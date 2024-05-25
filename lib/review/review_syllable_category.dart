@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/class.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_consonants_1.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_consonants_2.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_consonants_3.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_consonants_4.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_consonants_5.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_consonants_6.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_consonants_7.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_vowels_1.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_vowels_2.dart';
-// import 'package:flutter_application_1/syllablelist/syllable_vowels_3.dart';
+import 'package:flutter_application_1/review/syllablelist/vowel_1.dart';
 
 class ReviewSyllablesCategoryScreen extends StatefulWidget {
   const ReviewSyllablesCategoryScreen({super.key});
@@ -106,18 +97,18 @@ class _ReviewSyllablesCategoryScreenState
   // _buildSyllableCard 함수를 수정하여 타이틀과 서브타이틀을 함께 표시합니다.
   Widget _buildSyllableCard(
       BuildContext context, String title, String subtitle) {
-    // final Map<String, Widget Function()> navigationMap = {
-    //   CategoryLists.syllableTitles[0]: () => const SyllableVowels1(),
-    //   CategoryLists.syllableTitles[1]: () => const SyllableVowels2(),
-    //   CategoryLists.syllableTitles[2]: () => const SyllableVowels3(),
-    //   CategoryLists.syllableTitles[3]: () => const SyllableConsonants1(),
-    //   CategoryLists.syllableTitles[4]: () => const SyllableConsonants2(),
-    //   CategoryLists.syllableTitles[5]: () => const SyllableConsonants3(),
-    //   CategoryLists.syllableTitles[6]: () => const SyllableConsonants4(),
-    //   CategoryLists.syllableTitles[7]: () => const SyllableConsonants5(),
-    //   CategoryLists.syllableTitles[8]: () => const SyllableConsonants6(),
-    //   CategoryLists.syllableTitles[9]: () => const SyllableConsonants7(),
-    // };
+    final Map<String, Widget Function()> navigationMap = {
+      CategoryLists.syllableTitles[0]: () => const ReviewVowel1(),
+      //   CategoryLists.syllableTitles[1]: () => const SyllableVowels2(),
+      //   CategoryLists.syllableTitles[2]: () => const SyllableVowels3(),
+      //   CategoryLists.syllableTitles[3]: () => const SyllableConsonants1(),
+      //   CategoryLists.syllableTitles[4]: () => const SyllableConsonants2(),
+      //   CategoryLists.syllableTitles[5]: () => const SyllableConsonants3(),
+      //   CategoryLists.syllableTitles[6]: () => const SyllableConsonants4(),
+      //   CategoryLists.syllableTitles[7]: () => const SyllableConsonants5(),
+      //   CategoryLists.syllableTitles[8]: () => const SyllableConsonants6(),
+      //   CategoryLists.syllableTitles[9]: () => const SyllableConsonants7(),
+    };
 
     return Card(
       elevation: 0, // 그림자 제거
@@ -132,12 +123,12 @@ class _ReviewSyllablesCategoryScreenState
       child: InkWell(
         // InkWell을 사용하여 ListTile과 비슷한 탭 효과를 구현할 수 있습니다.
         onTap: () {
-          // if (navigationMap.containsKey(title)) {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => navigationMap[title]!()),
-          //   );
-          // }
+          if (navigationMap.containsKey(title)) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => navigationMap[title]!()),
+            );
+          }
         },
         child: Center(
           child: Padding(

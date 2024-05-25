@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/class.dart';
+import 'package:flutter_application_1/review/wordlist/initial_consonant_1.dart';
+import 'package:flutter_application_1/review/wordlist/initial_consonant_2.dart';
+import 'package:flutter_application_1/review/wordlist/initial_consonant_3.dart';
+import 'package:flutter_application_1/review/wordlist/initial_consonant_4.dart';
+import 'package:flutter_application_1/review/wordlist/initial_consonant_5.dart';
+import 'package:flutter_application_1/review/wordlist/initial_consonant_6.dart';
+import 'package:flutter_application_1/review/wordlist/initial_consonant_7.dart';
 // import 'package:flutter_application_1/wordlist/word_consonants_1.dart';
 // import 'package:flutter_application_1/wordlist/word_consonants_2.dart';
 // import 'package:flutter_application_1/wordlist/word_consonants_3.dart';
@@ -34,15 +41,15 @@ class _ReviewWordConsonantTabState extends State<ReviewWordConsonantTab> {
   }
 
   Widget _buildWordCard(BuildContext context, String title) {
-    // final Map<String, Widget Function()> navigationMap = {
-    //   CategoryLists.wordConsonants[0]: () => const WordConsonants1(),
-    //   CategoryLists.wordConsonants[1]: () => const WordConsonants2(),
-    //   CategoryLists.wordConsonants[2]: () => const WordConsonants3(),
-    //   CategoryLists.wordConsonants[3]: () => const WordConsonants4(),
-    //   CategoryLists.wordConsonants[4]: () => const WordConsonants5(),
-    //   CategoryLists.wordConsonants[5]: () => const WordConsonants6(),
-    //   CategoryLists.wordConsonants[6]: () => const WordConsonants7(),
-    // };
+    final Map<String, Widget Function()> navigationMap = {
+      CategoryLists.wordConsonants[0]: () => const ReviewIC1(),
+      CategoryLists.wordConsonants[1]: () => const ReviewIC2(),
+      CategoryLists.wordConsonants[2]: () => const ReviewIC3(),
+      CategoryLists.wordConsonants[3]: () => const ReviewIC4(),
+      CategoryLists.wordConsonants[4]: () => const ReviewIC5(),
+      CategoryLists.wordConsonants[5]: () => const ReviewIC6(),
+      CategoryLists.wordConsonants[6]: () => const ReviewIC7(),
+    };
 
     return Card(
       elevation: 0,
@@ -56,12 +63,12 @@ class _ReviewWordConsonantTabState extends State<ReviewWordConsonantTab> {
       ),
       child: InkWell(
         onTap: () {
-          // if (navigationMap.containsKey(title)) {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => navigationMap[title]!()),
-          //   );
-          // }
+          if (navigationMap.containsKey(title)) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => navigationMap[title]!()),
+            );
+          }
         },
         child: Center(
           child: Padding(

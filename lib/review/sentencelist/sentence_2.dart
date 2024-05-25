@@ -95,52 +95,6 @@ class _ReviewSentence2State extends State<ReviewSentence2> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'School Conversation',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-            ),
-          ),
-          backgroundColor: const Color(0xFFF5F5F5),
-          actions: [
-            IconButton(
-              icon: Icon(
-                showBookmarkedOnly
-                    ? Icons.filter_alt
-                    : Icons.filter_alt_outlined,
-                color: Colors.black,
-                size: 30,
-              ),
-              onPressed: () {
-                setState(() {
-                  showBookmarkedOnly = !showBookmarkedOnly;
-                });
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
-              child: IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: Colors.black,
-                  size: 30,
-                ),
-                onPressed: _showExitDialog,
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFFF5F5F5),
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     if (noData) {
       return Scaffold(
         appBar: AppBar(

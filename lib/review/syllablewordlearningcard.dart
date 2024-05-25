@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/feedbackui.dart';
 import 'package:flutter_application_1/function.dart';
@@ -8,16 +9,15 @@ import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-//import 'package:permission_handler/permission_handler.dart';
 
-class SentenceLearningCard extends StatefulWidget {
+class ReviewCard extends StatefulWidget {
   final int currentIndex;
   final List<int> cardIds;
   final List<String> contents;
   final List<String> pronunciations;
   final List<String> engpronunciations;
 
-  SentenceLearningCard({
+  ReviewCard({
     Key? key,
     required this.currentIndex,
     required this.cardIds,
@@ -27,16 +27,14 @@ class SentenceLearningCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SentenceLearningCard> createState() => _SentenceLearningCardState();
+  State<ReviewCard> createState() => _ReviewCardState();
 }
 
-class _SentenceLearningCardState extends State<SentenceLearningCard> {
+class _ReviewCardState extends State<ReviewCard> {
   FlutterSoundRecorder? _recorder;
   bool _isRecording = false;
 
   late String _filePathUserAudio;
-
-  //bool _isPlaying = false;
 
   @override
   void initState() {
@@ -46,75 +44,79 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
   }
 
   Future<void> _initializeRecorder() async {
-    final status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      //throw RecordingPermissionException('Microphone permission not granted');
-      print("Microphone permission not granted");
-    }
+    // final status = await Permission.microphone.request();
+    // if (status != PermissionStatus.granted) {
+    //   print("Microphone permission not granted");
+    // }
+    // await _recorder!.openAudioSession();
+    // _recorder!.setSubscriptionDuration(const Duration(milliseconds: 500));
+    await Permission.microphone.request();
     await _recorder!.openAudioSession();
-    _recorder!.setSubscriptionDuration(const Duration(milliseconds: 500));
-  }
-
-  Future<void> _toggleRecording() async {
-    if (_isRecording) {
-      await _stopRecording();
-    } else {
-      await _startRecording();
-    }
   }
 
   Future<void> _startRecording() async {
-// 캐시 디렉토리 경로 가져오기
+    // Stop the audio player if it is playing
+    await TtsService.instance.stopAudioPlayer();
+
+    // Add a small delay to ensure the audio session is released
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    // Get temporary directory
     final directory = await getTemporaryDirectory();
     _filePathUserAudio = '${directory.path}/user_audio.wav';
+    print("Recording to: $_filePathUserAudio");
 
-    //print('녹음된 파일의 경로: $_filePathUserAudio'); // 변수 출력
-    // if (_isPlaying = false) {
-    //   // 레코더에 파일 경로 설정하여 녹음 시작
-    //   await _recorder!.startRecorder(toFile: _filePathUserAudio);
-    // }
-
-    // // 레코더에 파일 경로 설정하여 녹음 시작
-    await _recorder!.startRecorder(toFile: _filePathUserAudio);
-    setState(() {
-      _isRecording = true;
-      //_isPlaying = false;
-    });
+    // Start recording
+    try {
+      await _recorder!.startRecorder(
+        toFile: _filePathUserAudio,
+        // codec: Codec.pcm16WAV,
+      );
+      setState(() {
+        _isRecording = true;
+      });
+      print("Recording started");
+    } catch (e) {
+      print("Error starting recording: $e");
+    }
   }
 
   Future<void> _stopRecording() async {
-    await _recorder!.stopRecorder();
-    setState(() {
-      _isRecording = false;
-    });
-    int currentCardId = widget.cardIds[widget.currentIndex];
+    try {
+      await _recorder!.stopRecorder();
+      setState(() {
+        _isRecording = false;
+      });
+      print("Recording stopped");
 
-    // 파일 읽기
-    File audioFile = File(_filePathUserAudio);
-    List<int> fileBytes = await audioFile.readAsBytes();
-    String base64userAudio = base64Encode(fileBytes);
+      int currentCardId = widget.cardIds[widget.currentIndex];
 
-    //getFeedback(currentCardId, base64userAudio, base64userAudio);
-// Fetch correct audio data
-    // String? base64correctAudio =
-    //     await TtsService.fetchAndPlayCorrectAudio(currentCardId);
+      // Read file
+      File audioFile = File(_filePathUserAudio);
+      if (await audioFile.exists()) {
+        List<int> fileBytes = await audioFile.readAsBytes();
+        String base64userAudio = base64Encode(fileBytes);
 
-    //싱글톤 인스턴스에서 base64CorrectAudio 가져오기
-    String? base64correctAudio = TtsService.instance.base64CorrectAudio;
-    //print(base64correctAudio);
-    //print(base64userAudio);
+        // Log the length of the recorded file
+        print("Recorded file length: ${fileBytes.length}");
 
-    if (base64correctAudio != null) {
-      print("base64correctAudio는 널이 아님");
-      FeedbackData? feedbackData =
-          await getFeedback(currentCardId, base64userAudio, base64correctAudio);
-      print(feedbackData);
-      if (mounted && feedbackData != null) {
-        showFeedbackDialog(context, feedbackData);
+        // Fetch correct audio from TtsService
+        String? base64correctAudio = TtsService.instance.base64CorrectAudio;
+
+        if (base64correctAudio != null) {
+          FeedbackData? feedbackData = await getFeedback(
+              currentCardId, base64userAudio, base64correctAudio);
+          if (mounted && feedbackData != null) {
+            showFeedbackDialog(context, feedbackData);
+          }
+        } else {
+          print("Failed to fetch correct audio");
+        }
+      } else {
+        print("Recorded file does not exist");
       }
-    } else {
-      // Handle error: correct audio could not be fetched
-      print("피드백받기실패");
+    } catch (e) {
+      print("Error stopping recording: $e");
     }
   }
 
@@ -135,9 +137,8 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
         return SizedBox();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        //final curvedValue = Curves.easeInOut.transform(animation.value) - 1.0;
         return Transform(
-          transform: Matrix4.translationValues(0.0, 112, 0.0),
+          transform: Matrix4.translationValues(0.0, 120, 0.0),
           child: Opacity(
             opacity: animation.value,
             child: FeedbackUI(feedbackData: feedbackData),
@@ -151,7 +152,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => SentenceLearningCard(
+        builder: (context) => ReviewCard(
           currentIndex: newIndex,
           cardIds: widget.cardIds,
           contents: widget.contents,
@@ -168,14 +169,14 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
+          title: Text("End Reviewing"),
+          content: Text("Do you want to end reviewing?"),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("Continue Learning"),
+              child: Text("Continue Reviewing"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -186,10 +187,12 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
               ),
               child: Text("End"),
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Exit the learning screen
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MainPage(initialIndex: 0)),
+                  (route) => false,
+                );
               },
             ),
           ],
@@ -200,8 +203,8 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
 
   @override
   Widget build(BuildContext context) {
-    double cardWidth = MediaQuery.of(context).size.width * 0.75;
-    double cardHeight = MediaQuery.of(context).size.height * 0.28;
+    double cardWidth = MediaQuery.of(context).size.width * 0.70;
+    double cardHeight = MediaQuery.of(context).size.height * 0.27;
 
     String currentContent = widget.contents[widget.currentIndex];
     String currentPronunciation = widget.pronunciations[widget.currentIndex];
@@ -234,7 +237,6 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
             IconButton(
               icon: Icon(Icons.arrow_back_ios),
               color: Color(0XFFF26647),
-              iconSize: 20,
               onPressed: widget.currentIndex > 0
                   ? () {
                       int nextIndex = widget.currentIndex - 1;
@@ -251,7 +253,6 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
             Container(
               width: cardWidth,
               height: cardHeight,
-              padding: EdgeInsets.all(12.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(color: const Color(0xFFF26647), width: 3),
@@ -262,43 +263,28 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
                 children: <Widget>[
                   Text(
                     currentContent,
-                    style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                   ),
-                  // const SizedBox(
-                  //   height: 3,
-                  // ),
                   Text(
                     currentPronunciation,
-                    style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                    style: TextStyle(fontSize: 24, color: Colors.grey[700]),
                   ),
                   Text(
                     currentEngPronunciation,
-                    style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24, color: Colors.grey[700]),
                   ),
                   const SizedBox(
-                    height: 15,
+                    height: 7,
                   ),
                   // 발음 듣기 버튼 - correctAudio 들려주기
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF26647),
-                      minimumSize: Size(240, 40),
+                      minimumSize: Size(220, 40),
                     ),
                     onPressed: () {
-                      // if (TtsService.instance.base64CorrectAudio != null) {
-                      //   // If audio is already fetched, play it immediately
                       TtsService.instance
                           .playCachedAudio(widget.cardIds[widget.currentIndex]);
-
-                      // _isPlaying = true;
-                      // } else {
-                      //   TtsService.fetchCorrectAudio(
-                      //           widget.cardIds[widget.currentIndex])
-                      //       .then((_) {
-                      //     TtsService.instance.playCachedAudio();
-                      //   });
-                      // }
                     },
                     icon: const Icon(
                       Icons.volume_up,
@@ -319,7 +305,6 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
             IconButton(
               icon: Icon(Icons.arrow_forward_ios),
               color: const Color(0xFFF26647),
-              iconSize: 20,
               onPressed: widget.currentIndex < widget.contents.length - 1
                   ? () {
                       int nextIndex = widget.currentIndex + 1;

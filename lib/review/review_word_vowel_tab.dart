@@ -1,10 +1,6 @@
 // 중성 탭 위젯
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/class.dart';
-// import 'package:flutter_application_1/wordlist/word_vowels_1.dart';
-// import 'package:flutter_application_1/wordlist/word_vowels_2.dart';
-// import 'package:flutter_application_1/wordlist/word_vowels_3.dart';
 
 class ReviewWordVowelTab extends StatefulWidget {
   const ReviewWordVowelTab({super.key});
@@ -33,9 +29,9 @@ class _ReviewWordVowelTabState extends State<ReviewWordVowelTab> {
 
   Widget _buildWordCard(BuildContext context, String title) {
     // final Map<String, Widget Function()> navigationMap = {
-    //   CategoryLists.wordVowels[0]: () => const WordVowels1(),
-    //   CategoryLists.wordVowels[1]: () => const WordVowels2(),
-    //   CategoryLists.wordVowels[2]: () => const WordVowels3(),
+    //   CategoryLists.wordVowels[0]: () => const ReviewVowel1(),
+    //   CategoryLists.wordVowels[1]: () => const ReviewVowel2(),
+    //   CategoryLists.wordVowels[2]: () => const ReviewVowel3(),
     // };
 
     return Card(

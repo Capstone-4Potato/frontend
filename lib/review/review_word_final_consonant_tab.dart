@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/class.dart';
-// import 'package:flutter_application_1/wordlist/word_final_consonants_1.dart';
-// import 'package:flutter_application_1/wordlist/word_final_consonants_2.dart';
-// import 'package:flutter_application_1/wordlist/word_final_consonants_3.dart';
-// import 'package:flutter_application_1/wordlist/word_final_consonants_4.dart';
-// import 'package:flutter_application_1/wordlist/word_final_consonants_5.dart';
-// import 'package:flutter_application_1/wordlist/word_final_consonants_6.dart';
-// import 'package:flutter_application_1/wordlist/word_final_consonants_7.dart';
+import 'package:flutter_application_1/review/wordlist/final_consonant_1.dart';
+import 'package:flutter_application_1/review/wordlist/final_consonant_2.dart';
+import 'package:flutter_application_1/review/wordlist/final_consonant_3.dart';
+import 'package:flutter_application_1/review/wordlist/final_consonant_4.dart';
+import 'package:flutter_application_1/review/wordlist/final_consonant_5.dart';
+import 'package:flutter_application_1/review/wordlist/final_consonant_6.dart';
+import 'package:flutter_application_1/review/wordlist/final_consonant_7.dart';
 
 class ReviewWordFinalConsonantTab extends StatefulWidget {
   const ReviewWordFinalConsonantTab({super.key});
@@ -36,15 +36,15 @@ class _ReviewWordFinalConsonantTabState
   }
 
   Widget _buildWordCard(BuildContext context, String title) {
-    // final Map<String, Widget Function()> navigationMap = {
-    //   CategoryLists.wordFinalCosonants[0]: () => const WordFinalConsonants1(),
-    //   CategoryLists.wordFinalCosonants[1]: () => const WordFinalConsonants2(),
-    //   CategoryLists.wordFinalCosonants[2]: () => const WordFinalConsonants3(),
-    //   CategoryLists.wordFinalCosonants[3]: () => const WordFinalConsonants4(),
-    //   CategoryLists.wordFinalCosonants[4]: () => const WordFinalConsonants5(),
-    //   CategoryLists.wordFinalCosonants[5]: () => const WordFinalConsonants6(),
-    //   CategoryLists.wordFinalCosonants[6]: () => const WordFinalConsonants7(),
-    // };
+    final Map<String, Widget Function()> navigationMap = {
+      CategoryLists.wordFinalCosonants[0]: () => const ReviewFC1(),
+      CategoryLists.wordFinalCosonants[1]: () => const ReviewFC2(),
+      CategoryLists.wordFinalCosonants[2]: () => const ReviewFC3(),
+      CategoryLists.wordFinalCosonants[3]: () => const ReviewFC4(),
+      CategoryLists.wordFinalCosonants[4]: () => const ReviewFC5(),
+      CategoryLists.wordFinalCosonants[5]: () => const ReviewFC6(),
+      CategoryLists.wordFinalCosonants[6]: () => const ReviewFC7(),
+    };
 
     return Card(
       elevation: 0, // 그림자 제거
@@ -58,12 +58,12 @@ class _ReviewWordFinalConsonantTabState
       ),
       child: InkWell(
         onTap: () {
-          // if (navigationMap.containsKey(title)) {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => navigationMap[title]!()),
-          //   );
-          // }
+          if (navigationMap.containsKey(title)) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => navigationMap[title]!()),
+            );
+          }
         },
         child: Center(
           child: Padding(

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/review/fetchreviewingcardlist.dart';
-import 'package:flutter_application_1/sentencelearningcard.dart';
+import 'package:flutter_application_1/review/syllablewordlearningcard.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 
-class ReviewSentence3 extends StatefulWidget {
-  const ReviewSentence3({super.key});
+class ReviewFC3 extends StatefulWidget {
+  const ReviewFC3({super.key});
 
   @override
-  State<ReviewSentence3> createState() => _ReviewSentence3State();
+  State<ReviewFC3> createState() => _ReviewFC3State();
 }
 
-class _ReviewSentence3State extends State<ReviewSentence3> {
+class _ReviewFC3State extends State<ReviewFC3> {
   late List<int> cardIds = [];
   late List<String> contents = [];
   late List<String> pronunciations = [];
@@ -21,7 +21,6 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
   late List<bool> weakCards = [];
 
   bool showBookmarkedOnly = false;
-  bool isLoading = true;
   bool noData = false;
 
   @override
@@ -31,7 +30,7 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
   }
 
   void initFetch() async {
-    var data = await fetchReviewList('문장', '카페주문');
+    var data = await fetchReviewList('단어', '받침ㄷ');
     print(data);
     if (data != null && data.isNotEmpty) {
       setState(() {
@@ -47,12 +46,10 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
             data.length, (index) => data[index]['cardScore'] / 100.0);
         weakCards =
             List.generate(data.length, (index) => data[index]['weakCard']);
-        isLoading = false;
       });
     } else {
       setState(() {
         noData = true;
-        isLoading = false;
       });
     }
   }
@@ -98,11 +95,14 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
     if (noData) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(
-            '    Ordering at a Cafe',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
+          title: Center(
+            child: Text(
+              '       ㄷ',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 22,
+                // fontSize: 18,
+              ),
             ),
           ),
           backgroundColor: const Color(0xFFF5F5F5),
@@ -147,7 +147,6 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
         ),
       );
     }
-
     List<int> displayCardIds = [];
     List<String> displayContents = [];
     List<String> displayPronunciations = [];
@@ -180,11 +179,14 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '    Ordering at a Cafe',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
+        title: Center(
+          child: Text(
+            '       ㄷ',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+              // fontSize: 18,
+            ),
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
@@ -218,10 +220,10 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
       body: GridView.builder(
         padding: const EdgeInsets.all(15),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 4,
-          childAspectRatio: 10 / 3.2,
+          crossAxisCount: 2,
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 15,
+          childAspectRatio: 6 / 4.3,
         ),
         itemCount: displayBookmarked.length,
         itemBuilder: (BuildContext context, int index) {
@@ -234,7 +236,7 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SentenceLearningCard(
+                  builder: (context) => ReviewCard(
                     currentIndex: index,
                     cardIds: displayCardIds,
                     contents: displayContents,
@@ -266,7 +268,7 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
                           child: Text(
                             displayContents[index],
                             style: TextStyle(
-                                fontSize: 22,
+                                fontSize: 26,
                                 fontWeight: FontWeight.bold,
                                 color: displayWeakCards[index]
                                     ? Color.fromARGB(236, 255, 85, 85)
@@ -274,7 +276,7 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
                           ),
                         ),
                         Text(displayEngPronunciations[index],
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 18)),
                       ],
                     ),
                     Positioned(

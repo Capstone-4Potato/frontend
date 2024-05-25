@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/bottomnavigationbartest.dart';
 //import 'package:flutter_application_1/audioplayerutil.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/feedbackui.dart';
@@ -193,10 +194,16 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
               ),
               child: Text("End"),
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Exit the learning screen
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                // Navigator.of(context).pop(); // Exit the learning screen
+                // Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MainPage(initialIndex: 0)),
+                  (route) => false,
+                );
               },
             ),
           ],
@@ -363,12 +370,12 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    Image.memory(
-                      base64Decode(currentPictureBase64),
-                      width: 300,
-                      height: 280,
-                    ),
-                    // ImageDisplay(base64Image: currentPictureBase64),
+                    // Image.memory(
+                    //   base64Decode(currentPictureBase64),
+                    //   width: 300,
+                    //   height: 280,
+                    // ),
+                    ImageDisplay(base64Image: currentPictureBase64),
                   ],
                 ),
               ),
@@ -376,25 +383,20 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
           ],
         ),
       ),
-      floatingActionButton: GestureDetector(
-        onLongPress: _startRecording,
-        onLongPressUp: _stopRecording,
-        child: Container(
-          width: 70,
-          height: 70,
-          child: FloatingActionButton(
-            onPressed: () {},
-            child: Icon(
-              _isRecording ? Icons.stop : Icons.mic,
-              size: 40,
-              color: const Color.fromARGB(231, 255, 255, 255),
-            ),
-            backgroundColor:
-                _isRecording ? Color(0xFF976841) : Color(0xFFF26647),
-            elevation: 0.0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(35))),
+      floatingActionButton: Container(
+        width: 70,
+        height: 70,
+        child: FloatingActionButton(
+          onPressed: _isRecording ? _stopRecording : _startRecording,
+          child: Icon(
+            _isRecording ? Icons.stop : Icons.mic,
+            size: 40,
+            color: const Color.fromARGB(231, 255, 255, 255),
           ),
+          backgroundColor: _isRecording ? Color(0xFF976841) : Color(0xFFF26647),
+          elevation: 0.0,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(35))),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -402,18 +404,41 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   }
 }
 
-class ImageDisplay extends StatelessWidget {
+class ImageDisplay extends StatefulWidget {
   final String base64Image;
 
   const ImageDisplay({Key? key, required this.base64Image}) : super(key: key);
 
   @override
+  _ImageDisplayState createState() => _ImageDisplayState();
+}
+
+class _ImageDisplayState extends State<ImageDisplay> {
+  late dynamic imageBytes;
+
+  @override
+  void initState() {
+    super.initState();
+    imageBytes = base64Decode(widget.base64Image);
+  }
+
+  @override
+  void didUpdateWidget(covariant ImageDisplay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.base64Image != widget.base64Image) {
+      setState(() {
+        imageBytes = base64Decode(widget.base64Image);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Image.memory(
-        base64Decode(base64Image),
-        fit: BoxFit.contain,
-      ),
+    return Image.memory(
+      imageBytes,
+      fit: BoxFit.contain,
+      width: 300,
+      height: 280,
     );
   }
 }
