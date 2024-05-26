@@ -51,7 +51,11 @@ class _StudyInfoPageState extends State<StudyInfoPage> {
         future: combinedData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+                child: CircularProgressIndicator(
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
+            ));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error loading data'));
           } else if (snapshot.hasData) {

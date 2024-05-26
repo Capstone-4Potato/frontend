@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
@@ -5,14 +6,27 @@ import 'package:flutter_application_1/ttsservice.dart';
 
 class FeedbackUI extends StatefulWidget {
   final FeedbackData feedbackData;
+  final String recordedFilePath;
 
-  FeedbackUI({required this.feedbackData});
+  FeedbackUI({required this.feedbackData, required this.recordedFilePath});
 
   @override
   State<FeedbackUI> createState() => _FeedbackUIState();
 }
 
 class _FeedbackUIState extends State<FeedbackUI> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _playUserRecording() async {
+    await _audioPlayer.play(DeviceFileSource(widget.recordedFilePath));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -82,8 +96,8 @@ class _FeedbackUIState extends State<FeedbackUI> {
                       //height: 280,
                     ), // 그래프 이미지
                     Positioned(
-                      left: 11.5,
-                      bottom: 144.5,
+                      left: 10,
+                      bottom: 134.5,
                       child: Image.memory(
                         widget.feedbackData.userWaveformImage,
                         width: 240,
@@ -91,8 +105,8 @@ class _FeedbackUIState extends State<FeedbackUI> {
                       ),
                     ),
                     Positioned(
-                      left: 11.8,
-                      bottom: 27.1,
+                      left: 10,
+                      bottom: 25.5,
                       child: Image.memory(
                         widget.feedbackData.correctWaveformImage,
                         width: 240,
@@ -107,7 +121,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
           //사용자 발음 듣기
           Positioned(
             right: 14,
-            bottom: 250,
+            bottom: 240,
             child: IconButton(
               icon: Icon(
                 Icons.volume_up,
@@ -116,24 +130,20 @@ class _FeedbackUIState extends State<FeedbackUI> {
               iconSize: 25.0,
               // onPressed: _playRecording,
               //****수정!!!!!!!!!!!!! */
-              onPressed: () {
-                TtsService.instance.playCachedAudio(widget.feedbackData.cardId);
-              },
+              onPressed: _playUserRecording,
             ),
           ),
 
           //표준 발음 듣기
           Positioned(
             right: 14,
-            bottom: 128,
+            bottom: 125,
             child: IconButton(
               icon: Icon(
                 Icons.volume_up,
                 color: Color(0xFFF26647),
               ),
               iconSize: 25.0,
-              // onPressed: _playRecording,
-              //이거 듣고나서 어쨋든 녹음진행은 안댐 ;;;;
               onPressed: () {
                 TtsService.instance.playCachedAudio(widget.feedbackData.cardId);
               },

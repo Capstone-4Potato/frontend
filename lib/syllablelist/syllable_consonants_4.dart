@@ -47,12 +47,12 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
             data.length, (index) => data[index]['cardScore'] / 100.0);
         weakCards =
             List.generate(data.length, (index) => data[index]['weakCard']);
-        isLoading = false;
+        // isLoading = false;
         explanations =
             List.generate(data.length, (index) => data[index]['explanation']);
         pictures =
             List.generate(data.length, (index) => data[index]['picture']);
-        //isLoading = false;
+        isLoading = false;
       });
     }
   }
@@ -288,8 +288,8 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
                       ],
                     ),
                     Positioned(
-                      top: 1,
-                      right: 2,
+                      top: 0.2,
+                      right: 0.2,
                       child: IconButton(
                         icon: Icon(
                           displayBookmarked[index]

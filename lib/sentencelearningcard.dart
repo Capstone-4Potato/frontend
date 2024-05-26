@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/feedbackui.dart';
 import 'package:flutter_application_1/function.dart';
+import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-//import 'package:permission_handler/permission_handler.dart';
 
 class SentenceLearningCard extends StatefulWidget {
   final int currentIndex;
@@ -31,98 +30,75 @@ class SentenceLearningCard extends StatefulWidget {
 }
 
 class _SentenceLearningCardState extends State<SentenceLearningCard> {
-  FlutterSoundRecorder? _recorder;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
+  final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
-
-  late String _filePathUserAudio;
-
-  //bool _isPlaying = false;
+  bool _canRecord = false;
+  late String _recordedFilePath;
 
   @override
   void initState() {
     super.initState();
-    _recorder = FlutterSoundRecorder();
-    _initializeRecorder();
+    _initialize();
   }
 
-  Future<void> _initializeRecorder() async {
-    final status = await Permission.microphone.request();
-    if (status != PermissionStatus.granted) {
-      //throw RecordingPermissionException('Microphone permission not granted');
-      print("Microphone permission not granted");
-    }
-    await _recorder!.openAudioSession();
-    _recorder!.setSubscriptionDuration(const Duration(milliseconds: 500));
+  Future<void> _initialize() async {
+    await _permissionService.requestPermissions();
+    await _audioRecorder.openAudioSession();
   }
 
-  Future<void> _toggleRecording() async {
+  Future<void> _recordAudio() async {
     if (_isRecording) {
-      await _stopRecording();
-    } else {
-      await _startRecording();
-    }
-  }
+      final path = await _audioRecorder.stopRecorder();
+      if (path != null) {
+        final audioFile = File(path);
+        final fileBytes = await audioFile.readAsBytes();
+        final base64userAudio = base64Encode(fileBytes);
+        final currentCardId = widget.cardIds[widget.currentIndex];
+        final base64correctAudio = TtsService.instance.base64CorrectAudio;
 
-  Future<void> _startRecording() async {
-// 캐시 디렉토리 경로 가져오기
-    final directory = await getTemporaryDirectory();
-    _filePathUserAudio = '${directory.path}/user_audio.wav';
+        if (base64correctAudio != null) {
+          final feedbackData = await getFeedback(
+              currentCardId, base64userAudio, base64correctAudio);
 
-    //print('녹음된 파일의 경로: $_filePathUserAudio'); // 변수 출력
-    // if (_isPlaying = false) {
-    //   // 레코더에 파일 경로 설정하여 녹음 시작
-    //   await _recorder!.startRecorder(toFile: _filePathUserAudio);
-    // }
-
-    // // 레코더에 파일 경로 설정하여 녹음 시작
-    await _recorder!.startRecorder(toFile: _filePathUserAudio);
-    setState(() {
-      _isRecording = true;
-      //_isPlaying = false;
-    });
-  }
-
-  Future<void> _stopRecording() async {
-    await _recorder!.stopRecorder();
-    setState(() {
-      _isRecording = false;
-    });
-    int currentCardId = widget.cardIds[widget.currentIndex];
-
-    // 파일 읽기
-    File audioFile = File(_filePathUserAudio);
-    List<int> fileBytes = await audioFile.readAsBytes();
-    String base64userAudio = base64Encode(fileBytes);
-
-    //getFeedback(currentCardId, base64userAudio, base64userAudio);
-// Fetch correct audio data
-    // String? base64correctAudio =
-    //     await TtsService.fetchAndPlayCorrectAudio(currentCardId);
-
-    //싱글톤 인스턴스에서 base64CorrectAudio 가져오기
-    String? base64correctAudio = TtsService.instance.base64CorrectAudio;
-    //print(base64correctAudio);
-    //print(base64userAudio);
-
-    if (base64correctAudio != null) {
-      print("base64correctAudio는 널이 아님");
-      FeedbackData? feedbackData =
-          await getFeedback(currentCardId, base64userAudio, base64correctAudio);
-      print(feedbackData);
-      if (mounted && feedbackData != null) {
-        showFeedbackDialog(context, feedbackData);
+          if (mounted && feedbackData != null) {
+            setState(() {
+              _isRecording = false;
+              _recordedFilePath = path;
+            });
+            showFeedbackDialog(context, feedbackData);
+          } else {
+            setState(() {
+              _isRecording = false;
+              _recordedFilePath = path;
+            });
+          }
+        } else {
+          setState(() {
+            _isRecording = false;
+            _recordedFilePath = path;
+          });
+        }
       }
     } else {
-      // Handle error: correct audio could not be fetched
-      print("피드백받기실패");
+      await _audioRecorder.startRecorder(
+        toFile: 'audio_record.wav',
+        codec: Codec.pcm16WAV,
+      );
+      setState(() {
+        _isRecording = true;
+      });
     }
   }
 
-  @override
-  void dispose() {
-    _recorder!.closeAudioSession();
-    _recorder = null;
-    super.dispose();
+  void _onListenPressed() async {
+    await TtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex]);
+    await TtsService.instance
+        .playCachedAudio(widget.cardIds[widget.currentIndex]);
+    setState(() {
+      _canRecord = true;
+    });
   }
 
   void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
@@ -140,7 +116,10 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
           transform: Matrix4.translationValues(0.0, 112, 0.0),
           child: Opacity(
             opacity: animation.value,
-            child: FeedbackUI(feedbackData: feedbackData),
+            child: FeedbackUI(
+              feedbackData: feedbackData,
+              recordedFilePath: _recordedFilePath,
+            ),
           ),
         );
       },
@@ -199,8 +178,15 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
   }
 
   @override
+  void dispose() {
+    _audioPlayer.dispose();
+    _audioRecorder.closeAudioSession();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    double cardWidth = MediaQuery.of(context).size.width * 0.75;
+    double cardWidth = MediaQuery.of(context).size.width * 0.74;
     double cardHeight = MediaQuery.of(context).size.height * 0.28;
 
     String currentContent = widget.contents[widget.currentIndex];
@@ -285,21 +271,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
                       backgroundColor: const Color(0xFFF26647),
                       minimumSize: Size(240, 40),
                     ),
-                    onPressed: () {
-                      // if (TtsService.instance.base64CorrectAudio != null) {
-                      //   // If audio is already fetched, play it immediately
-                      TtsService.instance
-                          .playCachedAudio(widget.cardIds[widget.currentIndex]);
-
-                      // _isPlaying = true;
-                      // } else {
-                      //   TtsService.fetchCorrectAudio(
-                      //           widget.cardIds[widget.currentIndex])
-                      //       .then((_) {
-                      //     TtsService.instance.playCachedAudio();
-                      //   });
-                      // }
-                    },
+                    onPressed: _onListenPressed,
                     icon: const Icon(
                       Icons.volume_up,
                       color: Colors.white,
@@ -340,13 +312,15 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
         width: 70,
         height: 70,
         child: FloatingActionButton(
-          onPressed: _isRecording ? _stopRecording : _startRecording,
+          onPressed: _canRecord ? _recordAudio : null,
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
             size: 40,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
-          backgroundColor: _isRecording ? Color(0xFF976841) : Color(0xFFF26647),
+          backgroundColor: _canRecord
+              ? (_isRecording ? Color(0xFF976841) : Color(0xFFF26647))
+              : Color.fromARGB(37, 206, 204, 204),
           elevation: 0.0,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(35))),

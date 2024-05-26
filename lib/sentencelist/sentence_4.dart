@@ -122,7 +122,7 @@ class _Sentence4State extends State<Sentence4> {
           '       Self Introduction',
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
@@ -159,7 +159,7 @@ class _Sentence4State extends State<Sentence4> {
           crossAxisCount: 1,
           crossAxisSpacing: 12,
           mainAxisSpacing: 4,
-          childAspectRatio: 10 / 3.2,
+          childAspectRatio: 10 / 3.4,
         ),
         itemCount: displayBookmarked.length,
         itemBuilder: (BuildContext context, int index) {
@@ -197,27 +197,34 @@ class _Sentence4State extends State<Sentence4> {
                 ),
                 child: Stack(
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Text(
-                            displayContents[index],
-                            style: TextStyle(
-                                fontSize: 22,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              displayContents[index],
+                              style: TextStyle(
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: displayWeakCards[index]
-                                    ? Color.fromARGB(236, 255, 85, 85)
-                                    : Colors.black),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                        Text(displayEngPronunciations[index],
-                            style: TextStyle(fontSize: 16)),
-                      ],
+                          Center(
+                            child: Text(
+                              displayEngPronunciations[index],
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Positioned(
-                      top: 1,
-                      right: 2,
+                      top: 0.2,
+                      right: 0.2,
                       child: IconButton(
                         icon: Icon(
                           displayBookmarked[index]

@@ -86,7 +86,8 @@ class CustomProgressBar extends StatelessWidget {
         ),
         SizedBox(width: 5),
         Container(
-          width: 230,
+          // width: 210,
+          width: MediaQuery.of(context).size.width * 0.58,
           height: 18,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -95,7 +96,7 @@ class CustomProgressBar extends StatelessWidget {
           child: Stack(
             children: [
               Container(
-                width: 230 * value,
+                width: MediaQuery.of(context).size.width * 0.58 * value,
                 height: 18,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),

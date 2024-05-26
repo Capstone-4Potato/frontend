@@ -132,7 +132,7 @@ class CategoryCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.w600),
                 ),
@@ -140,7 +140,7 @@ class CategoryCard extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: Colors.white70,
                       fontWeight: FontWeight.w500),
                 ),

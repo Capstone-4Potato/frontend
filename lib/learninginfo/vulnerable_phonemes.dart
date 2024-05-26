@@ -28,7 +28,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
           0.26; // Height for "No test conducted" message
     } else {
       cardHeight = MediaQuery.of(context).size.height *
-          0.46; // Default height for the list of phonemes
+          0.44; // Default height for the list of phonemes
     }
     // print(cardHeight);
     return Container(

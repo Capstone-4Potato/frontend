@@ -290,8 +290,8 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
                       ],
                     ),
                     Positioned(
-                      top: 1,
-                      right: 2,
+                      top: 0.2,
+                      right: 0.2,
                       child: IconButton(
                         icon: Icon(
                           displayBookmarked[index]

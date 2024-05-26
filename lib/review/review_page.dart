@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/review/review_sentence_category.dart';
-import 'package:flutter_application_1/review/review_syllable_category.dart';
-import 'package:flutter_application_1/review/review_word_category.dart';
+import 'package:flutter_application_1/review/sentence/review_sentence_category.dart';
+import 'package:flutter_application_1/review/syllable/review_syllable_category.dart';
+import 'package:flutter_application_1/review/word/review_word_category.dart';
 
 class ReviewPage extends StatefulWidget {
   @override
@@ -114,7 +114,7 @@ class CategoryCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: Colors.white,
                       fontWeight: FontWeight.w600),
                 ),
@@ -122,7 +122,7 @@ class CategoryCard extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: Colors.white70,
                       fontWeight: FontWeight.w500),
                 ),

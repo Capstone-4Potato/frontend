@@ -1,11 +1,8 @@
-//import 'dart:convert';
-//import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-//import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,12 +27,15 @@ class _PronunciationScreenState extends State<PronunciationScreen> {
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
+  bool _canRecord = false;
   late String _recordedFilePath;
+  late int _cardId;
 
   @override
   void initState() {
     super.initState();
     _initialize();
+    //_cardId = 324; // Example card ID, replace with actual ID
   }
 
   Future<void> _initialize() async {
@@ -43,20 +43,13 @@ class _PronunciationScreenState extends State<PronunciationScreen> {
     await _audioRecorder.openAudioSession();
   }
 
-  // Future<void> _playBase64Wav(String base64String) async {
-  //   final bytes = base64Decode(base64String);
-  //   final dir = await getTemporaryDirectory();
-  //   final file = File('${dir.path}/temp.wav');
-  //   await file.writeAsBytes(bytes);
-  //   await _audioPlayer.play(DeviceFileSource(file.path));
-  // }
-
   Future<void> _recordAudio() async {
     if (_isRecording) {
       final path = await _audioRecorder.stopRecorder();
       setState(() {
         _isRecording = false;
         _recordedFilePath = path!;
+        _showFeedbackDialog();
       });
     } else {
       await _audioRecorder.startRecorder(
@@ -69,14 +62,51 @@ class _PronunciationScreenState extends State<PronunciationScreen> {
     }
   }
 
-  // Future<String> _fetchBase64WavFromServer() async {
-  //   return 'base64-encoded-string-here';
-  // }
-
   void _onListenPressed() async {
-    final int cardId = 324; // Example card ID, replace with actual ID
-    await TtsService.fetchCorrectAudio(cardId);
-    await TtsService.instance.playCachedAudio(cardId);
+    await TtsService.fetchCorrectAudio(_cardId);
+    await TtsService.instance.playCachedAudio(_cardId);
+    setState(() {
+      _canRecord = true;
+    });
+  }
+
+  void _showFeedbackDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Feedback'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () async {
+                await TtsService.instance.playCachedAudio(_cardId);
+              },
+              icon: Icon(Icons.play_arrow),
+              label: Text('Play Correct Audio'),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            ),
+            ElevatedButton.icon(
+              onPressed: () async {
+                await _audioPlayer.play(DeviceFileSource(_recordedFilePath));
+              },
+              icon: Icon(Icons.play_arrow),
+              label: Text('Play Your Audio'),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _canRecord = false;
+            },
+            child: Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -127,19 +157,9 @@ class _PronunciationScreenState extends State<PronunciationScreen> {
                   ),
                   SizedBox(height: 10),
                   ElevatedButton.icon(
-                    onPressed: _recordAudio,
+                    onPressed: _canRecord ? _recordAudio : null,
                     icon: Icon(_isRecording ? Icons.stop : Icons.mic),
                     label: Text(_isRecording ? 'Stop Recording' : 'Record'),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      await _audioPlayer
-                          .play(DeviceFileSource(_recordedFilePath));
-                    },
-                    icon: Icon(Icons.play_arrow),
-                    label: Text('Play Recording'),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange),
                   ),
