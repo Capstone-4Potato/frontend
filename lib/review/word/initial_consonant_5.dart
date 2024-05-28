@@ -267,7 +267,7 @@ class _ReviewIC5State extends State<ReviewIC5> {
                           child: Text(
                             displayContents[index],
                             style: TextStyle(
-                                fontSize: 26,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: displayWeakCards[index]
                                     ? Color.fromARGB(236, 255, 85, 85)
@@ -279,8 +279,8 @@ class _ReviewIC5State extends State<ReviewIC5> {
                       ],
                     ),
                     Positioned(
-                      top: 1,
-                      right: 2,
+                      top: 0.2,
+                      right: 0.2,
                       child: IconButton(
                         icon: Icon(
                           displayBookmarked[index]

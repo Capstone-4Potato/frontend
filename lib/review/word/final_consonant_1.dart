@@ -268,7 +268,7 @@ class _ReviewFC1State extends State<ReviewFC1> {
                           child: Text(
                             displayContents[index],
                             style: TextStyle(
-                                fontSize: 26,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: displayWeakCards[index]
                                     ? Color.fromARGB(236, 255, 85, 85)

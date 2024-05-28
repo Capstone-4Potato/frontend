@@ -14,6 +14,7 @@ Future<List<dynamic>?> fetchData(String category, String subcategory) async {
     var headers = <String, String>{
       'access': '$token',
       'Content-Type': 'application/json',
+      'Accept-Encoding': 'gzip',
     };
 
     var response = await http.get(url, headers: headers);

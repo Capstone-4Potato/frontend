@@ -102,7 +102,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
             '   Basic Conversation',
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              fontSize: 20,
+              fontSize: 18,
             ),
           ),
           backgroundColor: const Color(0xFFF5F5F5),
@@ -184,7 +184,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
           '   Basic Conversation',
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
@@ -221,7 +221,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
           crossAxisCount: 1,
           crossAxisSpacing: 12,
           mainAxisSpacing: 4,
-          childAspectRatio: 10 / 3.2,
+          childAspectRatio: 10 / 3.4,
         ),
         itemCount: displayBookmarked.length,
         itemBuilder: (BuildContext context, int index) {
@@ -259,23 +259,30 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
                 ),
                 child: Stack(
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Text(
-                            displayContents[index],
-                            style: TextStyle(
-                                fontSize: 22,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              displayContents[index],
+                              style: TextStyle(
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: displayWeakCards[index]
-                                    ? Color.fromARGB(236, 255, 85, 85)
-                                    : Colors.black),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                        Text(displayEngPronunciations[index],
-                            style: TextStyle(fontSize: 16)),
-                      ],
+                          Center(
+                            child: Text(
+                              displayEngPronunciations[index],
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Positioned(
                       top: 0.2,

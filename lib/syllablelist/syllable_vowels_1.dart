@@ -24,6 +24,7 @@ class _SyllableVowels1State extends State<SyllableVowels1> {
   late List<String> pictures = [];
 
   bool showBookmarkedOnly = false;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -51,6 +52,7 @@ class _SyllableVowels1State extends State<SyllableVowels1> {
             List.generate(data.length, (index) => data[index]['explanation']);
         pictures =
             List.generate(data.length, (index) => data[index]['picture']);
+        isLoading = false;
       });
     }
   }
@@ -104,6 +106,56 @@ class _SyllableVowels1State extends State<SyllableVowels1> {
     List<bool> displayWeakCards = [];
     List<String> displayExplanations = [];
     List<String> displayPictures = [];
+
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Center(
+            child: Text(
+              '       ㅏ ㅓ ㅗ ⋯',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 22,
+              ),
+            ),
+          ),
+          backgroundColor: const Color(0xFFF5F5F5),
+          actions: [
+            IconButton(
+              icon: Icon(
+                showBookmarkedOnly
+                    ? Icons.filter_alt
+                    : Icons.filter_alt_outlined,
+                color: Colors.black,
+                size: 30,
+              ),
+              onPressed: () {
+                setState(() {
+                  showBookmarkedOnly = !showBookmarkedOnly;
+                });
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                onPressed: _showExitDialog,
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: const Color(0xFFF5F5F5),
+        body: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
+          ),
+        ),
+      );
+    }
 
     if (showBookmarkedOnly) {
       for (int i = 0; i < cardIds.length; i++) {

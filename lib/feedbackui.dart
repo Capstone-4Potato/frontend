@@ -47,7 +47,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                         widget.feedbackData.mistakenIndexes),
                   ),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 15),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(
@@ -128,8 +128,6 @@ class _FeedbackUIState extends State<FeedbackUI> {
                 color: Color(0xFF644829),
               ),
               iconSize: 25.0,
-              // onPressed: _playRecording,
-              //****수정!!!!!!!!!!!!! */
               onPressed: _playUserRecording,
             ),
           ),

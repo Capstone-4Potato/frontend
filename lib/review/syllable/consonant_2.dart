@@ -279,8 +279,8 @@ class _ReviewConsonant2State extends State<ReviewConsonant2> {
                       ],
                     ),
                     Positioned(
-                      top: 1,
-                      right: 2,
+                      top: 0.2,
+                      right: 0.2,
                       child: IconButton(
                         icon: Icon(
                           displayBookmarked[index]

@@ -106,7 +106,11 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       backgroundColor: const Color(0xFFF5F5F5),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+              child: CircularProgressIndicator(
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
+            ))
           : ListView(
               children: <Widget>[
                 SizedBox(height: 10),

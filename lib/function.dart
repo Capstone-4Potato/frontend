@@ -99,9 +99,9 @@ List<TextSpan> buildTextSpans(String text, List<int> mistakenIndexes) {
     final bool isMistaken = mistakenIndexes.contains(i);
     TextStyle textStyle = isMistaken
         ? TextStyle(
-            color: Color(0xFFFF0000), fontSize: 22, fontWeight: FontWeight.bold)
+            color: Color(0xFFFF0000), fontSize: 20, fontWeight: FontWeight.bold)
         : TextStyle(
-            color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold);
+            color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold);
     spans.add(TextSpan(text: text[i], style: textStyle));
   }
   return spans;

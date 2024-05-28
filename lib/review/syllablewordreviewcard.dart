@@ -248,18 +248,18 @@ class _ReviewCardState extends State<ReviewCard> {
                 children: <Widget>[
                   Text(
                     currentContent,
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     currentPronunciation,
-                    style: TextStyle(fontSize: 24, color: Colors.grey[700]),
+                    style: TextStyle(fontSize: 22, color: Colors.grey[700]),
                   ),
                   Text(
                     currentEngPronunciation,
-                    style: TextStyle(fontSize: 24, color: Colors.grey[700]),
+                    style: TextStyle(fontSize: 22, color: Colors.grey[700]),
                   ),
                   const SizedBox(
-                    height: 7,
+                    height: 8,
                   ),
                   // 발음 듣기 버튼 - correctAudio 들려주기
                   ElevatedButton.icon(
