@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
-
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/feedbackui.dart';
 import 'package:flutter_application_1/function.dart';
@@ -43,6 +42,8 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   bool _canRecord = false;
   late String _recordedFilePath;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +59,13 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     if (_isRecording) {
       final path = await _audioRecorder.stopRecorder();
       if (path != null) {
+        setState(() {
+          _isRecording = false;
+          _canRecord = false;
+          _recordedFilePath = path;
+          _isLoading = true; // 로딩 시작
+        });
+
         final audioFile = File(path);
         final fileBytes = await audioFile.readAsBytes();
         final base64userAudio = base64Encode(fileBytes);
@@ -70,20 +78,18 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
 
           if (mounted && feedbackData != null) {
             setState(() {
-              _isRecording = false;
-              _recordedFilePath = path;
+              _isLoading = false; // 로딩 종료
             });
             showFeedbackDialog(context, feedbackData);
           } else {
             setState(() {
-              _isRecording = false;
-              _recordedFilePath = path;
+              _isLoading = false; // 로딩 종료
+              showErrorDialog();
             });
           }
         } else {
           setState(() {
-            _isRecording = false;
-            _recordedFilePath = path;
+            _isLoading = false; // 로딩 종료
           });
         }
       }
@@ -126,6 +132,33 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
               recordedFilePath: _recordedFilePath,
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      //barrierDismissible: false, // 사용자가 다이얼로그 바깥을 터치하여 닫지 못하게 함
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Recording Error"),
+          content: Text(
+            "Please try recording again.",
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -274,7 +307,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                         style: TextStyle(fontSize: 24, color: Colors.grey[700]),
                       ),
                       const SizedBox(
-                        height: 7,
+                        height: 8,
                       ),
                       // 발음 듣기 버튼 - correctAudio 들려주기
                       ElevatedButton.icon(
@@ -318,42 +351,38 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                 ),
               ],
             ),
-            // const SizedBox(
-            //   height: 10,
-            // ),
-            Expanded(
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.82,
-                height: MediaQuery.of(context).size.height * 0.54,
-                decoration: BoxDecoration(
-                  color: Color(0xFFF5F5F5),
-                  //border: Border.all(color: const Color(0xFFF26647), width: 3),
-                  //borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    // Padding(
-                    //   padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    //   child: Text(
-                    //     currentExplanation,
-                    //     style: TextStyle(fontSize: 13, color: Colors.grey[700]),
-                    //     textAlign: TextAlign.center,
-                    //   ),
-                    // ),
-                    ImageDisplay(base64Image: currentPictureBase64),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      child: Text(
-                        currentExplanation,
-                        style: TextStyle(fontSize: 13, color: Colors.grey[700]),
-                        textAlign: TextAlign.center,
+            if (!_isLoading)
+              Expanded(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.82,
+                  height: MediaQuery.of(context).size.height * 0.54,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF5F5F5),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      ImageDisplay(base64Image: currentPictureBase64),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Text(
+                          currentExplanation,
+                          style:
+                              TextStyle(fontSize: 13, color: Colors.grey[700]),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+            if (_isLoading)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 160),
+                child: CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
+                ),
+              ),
           ],
         ),
       ),
@@ -361,15 +390,18 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         width: 70,
         height: 70,
         child: FloatingActionButton(
-          onPressed: _canRecord ? _recordAudio : null,
+          //onPressed: _canRecord ? _recordAudio : null,
+          onPressed: _canRecord && !_isLoading ? _recordAudio : null, // 조건 업데이트
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
             size: 40,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
-          backgroundColor: _canRecord
-              ? (_isRecording ? Color(0xFF976841) : Color(0xFFF26647))
-              : Color.fromARGB(37, 206, 204, 204),
+          backgroundColor: _isLoading
+              ? const Color.fromARGB(37, 206, 204, 204) // 로딩 중 색상
+              : _canRecord
+                  ? (_isRecording ? Color(0xFF976841) : Color(0xFFF26647))
+                  : const Color.fromARGB(37, 206, 204, 204),
           elevation: 0.0,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(35))),

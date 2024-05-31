@@ -48,7 +48,7 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
               );
             },
             child: Text(
-              "Confirm",
+              "OK",
               style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
             ),
           ),
@@ -98,7 +98,7 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
               Navigator.of(context).pop();
             },
             child: Text(
-              "Confirm",
+              "OK",
               style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
             ),
           ),

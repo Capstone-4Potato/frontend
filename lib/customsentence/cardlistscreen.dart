@@ -117,7 +117,7 @@ class _CustomSentencesState extends State<CustomSentences> {
           '   Custom Sentences',
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),

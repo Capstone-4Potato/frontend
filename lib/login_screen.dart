@@ -170,10 +170,10 @@ class _LoginScreenState extends State<LoginScreen> {
               assetName: 'assets/apple.png',
               onPressed: () {},
             ),
-            SignInImageButton(
-              assetName: 'assets/google.png',
-              onPressed: () {},
-            ),
+            // SignInImageButton(
+            //   assetName: 'assets/google.png',
+            //   onPressed: () {},
+            // ),
             SignInImageButton(
               assetName: 'assets/kakao.png',
               onPressed: () async {

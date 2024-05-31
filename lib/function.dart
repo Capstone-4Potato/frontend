@@ -21,6 +21,7 @@ import 'package:flutter_application_1/wordlist/word_final_consonants_6.dart';
 import 'package:flutter_application_1/wordlist/word_final_consonants_7.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
+//import 'dart:io';
 
 Future<void> updateBookmarkStatus(int cardId, bool newStatus) async {
   String? token = await getAccessToken();
@@ -70,6 +71,8 @@ Future<FeedbackData?> getFeedback(
       print('성공');
       var responseData = json.decode(response.body);
       print(responseData);
+      // saveToFile(responseData);
+
       return FeedbackData.fromJson(responseData);
     } else if (response.statusCode == 400 || response.statusCode == 404) {
       print(response.statusCode);
@@ -272,3 +275,12 @@ void _handleTap(
     print('error');
   }
 }
+
+// void saveToFile(String data) {
+//   File file = File('responseData.txt');
+//   file.writeAsString(data).then((_) {
+//     print('Data saved to file.');
+//   }).catchError((e) {
+//     print('Error saving file: $e');
+//   });
+// }
