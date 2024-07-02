@@ -114,13 +114,14 @@ class _CustomSentencesState extends State<CustomSentences> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '   Custom Sentences',
+          'Custom Sentences',
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: MediaQuery.of(context).size.width * 0.045,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

@@ -14,9 +14,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    // Get the screen width and height
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
+        // title: Text(
+        //   'Home Page',
+        //   style: TextStyle(
+        //     fontSize: screenWidth * 0.05, // Responsive font size for the title
+        //   ),
+        // ),
+        // centerTitle: true, // Center the title in the AppBar
       ),
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
@@ -25,11 +36,11 @@ class _HomePageState extends State<HomePage> {
             CategoryCard(
               title: '음절학습',
               subtitle: 'Learning Syllables',
-              backgroundColor: Color(0xFFFE6E88),
+              backgroundColor: const Color(0xFFFE6E88),
               image: Image.asset(
                 'assets/syllable_image.png',
-                height: 80,
-                width: 80,
+                height: screenHeight * 0.1, // 10% of screen height
+                width: screenWidth * 0.2, // 20% of screen width
               ),
               onTap: () {
                 Navigator.push(
@@ -45,8 +56,8 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: const Color(0xFF466CFF),
               image: Image.asset(
                 'assets/word_image.png',
-                height: 70,
-                width: 70,
+                height: screenHeight * 0.09, // 9% of screen height
+                width: screenWidth * 0.18, // 18% of screen width
               ),
               onTap: () {
                 Navigator.push(
@@ -62,8 +73,8 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: const Color(0xFF3AB9FE),
               image: Image.asset(
                 'assets/sentence_image.png',
-                height: 80,
-                width: 80,
+                height: screenHeight * 0.1, // 10% of screen height
+                width: screenWidth * 0.2, // 20% of screen width
               ),
               onTap: () {
                 Navigator.push(
@@ -76,10 +87,11 @@ class _HomePageState extends State<HomePage> {
             CategoryCard(
               title: '사용자 맞춤 문장학습',
               subtitle: 'Learning Custom Sentences',
+              backgroundColor: const Color(0xFFE472F6),
               image: Image.asset(
                 'assets/custom_sentence_image.png',
-                height: 70,
-                width: 70,
+                height: screenHeight * 0.09, // 9% of screen height
+                width: screenWidth * 0.18, // 18% of screen width
               ),
               onTap: () {
                 Navigator.push(
@@ -88,7 +100,6 @@ class _HomePageState extends State<HomePage> {
                       builder: (context) => CustomSentenceScreen()),
                 );
               },
-              backgroundColor: const Color(0xFFE472F6),
             ),
           ],
         ),
@@ -115,9 +126,27 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen width and height
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    // Responsive sizes for text
+    double responsiveTitleFontSize = screenWidth * 0.045;
+    double responsiveSubtitleFontSize = screenWidth * 0.04;
+
     return Container(
-      margin: const EdgeInsets.fromLTRB(18, 10, 18, 5),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: EdgeInsets.symmetric(
+        horizontal:
+            screenWidth * 0.05, // 5% of screen width for horizontal margin
+        vertical:
+            screenHeight * 0.01, // 1% of screen height for vertical margin
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal:
+            screenWidth * 0.04, // 4% of screen width for horizontal padding
+        vertical:
+            screenHeight * 0.016, // 2% of screen height for vertical padding
+      ),
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(10),
@@ -131,38 +160,49 @@ class CategoryCard extends StatelessWidget {
                 const SizedBox(height: 3),
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: responsiveSubtitleFontSize,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 1),
                 Text(
                   title,
-                  style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    fontSize: responsiveTitleFontSize,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const SizedBox(height: 3),
                 ElevatedButton(
                   onPressed: onTap,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 16.0), // 패딩 조절
-                    minimumSize: Size(93, 32), elevation: 2.0,
+                    padding: EdgeInsets.symmetric(
+                      horizontal:
+                          screenWidth * 0.04, // Responsive horizontal padding
+                    ),
+                    minimumSize: Size(
+                      screenWidth * 0.22, // Responsive minimum width
+                      screenHeight * 0.045, // Responsive minimum height
+                    ),
+                    elevation: 2.0,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Start',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.045, // Responsive font size
+                      fontWeight: FontWeight.w300,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           Align(
-            // Align 위젯을 사용해 이미지를 오른쪽에 배치
-            alignment: Alignment.centerRight, // 중앙 오른쪽에 배치
+            alignment: Alignment.centerRight,
             child: image,
           ),
         ],

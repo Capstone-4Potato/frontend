@@ -99,13 +99,14 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            '   Basic Conversation',
+            'Basic Conversation',
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              fontSize: 18,
+              fontSize: MediaQuery.of(context).size.width * 0.045,
             ),
           ),
           backgroundColor: const Color(0xFFF5F5F5),
+          centerTitle: true,
           actions: [
             IconButton(
               icon: Icon(

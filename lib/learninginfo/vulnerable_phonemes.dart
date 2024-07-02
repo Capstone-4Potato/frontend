@@ -12,7 +12,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 1, 16, 1),
       child: _buildCard(context),
     );
   }
@@ -40,7 +40,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
         color: Color.fromARGB(230, 255, 255, 255),
         elevation: 3,
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
           child: Column(
             children: [
               Text(
@@ -51,7 +51,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 8),
+              SizedBox(height: 5),
               Expanded(child: _buildContent()),
               SizedBox(height: 5),
               ElevatedButton(
@@ -105,12 +105,12 @@ class VulnerablePhonemesScreen extends StatelessWidget {
         children: phonemes.map((phoneme) {
           return Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: 4.0,
+              vertical: 1.8,
               horizontal: 16.0,
             ),
             child: Container(
               width: double.infinity, // Full width
-              height: 60,
+              height: 58,
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),

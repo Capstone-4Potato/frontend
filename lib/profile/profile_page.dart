@@ -114,18 +114,18 @@ class _ProfilePageState extends State<ProfilePage> {
             ))
           : ListView(
               children: <Widget>[
-                SizedBox(height: 10),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Image.asset(
                   'assets/profile.png',
                   width: 30,
-                  height: 100,
+                  height: MediaQuery.of(context).size.height * 0.13,
                 ),
-                SizedBox(height: 15),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 Text(
                   nickname ?? '',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontSize: 24,
+                      fontSize: MediaQuery.of(context).size.height * 0.03,
                       fontWeight: FontWeight.w600,
                       color: Colors.deepOrangeAccent),
                 ),
@@ -186,7 +186,9 @@ class _ProfilePageState extends State<ProfilePage> {
       child: ListTile(
         title: Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.w500),
+          style: TextStyle(
+              fontSize: MediaQuery.of(context).size.height * 0.02,
+              fontWeight: FontWeight.w500),
         ),
         trailing: Icon(icon),
         onTap: () => onTap(),

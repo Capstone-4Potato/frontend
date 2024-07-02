@@ -122,10 +122,11 @@ class _Sentence2State extends State<Sentence2> {
           'School Conversation',
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: MediaQuery.of(context).size.width * 0.045,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

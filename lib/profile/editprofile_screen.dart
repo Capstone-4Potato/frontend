@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/login_screen.dart';
 import 'package:flutter_application_1/token.dart';
 import 'package:http/http.dart' as http;
@@ -117,140 +118,142 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(
-          'Edit Profile',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
+    return DismissKeyboard(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text(
+            'Edit Profile',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
           ),
+          backgroundColor: const Color(0xFFF5F5F5),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
-      ),
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            children: [
-              SizedBox(height: 80),
-              TextFormField(
-                controller: _birthYearController,
-                decoration: InputDecoration(
-                  labelText: 'Birth Year',
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      color: Color(0xFFF26647),
-                      width: 1.5,
+        body: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Column(
+              children: [
+                SizedBox(height: 80),
+                TextFormField(
+                  controller: _birthYearController,
+                  decoration: InputDecoration(
+                    labelText: 'Birth Year',
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        color: Color(0xFFF26647),
+                        width: 1.5,
+                      ),
                     ),
                   ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your birth year.';
+                    }
+                    int? year = int.tryParse(value);
+                    if (year == null) {
+                      return 'Please enter a valid year.';
+                    } else if (year > DateTime.now().year) {
+                      return 'Please enter a valid year.';
+                    }
+                    return null;
+                  },
                 ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your birth year.';
-                  }
-                  int? year = int.tryParse(value);
-                  if (year == null) {
-                    return 'Please enter a valid year.';
-                  } else if (year > DateTime.now().year) {
-                    return 'Please enter a valid year.';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 25),
-              DropdownButtonFormField<int>(
-                value: _selectedGender,
-                items: const [
-                  DropdownMenuItem(
-                    value: 0,
-                    child: Text('Male'),
-                  ),
-                  DropdownMenuItem(
-                    value: 1,
-                    child: Text('Female'),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedGender = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Gender',
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      color: Color(0xFFF26647),
-                      width: 1.5,
+                SizedBox(height: 25),
+                DropdownButtonFormField<int>(
+                  value: _selectedGender,
+                  items: const [
+                    DropdownMenuItem(
+                      value: 0,
+                      child: Text('Male'),
+                    ),
+                    DropdownMenuItem(
+                      value: 1,
+                      child: Text('Female'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedGender = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Gender',
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        color: Color(0xFFF26647),
+                        width: 1.5,
+                      ),
                     ),
                   ),
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  dropdownColor: Colors.white,
                 ),
-                style: TextStyle(color: Colors.black, fontSize: 16),
-                dropdownColor: Colors.white,
-              ),
-              SizedBox(height: 25),
-              TextFormField(
-                controller: _nicknameController,
-                decoration: InputDecoration(
-                  labelText: 'Nickname',
-                  fillColor: Colors.white,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
-                      color: Color(0xFFF26647),
-                      width: 1.5,
+                SizedBox(height: 25),
+                TextFormField(
+                  controller: _nicknameController,
+                  decoration: InputDecoration(
+                    labelText: 'Nickname',
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: BorderSide(
+                        color: Color(0xFFF26647),
+                        width: 1.5,
+                      ),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your nickname.';
+                    } else if (value.length < 3) {
+                      return 'Nickname must be at least 3 characters.';
+                    } else if (value.length > 8) {
+                      return 'Nickname must be at most 8 characters.';
+                    } else if (value.contains(' ')) {
+                      return 'Nickname cannot contain spaces.';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your nickname.';
-                  } else if (value.length < 3) {
-                    return 'Nickname must be at least 3 characters.';
-                  } else if (value.length > 8) {
-                    return 'Nickname must be at most 8 characters.';
-                  } else if (value.contains(' ')) {
-                    return 'Nickname cannot contain spaces.';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 60),
-              ElevatedButton(
-                onPressed: _updateProfile,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xfff26647),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  textStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                SizedBox(height: 60),
+                ElevatedButton(
+                  onPressed: _updateProfile,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xfff26647),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    textStyle: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: Text(
+                    'Edit Profile',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-                child: Text(
-                  'Edit Profile',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

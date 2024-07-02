@@ -30,136 +30,152 @@ class _CustomFeedbackState extends State<CustomFeedback> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.topRight,
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.height * 0.62,
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 45),
-                RichText(
-                  text: TextSpan(
-                    children: customUserText(widget.feedbackData.userAudioText,
-                        widget.feedbackData.mistakenIndexes),
-                  ),
-                ),
-                SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: LinearProgressIndicator(
-                            value: widget.feedbackData.userScore / 100.0,
-                            backgroundColor: Colors.grey[300],
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFFF26647)),
-                            minHeight: 14,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Dialog(
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.topRight,
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.62,
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: constraints.maxHeight * 0.05),
+                    RichText(
+                      text: TextSpan(
+                        children: customUserText(
+                            widget.feedbackData.userAudioText,
+                            widget.feedbackData.mistakenIndexes),
+                      ),
+                    ),
+                    SizedBox(height: constraints.maxHeight * 0.02),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: constraints.maxWidth * 0.025),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: LinearProgressIndicator(
+                                value: widget.feedbackData.userScore / 100.0,
+                                backgroundColor: Colors.grey[300],
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xFFF26647)),
+                                minHeight: constraints.maxHeight * 0.016,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: constraints.maxWidth * 0.025),
+                          Text(
+                            '${widget.feedbackData.userScore.toString()}%',
+                            style: TextStyle(
+                                fontSize: constraints.maxHeight * 0.02,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFFF26647)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: constraints.maxHeight * 0.02),
+                    SizedBox(
+                      height: constraints.maxHeight * 0.06,
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: recommendText(
+                            widget.feedbackData.recommendCardId,
+                            widget.feedbackData.recommendCardText,
+                            widget.feedbackData.recommendCardCategory,
+                            widget.feedbackData.recommendCardSubcategory,
+                            context,
                           ),
                         ),
                       ),
-                      SizedBox(width: 10),
-                      Text(
-                        '${widget.feedbackData.userScore.toString()}%',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFFF26647)),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 12),
-                RichText(
-                  text: TextSpan(
-                    children: recommendText(
-                      widget.feedbackData.recommendCardId,
-                      widget.feedbackData.recommendCardText,
-                      widget.feedbackData.recommendCardCategory,
-                      widget.feedbackData.recommendCardSubcategory,
-                      context,
                     ),
-                  ),
-                ),
-                SizedBox(height: 35),
-                Stack(
-                  alignment: Alignment.center, // 내부 Stack의 정렬을 중앙으로 설정
-                  children: [
-                    Image.asset(
-                      'assets/image copy.png',
-                      //height: 280,
-                    ), // 그래프 이미지
-                    Positioned(
-                      left: 10,
-                      bottom: 134.5,
-                      child: Image.memory(
-                        widget.feedbackData.userWaveformImage,
-                        width: 240,
-                        height: 90,
-                      ),
-                    ),
-                    Positioned(
-                      left: 10,
-                      bottom: 25.5,
-                      child: Image.memory(
-                        widget.feedbackData.correctWaveformImage,
-                        width: 240,
-                        height: 90,
+                    SizedBox(height: constraints.maxHeight * 0.027),
+                    Expanded(
+                      child: Stack(
+                        alignment: Alignment.center, // 내부 Stack의 정렬을 중앙으로 설정
+                        children: [
+                          Image.asset(
+                            'assets/graph.png',
+                            // width: constraints.maxWidth * 0.8,
+                            // height: constraints.maxHeight * 0.43,
+                            //height: 280,
+                            //width: double.infinity,
+                            //height: double.infinity,
+                          ), // 그래프 이미지
+                          Positioned(
+                            left: constraints.maxWidth * 0.0468,
+                            bottom: constraints.minHeight * 0.1712,
+                            child: Image.memory(
+                              widget.feedbackData.userWaveformImage,
+                              width: constraints.maxWidth * 0.6,
+                              height: constraints.maxHeight * 0.14,
+                            ),
+                          ),
+                          Positioned(
+                            left: constraints.maxWidth * 0.0468,
+                            bottom: constraints.maxHeight * 0.034,
+                            child: Image.memory(
+                              widget.feedbackData.correctWaveformImage,
+                              width: constraints.maxWidth * 0.6,
+                              height: constraints.maxHeight * 0.14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          //사용자 발음 듣기
-          Positioned(
-            right: 14,
-            bottom: 240,
-            child: IconButton(
-              icon: Icon(
-                Icons.volume_up,
-                color: Color(0xFF644829),
               ),
-              iconSize: 25.0,
-              onPressed: _playUserRecording,
-            ),
-          ),
+              //사용자 발음 듣기
+              Positioned(
+                right: 14,
+                bottom: constraints.maxHeight * 0.26,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.volume_up,
+                    color: Color(0xFF644829),
+                  ),
+                  iconSize: constraints.maxHeight * 0.03,
+                  onPressed: _playUserRecording,
+                ),
+              ),
 
-          //표준 발음 듣기
-          Positioned(
-            right: 14,
-            bottom: 125,
-            child: IconButton(
-              icon: Icon(
-                Icons.volume_up,
-                color: Color(0xFFF26647),
+              //표준 발음 듣기
+              Positioned(
+                right: 14,
+                bottom: constraints.maxHeight * 0.12,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.volume_up,
+                    color: Color(0xFFF26647),
+                  ),
+                  iconSize: constraints.maxHeight * 0.03,
+                  onPressed: () {
+                    CustomTtsService.instance
+                        .playCachedAudio(widget.feedbackData.cardId);
+                  },
+                ),
               ),
-              iconSize: 25.0,
-              onPressed: () {
-                CustomTtsService.instance
-                    .playCachedAudio(widget.feedbackData.cardId);
-              },
-            ),
+              Positioned(
+                right: 5,
+                top: 5,
+                child: IconButton(
+                  icon: Icon(Icons.close),
+                  iconSize: constraints.maxHeight * 0.034,
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
+            ],
           ),
-          Positioned(
-            right: 5,
-            top: 5,
-            child: IconButton(
-              icon: Icon(Icons.close),
-              iconSize: 25.0,
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

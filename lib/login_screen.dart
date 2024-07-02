@@ -189,6 +189,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            Text(
+              'BalbamBalbam',
+              //textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xFFD86F41),
+                fontSize: 26.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(

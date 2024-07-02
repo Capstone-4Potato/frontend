@@ -119,13 +119,14 @@ class _Sentence3State extends State<Sentence3> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '    Ordering at a Cafe',
+          'Ordering at a Cafe',
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: MediaQuery.of(context).size.width * 0.045,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

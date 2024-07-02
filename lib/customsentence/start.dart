@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/customsentence/cardlistscreen.dart';
+import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/token.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -225,105 +226,107 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Custom Sentences',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 22,
+    return DismissKeyboard(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Custom Sentences',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+            ),
           ),
+          backgroundColor: const Color(0xFFF5F5F5),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                onPressed: _showExitDialog,
+              ),
+            ),
+          ],
         ),
         backgroundColor: const Color(0xFFF5F5F5),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
-            child: IconButton(
-              icon: Icon(
-                Icons.close,
-                color: Colors.black,
-                size: 30,
-              ),
-              onPressed: _showExitDialog,
-            ),
-          ),
-        ],
-      ),
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                labelText: 'Please enter a sentence',
-                labelStyle: TextStyle(color: Colors.black26),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(
-                    color: Color(0xFFF26647),
-                    width: 1.5,
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: _controller,
+                decoration: InputDecoration(
+                  labelText: 'Please enter a sentence',
+                  labelStyle: TextStyle(color: Colors.black26),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
                   ),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Color.fromARGB(255, 246, 114, 114),
-                    size: 30,
-                  ),
-                  onPressed:
-                      _sentences.length < _maxSentences ? _addSentence : null,
-                ),
-              ),
-              onSubmitted: (text) => _addSentence(),
-              enabled: _sentences.length < _maxSentences,
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _sentences.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_sentences[index].text),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.black38,
-                      ),
-                      onPressed: () => _deleteSentence(index),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(
+                      color: Color(0xFFF26647),
+                      width: 1.5,
                     ),
-                    // onTap: () =>
-                    //     _navigateToLearningScreen(_sentences[index].text),
-                  );
-                },
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      Icons.add,
+                      color: Color.fromARGB(255, 246, 114, 114),
+                      size: 30,
+                    ),
+                    onPressed:
+                        _sentences.length < _maxSentences ? _addSentence : null,
+                  ),
+                ),
+                onSubmitted: (text) => _addSentence(),
+                enabled: _sentences.length < _maxSentences,
               ),
-            ),
-            Text(
-              'Number of sentences : ${_sentences.length} / $_maxSentences',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xfff26647),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                textStyle: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+              SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _sentences.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(_sentences[index].text),
+                      trailing: IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.black38,
+                        ),
+                        onPressed: () => _deleteSentence(index),
+                      ),
+                      // onTap: () =>
+                      //     _navigateToLearningScreen(_sentences[index].text),
+                    );
+                  },
                 ),
               ),
-              child: Text(
-                'Go to Learning',
-                style: TextStyle(color: Colors.white),
+              Text(
+                'Number of sentences : ${_sentences.length} / $_maxSentences',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
-            ),
-            SizedBox(height: 30),
-          ],
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xfff26647),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  textStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                child: Text(
+                  'Go to Learning',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

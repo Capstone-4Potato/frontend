@@ -103,14 +103,14 @@ class _FeedbackUIState extends State<FeedbackUI> {
                         alignment: Alignment.center,
                         children: [
                           Image.asset(
-                            'assets/image copy.png',
+                            'assets/graph.png',
                             //fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
+                            //width: double.infinity,
+                            //height: double.infinity,
                           ),
                           Positioned(
                             left: constraints.maxWidth * 0.0468,
-                            top: constraints.maxHeight * 0.041,
+                            bottom: constraints.minHeight * 0.1712,
                             child: Image.memory(
                               widget.feedbackData.userWaveformImage,
                               width: constraints.maxWidth * 0.6,
@@ -119,7 +119,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                           ),
                           Positioned(
                             left: constraints.maxWidth * 0.0468,
-                            bottom: constraints.maxHeight * 0.0363,
+                            bottom: constraints.maxHeight * 0.034,
                             child: Image.memory(
                               widget.feedbackData.correctWaveformImage,
                               width: constraints.maxWidth * 0.6,
@@ -134,7 +134,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
               ),
               Positioned(
                 right: 14,
-                bottom: constraints.maxHeight * 0.27,
+                bottom: constraints.maxHeight * 0.26,
                 child: IconButton(
                   icon: Icon(
                     Icons.volume_up,
@@ -146,7 +146,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
               ),
               Positioned(
                 right: 14,
-                bottom: constraints.maxHeight * 0.13,
+                bottom: constraints.maxHeight * 0.12,
                 child: IconButton(
                   icon: Icon(
                     Icons.volume_up,

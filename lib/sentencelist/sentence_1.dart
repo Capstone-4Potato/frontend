@@ -119,13 +119,15 @@ class _Sentence1State extends State<Sentence1> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '   Basic Conversation',
+          'Basic Conversation',
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: MediaQuery.of(context).size.width * 0.045,
           ),
+          textAlign: TextAlign.center, // Center-align the text in the AppBar
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(
