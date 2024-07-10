@@ -1,11 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/profile/sign_out_social.dart';
 import 'package:flutter_application_1/signup_screen.dart';
 import 'package:flutter_application_1/login_platform.dart';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
@@ -53,11 +52,28 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.statusCode == 200) {
         // Assuming 'access' is the key for the access token in headers
         String? accessToken = response.headers['access'];
+        String? refreshToken = response.headers['refresh'];
         print(accessToken);
-        if (accessToken != null) {
-          await saveAccessToken(accessToken); // Save access token
+        print(refreshToken);
+        if (accessToken != null && refreshToken != null) {
+          // 사용자별로 토큰 저장
+          await saveTokens(accessToken, refreshToken);
+          // socialId를 현재 사용자 식별자로 저장
+          //await saveUserIdentifier(socialId);
         }
       }
+      // if (response.statusCode == 401) {
+      //   // 액세스 토큰 만료, 리프레시 토큰으로 재발급 시도
+      //   final success = await refreshAccessToken();
+      //   if (success) {
+      //     // 재발급된 새로운 토큰으로 원래 요청 다시 시도
+      //     await http.MultipartRequest('POST', url);
+      //   } else {
+      //     // 리프레시 토큰으로도 재발급 실패 시
+      //     print('Failed to refresh the token.');
+      //     // Handle the failure case, e.g., throw an error or return null
+      //   }
+      // }
       print(response.statusCode);
       print('Response body: ${response.body}'); // Log the response body
       print(
@@ -105,37 +121,126 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Future<Map<String, dynamic>> signInWithKakao() async {
+  //   try {
+  //     bool isInstalled = await isKakaoTalkInstalled();
+  //     OAuthToken token = isInstalled
+  //         ? await UserApi.instance.loginWithKakaoTalk()
+  //         : await UserApi.instance.loginWithKakaoAccount();
+  //     var response = await http.get(
+  //       Uri.https('kapi.kakao.com', '/v2/user/me'),
+  //       headers: {
+  //         HttpHeaders.authorizationHeader: 'Bearer ${token.accessToken}'
+  //       },
+  //     );
+  //     final profileInfo = json.decode(response.body);
+  //     //print(profileInfo['id']);
+  //     int statusCode = await socialLogin(profileInfo['id'].toString());
+  //     if (statusCode == 200 || statusCode == 404) {
+  //       setState(() {
+  //         _loginPlatform = LoginPlatform.kakao;
+  //       });
+  //       await _saveLoginPlatform(LoginPlatform.kakao);
+  //     }
+  //     return {
+  //       'statusCode': statusCode,
+  //       'socialId': profileInfo['id'].toString(),
+  //     };
+  //   } catch (error) {
+  //     print('카카오톡으로 로그인 실패 $error');
+  //     return {
+  //       'statusCode': 500,
+  //       'socialId': '',
+  //     }; // Return error code on exception
+  //   }
+  // }
+
   Future<Map<String, dynamic>> signInWithKakao() async {
-    try {
-      bool isInstalled = await isKakaoTalkInstalled();
-      OAuthToken token = isInstalled
-          ? await UserApi.instance.loginWithKakaoTalk()
-          : await UserApi.instance.loginWithKakaoAccount();
-      var response = await http.get(
-        Uri.https('kapi.kakao.com', '/v2/user/me'),
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer ${token.accessToken}'
-        },
-      );
-      final profileInfo = json.decode(response.body);
-      //print(profileInfo['id']);
-      int statusCode = await socialLogin(profileInfo['id'].toString());
-      if (statusCode == 200 || statusCode == 404) {
-        setState(() {
-          _loginPlatform = LoginPlatform.kakao;
-        });
-        await _saveLoginPlatform(LoginPlatform.kakao);
+    // 카카오 로그인 구현 예제
+
+// 카카오톡 설치 여부 확인
+// 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
+    if (await isKakaoTalkInstalled()) {
+      try {
+        await UserApi.instance.loginWithKakaoTalk();
+        print('카카오톡으로 로그인 성공');
+        User user = await UserApi.instance.me();
+        print('사용자 정보 요청 성공'
+            '\n회원번호: ${user.id}');
+        int statusCode = await socialLogin(user.id.toString());
+        if (statusCode == 200 || statusCode == 404) {
+          setState(() {
+            _loginPlatform = LoginPlatform.kakao;
+          });
+          await _saveLoginPlatform(LoginPlatform.kakao);
+        }
+        return {
+          'statusCode': statusCode,
+          'socialId': user.id.toString(),
+        };
+      } catch (error) {
+        print('카카오톡으로 로그인 실패 $error');
+
+        // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+        // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+        if (error is PlatformException && error.code == 'CANCELED') {
+          print('로그인 취소');
+          return {
+            'statusCode': 500,
+            'socialId': '',
+          };
+        }
+        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
+        try {
+          await UserApi.instance.loginWithKakaoAccount();
+          print('카카오계정으로 로그인 성공');
+          User user = await UserApi.instance.me();
+          print('사용자 정보 요청 성공'
+              '\n회원번호: ${user.id}');
+          int statusCode = await socialLogin(user.id.toString());
+          if (statusCode == 200 || statusCode == 404) {
+            setState(() {
+              _loginPlatform = LoginPlatform.kakao;
+            });
+            await _saveLoginPlatform(LoginPlatform.kakao);
+          }
+          return {
+            'statusCode': statusCode,
+            'socialId': user.id.toString(),
+          };
+        } catch (error) {
+          print('카카오계정으로 로그인 실패 $error');
+          return {
+            'statusCode': 500,
+            'socialId': '',
+          }; //
+        }
       }
-      return {
-        'statusCode': statusCode,
-        'socialId': profileInfo['id'].toString(),
-      };
-    } catch (error) {
-      print('카카오톡으로 로그인 실패 $error');
-      return {
-        'statusCode': 500,
-        'socialId': '',
-      }; // Return error code on exception
+    } else {
+      try {
+        await UserApi.instance.loginWithKakaoAccount();
+        print('카카오계정으로 로그인 성공');
+        User user = await UserApi.instance.me();
+        print('사용자 정보 요청 성공'
+            '\n회원번호: ${user.id}');
+        int statusCode = await socialLogin(user.id.toString());
+        if (statusCode == 200 || statusCode == 404) {
+          setState(() {
+            _loginPlatform = LoginPlatform.kakao;
+          });
+          await _saveLoginPlatform(LoginPlatform.kakao);
+        }
+        return {
+          'statusCode': statusCode,
+          'socialId': user.id.toString(),
+        };
+      } catch (error) {
+        print('카카오계정으로 로그인 실패 $error');
+        return {
+          'statusCode': 500,
+          'socialId': '',
+        }; //
+      }
     }
   }
 
@@ -257,25 +362,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
             ),
-            SignInImageButton(
-              assetName: 'assets/naver.png',
-              onPressed: () async {
-                var result = await signInWithNaver();
-                int statusCode = result['statusCode'];
-                String socialId = result['socialId'];
-                print(statusCode);
-                if (statusCode == 404) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              UserInputForm(socialId: socialId)));
-                } else if (statusCode == 200) {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => MainPage()));
-                }
-              },
-            ),
+            // SignInImageButton(
+            //   assetName: 'assets/naver.png',
+            //   onPressed: () async {
+            //     var result = await signInWithNaver();
+            //     int statusCode = result['statusCode'];
+            //     String socialId = result['socialId'];
+            //     print(statusCode);
+            //     if (statusCode == 404) {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (context) =>
+            //                   UserInputForm(socialId: socialId)));
+            //     } else if (statusCode == 200) {
+            //       Navigator.pushReplacement(context,
+            //           MaterialPageRoute(builder: (context) => MainPage()));
+            //     }
+            //   },
+            // ),
             Spacer(flex: 2),
           ],
         ),

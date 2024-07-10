@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -69,14 +69,47 @@ class _TestCardState extends State<TestCard> {
 
       request.files.add(await http.MultipartFile.fromPath('userAudio', path));
 
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        String responseBody = await response.stream.bytesToString();
-        print('File uploaded successfully');
-        print('Response body: $responseBody');
-        _nextCard();
-      } else {
-        print('File upload failed with status: ${response.statusCode}');
+      try {
+        var response = await request.send();
+
+        if (response.statusCode == 200) {
+          String responseBody = await response.stream.bytesToString();
+          print('File uploaded successfully');
+          print('Response body: $responseBody');
+          _nextCard();
+        } else if (response.statusCode == 401) {
+          // Token expired, attempt to refresh the token
+          print('Access token expired. Refreshing token...');
+
+          // Refresh the access token
+          bool isRefreshed = await refreshAccessToken();
+          if (isRefreshed) {
+            // Retry the upload request with the new token
+            token = await getAccessToken();
+            request.headers['access'] = token!;
+
+            var retryResponse = await request.send();
+
+            if (retryResponse.statusCode == 200) {
+              String responseBody = await retryResponse.stream.bytesToString();
+              print('File uploaded successfully after token refresh');
+              print('Response body: $responseBody');
+              _nextCard();
+            } else {
+              print(
+                  'File upload failed after token refresh with status: ${retryResponse.statusCode}');
+              _showUploadErrorDialog();
+            }
+          } else {
+            print('Failed to refresh access token');
+            _showUploadErrorDialog();
+          }
+        } else {
+          print('File upload failed with status: ${response.statusCode}');
+          _showUploadErrorDialog();
+        }
+      } catch (e) {
+        print('Error uploading file: $e');
         _showUploadErrorDialog();
       }
     }

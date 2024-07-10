@@ -11,7 +11,7 @@ import 'package:flutter_application_1/syllablelist/syllable_consonants_7.dart';
 import 'package:flutter_application_1/syllablelist/syllable_vowels_1.dart';
 import 'package:flutter_application_1/syllablelist/syllable_vowels_2.dart';
 import 'package:flutter_application_1/syllablelist/syllable_vowels_3.dart';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/wordlist/word_final_consonants_1.dart';
 import 'package:flutter_application_1/wordlist/word_final_consonants_2.dart';
 import 'package:flutter_application_1/wordlist/word_final_consonants_3.dart';
@@ -21,30 +21,55 @@ import 'package:flutter_application_1/wordlist/word_final_consonants_6.dart';
 import 'package:flutter_application_1/wordlist/word_final_consonants_7.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
-//import 'dart:io';
 
 Future<void> updateBookmarkStatus(int cardId, bool newStatus) async {
   String? token = await getAccessToken();
   var url = Uri.parse('http://potato.seatnullnull.com/cards/bookmark/$cardId');
-  try {
-    var response = await http.get(
+
+  // Function to make the GET request
+  Future<http.Response> makeGetRequest(String token) {
+    return http.get(
       url,
       headers: <String, String>{
-        'access': '$token',
+        'access': token,
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
+  }
+
+  try {
+    var response = await makeGetRequest(token!);
 
     if (response.statusCode == 200) {
-      // OK : 북마크 UPDATE(있으면 삭제 없으면 추가)
       print(response.body);
-    }
-    if (response.statusCode == 400) {
-      // ERROR : 존재하지 않는 카드
+    } else if (response.statusCode == 401) {
+      // Token expired, attempt to refresh the token
+      print('Access token expired. Refreshing token...');
+
+      // Refresh the access token
+      bool isRefreshed = await refreshAccessToken();
+      if (isRefreshed) {
+        // Retry the bookmark status update request with the new token
+        token = await getAccessToken();
+        response = await makeGetRequest(token!);
+
+        if (response.statusCode == 200) {
+          print('Bookmark status updated successfully after token refresh');
+          print(response.body);
+        } else {
+          print(
+              'Failed to update bookmark status after token refresh: ${response.statusCode}');
+        }
+      } else {
+        print('Failed to refresh access token');
+      }
+    } else {
+      // Handle all other HTTP status codes
+      print('Unhandled server response: ${response.statusCode}');
       print(json.decode(response.body));
     }
   } catch (e) {
-    // 요청 중에 발생한 에러 처리
+    // Handle exceptions that occur during the network request
     print("Error updating bookmark status: $e");
   }
 }
@@ -60,38 +85,54 @@ Future<FeedbackData?> getFeedback(
 
   String? token = await getAccessToken();
 
-  try {
-    var response = await http.post(
+  // Function to make the POST request
+  Future<http.Response> makePostRequest(String token) {
+    return http.post(
       Uri.parse(url),
-      headers: {'access': '$token', "Content-Type": "application/json"},
+      headers: {'access': token, "Content-Type": "application/json"},
       body: jsonEncode(feedbackRequest),
     );
-    //print('post 했음');
-    if (response.statusCode == 200) {
-      print('성공');
-      var responseData = json.decode(response.body);
-      print(responseData['waveform']['userAudioDuration']);
-      print(responseData['waveform']['correctAudioDuration']);
-      // saveToFile(responseData);
+  }
 
+  try {
+    var response = await makePostRequest(token!);
+
+    if (response.statusCode == 200) {
+      print('Successful feedback submission');
+      var responseData = json.decode(response.body);
       return FeedbackData.fromJson(responseData);
-    } else if (response.statusCode == 400 || response.statusCode == 404) {
-      print(response.statusCode);
-      print('실패1');
-      // ERROR 처리: JSON 형식 오류 또는 존재하지 않는 사용자/카드
-      print(json.decode(response.body));
-      return null;
+    } else if (response.statusCode == 401) {
+      // Token expired, attempt to refresh the token
+      print('Access token expired. Refreshing token...');
+
+      // Refresh the access token
+      bool isRefreshed = await refreshAccessToken();
+      if (isRefreshed) {
+        // Retry the feedback request with the new token
+        token = await getAccessToken();
+        response = await makePostRequest(token!);
+
+        if (response.statusCode == 200) {
+          print('Successful feedback submission after token refresh');
+          var responseData = json.decode(response.body);
+          return FeedbackData.fromJson(responseData);
+        } else {
+          print(
+              'Failed to submit feedback after token refresh: ${response.statusCode}');
+          return null;
+        }
+      } else {
+        print('Failed to refresh access token');
+        return null;
+      }
     } else {
-      // 기타 모든 HTTP 상태 코드 처리
+      // Handle all other HTTP status codes
       print('Unhandled server response: ${response.statusCode}');
       print(json.decode(response.body));
-      print('실패2');
       return null;
     }
   } catch (e) {
-    print('실패3');
-
-    // 네트워크 요청 중에 발생한 예외 처리
+    // Handle exceptions that occur during the network request
     print("Error during the request: $e");
     return null;
   }
@@ -173,13 +214,7 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
         spans.add(TextSpan(text: "\n")); // Add commas between items
       }
     }
-    // spans.add(TextSpan(
-    //     text: ' 연습해보세요!',
-    //     style: TextStyle(
-    //       fontSize: 18,
-    //       fontWeight: FontWeight.w500,
-    //       color: Colors.black,
-    //     )));
+
     return spans;
   }
 }
@@ -276,12 +311,3 @@ void _handleTap(
     print('error');
   }
 }
-
-// void saveToFile(String data) {
-//   File file = File('responseData.txt');
-//   file.writeAsString(data).then((_) {
-//     print('Data saved to file.');
-//   }).catchError((e) {
-//     print('Error saving file: $e');
-//   });
-// }

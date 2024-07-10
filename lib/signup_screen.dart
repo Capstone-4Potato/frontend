@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/profile/tutorial.dart';
-import 'package:flutter_application_1/token.dart';
-//import 'package:flutter_application_1/vulnerablesoundtest/starting_teat_page.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -46,14 +45,17 @@ class _UserInputFormState extends State<UserInputForm> {
         case 200:
           print(response.body);
           String? accessToken = response.headers['access'];
+          String? refreshToken = response.headers['refresh'];
           print(accessToken);
-          if (accessToken != null) {
-            await saveAccessToken(accessToken); // Save access token
+          print(refreshToken);
+          if (accessToken != null && refreshToken != null) {
+            // 사용자별로 토큰 저장
+            await saveTokens(accessToken, refreshToken);
+            // socialId를 현재 사용자 식별자로 저장
+            // await saveUserIdentifier(socialId);
           }
           break;
-        case 401:
-          print('로그아웃 설정');
-          break;
+
         case 500:
           print(response.body);
           // 오류 처리 로직, 예를 들어 사용자에게 오류 알림 등

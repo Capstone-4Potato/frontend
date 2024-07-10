@@ -6,7 +6,7 @@ import 'package:flutter_application_1/profile/sign_out_social.dart';
 import 'package:flutter_application_1/profile/signout.dart';
 import 'package:flutter_application_1/profile/withdrawal_screen.dart';
 import 'package:flutter_application_1/login_screen.dart';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,14 +51,19 @@ class _ProfilePageState extends State<ProfilePage> {
     String? token = await getAccessToken();
     var url = Uri.parse('http://potato.seatnullnull.com/users');
 
-    try {
-      var response = await http.get(
+    // Function to make the get request
+    Future<http.Response> makeGetRequest(String token) {
+      return http.get(
         url,
         headers: <String, String>{
           'access': '$token',
           'Content-Type': 'application/json',
         },
       );
+    }
+
+    try {
+      var response = await makeGetRequest(token!);
 
       if (response.statusCode == 200) {
         print(response.body);
@@ -70,13 +75,33 @@ class _ProfilePageState extends State<ProfilePage> {
           isLoading = false;
         });
       } else if (response.statusCode == 401) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
+        // Token expired, attempt to refresh the token
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the access token
+        bool isRefreshed = await refreshAccessToken();
+        if (isRefreshed) {
+          // Retry the get request with the new token
+          token = await getAccessToken();
+          response = await makeGetRequest(token!);
+
+          if (response.statusCode == 200) {
+            print(response.body);
+            var data = json.decode(response.body);
+            setState(() {
+              nickname = data['name'];
+              age = data['age'];
+              gender = data['gender'];
+              isLoading = false;
+            });
+          } else {
+            throw Exception('Failed to fetch user data after refreshing token');
+          }
+        } else {
+          throw Exception('Failed to refresh access token');
+        }
       } else {
-        print('사용자정보불러오기오류');
-        print(response.statusCode);
+        throw Exception('Failed to fetch user data');
       }
     } catch (e) {
       print('Network error occurred: $e');

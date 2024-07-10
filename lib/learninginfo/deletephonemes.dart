@@ -1,34 +1,50 @@
 import 'dart:convert';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
-// Asynchronously fetch data from the backend
 Future<void> deletePhonemes() async {
   try {
-    // String? token = await getAccessToken();
-    // Backend server URL
     var url = Uri.parse('http://potato.seatnullnull.com/phonemes');
     String? token = await getAccessToken();
 
-    // Set headers with the token
-    var headers = <String, String>{
-      'access': '$token',
-      'Content-Type': 'application/json',
-    };
+    // Function to make the delete request
+    Future<http.Response> makeDeleteRequest(String token) {
+      var headers = <String, String>{
+        'access': token,
+        'Content-Type': 'application/json',
+      };
+      return http.delete(url, headers: headers);
+    }
 
-    var response = await http.delete(url, headers: headers);
+    var response = await makeDeleteRequest(token!);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print(data);
-      // Return the data if you need to use it after calling fetchData
-      //return data;
-    } else if (response.statusCode == 400) {
-      // Handle error: non-existing category search
-      print(json.decode(response.body));
+    } else if (response.statusCode == 401) {
+      // Token expired, attempt to refresh the token
+      print('Access token expired. Refreshing token...');
+
+      // Refresh the access token
+      bool isRefreshed = await refreshAccessToken();
+      if (isRefreshed) {
+        // Retry the delete request with the new token
+        token = await getAccessToken();
+        response = await makeDeleteRequest(token!);
+
+        if (response.statusCode == 200) {
+          var data = json.decode(response.body);
+          print(data);
+        } else {
+          throw Exception('Failed to delete phonemes after refreshing token');
+        }
+      } else {
+        throw Exception('Failed to refresh access token');
+      }
+    } else {
+      throw Exception('Failed to delete phonemes');
     }
   } catch (e) {
     print(e);
   }
-  // return null; // Return null if there's an error or unsuccessful fetch
 }

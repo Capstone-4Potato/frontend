@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
-// Asynchronously fetch data from the backend
 Future<List<dynamic>?> fetchCustomList() async {
   try {
     String? token = await getAccessToken();
-    // Backend server URL
+
     var url = Uri.parse('http://potato.seatnullnull.com/cards/custom');
 
     // Set headers with the token
@@ -20,15 +19,47 @@ Future<List<dynamic>?> fetchCustomList() async {
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body)['cardList'];
-      // Return the data if you need to use it after calling fetchData
-      print(data);
+
       return data;
-    } else if (response.statusCode == 400) {
-      // Handle error: non-existing category search
+    } else if (response.statusCode == 401) {
+      // Token expired, attempt to refresh and retry the request
+      print('Access token expired. Refreshing token...');
+
+      // Refresh the token
+      bool isRefreshed = await refreshAccessToken();
+
+      if (isRefreshed) {
+        // Retry request with new token
+        print('Token refreshed successfully. Retrying request...');
+        String? newToken = await getAccessToken();
+        response = await http.get(url, headers: {
+          'access': '$newToken',
+          'Content-Type': 'application/json'
+        });
+
+        if (response.statusCode == 200) {
+          var data = json.decode(response.body)['cardList'];
+          return data;
+        } else {
+          // Handle other response codes after retry if needed
+          print(
+              'Unhandled server response after retry: ${response.statusCode}');
+          print(json.decode(response.body));
+          return null;
+        }
+      } else {
+        print('Failed to refresh token. Please log in again.');
+        return null;
+      }
+    } else {
+      // Handle other status codes
+      print('Unhandled server response: ${response.statusCode}');
       print(json.decode(response.body));
+      return null;
     }
   } catch (e) {
-    print(e);
+    // Handle network request exceptions
+    print("Error during the request: $e");
+    return null;
   }
-  return null; // Return null if there's an error or unsuccessful fetch
 }

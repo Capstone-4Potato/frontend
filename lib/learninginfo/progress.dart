@@ -1,7 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
 class LearningProgressScreen extends StatelessWidget {
@@ -124,12 +123,16 @@ Future<Map<String, double>> fetchProgressData() async {
   var url = Uri.parse('http://potato.seatnullnull.com/learning/progress');
   String? token = await getAccessToken();
 
-  // Set headers with the token
-  var headers = <String, String>{
-    'access': '$token',
-    'Content-Type': 'application/json',
-  };
-  var response = await http.get(url, headers: headers);
+  // Function to make the request
+  Future<http.Response> makeRequest(String token) {
+    var headers = <String, String>{
+      'access': token,
+      'Content-Type': 'application/json',
+    };
+    return http.get(url, headers: headers);
+  }
+
+  var response = await makeRequest(token!);
 
   if (response.statusCode == 200) {
     var data = json.decode(response.body);
@@ -138,6 +141,31 @@ Future<Map<String, double>> fetchProgressData() async {
       'wordProgress': data['wordProgress'],
       'sentenceProgress': data['sentenceProgress'],
     };
+  } else if (response.statusCode == 401) {
+    // Token expired, attempt to refresh the token
+    print('Access token expired. Refreshing token...');
+
+    // Refresh the access token
+    bool isRefreshed = await refreshAccessToken();
+    if (isRefreshed) {
+      // Retry the request with the new token
+      token = await getAccessToken();
+      response = await makeRequest(token!);
+
+      if (response.statusCode == 200) {
+        print("토큰 재발급 후 학습 진척도 정보 가져오기 성공");
+        var data = json.decode(response.body);
+        return {
+          'syllableProgress': data['syllableProgress'],
+          'wordProgress': data['wordProgress'],
+          'sentenceProgress': data['sentenceProgress'],
+        };
+      } else {
+        throw Exception('Failed to load progress data after refreshing token');
+      }
+    } else {
+      throw Exception('Failed to refresh access token');
+    }
   } else {
     throw Exception('Failed to load progress data');
   }

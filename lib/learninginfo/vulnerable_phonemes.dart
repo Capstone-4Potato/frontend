@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/learninginfo/re_test_page.dart';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -151,11 +151,16 @@ Future<List<Map<String, dynamic>>> fetchVulnerablePhonemes() async {
   var url = Uri.parse('http://potato.seatnullnull.com/test/phonemes');
   String? token = await getAccessToken();
 
-  var headers = <String, String>{
-    'access': '$token',
-    'Content-Type': 'application/json',
-  };
-  var response = await http.get(url, headers: headers);
+  // Function to make the request
+  Future<http.Response> makeRequest(String token) {
+    var headers = <String, String>{
+      'access': token,
+      'Content-Type': 'application/json',
+    };
+    return http.get(url, headers: headers);
+  }
+
+  var response = await makeRequest(token!);
 
   if (response.statusCode == 200) {
     var data = json.decode(response.body) as List;
@@ -163,6 +168,31 @@ Future<List<Map<String, dynamic>>> fetchVulnerablePhonemes() async {
   } else if (response.statusCode == 404) {
     // No vulnerable phonemes (perfect score)
     return [];
+  } else if (response.statusCode == 401) {
+    // 토큰이 만료된 경우
+    print('Access token expired. Refreshing token...');
+
+    // 리프레시 토큰을 사용하여 새로운 액세스 토큰을 가져옵니다.
+    bool isRefreshed = await refreshAccessToken();
+    if (isRefreshed) {
+      // Retry the request with the new token
+      token = await getAccessToken();
+      response = await makeRequest(token!);
+
+      if (response.statusCode == 200) {
+        print("토큰 재발급 후 사용자 취약음소 반환");
+        var data = json.decode(response.body) as List;
+        return data.map((item) => item as Map<String, dynamic>).toList();
+      } else if (response.statusCode == 404) {
+        // No vulnerable phonemes (perfect score)
+        return [];
+      } else {
+        throw Exception(
+            'Failed to load vulnerable phonemes after refreshing token');
+      }
+    } else {
+      throw Exception('Failed to refresh access token');
+    }
   } else {
     throw Exception('Failed to load vulnerable phonemes');
   }
@@ -172,15 +202,44 @@ Future<String> testStatus() async {
   var url = Uri.parse('http://potato.seatnullnull.com/test/status');
   String? token = await getAccessToken();
 
-  var headers = <String, String>{
-    'access': '$token',
-    'Content-Type': 'application/json',
-  };
-  var response = await http.get(url, headers: headers);
+  // Function to make the request
+  Future<http.Response> makeRequest(String token) {
+    var headers = <String, String>{
+      'access': token,
+      'Content-Type': 'application/json',
+    };
+    return http.get(url, headers: headers);
+  }
+
+  var response = await makeRequest(token!);
+
   if (response.statusCode == 200) {
     return 'yestest';
   } else if (response.statusCode == 404) {
     return 'notest';
+  } else if (response.statusCode == 401) {
+    // 토큰이 만료된 경우
+    print('Access token expired. Refreshing token...');
+
+    // 리프레시 토큰을 사용하여 새로운 액세스 토큰을 가져옵니다.
+    bool isRefreshed = await refreshAccessToken();
+    if (isRefreshed) {
+      // Retry the request with the new token
+      token = await getAccessToken();
+      response = await makeRequest(token!);
+      if (response.statusCode == 200) {
+        print("토큰 재발급 후 yestest 반환");
+        return 'yestest';
+      } else if (response.statusCode == 404) {
+        // No vulnerable phonemes (perfect score)
+        print("토큰 재발급 후 notest 반환");
+        return 'notest';
+      } else {
+        throw Exception('Failed to load test ststus after refreshing token');
+      }
+    } else {
+      throw Exception('Failed to refresh access token');
+    }
   } else {
     throw Exception('Failed to load test status');
   }

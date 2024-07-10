@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
 // Asynchronously fetch data from the backend
@@ -11,21 +11,37 @@ Future<List<dynamic>?> fetchReviewList(
     var url = Uri.parse(
         'http://potato.seatnullnull.com/review?category=${Uri.encodeComponent(category)}&subcategory=${Uri.encodeComponent(subcategory)}');
 
-    // Set headers with the token
-    var headers = <String, String>{
-      'access': '$token',
-      'Content-Type': 'application/json',
-    };
+    // Function to make the request
+    Future<http.Response> makeRequest(String token) {
+      var headers = <String, String>{
+        'access': token,
+        'Content-Type': 'application/json',
+      };
+      return http.get(url, headers: headers);
+    }
 
-    var response = await http.get(url, headers: headers);
+    var response = await makeRequest(token!);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body)['cardList'];
       // Return the data if you need to use it after calling fetchData
       return data;
-    } else if (response.statusCode == 400) {
-      // Handle error: non-existing category search
-      print(json.decode(response.body));
+    } else if (response.statusCode == 401) {
+      // Token expired, attempt to refresh the token
+      print('Access token expired. Refreshing token...');
+
+      // Refresh the access token
+      bool isRefreshed = await refreshAccessToken();
+      if (isRefreshed) {
+        // Retry the request with the new token
+        token = await getAccessToken();
+        response = await makeRequest(token!);
+
+        if (response.statusCode == 200) {
+          var data = json.decode(response.body)['cardList'];
+          return data;
+        }
+      }
     }
   } catch (e) {
     print(e);

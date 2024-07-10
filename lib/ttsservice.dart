@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
@@ -25,9 +25,6 @@ class TtsService {
         Uri.parse(audioUrl),
         headers: <String, String>{
           'access': '$token',
-          // 'access':
-          //     'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInNvY2lhbElkIjoiMzQ1MzcwNDI4OSIsInJvbGUiOiJST0xFX0FETUlOIiwiaWF0IjoxNzE1NTA1MDA2LCJleHAiOjE3MTgwOTcwMDZ9.a744Z7lTIIFQjul6-fLCp-Y4MN9LxqdLX8U9_GyGwIA',
-
           'Content-Type': 'application/json',
         },
       );
@@ -37,11 +34,41 @@ class TtsService {
         _instance.base64CorrectAudio = base64correctAudio;
         // Save audio to a file
         await _instance.saveAudioToFile(cardId, base64correctAudio);
-
         return; // Return the base64 string of the correct audio
+      } else if (response.statusCode == 401) {
+        // Token expired, attempt to refresh and retry the request
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the token
+        bool isRefreshed = await refreshAccessToken();
+
+        if (isRefreshed) {
+          // Retry request with new token
+          print('Token refreshed successfully. Retrying request...');
+          String? newToken = await getAccessToken();
+          final retryResponse = await http.get(
+            Uri.parse(audioUrl),
+            headers: <String, String>{
+              'access': '$newToken',
+              'Content-Type': 'application/json',
+            },
+          );
+
+          if (retryResponse.statusCode == 200) {
+            final jsonData = jsonDecode(retryResponse.body);
+            final String base64correctAudio = jsonData['correctAudio'];
+            _instance.base64CorrectAudio = base64correctAudio;
+            await _instance.saveAudioToFile(cardId, base64correctAudio);
+            return; // Return the base64 string of the correct audio
+          } else {
+            final errorMessage = jsonDecode(retryResponse.body)['message'];
+            throw Exception('Failed to load audio after retry: $errorMessage');
+          }
+        } else {
+          print('Failed to refresh token. Please log in again.');
+          throw Exception('Failed to refresh token.');
+        }
       } else {
-        final jsonData = jsonDecode(response.body);
-        print(jsonData);
         final errorMessage = jsonDecode(response.body)['message'];
         throw Exception('Failed to load audio: $errorMessage');
       }

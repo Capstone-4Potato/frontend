@@ -1,26 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/customsentence/cardlistscreen.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
-import 'package:flutter_application_1/token.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-// void main() {
-//   runApp(SentenceLearningApp());
-// }
-
-// class SentenceLearningApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Sentence Learning App',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: CustomSentenceScreen(),
-//     );
-//   }
-// }
 
 class CustomSentenceScreen extends StatefulWidget {
   @override
@@ -62,38 +45,67 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
   Future<void> _loadSentencesFromServer() async {
     String? token = await getAccessToken();
-    final response = await http.get(
-      Uri.parse('http://potato.seatnullnull.com/cards/custom'),
-      headers: <String, String>{
-        'access': '$token',
-        'Content-Type': 'application/json',
-      },
-    );
-    if (response.statusCode == 200) {
-      final List<dynamic> responseData = json.decode(response.body)['cardList'];
-      setState(() {
-        _sentences.addAll(
-            responseData.map((data) => Sentence.fromJson(data)).toList());
-      });
-    } else {
+    final url = 'http://potato.seatnullnull.com/cards/custom';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'access': '$token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData =
+            json.decode(response.body)['cardList'];
+        setState(() {
+          _sentences.addAll(
+            responseData.map((data) => Sentence.fromJson(data)).toList(),
+          );
+        });
+      } else if (response.statusCode == 401) {
+        // Token expired, attempt to refresh and retry the request
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the token
+        bool isRefreshed = await refreshAccessToken();
+
+        if (isRefreshed) {
+          // Retry request with new token
+          print('Token refreshed successfully. Retrying request...');
+          String? newToken = await getAccessToken();
+          final retryResponse = await http.get(
+            Uri.parse(url),
+            headers: <String, String>{
+              'access': '$newToken',
+              'Content-Type': 'application/json',
+            },
+          );
+
+          if (retryResponse.statusCode == 200) {
+            final List<dynamic> responseData =
+                json.decode(retryResponse.body)['cardList'];
+            setState(() {
+              _sentences.addAll(
+                responseData.map((data) => Sentence.fromJson(data)).toList(),
+              );
+            });
+          } else {
+            _showErrorDialog(
+                'Failed to load sentences after retry. Please try again.');
+          }
+        } else {
+          _showErrorDialog('Failed to refresh token. Please log in again.');
+        }
+      } else {
+        _showErrorDialog('Failed to load sentences. Please try again.');
+      }
+    } catch (e) {
+      // Handle network request exceptions
+      print("Error during the request: $e");
       _showErrorDialog('Failed to load sentences. Please try again.');
     }
   }
-
-  // Future<void> _loadSentences() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     _sentences.addAll((prefs.getStringList('sentences') ?? [])
-  //         .map((s) => Sentence.fromJson(json.decode(s)))
-  //         .toList());
-  //   });
-  // }
-
-  // Future<void> _saveSentences() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setStringList(
-  //       'sentences', _sentences.map((s) => json.encode(s.toJson())).toList());
-  // }
 
   Future<void> _addSentence() async {
     final text = _controller.text;
@@ -103,25 +115,66 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         text.length <= _maxChars &&
         _koreanRegExp.hasMatch(text)) {
       String? token = await getAccessToken();
-      final response = await http.post(
-        Uri.parse('http://potato.seatnullnull.com/cards/custom'),
-        headers: <String, String>{
-          'access': '$token',
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({'text': text}),
-      );
+      final url = 'http://potato.seatnullnull.com/cards/custom';
+      try {
+        final response = await http.post(
+          Uri.parse(url),
+          headers: <String, String>{
+            'access': '$token',
+            'Content-Type': 'application/json',
+          },
+          body: json.encode({'text': text}),
+        );
 
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        print(responseData);
-        final newSentence = Sentence.fromJson(responseData);
-        setState(() {
-          _sentences.add(newSentence);
-          _controller.clear();
-          // _saveSentences();
-        });
-      } else {
+        if (response.statusCode == 200) {
+          final responseData = json.decode(response.body);
+          print(responseData);
+          final newSentence = Sentence.fromJson(responseData);
+          setState(() {
+            _sentences.add(newSentence);
+            _controller.clear();
+          });
+        } else if (response.statusCode == 401) {
+          // Token expired, attempt to refresh and retry the request
+          print('Access token expired. Refreshing token...');
+
+          // Refresh the token
+          bool isRefreshed = await refreshAccessToken();
+
+          if (isRefreshed) {
+            // Retry request with new token
+            print('Token refreshed successfully. Retrying request...');
+            String? newToken = await getAccessToken();
+            final retryResponse = await http.post(
+              Uri.parse(url),
+              headers: <String, String>{
+                'access': '$newToken',
+                'Content-Type': 'application/json',
+              },
+              body: json.encode({'text': text}),
+            );
+
+            if (retryResponse.statusCode == 200) {
+              final responseData = json.decode(retryResponse.body);
+              print(responseData);
+              final newSentence = Sentence.fromJson(responseData);
+              setState(() {
+                _sentences.add(newSentence);
+                _controller.clear();
+              });
+            } else {
+              _showErrorDialog(
+                  'Failed to add sentence after retry. Please try again.');
+            }
+          } else {
+            _showErrorDialog('Failed to refresh token. Please log in again.');
+          }
+        } else {
+          _showErrorDialog('Failed to add sentence. Please try again.');
+        }
+      } catch (e) {
+        // Handle network request exceptions
+        print("Error during the request: $e");
         _showErrorDialog('Failed to add sentence. Please try again.');
       }
     } else {
@@ -133,21 +186,55 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
   Future<void> _deleteSentence(int index) async {
     final sentence = _sentences[index];
     String? token = await getAccessToken();
-    final response = await http.delete(
-      Uri.parse('http://potato.seatnullnull.com/cards/custom/${sentence.id}'),
-      headers: <String, String>{
-        'access': '$token',
-        'Content-Type': 'application/json',
-      },
-    );
+    final url = 'http://potato.seatnullnull.com/cards/custom/${sentence.id}';
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: <String, String>{
+          'access': '$token',
+          'Content-Type': 'application/json',
+        },
+      );
 
-    if (response.statusCode == 200) {
-      print(response.body);
-      setState(() {
-        _sentences.removeAt(index);
-        // _saveSentences();
-      });
-    } else {
+      if (response.statusCode == 200) {
+        print(response.body);
+        setState(() {
+          _sentences.removeAt(index);
+        });
+      } else if (response.statusCode == 401) {
+        // Token expired, attempt to refresh and retry the request
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the token
+        bool isRefreshed = await refreshAccessToken();
+
+        if (isRefreshed) {
+          // Retry request with new token
+          print('Token refreshed successfully. Retrying request...');
+          String? newToken = await getAccessToken();
+          final retryResponse = await http.delete(
+            Uri.parse(url),
+            headers: <String, String>{
+              'access': '$newToken',
+              'Content-Type': 'application/json',
+            },
+          );
+
+          if (retryResponse.statusCode == 200) {
+            print(retryResponse.body);
+            setState(() {
+              _sentences.removeAt(index);
+            });
+          }
+        } else {
+          _showErrorDialog('Failed to refresh token. Please log in again.');
+        }
+      } else {
+        _showErrorDialog('Failed to delete sentence. Please try again.');
+      }
+    } catch (e) {
+      // Handle network request exceptions
+      print("Error during the request: $e");
       _showErrorDialog('Failed to delete sentence. Please try again.');
     }
   }
@@ -171,15 +258,6 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
       },
     );
   }
-
-  // void _navigateToLearningScreen(String sentence) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => LearningScreen(sentence: sentence),
-  //     ),
-  //   );
-  // }
 
   void _showExitDialog() {
     showDialog(
@@ -298,8 +376,6 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                         ),
                         onPressed: () => _deleteSentence(index),
                       ),
-                      // onTap: () =>
-                      //     _navigateToLearningScreen(_sentences[index].text),
                     );
                   },
                 ),
