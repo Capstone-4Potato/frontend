@@ -1,6 +1,7 @@
-# flutter_application_1
+# 발밤발밤 BalbamBalbam
+![image](https://github.com/Capstone-4Potato/frontend-ysn/assets/102887277/c0cd23a3-d401-47ea-9054-3ddd014fa0d5)
 
-A new Flutter project.
+
 
 ## Getting Started
 

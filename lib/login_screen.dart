@@ -362,25 +362,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
             ),
-            // SignInImageButton(
-            //   assetName: 'assets/naver.png',
-            //   onPressed: () async {
-            //     var result = await signInWithNaver();
-            //     int statusCode = result['statusCode'];
-            //     String socialId = result['socialId'];
-            //     print(statusCode);
-            //     if (statusCode == 404) {
-            //       Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //               builder: (context) =>
-            //                   UserInputForm(socialId: socialId)));
-            //     } else if (statusCode == 200) {
-            //       Navigator.pushReplacement(context,
-            //           MaterialPageRoute(builder: (context) => MainPage()));
-            //     }
-            //   },
-            // ),
+            // 햣
             Spacer(flex: 2),
           ],
         ),
