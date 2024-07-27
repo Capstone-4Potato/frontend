@@ -105,6 +105,7 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
               fontWeight: FontWeight.w600,
               fontSize: MediaQuery.of(context).size.width * 0.045,
             ),
+            textAlign: TextAlign.center,
           ),
           backgroundColor: const Color(0xFFF5F5F5),
           centerTitle: true,
@@ -183,13 +184,15 @@ class _ReviewSentence3State extends State<ReviewSentence3> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '    Ordering at a Cafe',
+          'Ordering at a Cafe',
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: MediaQuery.of(context).size.width * 0.045,
           ),
+          textAlign: TextAlign.center, // Center-align the text in the AppBar
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

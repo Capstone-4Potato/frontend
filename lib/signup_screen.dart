@@ -131,13 +131,11 @@ class _UserInputFormState extends State<UserInputForm> {
                       calculateAge();
                     },
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your birth year.';
-                      }
-                      int? year = int.tryParse(value);
+                      int? year = int.tryParse(value!);
+                      print(year);
                       if (year == null) {
-                        return 'Please enter your birth year.';
-                      } else if (year > DateTime.now().year) {
+                        return 'Please enter a valid year.';
+                      } else if (year < 1924 || year > DateTime.now().year) {
                         return 'Please enter your birth year.';
                       }
                       return null;
@@ -212,8 +210,8 @@ class _UserInputFormState extends State<UserInputForm> {
                         return 'Please enter your nickname.';
                       } else if (value.length < 3) {
                         return 'Nickname must be at least 3 characters.';
-                      } else if (value.length > 8) {
-                        return 'Nickname must be at most 8 characters.';
+                      } else if (value.length > 10) {
+                        return 'Nickname must be at most 10 characters.';
                       } else if (value.contains(' ')) {
                         return 'Nickname cannot contain spaces.';
                       }

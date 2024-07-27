@@ -104,48 +104,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     }
   }
 
-  // if (_formKey.currentState?.validate() ?? false) {
-  //   String? token = await getAccessToken();
-  //   var url = Uri.parse('http://potato.seatnullnull.com/users');
-
-  //   try {
-  //     var response = await http.patch(
-  //       url,
-  //       headers: <String, String>{
-  //         'access': '$token',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: json.encode({
-  //         'name': _nicknameController.text,
-  //         'age':
-  //             DateTime.now().year - int.parse(_birthYearController.text) + 1,
-  //         'gender': _selectedGender,
-  //       }),
-  //     );
-  //     if (response.statusCode == 200) {
-  //       print("Info updated successfully: ${response.body}");
-  //       widget.onProfileUpdate(
-  //         _nicknameController.text,
-  //         DateTime.now().year - int.parse(_birthYearController.text) + 1,
-  //         _selectedGender!,
-  //       );
-  //       _showSuccessDialog();
-  //     } else if (response.statusCode == 401) {
-  //       // 토큰이 만료된 경우
-  //       print('Access token expired. Refreshing token...');
-
-  //       // 리프레시 토큰을 사용하여 새로운 액세스 토큰을 가져옵니다.
-  //       bool isRefreshed = await refreshAccessToken();
-  //     } else {
-  //       print(
-  //           "Failed to update info: ${response.statusCode} - ${response.body}");
-  //     }
-  //   } catch (e) {
-  //     print("Error updating info: $e");
-  //   }
-  // }
-// }
-
   void _showSuccessDialog() {
     showDialog(
       context: context,
@@ -220,14 +178,12 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                   ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your birth year.';
-                    }
-                    int? year = int.tryParse(value);
+                    int? year = int.tryParse(value!);
+                    print(year);
                     if (year == null) {
                       return 'Please enter a valid year.';
-                    } else if (year > DateTime.now().year) {
-                      return 'Please enter a valid year.';
+                    } else if (year < 1924 || year > DateTime.now().year) {
+                      return 'Please enter your birth year.';
                     }
                     return null;
                   },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter/services.dart';
 import 'package:flutter_application_1/home/home_page.dart';
 import 'package:flutter_application_1/profile/profile_page.dart';
 import 'package:flutter_application_1/review/review_page.dart';
@@ -49,6 +50,11 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    // // 상태 표시줄의 스타일을 설정
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.transparent,
+    //   statusBarIconBrightness: Brightness.dark, // 아이콘을 어두운 색으로
+    // ));
     return Scaffold(
       // appBar: AppBar(
       //   backgroundColor: const Color(0xFFF5F5F5),

@@ -56,7 +56,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
       if (path != null) {
         setState(() {
           _isRecording = false;
-          _canRecord = false;
+          //_canRecord = false;
           _recordedFilePath = path;
           _isLoading = true; // 로딩 시작
         });
