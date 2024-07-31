@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/feedbackui.dart';
+import 'package:flutter_application_1/fetchimage.dart';
+import 'package:flutter_application_1/syllablefeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
@@ -43,16 +45,32 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   late String _recordedFilePath;
 
   bool _isLoading = false;
+  Uint8List? _imageData;
 
   @override
   void initState() {
     super.initState();
     _initialize();
+    _loadImage();
   }
 
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
     await _audioRecorder.openAudioSession();
+  }
+
+  Future<void> _loadImage() async {
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    try {
+      _imageData = await fetchImage(widget.pictures[widget.currentIndex]);
+    } catch (e) {
+      print('Error loading image: $e');
+    }
+    // setState(() {
+    //   _isLoading = false;
+    // });
   }
 
   Future<void> _recordAudio() async {
@@ -124,7 +142,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         return Transform(
-          transform: Matrix4.translationValues(0.0, 115, 0.0),
+          transform: Matrix4.translationValues(0.0, 140, 0.0),
           child: Opacity(
             opacity: animation.value,
             child: FeedbackUI(
@@ -237,7 +255,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         widget.engpronunciations[widget.currentIndex];
 
     String currentExplanation = widget.explanations[widget.currentIndex];
-    String currentPictureBase64 = widget.pictures[widget.currentIndex];
+    //String currentPictureUrl = widget.pictures[widget.currentIndex];
 
     return Scaffold(
       appBar: AppBar(
@@ -271,6 +289,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                       ? () {
                           int nextIndex = widget.currentIndex - 1;
                           navigateToCard(nextIndex);
+                          _loadImage();
                           TtsService.fetchCorrectAudio(
                                   widget.cardIds[nextIndex])
                               .then((_) {
@@ -296,16 +315,20 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                       Text(
                         currentContent,
                         style: TextStyle(
-                            fontSize: 40, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        currentPronunciation,
-                        style: TextStyle(fontSize: 24, color: Colors.grey[700]),
+                            fontSize: 38, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         currentEngPronunciation,
                         style: TextStyle(fontSize: 24, color: Colors.grey[700]),
                       ),
+                      Text(
+                        currentPronunciation,
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 231, 156, 135)),
+                      ),
+
                       const SizedBox(
                         height: 8,
                       ),
@@ -339,6 +362,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                       ? () {
                           int nextIndex = widget.currentIndex + 1;
                           navigateToCard(nextIndex);
+                          _loadImage();
                           TtsService.fetchCorrectAudio(
                                   widget.cardIds[nextIndex])
                               .then((_) {
@@ -351,7 +375,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                 ),
               ],
             ),
-            if (!_isLoading)
+            if (!_isLoading && _imageData != null)
               Expanded(
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.82,
@@ -361,7 +385,12 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                   ),
                   child: Column(
                     children: <Widget>[
-                      ImageDisplay(base64Image: currentPictureBase64),
+                      Image.memory(
+                        _imageData!,
+                        fit: BoxFit.contain,
+                        width: 300,
+                        height: 250,
+                      ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                         child: Text(
@@ -408,45 +437,6 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-}
-
-class ImageDisplay extends StatefulWidget {
-  final String base64Image;
-
-  const ImageDisplay({Key? key, required this.base64Image}) : super(key: key);
-
-  @override
-  _ImageDisplayState createState() => _ImageDisplayState();
-}
-
-class _ImageDisplayState extends State<ImageDisplay> {
-  late dynamic imageBytes;
-
-  @override
-  void initState() {
-    super.initState();
-    imageBytes = base64Decode(widget.base64Image);
-  }
-
-  @override
-  void didUpdateWidget(covariant ImageDisplay oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.base64Image != widget.base64Image) {
-      setState(() {
-        imageBytes = base64Decode(widget.base64Image);
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.memory(
-      imageBytes,
-      fit: BoxFit.contain,
-      width: 300,
-      height: 250,
     );
   }
 }

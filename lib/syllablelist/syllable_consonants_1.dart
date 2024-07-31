@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/fetchlearningcardlist.dart';
-
 import 'package:flutter_application_1/syllabelearningcard.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 
@@ -26,7 +25,7 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
   late List<String> pictures = [];
 
   bool showBookmarkedOnly = false; // Add this variable to track filter mode
-  bool isLoading = true;
+  //bool isLoading = true;
 
   @override
   void initState() {
@@ -36,13 +35,17 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
 
   void initFetch() async {
     var data = await fetchData('음절', '자음ㄱㅋㄲ');
+    //print(data);
 
     if (data != null) {
       setState(() {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
         contents = List.generate(data.length, (index) => data[index]['text']);
+        // 업데이트하면서 영어 해석으로 변동
+        // pronunciations = List.generate(
+        //     data.length, (index) => '[${data[index]['pronunciation']}]');
         pronunciations = List.generate(
-            data.length, (index) => '[${data[index]['pronunciation']}]');
+            data.length, (index) => '${data[index]['engTranslation']}');
         engpronunciations = List.generate(
             data.length, (index) => '[${data[index]['engPronunciation']}]');
         bookmarked =
@@ -55,8 +58,8 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
         explanations =
             List.generate(data.length, (index) => data[index]['explanation']);
         pictures =
-            List.generate(data.length, (index) => data[index]['picture']);
-        isLoading = false;
+            List.generate(data.length, (index) => data[index]['pictureUrl']);
+        //isLoading = false;
       });
     }
   }
@@ -111,55 +114,55 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
     List<String> displayExplanations = [];
     List<String> displayPictures = [];
 
-    if (isLoading) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Center(
-            child: Text(
-              '       ㄱㅋㄲ',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
-              ),
-            ),
-          ),
-          backgroundColor: const Color(0xFFF5F5F5),
-          actions: [
-            IconButton(
-              icon: Icon(
-                showBookmarkedOnly
-                    ? Icons.filter_alt
-                    : Icons.filter_alt_outlined,
-                color: Colors.black,
-                size: 30,
-              ),
-              onPressed: () {
-                setState(() {
-                  showBookmarkedOnly = !showBookmarkedOnly;
-                });
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
-              child: IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: Colors.black,
-                  size: 30,
-                ),
-                onPressed: _showExitDialog,
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFFF5F5F5),
-        body: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
-          ),
-        ),
-      );
-    }
+    // if (isLoading) {
+    //   return Scaffold(
+    //     appBar: AppBar(
+    //       title: Center(
+    //         child: Text(
+    //           '       ㄱㅋㄲ',
+    //           style: TextStyle(
+    //             fontWeight: FontWeight.w600,
+    //             fontSize: 22,
+    //           ),
+    //         ),
+    //       ),
+    //       backgroundColor: const Color(0xFFF5F5F5),
+    //       actions: [
+    //         IconButton(
+    //           icon: Icon(
+    //             showBookmarkedOnly
+    //                 ? Icons.filter_alt
+    //                 : Icons.filter_alt_outlined,
+    //             color: Colors.black,
+    //             size: 30,
+    //           ),
+    //           onPressed: () {
+    //             setState(() {
+    //               showBookmarkedOnly = !showBookmarkedOnly;
+    //             });
+    //           },
+    //         ),
+    //         Padding(
+    //           padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
+    //           child: IconButton(
+    //             icon: Icon(
+    //               Icons.close,
+    //               color: Colors.black,
+    //               size: 30,
+    //             ),
+    //             onPressed: _showExitDialog,
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //     backgroundColor: const Color(0xFFF5F5F5),
+    //     body: Center(
+    //       child: CircularProgressIndicator(
+    //         valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     if (showBookmarkedOnly) {
       for (int i = 0; i < cardIds.length; i++) {

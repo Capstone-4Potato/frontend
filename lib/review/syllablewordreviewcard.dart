@@ -289,13 +289,17 @@ class _ReviewCardState extends State<ReviewCard> {
                             fontSize: 36, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        currentPronunciation,
-                        style: TextStyle(fontSize: 22, color: Colors.grey[700]),
-                      ),
-                      Text(
                         currentEngPronunciation,
                         style: TextStyle(fontSize: 22, color: Colors.grey[700]),
                       ),
+                      Text(
+                        currentPronunciation,
+                        style: TextStyle(fontSize: 22, color: Colors.grey[700]),
+                      ),
+                      // Text(
+                      //   currentEngPronunciation,
+                      //   style: TextStyle(fontSize: 22, color: Colors.grey[700]),
+                      // ),
                       const SizedBox(
                         height: 8,
                       ),

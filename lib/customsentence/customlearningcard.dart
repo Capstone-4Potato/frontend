@@ -228,7 +228,7 @@ class _CustomSentenceLearningCardState
     double cardHeight = MediaQuery.of(context).size.height * 0.32;
 
     String currentContent = widget.contents[widget.currentIndex];
-    //String currentPronunciation = widget.pronunciations[widget.currentIndex];
+    String currentPronunciation = widget.pronunciations[widget.currentIndex];
     String currentEngPronunciation =
         widget.engpronunciations[widget.currentIndex];
 
@@ -305,6 +305,15 @@ class _CustomSentenceLearningCardState
                       Text(
                         currentEngPronunciation,
                         style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        currentPronunciation,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(255, 231, 156, 135),
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(

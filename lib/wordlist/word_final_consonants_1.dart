@@ -35,7 +35,7 @@ class _WordFinalConsonants1State extends State<WordFinalConsonants1> {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
         contents = List.generate(data.length, (index) => data[index]['text']);
         pronunciations = List.generate(
-            data.length, (index) => '[${data[index]['pronunciation']}]');
+            data.length, (index) => '${data[index]['engTranslation']}');
         engpronunciations = List.generate(
             data.length, (index) => '[${data[index]['engPronunciation']}]');
         bookmarked =

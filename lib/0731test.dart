@@ -1,42 +1,38 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
-import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/feedbackui.dart';
-import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
-class WordLearningCard extends StatefulWidget {
+class SyllableLearningCard extends StatefulWidget {
   final int currentIndex;
   final List<int> cardIds;
   final List<String> contents;
   final List<String> pronunciations;
   final List<String> engpronunciations;
+  final List<String> explanations;
+  final List<String> pictures;
 
-  WordLearningCard({
+  SyllableLearningCard({
     Key? key,
     required this.currentIndex,
     required this.cardIds,
     required this.contents,
     required this.pronunciations,
     required this.engpronunciations,
+    required this.explanations,
+    required this.pictures,
   }) : super(key: key);
 
   @override
-  State<WordLearningCard> createState() => _WordLearningCardState();
+  State<SyllableLearningCard> createState() => _SyllableLearningCardState();
 }
 
-class _WordLearningCardState extends State<WordLearningCard> {
+class _SyllableLearningCardState extends State<SyllableLearningCard> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
-  bool _isRecording = false;
-  bool _canRecord = false;
-  late String _recordedFilePath;
 
   bool _isLoading = false;
 
@@ -51,125 +47,18 @@ class _WordLearningCardState extends State<WordLearningCard> {
     await _audioRecorder.openAudioSession();
   }
 
-  Future<void> _recordAudio() async {
-    if (_isRecording) {
-      final path = await _audioRecorder.stopRecorder();
-      if (path != null) {
-        setState(() {
-          _isRecording = false;
-          //_canRecord = false;
-          _recordedFilePath = path;
-          _isLoading = true; // 로딩 시작
-        });
-        final audioFile = File(path);
-        final fileBytes = await audioFile.readAsBytes();
-        final base64userAudio = base64Encode(fileBytes);
-        final currentCardId = widget.cardIds[widget.currentIndex];
-        final base64correctAudio = TtsService.instance.base64CorrectAudio;
-
-        if (base64correctAudio != null) {
-          final feedbackData = await getFeedback(
-              currentCardId, base64userAudio, base64correctAudio);
-          //print(feedbackData);
-
-          if (mounted && feedbackData != null) {
-            setState(() {
-              _isLoading = false; // 로딩 종료
-            });
-            showFeedbackDialog(context, feedbackData);
-          } else {
-            setState(() {
-              _isLoading = false; // 로딩 종료
-              showErrorDialog();
-            });
-          }
-        } else {
-          setState(() {
-            _isLoading = false; // 로딩 종료
-          });
-        }
-      }
-    } else {
-      await _audioRecorder.startRecorder(
-        toFile: 'audio_record.wav',
-        codec: Codec.pcm16WAV,
-      );
-      setState(() {
-        _isRecording = true;
-      });
-    }
-  }
-
-  void _onListenPressed() async {
-    await TtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex]);
-    await TtsService.instance
-        .playCachedAudio(widget.cardIds[widget.currentIndex]);
-    setState(() {
-      _canRecord = true;
-    });
-  }
-
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return Transform(
-          transform: Matrix4.translationValues(0.0, 115, 0.0),
-          child: Opacity(
-            opacity: animation.value,
-            child: FeedbackUI(
-              feedbackData: feedbackData,
-              recordedFilePath: _recordedFilePath,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void showErrorDialog() {
-    showDialog(
-      context: context,
-      //barrierDismissible: false, // 사용자가 다이얼로그 바깥을 터치하여 닫지 못하게 함
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Recording Error"),
-          content: Text(
-            "Please try recording again.",
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // 다이얼로그 닫기
-              },
-              child: Text(
-                'OK',
-                style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void navigateToCard(int newIndex) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => WordLearningCard(
+        builder: (context) => SyllableLearningCard(
           currentIndex: newIndex,
           cardIds: widget.cardIds,
           contents: widget.contents,
           pronunciations: widget.pronunciations,
           engpronunciations: widget.engpronunciations,
+          explanations: widget.explanations,
+          pictures: widget.pictures,
         ),
       ),
     );
@@ -230,6 +119,9 @@ class _WordLearningCardState extends State<WordLearningCard> {
     String currentEngPronunciation =
         widget.engpronunciations[widget.currentIndex];
 
+    String currentExplanation = widget.explanations[widget.currentIndex];
+    String currentPictureUrl = widget.pictures[widget.currentIndex];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
@@ -287,44 +179,21 @@ class _WordLearningCardState extends State<WordLearningCard> {
                       Text(
                         currentContent,
                         style: TextStyle(
-                            fontSize: 36, fontWeight: FontWeight.bold),
+                            fontSize: 40, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         currentEngPronunciation,
-                        style: TextStyle(fontSize: 22, color: Colors.grey[700]),
+                        style: TextStyle(fontSize: 24, color: Colors.grey[700]),
                       ),
                       Text(
                         currentPronunciation,
                         style: TextStyle(
-                            fontSize: 22,
+                            fontSize: 18,
                             fontWeight: FontWeight.w500,
                             color: Color.fromARGB(255, 231, 156, 135)),
                       ),
-                      // Text(
-                      //   currentEngPronunciation,
-                      //   style: TextStyle(fontSize: 22, color: Colors.grey[700]),
-                      // ),
                       const SizedBox(
                         height: 8,
-                      ),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF26647),
-                          minimumSize: Size(220, 40),
-                        ),
-                        onPressed: _onListenPressed,
-                        icon: const Icon(
-                          Icons.volume_up,
-                          color: Colors.white,
-                        ),
-                        label: const Text(
-                          'Listen',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -348,6 +217,30 @@ class _WordLearningCardState extends State<WordLearningCard> {
                 ),
               ],
             ),
+            if (!_isLoading)
+              Expanded(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.82,
+                  height: MediaQuery.of(context).size.height * 0.54,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF5F5F5),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      //ImageDisplay(pictureUrl: currentPictureUrl),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        child: Text(
+                          currentExplanation,
+                          style:
+                              TextStyle(fontSize: 13, color: Colors.grey[700]),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             if (_isLoading)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 160),
@@ -359,27 +252,6 @@ class _WordLearningCardState extends State<WordLearningCard> {
           ],
         ),
       ),
-      floatingActionButton: Container(
-        width: 70,
-        height: 70,
-        child: FloatingActionButton(
-          onPressed: _canRecord && !_isLoading ? _recordAudio : null, // 조건 업데이트
-          child: Icon(
-            _isRecording ? Icons.stop : Icons.mic,
-            size: 40,
-            color: const Color.fromARGB(231, 255, 255, 255),
-          ),
-          backgroundColor: _isLoading
-              ? const Color.fromARGB(37, 206, 204, 204) // 로딩 중 색상
-              : _canRecord
-                  ? (_isRecording ? Color(0xFF976841) : Color(0xFFF26647))
-                  : const Color.fromARGB(37, 206, 204, 204),
-          elevation: 0.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35))),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

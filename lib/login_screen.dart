@@ -285,39 +285,48 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Spacer(),
-            Text(
-              '발밤발밤',
-              //textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFFF26647),
-                fontSize: 32.0,
-                fontWeight: FontWeight.bold,
-              ),
+            Image.asset(
+              'assets/bam.png',
+              width: 100,
+              height: MediaQuery.of(context).size.height * 0.12,
             ),
-            Text(
-              'BalbamBalbam',
-              //textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFFD86F41),
-                fontSize: 26.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            // Text(
+            //   '발밤발밤-BalbamBalbam',
+            //   //textAlign: TextAlign.center,
+            //   style: TextStyle(
+            //     color: Color(0xFFF26647),
+            //     fontSize: 28.0,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
+            // Text(
+            //   'BalbamBalbam',
+            //   //textAlign: TextAlign.center,
+            //   style: TextStyle(
+            //     color: Color(0xFFF26647),
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.w500,
+            //   ),
+            // ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 18.0, horizontal: 26),
               child: Text(
-                'Log in to access a variety of services',
-                //textAlign: TextAlign.center,
+                'Log in or sign up to get started',
+                textAlign: TextAlign.center,
                 // '로그인하고 다양한 서비스를 이용하세요!',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 18.0,
+                  fontSize: 28.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            Spacer(),
+            SizedBox(
+              height: 20,
+            ),
             SignInImageButton(
-              assetName: 'assets/apple.png',
+              assetName: 'assets/engapple.png',
               onPressed: () async {
                 var result = await signInWithApple();
                 int statusCode = result['statusCode'];
@@ -342,7 +351,7 @@ class _LoginScreenState extends State<LoginScreen> {
             //   onPressed: () {},
             // ),
             SignInImageButton(
-              assetName: 'assets/kakao.png',
+              assetName: 'assets/engkakao.png',
               onPressed: () async {
                 var result = await signInWithKakao();
                 int statusCode = result['statusCode'];
@@ -362,7 +371,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
             ),
-            // 햣
+
             Spacer(flex: 2),
           ],
         ),

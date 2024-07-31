@@ -29,12 +29,13 @@ class _WordVowels1State extends State<WordVowels1> {
 
   void initFetch() async {
     var data = await fetchData('단어', '단모음');
+    print(data);
     if (data != null) {
       setState(() {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
         contents = List.generate(data.length, (index) => data[index]['text']);
         pronunciations = List.generate(
-            data.length, (index) => '[${data[index]['pronunciation']}]');
+            data.length, (index) => '${data[index]['engTranslation']}');
         engpronunciations = List.generate(
             data.length, (index) => '[${data[index]['engPronunciation']}]');
         bookmarked =

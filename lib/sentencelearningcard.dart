@@ -288,16 +288,26 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-
-                      Text(
-                        currentPronunciation,
-                        style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-                      ),
                       Text(
                         currentEngPronunciation,
                         style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                         textAlign: TextAlign.center,
                       ),
+
+                      Text(
+                        currentPronunciation,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(255, 231, 156, 135),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      // Text(
+                      //   currentEngPronunciation,
+                      //   style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                      //   textAlign: TextAlign.center,
+                      // ),
                       const SizedBox(
                         height: 15,
                       ),

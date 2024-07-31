@@ -291,14 +291,19 @@ class _ReviewSentenceCardState extends State<ReviewSentenceCard> {
                       //   height: 3,
                       // ),
                       Text(
-                        currentPronunciation,
-                        style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-                      ),
-                      Text(
                         currentEngPronunciation,
                         style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                         textAlign: TextAlign.center,
                       ),
+                      Text(
+                        currentPronunciation,
+                        style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                      ),
+                      // Text(
+                      //   currentEngPronunciation,
+                      //   style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                      //   textAlign: TextAlign.center,
+                      // ),
                       const SizedBox(
                         height: 15,
                       ),

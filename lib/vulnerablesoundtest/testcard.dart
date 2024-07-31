@@ -252,13 +252,25 @@ class _TestCardState extends State<TestCard> {
                           style: TextStyle(
                               fontSize: 40, fontWeight: FontWeight.bold)),
                       SizedBox(height: 7),
-                      Text('[${widget.testPronunciations[_currentIndex]}]',
-                          style:
-                              TextStyle(fontSize: 24, color: Colors.grey[700])),
-                      SizedBox(height: 4),
+                      // Text('[${widget.testPronunciations[_currentIndex]}]',
+                      //     style:
+                      //         TextStyle(fontSize: 24, color: Colors.grey[700])),
                       Text('[${widget.testEngPronunciations[_currentIndex]}]',
                           style:
                               TextStyle(fontSize: 24, color: Colors.grey[700])),
+                      SizedBox(height: 4),
+                      // Text('[${widget.testEngPronunciations[_currentIndex]}]',
+                      //     style:
+                      //         TextStyle(fontSize: 24, color: Colors.grey[700])),
+
+                      //engTranslation
+                      Text(
+                        '${widget.testPronunciations[_currentIndex]}',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Color.fromARGB(255, 231, 156, 135),
+                        ),
+                      ),
                     ],
                   ),
                 ),
