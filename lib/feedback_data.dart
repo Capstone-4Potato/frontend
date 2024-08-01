@@ -37,6 +37,8 @@ class FeedbackData {
     Map<String, Map<String, dynamic>> recommendCard =
         Map<String, Map<String, dynamic>>.from(json['recommendCard']);
 
+    print(recommendCard);
+
     // 추천 카드 아이디, 텍스트, 카테고리, 서브카테고리를 별도의 리스트로 생성
     List<String> recommendCardId = [];
     List<String> recommendCardText = [];

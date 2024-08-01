@@ -83,7 +83,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                     ),
                     SizedBox(height: constraints.maxHeight * 0.02),
                     SizedBox(
-                      height: constraints.maxHeight * 0.06,
+                      height: constraints.maxHeight * 0.063,
                       child: RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
@@ -97,7 +97,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                         ),
                       ),
                     ),
-                    SizedBox(height: constraints.maxHeight * 0.02),
+                    SizedBox(height: constraints.maxHeight * 0.015),
                     Expanded(
                       child: Stack(
                         alignment: Alignment.center,

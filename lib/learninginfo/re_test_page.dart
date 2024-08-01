@@ -45,8 +45,8 @@ class _restartTestScreenState extends State<restartTestScreen> {
         testIds = List.generate(data.length, (index) => data[index]['id']);
         testContents =
             List.generate(data.length, (index) => data[index]['text']);
-        testPronunciations =
-            List.generate(data.length, (index) => data[index]['pronunciation']);
+        testPronunciations = List.generate(
+            data.length, (index) => data[index]['engTranslation']);
         testEngPronunciations = List.generate(
             data.length, (index) => data[index]['engPronunciation']);
       });

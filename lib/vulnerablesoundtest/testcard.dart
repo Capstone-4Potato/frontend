@@ -269,6 +269,7 @@ class _TestCardState extends State<TestCard> {
                         style: TextStyle(
                           fontSize: 24,
                           color: Color.fromARGB(255, 231, 156, 135),
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],

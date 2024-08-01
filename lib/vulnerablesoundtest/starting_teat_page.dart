@@ -38,6 +38,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
 
   Future<void> initTestData() async {
     var data = await fetchTestData();
+    print(data);
 
     if (data != null) {
       setState(() {
@@ -45,7 +46,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
         testContents =
             List.generate(data.length, (index) => data[index]['text']);
         testPronunciations = List.generate(
-            data.length, (index) => data[index]['engPronunciation']);
+            data.length, (index) => data[index]['engTranslation']);
         testEngPronunciations = List.generate(
             data.length, (index) => data[index]['engPronunciation']);
       });

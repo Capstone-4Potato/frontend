@@ -189,7 +189,7 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
     return spans;
   } else {
     spans.add(TextSpan(
-        text: 'Practice  ',
+        text: 'Practice ',
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
