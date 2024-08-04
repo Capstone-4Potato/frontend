@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/fetchlearningcardlist.dart';
-
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/wordlearningcard.dart';
 

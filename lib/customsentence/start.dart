@@ -45,7 +45,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
   Future<void> _loadSentencesFromServer() async {
     String? token = await getAccessToken();
-    final url = 'http://potato.seatnullnull.com/cards/custom';
+    const url = 'http://potato.seatnullnull.com/cards/custom';
     try {
       final response = await http.get(
         Uri.parse(url),
@@ -115,7 +115,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         text.length <= _maxChars &&
         _koreanRegExp.hasMatch(text)) {
       String? token = await getAccessToken();
-      final url = 'http://potato.seatnullnull.com/cards/custom';
+      const url = 'http://potato.seatnullnull.com/cards/custom';
       try {
         final response = await http.post(
           Uri.parse(url),

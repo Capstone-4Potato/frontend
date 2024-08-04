@@ -36,7 +36,7 @@ class _ReviewWordVowel2State extends State<ReviewWordVowel2> {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
         contents = List.generate(data.length, (index) => data[index]['text']);
         pronunciations = List.generate(
-            data.length, (index) => '[${data[index]['pronunciation']}]');
+            data.length, (index) => '${data[index]['engTranslation']}');
         engpronunciations = List.generate(
             data.length, (index) => '[${data[index]['engPronunciation']}]');
         bookmarked =

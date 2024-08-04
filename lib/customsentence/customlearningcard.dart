@@ -101,8 +101,8 @@ class _CustomSentenceLearningCardState
   }
 
   void _onListenPressed() async {
-    await CustomTtsService.fetchCorrectAudio(
-        widget.cardIds[widget.currentIndex]);
+    // await CustomTtsService.fetchCorrectAudio(
+    //     widget.cardIds[widget.currentIndex]);
     await CustomTtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
     setState(() {

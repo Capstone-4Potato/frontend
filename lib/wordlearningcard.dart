@@ -101,7 +101,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
   }
 
   void _onListenPressed() async {
-    await TtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex]);
+    //await TtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex]);
     await TtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
     setState(() {

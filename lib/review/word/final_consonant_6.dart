@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/review/fetchreviewingcardlist.dart';
 import 'package:flutter_application_1/review/syllablewordreviewcard.dart';
-import 'package:flutter_application_1/ttsservice.dart';
+//import 'package:flutter_application_1/ttsservice.dart';
 
 class ReviewFC6 extends StatefulWidget {
   const ReviewFC6({super.key});
@@ -230,9 +230,9 @@ class _ReviewFC6State extends State<ReviewFC6> {
           return GestureDetector(
             onTap: () {
               // Fetch and save the correct audio for the selected card
-              TtsService.fetchCorrectAudio(cardIds[index]).then((_) {
-                print('Audio fetched and saved successfully.');
-              });
+              // TtsService.fetchCorrectAudio(cardIds[index]).then((_) {
+              //   print('Audio fetched and saved successfully.');
+              // });
               Navigator.push(
                 context,
                 MaterialPageRoute(
