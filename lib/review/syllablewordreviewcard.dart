@@ -294,7 +294,10 @@ class _ReviewCardState extends State<ReviewCard> {
                       ),
                       Text(
                         currentPronunciation,
-                        style: TextStyle(fontSize: 22, color: Colors.grey[700]),
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w500,
+                            color: Color.fromARGB(255, 231, 156, 135)),
                       ),
                       // Text(
                       //   currentEngPronunciation,

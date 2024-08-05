@@ -94,17 +94,16 @@ class _ReviewIC4State extends State<ReviewIC4> {
     if (noData) {
       return Scaffold(
         appBar: AppBar(
-          title: Center(
-            child: Text(
-              '       ㅅㅆ',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
-                // fontSize: 18,
-              ),
+          title: Text(
+            'ㅅㅆ',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+              // fontSize: 18,
             ),
           ),
           backgroundColor: const Color(0xFFF5F5F5),
+          centerTitle: true,
           actions: [
             IconButton(
               icon: Icon(
@@ -178,17 +177,16 @@ class _ReviewIC4State extends State<ReviewIC4> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            '       ㅅㅆ',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
-              // fontSize: 18,
-            ),
+        title: Text(
+          'ㅅㅆ',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 22,
+            // fontSize: 18,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

@@ -117,17 +117,16 @@ class _WordConsonants5State extends State<WordConsonants5> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            '       ㅈㅊㅉ',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              // fontSize: 18,
-              fontSize: 22,
-            ),
+        title: Text(
+          'ㅈㅊㅉ',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            // fontSize: 18,
+            fontSize: 22,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

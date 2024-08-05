@@ -120,16 +120,15 @@ class _WordFinalConsonants2State extends State<WordFinalConsonants2> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            '       ㄴ',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
-            ),
+        title: Text(
+          'ㄴ',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 22,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

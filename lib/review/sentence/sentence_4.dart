@@ -33,7 +33,7 @@ class _ReviewSentence4State extends State<ReviewSentence4> {
 
   void initFetch() async {
     var data = await fetchReviewList('문장', '자기소개');
-    print(data);
+    //print(data);
     if (data != null && data.isNotEmpty) {
       setState(() {
         cardIds = List.generate(data.length, (index) => data[index]['id']);

@@ -94,17 +94,16 @@ class _ReviewWordVowel1State extends State<ReviewWordVowel1> {
     if (noData) {
       return Scaffold(
         appBar: AppBar(
-          title: Center(
-            child: Text(
-              '       ㅏ ㅓ ㅗ ⋯',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
-                // fontSize: 18,
-              ),
+          title: Text(
+            'ㅏ ㅓ ㅗ ⋯',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+              // fontSize: 18,
             ),
           ),
           backgroundColor: const Color(0xFFF5F5F5),
+          centerTitle: true,
           actions: [
             IconButton(
               icon: Icon(
@@ -178,17 +177,16 @@ class _ReviewWordVowel1State extends State<ReviewWordVowel1> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            '       ㅏ ㅓ ㅗ ⋯',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
-              // fontSize: 18,
-            ),
+        title: Text(
+          'ㅏ ㅓ ㅗ ⋯',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 22,
+            // fontSize: 18,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

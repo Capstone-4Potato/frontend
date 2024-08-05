@@ -32,7 +32,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
 
   void initFetch() async {
     var data = await fetchReviewList('문장', '기본회화');
-    print(data);
+    //print(data);
     if (data != null && data.isNotEmpty) {
       setState(() {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
@@ -104,7 +104,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
               fontWeight: FontWeight.w600,
               fontSize: MediaQuery.of(context).size.width * 0.045,
             ),
-            textAlign: TextAlign.center,
+            //textAlign: TextAlign.center,
           ),
           backgroundColor: const Color(0xFFF5F5F5),
           centerTitle: true,
@@ -188,7 +188,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
             fontWeight: FontWeight.w600,
             fontSize: MediaQuery.of(context).size.width * 0.045,
           ),
-          textAlign: TextAlign.center, // Center-align the text in the AppBar
+          //textAlign: TextAlign.center, // Center-align the text in the AppBar
         ),
         backgroundColor: const Color(0xFFF5F5F5),
         centerTitle: true,

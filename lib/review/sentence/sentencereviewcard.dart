@@ -297,7 +297,12 @@ class _ReviewSentenceCardState extends State<ReviewSentenceCard> {
                       ),
                       Text(
                         currentPronunciation,
-                        style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(255, 231, 156, 135),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                       // Text(
                       //   currentEngPronunciation,

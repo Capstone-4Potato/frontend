@@ -31,7 +31,7 @@ class _ReviewFC2State extends State<ReviewFC2> {
 
   void initFetch() async {
     var data = await fetchReviewList('단어', '받침ㄴ');
-    print(data);
+    //print(data);
     if (data != null && data.isNotEmpty) {
       setState(() {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
@@ -95,17 +95,16 @@ class _ReviewFC2State extends State<ReviewFC2> {
     if (noData) {
       return Scaffold(
         appBar: AppBar(
-          title: Center(
-            child: Text(
-              '       ㄴ',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
-                // fontSize: 18,
-              ),
+          title: Text(
+            'ㄴ',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+              // fontSize: 18,
             ),
           ),
           backgroundColor: const Color(0xFFF5F5F5),
+          centerTitle: true,
           actions: [
             IconButton(
               icon: Icon(
@@ -179,17 +178,16 @@ class _ReviewFC2State extends State<ReviewFC2> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            '       ㄴ',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
-              // fontSize: 18,
-            ),
+        title: Text(
+          'ㄴ',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 22,
+            // fontSize: 18,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

@@ -185,16 +185,15 @@ class _SyllableConsonants3State extends State<SyllableConsonants3> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            '       ㅂㅍㅃ',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
-            ),
+        title: Text(
+          'ㅂㅍㅃ',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 22,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(

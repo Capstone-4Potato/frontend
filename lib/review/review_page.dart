@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/review/sentence/review_sentence_category.dart';
-import 'package:flutter_application_1/review/syllable/review_syllable_category.dart';
+//import 'package:flutter_application_1/review/syllable/review_syllable_category.dart';
 import 'package:flutter_application_1/review/word/review_word_category.dart';
 
 class ReviewPage extends StatefulWidget {
@@ -31,24 +31,24 @@ class _ReviewPageState extends State<ReviewPage> {
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            CategoryCard(
-              title: '음절복습',
-              subtitle: 'Reviewing Syllables',
-              backgroundColor: const Color(0xFFFF6F50),
-              image: Image.asset(
-                'assets/syllable_image.png',
-                height: screenHeight * 0.1, // 10% of screen height
-                width: screenWidth * 0.2, // 20% of screen width
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const ReviewSyllablesCategoryScreen()),
-                );
-              },
-            ),
+            // CategoryCard(
+            //   title: '음절복습',
+            //   subtitle: 'Reviewing Syllables',
+            //   backgroundColor: const Color(0xFFFF6F50),
+            //   image: Image.asset(
+            //     'assets/syllable_image.png',
+            //     height: screenHeight * 0.1, // 10% of screen height
+            //     width: screenWidth * 0.2, // 20% of screen width
+            //   ),
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) =>
+            //               const ReviewSyllablesCategoryScreen()),
+            //     );
+            //   },
+            // ),
             CategoryCard(
               title: '단어복습',
               subtitle: 'Reviewing Words',
