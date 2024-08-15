@@ -37,66 +37,69 @@ class SyllableLearningCard extends StatefulWidget {
 }
 
 class _SyllableLearningCardState extends State<SyllableLearningCard> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
-  final PermissionService _permissionService = PermissionService();
-  bool _isRecording = false;
-  bool _canRecord = false;
-  late String _recordedFilePath;
+  final AudioPlayer _audioPlayer = AudioPlayer(); // 오디오 재생기
+  final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder(); // 오디오 녹음기
+  final PermissionService _permissionService = PermissionService(); // 권한 서비스
+  bool _isRecording = false; // 녹음 중인지 여부
+  bool _canRecord = false; // 녹음 가능 여부
+  late String _recordedFilePath; // 녹음된 파일 경로
 
-  bool _isLoading = false;
-  Uint8List? _imageData;
+  bool _isLoading = false; // 로딩 중인지 여부
+  Uint8List? _imageData; // 이미지를 저장할 변수
 
   @override
   void initState() {
     super.initState();
-    _initialize();
-    _loadImage();
+    _initialize(); // 초기 설정
+    _loadImage(); // 이미지 로드
   }
 
+  // 초기 설정 : 권한 요청 및 오디오 세션 열기
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
     await _audioRecorder.openAudioSession();
   }
 
+  // 이미지 로드
   Future<void> _loadImage() async {
     try {
-      _imageData = await fetchImage(widget.pictures[widget.currentIndex]);
+      _imageData = await fetchImage(
+          widget.pictures[widget.currentIndex]); // 이미지 데이터 가져오기
     } catch (e) {
       print('Error loading image: $e');
     }
   }
 
+  // 오디오 녹음 및 처리
   Future<void> _recordAudio() async {
     if (_isRecording) {
-      final path = await _audioRecorder.stopRecorder();
+      final path = await _audioRecorder.stopRecorder(); // 녹음 중단
       if (path != null) {
         setState(() {
-          _isRecording = false;
-          //_canRecord = false;
-          _recordedFilePath = path;
+          _isRecording = false; // 녹음 상태 해체
+          _recordedFilePath = path; // 녹음된 파일 경로 저장
           _isLoading = true; // 로딩 시작
         });
 
-        final audioFile = File(path);
-        final fileBytes = await audioFile.readAsBytes();
-        final base64userAudio = base64Encode(fileBytes);
+        final audioFile = File(path); // 녹음된 파일 불러오기
+        final fileBytes = await audioFile.readAsBytes(); // 파일을 바이트로 읽기
+        final base64userAudio = base64Encode(fileBytes); // Base64 인코딩
         final currentCardId = widget.cardIds[widget.currentIndex];
         final base64correctAudio = TtsService.instance.base64CorrectAudio;
 
         if (base64correctAudio != null) {
-          final feedbackData = await getFeedback(
-              currentCardId, base64userAudio, base64correctAudio);
+          final feedbackData = await getFeedback(currentCardId, base64userAudio,
+              base64correctAudio); // 피드백 데이터 가져오기
 
           if (mounted && feedbackData != null) {
             setState(() {
               _isLoading = false; // 로딩 종료
             });
-            showFeedbackDialog(context, feedbackData);
+            showFeedbackDialog(context, feedbackData); // 피드백 다이얼로그 표시
           } else {
             setState(() {
               _isLoading = false; // 로딩 종료
-              showErrorDialog();
+              showErrorDialog(); // 오류 다이얼로그 표시
             });
           }
         } else {
@@ -111,19 +114,21 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         codec: Codec.pcm16WAV,
       );
       setState(() {
-        _isRecording = true;
+        _isRecording = true; // 녹음 상태 활성화
       });
     }
   }
 
+  // 사용자에게 올바른 발음 Listen 버튼 누르면 들려주기
   void _onListenPressed() async {
     await TtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
     setState(() {
-      _canRecord = true;
+      _canRecord = true; // 녹음 가능 상태로 설정
     });
   }
 
+  // 피드백 다이얼로그 표시
   void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
     showGeneralDialog(
       context: context,
@@ -148,10 +153,10 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     );
   }
 
+  // 오류 다이얼로그 표시
   void showErrorDialog() {
     showDialog(
       context: context,
-      //barrierDismissible: false, // 사용자가 다이얼로그 바깥을 터치하여 닫지 못하게 함
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Recording Error"),
@@ -175,6 +180,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     );
   }
 
+  // 다른 카드로 이동
   void navigateToCard(int newIndex) {
     Navigator.pushReplacement(
       context,
@@ -192,6 +198,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     );
   }
 
+  // 학습 종료 확인 다이얼로그 표시
   void _showExitDialog() {
     showDialog(
       context: context,
@@ -232,8 +239,8 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
-    _audioRecorder.closeAudioSession();
+    _audioPlayer.dispose(); // 오디오 플레이어 정리
+    _audioRecorder.closeAudioSession(); // 오디오 세션 닫기
     super.dispose();
   }
 
@@ -246,7 +253,6 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     String currentPronunciation = widget.pronunciations[widget.currentIndex];
     String currentEngPronunciation =
         widget.engpronunciations[widget.currentIndex];
-
     String currentExplanation = widget.explanations[widget.currentIndex];
 
     return Scaffold(
@@ -271,6 +277,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         padding: const EdgeInsets.only(top: 12),
         child: Column(
           children: [
+            // 이전 카드로 이동 버튼
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -320,7 +327,6 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                             fontWeight: FontWeight.w500,
                             color: Color.fromARGB(255, 231, 156, 135)),
                       ),
-
                       const SizedBox(
                         height: 8,
                       ),
@@ -347,14 +353,16 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                     ],
                   ),
                 ),
+                // 다음 카드로 이동 버튼
                 IconButton(
                   icon: Icon(Icons.arrow_forward_ios),
                   color: const Color(0xFFF26647),
                   onPressed: widget.currentIndex < widget.contents.length - 1
                       ? () {
                           int nextIndex = widget.currentIndex + 1;
-                          navigateToCard(nextIndex);
-                          _loadImage();
+                          navigateToCard(nextIndex); // 다음 카드로 이동
+                          _loadImage(); // 이미지 로드
+                          // 다음 카드에 해당하는 올바른 음성 데이터 불러오기
                           TtsService.fetchCorrectAudio(
                                   widget.cardIds[nextIndex])
                               .then((_) {
@@ -407,6 +415,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
           ],
         ),
       ),
+      // 녹음 시작/중지 버튼
       floatingActionButton: Container(
         width: 70,
         height: 70,

@@ -100,7 +100,6 @@ class _ReviewCardState extends State<ReviewCard> {
   }
 
   void _onListenPressed() async {
-    //await TtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex]);
     await TtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
     setState(() {
@@ -299,10 +298,6 @@ class _ReviewCardState extends State<ReviewCard> {
                             fontWeight: FontWeight.w500,
                             color: Color.fromARGB(255, 231, 156, 135)),
                       ),
-                      // Text(
-                      //   currentEngPronunciation,
-                      //   style: TextStyle(fontSize: 22, color: Colors.grey[700]),
-                      // ),
                       const SizedBox(
                         height: 8,
                       ),

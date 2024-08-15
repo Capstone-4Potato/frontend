@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
-// Asynchronously fetch data from the backend
+// 학습카드 리스트 API (음절, 단어, 문장)
 Future<List<dynamic>?> fetchData(String category, String subcategory) async {
   try {
     String? token = await getAccessToken();

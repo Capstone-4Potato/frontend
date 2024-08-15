@@ -1,6 +1,7 @@
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
+// 맞춤 문장 북마크 API
 Future<void> updateCustomBookmark(int cardId, bool newStatus) async {
   // 토큰을 가져오는 함수를 별도 메서드로 분리
   Future<String?> fetchAccessToken() async {

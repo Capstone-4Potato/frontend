@@ -3,6 +3,7 @@ import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
+// 맞춤 문장 피드백 API
 Future<FeedbackData?> customFeedback(
     int cardId, String base64userAudio, String base64correctAudio) async {
   Map<String, dynamic> feedbackRequest = {

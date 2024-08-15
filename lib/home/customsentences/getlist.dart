@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
+// 맞춤 문장 리스트 API
 Future<List<dynamic>?> fetchCustomList() async {
   try {
     String? token = await getAccessToken();

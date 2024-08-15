@@ -17,6 +17,7 @@ class CustomTtsService {
 
   String? base64CorrectAudio; // 여기에 base64 오디오 데이터를 저장합니다.
 
+  // 맞춤 문장 correctAudio API
   static Future<void> fetchCorrectAudio(int cardId) async {
     String? token = await getAccessToken();
     final audioUrl = '$_baseUrl$cardId';
