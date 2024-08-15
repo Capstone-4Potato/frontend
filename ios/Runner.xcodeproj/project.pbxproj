@@ -474,7 +474,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = UM8F2HHYN4;
 				ENABLE_BITCODE = NO;
-				FLUTTER_BUILD_NAME = 1.1.1;
+				FLUTTER_BUILD_NAME = 1.1.2;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "발밤발밤";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -482,7 +482,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.potato.balbambalbam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -662,7 +662,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = UM8F2HHYN4;
 				ENABLE_BITCODE = NO;
-				FLUTTER_BUILD_NAME = 1.1.1;
+				FLUTTER_BUILD_NAME = 1.1.2;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "발밤발밤";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -670,7 +670,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.potato.balbambalbam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -694,7 +694,7 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = UM8F2HHYN4;
 				ENABLE_BITCODE = NO;
-				FLUTTER_BUILD_NAME = 1.1.1;
+				FLUTTER_BUILD_NAME = 1.1.2;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "발밤발밤";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
@@ -702,7 +702,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.potato.balbambalbam;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

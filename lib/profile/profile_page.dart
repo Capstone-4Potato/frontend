@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/login_platform.dart';
-import 'package:flutter_application_1/profile/editprofile_screen.dart';
-import 'package:flutter_application_1/profile/retutorial.dart';
-import 'package:flutter_application_1/profile/sign_out_social.dart';
-import 'package:flutter_application_1/profile/signout.dart';
-import 'package:flutter_application_1/profile/withdrawal_screen.dart';
-import 'package:flutter_application_1/login_screen.dart';
+import 'package:flutter_application_1/login/login_platform.dart';
+import 'package:flutter_application_1/profile/editprofile/editprofile_screen.dart';
+import 'package:flutter_application_1/profile/tutorial/retutorial.dart';
+import 'package:flutter_application_1/profile/logout/sign_out_social.dart';
+import 'package:flutter_application_1/profile/logout/signout.dart';
+import 'package:flutter_application_1/profile/deleteaccount/withdrawal_screen.dart';
+import 'package:flutter_application_1/login/login_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -47,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  // 회원정보 받기 API
   Future<void> userData() async {
     String? token = await getAccessToken();
     var url = Uri.parse('http://potato.seatnullnull.com/users');
@@ -221,6 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  // 로그아웃 다이알로그
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -252,9 +254,9 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () async {
                 print(
                     'Current login platform: $_loginPlatform'); // Add this line
-                await SignOutService.signOut(_loginPlatform);
-                signout();
-                _resetUserProfile(); // Reset user data on sign out
+                await SignOutService.signOut(_loginPlatform); // 소셜로그인 로그아웃하기
+                signout(); // 앱 로그아웃하기
+                _resetUserProfile();
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => LoginScreen()),

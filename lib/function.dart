@@ -1,27 +1,28 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/syllablelist/syllable_consonants_1.dart';
-import 'package:flutter_application_1/syllablelist/syllable_consonants_2.dart';
-import 'package:flutter_application_1/syllablelist/syllable_consonants_3.dart';
-import 'package:flutter_application_1/syllablelist/syllable_consonants_4.dart';
-import 'package:flutter_application_1/syllablelist/syllable_consonants_5.dart';
-import 'package:flutter_application_1/syllablelist/syllable_consonants_6.dart';
-import 'package:flutter_application_1/syllablelist/syllable_consonants_7.dart';
-import 'package:flutter_application_1/syllablelist/syllable_vowels_1.dart';
-import 'package:flutter_application_1/syllablelist/syllable_vowels_2.dart';
-import 'package:flutter_application_1/syllablelist/syllable_vowels_3.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_1.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_2.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_3.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_4.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_5.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_6.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_7.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels_1.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels_2.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels_3.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
-import 'package:flutter_application_1/wordlist/word_final_consonants_1.dart';
-import 'package:flutter_application_1/wordlist/word_final_consonants_2.dart';
-import 'package:flutter_application_1/wordlist/word_final_consonants_3.dart';
-import 'package:flutter_application_1/wordlist/word_final_consonants_4.dart';
-import 'package:flutter_application_1/wordlist/word_final_consonants_5.dart';
-import 'package:flutter_application_1/wordlist/word_final_consonants_6.dart';
-import 'package:flutter_application_1/wordlist/word_final_consonants_7.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_1.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_2.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_3.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_4.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_5.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_6.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_7.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 
+// 음절, 단어, 문장 학습 카드 북마크 API
 Future<void> updateBookmarkStatus(int cardId, bool newStatus) async {
   String? token = await getAccessToken();
   var url = Uri.parse('http://potato.seatnullnull.com/cards/bookmark/$cardId');
@@ -74,6 +75,7 @@ Future<void> updateBookmarkStatus(int cardId, bool newStatus) async {
   }
 }
 
+// 음절, 단어, 문장 사용자 피드백 API
 Future<FeedbackData?> getFeedback(
     int cardId, String base64userAudio, String base64correctAudio) async {
   Map<String, dynamic> feedbackRequest = {
@@ -138,10 +140,13 @@ Future<FeedbackData?> getFeedback(
   }
 }
 
+// 단어, 문장, 사용자문장 피드백 화면에서 잘못발음한 텍스트 표현하기 위함
 List<TextSpan> buildTextSpans(String text, List<int> mistakenIndexes) {
   List<TextSpan> spans = [];
+
   for (int i = 0; i < text.length; i++) {
     final bool isMistaken = mistakenIndexes.contains(i);
+    // 잘못된 문자라면 빨간색, 그렇지 않다면 검정색
     TextStyle textStyle = isMistaken
         ? TextStyle(
             color: Color(0xFFFF0000), fontSize: 20, fontWeight: FontWeight.bold)
@@ -152,6 +157,7 @@ List<TextSpan> buildTextSpans(String text, List<int> mistakenIndexes) {
   return spans;
 }
 
+// 추천 학습 링크 UI : 단어 / 문장 / 사용자 맞춤 문장
 List<TextSpan> recommendText(List<String> ids, List<String> texts,
     List<String> categories, List<String> subcategories, BuildContext context) {
   // 색상 리스트 정의
@@ -219,6 +225,7 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
   }
 }
 
+// 단어 학습 피드백에서 추천 학습 링크 페이지 전환
 void _handleTap(
     BuildContext context, String category, String subcategory, String text) {
   //페이지 이동 로직 구현

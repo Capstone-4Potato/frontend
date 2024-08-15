@@ -1,22 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/learninginfo/deletephonemes.dart';
-//import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/gettestlist.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testcard.dart';
-
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Korean Pronunciation Test',
-//       home: restartTestScreen(),
-//     );
-//   }
-// }
 
 class restartTestScreen extends StatefulWidget {
   const restartTestScreen({super.key});

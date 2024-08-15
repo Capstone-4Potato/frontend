@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/customsentence/start.dart';
-import 'package:flutter_application_1/home/sentence_category.dart';
-import 'package:flutter_application_1/home/syllable_category.dart';
-import 'package:flutter_application_1/home/word_category.dart';
+import 'package:flutter_application_1/home/customsentences/customsentence_page.dart';
+import 'package:flutter_application_1/home/sentecnes/sentence_category.dart';
+import 'package:flutter_application_1/home/syllables/syllable_category.dart';
+import 'package:flutter_application_1/home/words/word_category.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,13 +21,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
-        // title: Text(
-        //   'Home Page',
-        //   style: TextStyle(
-        //     fontSize: screenWidth * 0.05, // Responsive font size for the title
-        //   ),
-        // ),
-        // centerTitle: true, // Center the title in the AppBar
       ),
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(

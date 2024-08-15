@@ -1,23 +1,8 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart';
 import 'package:flutter_application_1/home/home_page.dart';
 import 'package:flutter_application_1/profile/profile_page.dart';
 import 'package:flutter_application_1/review/review_page.dart';
 import 'package:flutter_application_1/learninginfo/study_info_page.dart';
-
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: MainPage(),
-//     );
-//   }
-// }
 
 class MainPage extends StatefulWidget {
   final int initialIndex;
@@ -29,6 +14,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   late int _selectedIndex;
 
+  // 각 탭에 해당하는 페이지들 정의
   final List<Widget> _pages = [
     HomePage(),
     ReviewPage(),
@@ -39,6 +25,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    // 초기 탭 인덱스 설정
     _selectedIndex = widget.initialIndex;
   }
 
@@ -51,11 +38,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: const Color(0xFFF5F5F5),
-
-      //   // title: Text('Bottom Navigation Bar Sample'),
-      // ),
+      // 현재 선택된 페이지 표시
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed, // 항목 위치 고정

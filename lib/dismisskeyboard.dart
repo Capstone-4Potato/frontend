@@ -1,14 +1,5 @@
 import 'package:flutter/material.dart';
 
-// class MyWidget extends StatelessWidget {
-//   const MyWidget({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
-
 class DismissKeyboard extends StatelessWidget {
   final Widget child;
 
@@ -17,6 +8,7 @@ class DismissKeyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // 화면을 터치했을 때 키보드를 숨기는 동작 처리
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
         if (!currentFocus.hasPrimaryFocus &&

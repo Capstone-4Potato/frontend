@@ -3,20 +3,7 @@ import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/gettestlist.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testcard.dart';
 
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Korean Pronunciation Test',
-//       home: StartTestScreen(),
-//     );
-//   }
-// }
-
+// 로그인 -> 회원가입 -> 튜토리얼 -> 취약음테스트 시작 페이지
 class StartTestScreen extends StatefulWidget {
   const StartTestScreen({super.key});
 
@@ -38,7 +25,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
 
   Future<void> initTestData() async {
     var data = await fetchTestData();
-    print(data);
+    // print(data);
 
     if (data != null) {
       setState(() {

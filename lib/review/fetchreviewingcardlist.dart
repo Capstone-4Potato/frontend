@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
-// Asynchronously fetch data from the backend
 Future<List<dynamic>?> fetchReviewList(
     String category, String subcategory) async {
   try {

@@ -1,6 +1,7 @@
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
+// 취약음테스트 테스트 완료 API
 Future<int> testfinalize() async {
   try {
     String? token = await getAccessToken();

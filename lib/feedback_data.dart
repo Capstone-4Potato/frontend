@@ -13,8 +13,6 @@ class FeedbackData {
   final List<String> recommendCardSubcategory;
   final Uint8List userWaveformImage;
   final Uint8List correctWaveformImage;
-  final double userAudioDuration;
-  final double correctAudioDuration;
 
   FeedbackData({
     required this.cardId,
@@ -28,8 +26,6 @@ class FeedbackData {
     required this.recommendCardSubcategory,
     required this.userWaveformImage,
     required this.correctWaveformImage,
-    required this.userAudioDuration,
-    required this.correctAudioDuration,
   });
 
   factory FeedbackData.fromJson(Map<String, dynamic> json) {
@@ -66,8 +62,6 @@ class FeedbackData {
       recommendCardSubcategory: recommendCardSubcategory,
       userWaveformImage: base64Decode(json['waveform']['userWaveform']),
       correctWaveformImage: base64Decode(json['waveform']['correctWaveform']),
-      userAudioDuration: json['waveform']['userAudioDuration'],
-      correctAudioDuration: json['waveform']['correctAudioDuration'],
     );
   }
 }

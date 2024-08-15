@@ -1,6 +1,7 @@
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
+// 학습 카드에 취약음소 표시 갱신 API
 Future<void> updatecardweaksound() async {
   try {
     String? token = await getAccessToken();

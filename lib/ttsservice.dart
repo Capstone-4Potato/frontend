@@ -7,7 +7,6 @@ import 'package:path_provider/path_provider.dart';
 
 class TtsService {
   static final TtsService _instance = TtsService._internal();
-  // 추가: instance에 대한 getter 메서드
   static TtsService get instance => _instance;
 
   TtsService._internal();
@@ -15,8 +14,9 @@ class TtsService {
   static final AudioPlayer _audioPlayer = AudioPlayer();
   static const String _baseUrl = 'http://potato.seatnullnull.com/cards/';
 
-  String? base64CorrectAudio; // 여기에 base64 오디오 데이터를 저장합니다.
+  String? base64CorrectAudio;
 
+  // correctAudio를 서버에서 가져오는 메서드
   static Future<void> fetchCorrectAudio(int cardId) async {
     String? token = await getAccessToken();
     final audioUrl = '$_baseUrl$cardId';
@@ -29,21 +29,23 @@ class TtsService {
         },
       );
       if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        final String base64correctAudio = jsonData['correctAudio'];
-        _instance.base64CorrectAudio = base64correctAudio;
-        // Save audio to a file
+        // 응답이 성공적인 경우
+        final jsonData = jsonDecode(response.body); // 응답 데이터를 디코딩
+        final String base64correctAudio =
+            jsonData['correctAudio']; // 오디오 데이터 추출
+        _instance.base64CorrectAudio = base64correctAudio; // 인스턴스 변수에 저장
+        // 오디오 파일로 저장
         await _instance.saveAudioToFile(cardId, base64correctAudio);
-        return; // Return the base64 string of the correct audio
+        return;
       } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh and retry the request
+        // 토큰이 만료된 경우
         print('Access token expired. Refreshing token...');
 
-        // Refresh the token
+        // 토큰 갱신 시도
         bool isRefreshed = await refreshAccessToken();
 
         if (isRefreshed) {
-          // Retry request with new token
+          // 갱신에 성공하면 요청을 다시 시도
           print('Token refreshed successfully. Retrying request...');
           String? newToken = await getAccessToken();
           final retryResponse = await http.get(
@@ -59,7 +61,7 @@ class TtsService {
             final String base64correctAudio = jsonData['correctAudio'];
             _instance.base64CorrectAudio = base64correctAudio;
             await _instance.saveAudioToFile(cardId, base64correctAudio);
-            return; // Return the base64 string of the correct audio
+            return;
           } else {
             final errorMessage = jsonDecode(retryResponse.body)['message'];
             throw Exception('Failed to load audio after retry: $errorMessage');
@@ -78,27 +80,21 @@ class TtsService {
     }
   }
 
+  // 오디오 데이터를 파일로 저장하는 메서드
   Future<void> saveAudioToFile(int cardId, String base64String) async {
     final bytes = base64Decode(base64String);
     final String dir = (await getTemporaryDirectory()).path;
-    final String fileName =
-        'correct_audio_$cardId.wav'; // 파일 이름을 cardId에 기반하여 생성
+    final String fileName = 'correct_audio_$cardId.wav';
     final File file = File('$dir/$fileName');
 
-    // Write bytes to a temporary file
     await file.writeAsBytes(bytes);
   }
 
+  // 저장된 오디오 파일을 재생하는 메서드
   Future<void> playCachedAudio(int cardId) async {
     final String dir = (await getTemporaryDirectory()).path;
-    final String fileName =
-        'correct_audio_$cardId.wav'; // 파일 이름을 cardId에 기반하여 생성
+    final String fileName = 'correct_audio_$cardId.wav';
     final File file = File('$dir/$fileName');
     await _audioPlayer.play(DeviceFileSource(file.path));
-  }
-
-  Future<void> stopAudioPlayer() async {
-    await _audioPlayer.stop();
-    await _audioPlayer.release(); // 명시적으로 오디오 세션 해제
   }
 }

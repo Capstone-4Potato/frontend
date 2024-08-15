@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
+// 취약음 테스트 리스트 받아오는 API
 Future<List<dynamic>?> fetchTestData() async {
   try {
     var url = Uri.parse('http://potato.seatnullnull.com/test');

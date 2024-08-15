@@ -59,6 +59,7 @@ class _TestCardState extends State<TestCard> {
     await _uploadRecording(path);
   }
 
+  // 서버로 사용자가 녹음한 오디오 전송
   Future<void> _uploadRecording(String? path) async {
     if (path != null) {
       String? token = await getAccessToken();
@@ -135,7 +136,6 @@ class _TestCardState extends State<TestCard> {
   void _showUploadErrorDialog() {
     showDialog(
       context: context,
-      //barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Error'),
@@ -163,12 +163,14 @@ class _TestCardState extends State<TestCard> {
     int responseCode = await testfinalize();
     String title;
     String content;
-
+    // 테스트했고 틀린 발음 바탕으로 학습 카드에 취약음소 표시
     if (responseCode == 200) {
       updatecardweaksound();
       title = 'Test Completed';
       content = 'You have completed the pronunciation test.';
-    } else if (responseCode == 404) {
+    }
+    // 테스트했는데 100점 맞았을 때
+    else if (responseCode == 404) {
       title = 'Perfect Pronunciation';
       content = 'You have no mispronunciations. Well done!';
     } else {
@@ -252,18 +254,10 @@ class _TestCardState extends State<TestCard> {
                           style: TextStyle(
                               fontSize: 40, fontWeight: FontWeight.bold)),
                       SizedBox(height: 7),
-                      // Text('[${widget.testPronunciations[_currentIndex]}]',
-                      //     style:
-                      //         TextStyle(fontSize: 24, color: Colors.grey[700])),
                       Text('[${widget.testEngPronunciations[_currentIndex]}]',
                           style:
                               TextStyle(fontSize: 24, color: Colors.grey[700])),
                       SizedBox(height: 4),
-                      // Text('[${widget.testEngPronunciations[_currentIndex]}]',
-                      //     style:
-                      //         TextStyle(fontSize: 24, color: Colors.grey[700])),
-
-                      //engTranslation
                       Text(
                         '${widget.testPronunciations[_currentIndex]}',
                         style: TextStyle(
@@ -332,6 +326,7 @@ class _TestCardState extends State<TestCard> {
           ],
         ),
       ),
+      // 녹음하기 버튼
       floatingActionButton: Container(
         width: 70,
         height: 70,
