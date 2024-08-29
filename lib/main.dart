@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/login/login_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
@@ -6,7 +7,11 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  KakaoSdk.init(nativeAppKey: '노션에 적어둔 키');
+  // 세로 방향 고정
+  await SystemChrome.setPreferredOrientations([
+    //DeviceOrientation.portraitUp,
+  ]);
+  KakaoSdk.init(nativeAppKey: 'f8f93eaab1213c026ea40c425a054ea1');
   Widget initialScreen = await _checkTokenStatus();
 
   runApp(MyApp(initialScreen: initialScreen));
@@ -44,6 +49,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'BM_Jua',
       ),
       home: initialScreen,
     );

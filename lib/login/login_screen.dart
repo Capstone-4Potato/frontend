@@ -1,10 +1,15 @@
+import 'package:convert/convert.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/profile/logout/sign_out_social.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -190,33 +195,42 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.sizeOf(context).width / 393;
+    double height = MediaQuery.sizeOf(context).height / 852;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Spacer(),
-            Image.asset(
-              'assets/bam.png',
-              width: 100,
-              height: MediaQuery.of(context).size.height * 0.12,
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 18.0, horizontal: 26),
-              child: Text(
-                'Log in or sign up to get started',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 28.0,
-                  fontWeight: FontWeight.bold,
+            const Spacer(),
+            Flexible(
+              flex: 3,
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/image/title_logo.svg',
+                  width: 270 * width,
+                  height: 157 * height,
                 ),
               ),
             ),
+            const Spacer(
+              flex: 1,
+            ),
+            Text(
+              'Log in or sign up to\nGet Started !',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 28.0 * height,
+                fontWeight: FontWeight.w400,
+                wordSpacing: 1.1 * width,
+                height: 1.2 * height,
+              ),
+            ),
             SizedBox(
-              height: 20,
+              height: 10 * height,
             ),
             SignInImageButton(
               assetName: 'assets/engapple.png',
@@ -260,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
             ),
-            Spacer(flex: 2),
+            const Spacer(flex: 2),
           ],
         ),
       ),
@@ -281,14 +295,16 @@ class SignInImageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height / 852;
+
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10.0 * height),
       child: InkWell(
         onTap: onPressed,
         child: Image.asset(
           assetName,
           width: double.infinity, // Set the image to the width of the screen
-          height: 50, // Set the image height
+          height: 50 * height, // Set the image height
           fit: BoxFit.contain, // Cover the button area
         ),
       ),

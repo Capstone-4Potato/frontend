@@ -87,7 +87,7 @@ class _UserInputFormState extends State<UserInputForm> {
               child: Column(
                 children: [
                   // SizedBox(height: 10),
-                  Text(
+                  const Text(
                     'Almost done!',
                     style: TextStyle(
                       color: Colors.black,
@@ -95,8 +95,8 @@ class _UserInputFormState extends State<UserInputForm> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'For effective Korean pronunciation correction,\nwe provide voices tailored to your age and gender.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -104,7 +104,7 @@ class _UserInputFormState extends State<UserInputForm> {
                       fontSize: 12.0,
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Birth Year',
@@ -116,12 +116,12 @@ class _UserInputFormState extends State<UserInputForm> {
                       focusedBorder: OutlineInputBorder(
                         // 포커스 상태일 때의 테두리 스타일
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Color(0xFFF26647), // 테두리 색상 변경
                           width: 1.5, // 테두리 너비
                         ),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 15.0, horizontal: 15.0), // 내부 여백 설정
                     ),
                     keyboardType: TextInputType.number,
@@ -140,7 +140,7 @@ class _UserInputFormState extends State<UserInputForm> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   DropdownButtonFormField<int>(
                     decoration: InputDecoration(
                       labelText: 'Gender',
@@ -152,12 +152,12 @@ class _UserInputFormState extends State<UserInputForm> {
                       focusedBorder: OutlineInputBorder(
                         // 포커스 상태일 때의 테두리 스타일
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Color(0xFFF26647), // 테두리 색상 변경
                           width: 1.5, // 테두리 너비
                         ),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 15.0, horizontal: 15.0),
                     ),
                     items: <int>[0, 1].map((int value) {
@@ -181,7 +181,7 @@ class _UserInputFormState extends State<UserInputForm> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Nickname',
@@ -193,12 +193,12 @@ class _UserInputFormState extends State<UserInputForm> {
                       focusedBorder: OutlineInputBorder(
                         // 포커스 상태일 때의 테두리 스타일
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Color(0xFFF26647), // 테두리 색상 변경
                           width: 1.5, // 테두리 너비
                         ),
                       ),
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                           vertical: 15.0, horizontal: 15.0),
                     ),
                     onSaved: (value) {
@@ -217,7 +217,7 @@ class _UserInputFormState extends State<UserInputForm> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
@@ -228,17 +228,16 @@ class _UserInputFormState extends State<UserInputForm> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => TutorialScreen()),
+                              builder: (context) => const TutorialScreen()),
                           (route) => false,
                         );
                       }
-                    },
-                    child: Text('Submit',
-                        style: TextStyle(
-                            fontSize: 20, color: Colors.white)), // 텍스트 크기 조정
+                    }, // 텍스트 크기 조정
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFF26647), // 버튼 배경색 설정
+                      backgroundColor: const Color(0xFFF26647), // 버튼 배경색 설정
                     ),
+                    child: const Text('Submit',
+                        style: TextStyle(fontSize: 20, color: Colors.white)),
                   ),
                 ],
               ),

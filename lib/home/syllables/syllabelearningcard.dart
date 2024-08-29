@@ -21,7 +21,7 @@ class SyllableLearningCard extends StatefulWidget {
   final List<String> explanations;
   final List<String> pictures;
 
-  SyllableLearningCard({
+  const SyllableLearningCard({
     Key? key,
     required this.currentIndex,
     required this.cardIds,
@@ -136,7 +136,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
       barrierLabel: "Feedback",
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
-        return SizedBox();
+        return const SizedBox();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         return Transform(
@@ -159,8 +159,8 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Recording Error"),
-          content: Text(
+          title: const Text("Recording Error"),
+          content: const Text(
             "Please try recording again.",
             style: TextStyle(fontSize: 16),
           ),
@@ -169,7 +169,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
               onPressed: () {
                 Navigator.of(context).pop(); // 다이얼로그 닫기
               },
-              child: Text(
+              child: const Text(
                 'OK',
                 style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
               ),
@@ -205,14 +205,14 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
+          title: const Text("End Learning"),
+          content: const Text("Do you want to end learning?"),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("Continue Learning"),
+              child: const Text("Continue Learning"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -221,7 +221,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("End"),
+              child: const Text("End"),
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
@@ -262,7 +262,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,
@@ -282,8 +282,8 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
-                  color: Color(0XFFF26647),
+                  icon: const Icon(Icons.arrow_back_ios),
+                  color: const Color(0XFFF26647),
                   onPressed: widget.currentIndex > 0
                       ? () {
                           int nextIndex = widget.currentIndex - 1;
@@ -313,7 +313,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                     children: <Widget>[
                       Text(
                         currentContent,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 38, fontWeight: FontWeight.bold),
                       ),
                       Text(
@@ -322,7 +322,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                       ),
                       Text(
                         currentPronunciation,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
                             color: Color.fromARGB(255, 231, 156, 135)),
@@ -334,7 +334,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFF26647),
-                          minimumSize: Size(220, 40),
+                          minimumSize: const Size(220, 40),
                         ),
                         onPressed: _onListenPressed,
                         icon: const Icon(
@@ -355,7 +355,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                 ),
                 // 다음 카드로 이동 버튼
                 IconButton(
-                  icon: Icon(Icons.arrow_forward_ios),
+                  icon: const Icon(Icons.arrow_forward_ios),
                   color: const Color(0xFFF26647),
                   onPressed: widget.currentIndex < widget.contents.length - 1
                       ? () {
@@ -380,7 +380,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.82,
                   height: MediaQuery.of(context).size.height * 0.54,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFFF5F5F5),
                   ),
                   child: Column(
@@ -405,35 +405,36 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                 ),
               ),
             if (_isLoading)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 160),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 160),
                 child: CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
                 ),
               ),
           ],
         ),
       ),
       // 녹음 시작/중지 버튼
-      floatingActionButton: Container(
+      floatingActionButton: SizedBox(
         width: 70,
         height: 70,
         child: FloatingActionButton(
-          onPressed: _canRecord && !_isLoading ? _recordAudio : null, // 조건 업데이트
+          onPressed: _canRecord && !_isLoading ? _recordAudio : null,
+          backgroundColor: _isLoading
+              ? const Color.fromARGB(37, 206, 204, 204) // 로딩 중 색상
+              : _canRecord
+                  ? (_isRecording
+                      ? const Color(0xFF976841)
+                      : const Color(0xFFF26647))
+                  : const Color.fromARGB(37, 206, 204, 204),
+          elevation: 0.0,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(35))), // 조건 업데이트
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
             size: 40,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
-          backgroundColor: _isLoading
-              ? const Color.fromARGB(37, 206, 204, 204) // 로딩 중 색상
-              : _canRecord
-                  ? (_isRecording ? Color(0xFF976841) : Color(0xFFF26647))
-                  : const Color.fromARGB(37, 206, 204, 204),
-          elevation: 0.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35))),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

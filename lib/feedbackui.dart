@@ -8,7 +8,8 @@ class FeedbackUI extends StatefulWidget {
   final FeedbackData feedbackData;
   final String recordedFilePath;
   // 필수 매개변수로 피드백 데이터와 녹음된 파일 경로를 받는다
-  FeedbackUI({required this.feedbackData, required this.recordedFilePath});
+  const FeedbackUI(
+      {super.key, required this.feedbackData, required this.recordedFilePath});
 
   @override
   State<FeedbackUI> createState() => _FeedbackUIState();
@@ -40,7 +41,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
               Container(
                 width: constraints.maxWidth * 0.8,
                 height: constraints.maxHeight * 0.62,
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: constraints.maxHeight * 0.05),
@@ -66,7 +67,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                               child: LinearProgressIndicator(
                                 value: widget.feedbackData.userScore / 100.0,
                                 backgroundColor: Colors.grey[300],
-                                valueColor: AlwaysStoppedAnimation<Color>(
+                                valueColor: const AlwaysStoppedAnimation<Color>(
                                     Color(0xFFF26647)),
                                 minHeight: constraints.maxHeight * 0.016,
                               ),
@@ -79,7 +80,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                             style: TextStyle(
                               fontSize: constraints.maxHeight * 0.02,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFFF26647),
+                              color: const Color(0xFFF26647),
                             ),
                           ),
                         ],
@@ -139,7 +140,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                 right: 14,
                 bottom: constraints.maxHeight * 0.26,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.volume_up,
                     color: Color(0xFF644829),
                   ),
@@ -152,7 +153,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                 right: 14,
                 bottom: constraints.maxHeight * 0.12,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.volume_up,
                     color: Color(0xFFF26647),
                   ),
@@ -168,7 +169,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                 right: 5,
                 top: 5,
                 child: IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   iconSize: constraints.maxHeight * 0.034,
                   onPressed: () => Navigator.of(context).pop(),
                 ),
