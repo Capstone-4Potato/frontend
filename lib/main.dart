@@ -11,7 +11,7 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([
     //DeviceOrientation.portraitUp,
   ]);
-  KakaoSdk.init(nativeAppKey: 'f8f93eaab1213c026ea40c425a054ea1');
+  KakaoSdk.init(nativeAppKey: '앱키');
   Widget initialScreen = await _checkTokenStatus();
 
   runApp(MyApp(initialScreen: initialScreen));
