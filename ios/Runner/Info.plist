@@ -38,7 +38,6 @@
 			<array>
 				<string>balbambalbamurlscheme</string>
 			</array>
-			
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
@@ -105,11 +104,9 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<string>LaunchScreen.storyboard</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-	<!-- <key>UIStatusBarHidden</key>
-	<true/> -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -133,5 +130,7 @@
 	<string>발밤발밤</string>
 	<key>naverServiceAppUrlScheme</key>
 	<string>balbambalbamurlscheme</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
 </dict>
 </plist>

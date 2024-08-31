@@ -226,7 +226,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontSize: 28.0 * height,
                 fontWeight: FontWeight.w400,
                 wordSpacing: 1.1 * width,
-                height: 1.2 * height,
               ),
             ),
             SizedBox(
