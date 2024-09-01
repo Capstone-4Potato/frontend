@@ -199,7 +199,6 @@ class _LoginScreenState extends State<LoginScreen> {
     double height = MediaQuery.sizeOf(context).height / 852;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -222,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
               'Log in or sign up to\nGet Started !',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.black,
+                color: bam,
                 fontSize: 28.0 * height,
                 fontWeight: FontWeight.w400,
                 wordSpacing: 1.1 * width,

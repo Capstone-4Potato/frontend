@@ -1,4 +1,8 @@
+import 'package:convert/convert.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/signup/tutorial.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
@@ -17,10 +21,15 @@ class UserInputForm extends StatefulWidget {
 
 class _UserInputFormState extends State<UserInputForm> {
   final _formKey = GlobalKey<FormState>();
+  final _fieldKey_1 = GlobalKey<FormFieldState>();
+  final _fieldKey_2 = GlobalKey<FormFieldState>();
+  final _fieldKey_3 = GlobalKey<FormFieldState>();
   late String birthYear;
   late int gender;
   late String nickname;
   late int age;
+  Color fieldBgColor = const Color.fromARGB(255, 248, 241, 227);
+  var isButtonEnabled = List<bool>.filled(3, false);
 
   void calculateAge() {
     int currentYear = DateTime.now().year;
@@ -72,175 +81,325 @@ class _UserInputFormState extends State<UserInputForm> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.sizeOf(context).width / 393;
+    double height = MediaQuery.sizeOf(context).height / 852;
+
     return DismissKeyboard(
       child: Scaffold(
-        //resizeToAvoidBottomInset: false,
+        backgroundColor: primary,
         appBar: AppBar(
-          backgroundColor: const Color(0xFFF5F5F5),
+          backgroundColor: background,
         ),
-        backgroundColor: const Color(0xFFF5F5F5),
         body: SingleChildScrollView(
           child: Form(
             key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Column(
-                children: [
-                  // SizedBox(height: 10),
-                  const Text(
-                    'Almost done!',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
+            child: Stack(
+              children: [
+                Container(
+                  height: 597 * height,
+                  decoration: BoxDecoration(
+                    color: background,
+                    borderRadius: const BorderRadiusDirectional.only(
+                      bottomStart: Radius.circular(40),
+                      bottomEnd: Radius.circular(40),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'For effective Korean pronunciation correction,\nwe provide voices tailored to your age and gender.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12.0,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Birth Year',
-                      fillColor: Colors.white, // 내부 배경색을 흰색으로 설정
-                      filled: true, // 배경색 채우기 활성화
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ), // 모서리를 더 둥글게
-                      focusedBorder: OutlineInputBorder(
-                        // 포커스 상태일 때의 테두리 스타일
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFF26647), // 테두리 색상 변경
-                          width: 1.5, // 테두리 너비
+                ),
+                Padding(
+                  padding: EdgeInsets.all(30.0 * height),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20 * height,
+                      ),
+                      Text(
+                        'Almost Done!',
+                        style: TextStyle(
+                          color: bam,
+                          fontSize: 30.0 * height,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 15.0), // 내부 여백 설정
-                    ),
-                    keyboardType: TextInputType.number,
-                    onSaved: (value) {
-                      birthYear = value!;
-                      calculateAge();
-                    },
-                    validator: (value) {
-                      int? year = int.tryParse(value!);
-                      print(year);
-                      if (year == null) {
-                        return 'Please enter a valid year.';
-                      } else if (year < 1924 || year > DateTime.now().year) {
-                        return 'Please enter your birth year.';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  DropdownButtonFormField<int>(
-                    decoration: InputDecoration(
-                      labelText: 'Gender',
-                      fillColor: Colors.white, // 내부 배경색을 흰색으로 설정
-                      filled: true, // 배경색 채우기 활성화
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        // 포커스 상태일 때의 테두리 스타일
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFF26647), // 테두리 색상 변경
-                          width: 1.5, // 테두리 너비
+                      SizedBox(height: 15 * height),
+                      Text(
+                        'For effective Korean pronunciation correction,\nwe provide voices tailored to your age and gender.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: primary,
+                          fontSize: 14.0 * height,
                         ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 15.0),
-                    ),
-                    items: <int>[0, 1].map((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(value == 0 ? 'Male' : 'Female'),
-                      );
-                    }).toList(),
-                    onChanged: (int? newValue) {
-                      setState(() {
-                        gender = newValue!;
-                      });
-                    },
-                    onSaved: (value) {
-                      gender = value!;
-                    },
-                    validator: (value) {
-                      if (value == null /*|| value.isEmpty*/) {
-                        return 'Please select your gender.';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Nickname',
-                      fillColor: Colors.white, // 내부 배경색을 흰색으로 설정
-                      filled: true, // 배경색 채우기 활성화
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+                      SizedBox(height: 75 * height),
+                      TextFormField(
+                        key: _fieldKey_1,
+                        decoration: InputDecoration(
+                          fillColor: isButtonEnabled[0]
+                              ? const Color.fromARGB(255, 248, 241, 227)
+                              : const Color.fromARGB(255, 247, 222, 217),
+                          filled: true, // 배경색 채우기 활성화
+                          hintText: 'Birth Year', // 힌트 텍스트 설정
+                          hintStyle: TextStyle(
+                            color: bam.withOpacity(0.5),
+                            fontSize: 20 * height,
+                          ),
+                          helperText: ' ',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: const Color.fromARGB(255, 195, 185, 182),
+                              width: 0.5 * width,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            // 포커스 상태일 때의 테두리 스타일
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: primary,
+                              width: 1.0 * width, // 테두리 너비
+                            ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 232, 57, 26),
+                              width: 1.5,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 232, 57, 26),
+                              width: 1.5,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 15.0 * height,
+                            horizontal: 15.0 * width,
+                          ), // 내부 여백 설정
+                        ),
+                        cursorColor: bam,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          setState(() {
+                            if (_fieldKey_1.currentState != null) {
+                              _fieldKey_1.currentState!.validate()
+                                  ? isButtonEnabled[0] = true
+                                  : isButtonEnabled[0] = false;
+                            }
+                          });
+                        },
+                        onSaved: (value) {
+                          birthYear = value!;
+                          calculateAge();
+                        },
+                        validator: (value) {
+                          int? year = int.tryParse(value!);
+                          print(year);
+                          if (year == null) {
+                            return 'Please enter a valid year.';
+                          } else if (year < 1924 ||
+                              year > DateTime.now().year) {
+                            return 'Please enter your birth year.';
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        // 포커스 상태일 때의 테두리 스타일
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFF26647), // 테두리 색상 변경
-                          width: 1.5, // 테두리 너비
+                      SizedBox(height: 10 * height),
+                      DropdownButtonFormField<int>(
+                        key: _fieldKey_2,
+                        decoration: InputDecoration(
+                          fillColor: isButtonEnabled[1]
+                              ? const Color.fromARGB(255, 248, 241, 227)
+                              : const Color.fromARGB(255, 247, 222, 217),
+                          filled: true, // 배경색 채우기 활성화
+                          hintText: 'Gender', // 힌트 텍스트 설정
+                          hintStyle: TextStyle(
+                            color: bam.withOpacity(0.5),
+                            fontSize: 20 * height,
+                          ),
+                          helperText: ' ',
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: const Color.fromARGB(255, 195, 185, 182),
+                              width: 0.5 * width,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            // 포커스 상태일 때의 테두리 스타일
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: primary,
+                              width: 1.0, // 테두리 너비
+                            ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 232, 57, 26),
+                              width: 1.5,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 232, 57, 26),
+                              width: 1.5,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 15.0 * height,
+                            horizontal: 15.0 * width,
+                          ),
+                        ),
+                        items: <int>[0, 1].map((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(value == 0 ? 'Male' : 'Female'),
+                          );
+                        }).toList(),
+                        onChanged: (int? newValue) {
+                          setState(() {
+                            gender = newValue!;
+                            if (_fieldKey_2.currentState != null) {
+                              _fieldKey_2.currentState!.validate()
+                                  ? isButtonEnabled[1] = true
+                                  : isButtonEnabled[1] = false;
+                            }
+                          });
+                        },
+                        onSaved: (value) {
+                          gender = value!;
+                        },
+                        validator: (value) {
+                          if (value == null /*|| value.isEmpty*/) {
+                            return 'Please select your gender.';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      SizedBox(height: 10 * height),
+                      TextFormField(
+                        key: _fieldKey_3,
+                        decoration: InputDecoration(
+                          hintText: 'Nickname',
+                          hintStyle: TextStyle(
+                            color: bam.withOpacity(0.5),
+                            fontSize: 20 * height,
+                          ),
+                          helperText: ' ',
+                          fillColor: isButtonEnabled[2]
+                              ? const Color.fromARGB(255, 248, 241, 227)
+                              : const Color.fromARGB(255, 247, 222, 217),
+                          filled: true, // 배경색 채우기 활성화
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: const Color.fromARGB(255, 195, 185, 182),
+                              width: 0.5 * width,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            // 포커스 상태일 때의 테두리 스타일
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: BorderSide(
+                              color: primary,
+                              width: 1.0, // 테두리 너비
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 15.0 * height,
+                            horizontal: 15.0 * width,
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 232, 57, 26),
+                              width: 1.5,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 232, 57, 26),
+                              width: 1.5,
+                            ),
+                          ),
+                        ),
+                        cursorColor: bam,
+                        onChanged: (value) {
+                          setState(() {
+                            if (_fieldKey_3.currentState != null) {
+                              _fieldKey_3.currentState!.validate()
+                                  ? isButtonEnabled[2] = true
+                                  : isButtonEnabled[2] = false;
+                            }
+                          });
+                        },
+                        onSaved: (value) {
+                          nickname = value!;
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your nickname.';
+                          } else if (value.length < 3) {
+                            return 'Nickname must be at least 3 characters.';
+                          } else if (value.length > 10) {
+                            return 'Nickname must be at most 10 characters.';
+                          } else if (value.contains(' ')) {
+                            return 'Nickname cannot contain spaces.';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                      SizedBox(height: 110 * height),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 40,
+                  left: 40,
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          signup(); // 서버로 데이터 제출
+                          //튜토리얼로 이동
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const TutorialScreen()),
+                            (route) => false,
+                          );
+                        }
+                      }, // 텍스트 크기 조정
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isButtonEnabled[0] &&
+                                isButtonEnabled[1] &&
+                                isButtonEnabled[2]
+                            ? const Color.fromARGB(255, 232, 120, 71)
+                            : const Color.fromARGB(255, 246, 202, 182),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Submit',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20 * height,
+                            color: Colors.white,
+                            height: 3,
+                          ),
                         ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 15.0),
                     ),
-                    onSaved: (value) {
-                      nickname = value!;
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your nickname.';
-                      } else if (value.length < 3) {
-                        return 'Nickname must be at least 3 characters.';
-                      } else if (value.length > 10) {
-                        return 'Nickname must be at most 10 characters.';
-                      } else if (value.contains(' ')) {
-                        return 'Nickname cannot contain spaces.';
-                      }
-                      return null;
-                    },
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        signup(); // 서버로 데이터 제출
-
-                        //튜토리얼로 이동
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const TutorialScreen()),
-                          (route) => false,
-                        );
-                      }
-                    }, // 텍스트 크기 조정
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF26647), // 버튼 배경색 설정
-                    ),
-                    child: const Text('Submit',
-                        style: TextStyle(fontSize: 20, color: Colors.white)),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

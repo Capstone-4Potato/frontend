@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/login/login_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -11,7 +12,7 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([
     //DeviceOrientation.portraitUp,
   ]);
-  KakaoSdk.init(nativeAppKey: 'ㅇㅇ');
+  KakaoSdk.init(nativeAppKey: '앱키');
   Widget initialScreen = await _checkTokenStatus();
 
   runApp(MyApp(initialScreen: initialScreen));
@@ -48,8 +49,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         fontFamily: 'BM_Jua',
+        scaffoldBackgroundColor: background,
       ),
       home: initialScreen,
     );
