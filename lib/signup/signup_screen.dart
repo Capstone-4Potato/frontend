@@ -28,8 +28,8 @@ class _UserInputFormState extends State<UserInputForm> {
   late int gender;
   late String nickname;
   late int age;
-  Color fieldBgColor = const Color.fromARGB(255, 248, 241, 227);
   var isButtonEnabled = List<bool>.filled(3, false);
+  var isTapped = List<bool>.filled(3, false);
 
   void calculateAge() {
     int currentYear = DateTime.now().year;
@@ -132,10 +132,16 @@ class _UserInputFormState extends State<UserInputForm> {
                       SizedBox(height: 75 * height),
                       TextFormField(
                         key: _fieldKey_1,
+                        style: TextStyle(
+                          color: bam,
+                          fontSize: 20 * height,
+                        ),
                         decoration: InputDecoration(
-                          fillColor: isButtonEnabled[0]
-                              ? const Color.fromARGB(255, 248, 241, 227)
-                              : const Color.fromARGB(255, 247, 222, 217),
+                          fillColor: isTapped[0]
+                              ? isButtonEnabled[0]
+                                  ? const Color.fromARGB(255, 248, 241, 227)
+                                  : const Color.fromARGB(255, 247, 222, 217)
+                              : const Color.fromARGB(255, 248, 241, 227),
                           filled: true, // 배경색 채우기 활성화
                           hintText: 'Birth Year', // 힌트 텍스트 설정
                           hintStyle: TextStyle(
@@ -180,6 +186,7 @@ class _UserInputFormState extends State<UserInputForm> {
                         cursorColor: bam,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
+                          isTapped[0] = true;
                           setState(() {
                             if (_fieldKey_1.currentState != null) {
                               _fieldKey_1.currentState!.validate()
@@ -208,10 +215,23 @@ class _UserInputFormState extends State<UserInputForm> {
                       SizedBox(height: 10 * height),
                       DropdownButtonFormField<int>(
                         key: _fieldKey_2,
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 195, 185, 182),
+                        ),
+                        dropdownColor: const Color.fromARGB(255, 223, 234, 251),
+                        style: TextStyle(
+                          color: bam,
+                          fontFamily: 'BM_Jua',
+                          fontSize: 20 * height,
+                        ),
+                        elevation: 16,
                         decoration: InputDecoration(
-                          fillColor: isButtonEnabled[1]
-                              ? const Color.fromARGB(255, 248, 241, 227)
-                              : const Color.fromARGB(255, 247, 222, 217),
+                          fillColor: isTapped[1]
+                              ? isButtonEnabled[1]
+                                  ? const Color.fromARGB(255, 248, 241, 227)
+                                  : const Color.fromARGB(255, 247, 222, 217)
+                              : const Color.fromARGB(255, 248, 241, 227),
                           filled: true, // 배경색 채우기 활성화
                           hintText: 'Gender', // 힌트 텍스트 설정
                           hintStyle: TextStyle(
@@ -260,6 +280,7 @@ class _UserInputFormState extends State<UserInputForm> {
                           );
                         }).toList(),
                         onChanged: (int? newValue) {
+                          isTapped[1] = true;
                           setState(() {
                             gender = newValue!;
                             if (_fieldKey_2.currentState != null) {
@@ -283,6 +304,10 @@ class _UserInputFormState extends State<UserInputForm> {
                       SizedBox(height: 10 * height),
                       TextFormField(
                         key: _fieldKey_3,
+                        style: TextStyle(
+                          color: bam,
+                          fontSize: 20 * height,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Nickname',
                           hintStyle: TextStyle(
@@ -290,9 +315,11 @@ class _UserInputFormState extends State<UserInputForm> {
                             fontSize: 20 * height,
                           ),
                           helperText: ' ',
-                          fillColor: isButtonEnabled[2]
-                              ? const Color.fromARGB(255, 248, 241, 227)
-                              : const Color.fromARGB(255, 247, 222, 217),
+                          fillColor: isTapped[2]
+                              ? isButtonEnabled[2]
+                                  ? const Color.fromARGB(255, 248, 241, 227)
+                                  : const Color.fromARGB(255, 247, 222, 217)
+                              : const Color.fromARGB(255, 248, 241, 227),
                           filled: true, // 배경색 채우기 활성화
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20.0),
@@ -330,6 +357,7 @@ class _UserInputFormState extends State<UserInputForm> {
                         ),
                         cursorColor: bam,
                         onChanged: (value) {
+                          isTapped[2] = true;
                           setState(() {
                             if (_fieldKey_3.currentState != null) {
                               _fieldKey_3.currentState!.validate()
@@ -384,15 +412,16 @@ class _UserInputFormState extends State<UserInputForm> {
                                 isButtonEnabled[2]
                             ? const Color.fromARGB(255, 232, 120, 71)
                             : const Color.fromARGB(255, 246, 202, 182),
+                        elevation: 4,
                       ),
                       child: Center(
                         child: Text(
                           'Submit',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 20 * height,
+                            fontSize: 25 * height,
                             color: Colors.white,
-                            height: 3,
+                            height: 2.6 * height,
                           ),
                         ),
                       ),
