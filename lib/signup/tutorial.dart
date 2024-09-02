@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/starting_teat_page.dart';
 
 // 회원가입 -> 튜토리얼
@@ -9,33 +10,76 @@ class TutorialScreen extends StatefulWidget {
   _TutorialScreenState createState() => _TutorialScreenState();
 }
 
-class _TutorialScreenState extends State<TutorialScreen> {
-  final PageController _controller = PageController(initialPage: 0);
+class _TutorialScreenState extends State<TutorialScreen>
+    with TickerProviderStateMixin {
+  late PageController _pageController;
+  late TabController _tabController;
   final List<String> _images = [
-    'assets/tutorial1.png',
-    'assets/tutorial2.png',
-    'assets/tutorial3.png',
-    'assets/tutorial4.png',
-    'assets/tutorial5.png',
-    'assets/tutorial6.png',
-    'assets/tutorial7.png',
-    'assets/tutorial8.png',
-    'assets/tutorial9.png', // 마지막 이미지
+    'assets/tutorial/tutorial1.png',
+    'assets/tutorial/tutorial2.png',
+    'assets/tutorial/tutorial3.png',
+    'assets/tutorial/tutorial4.png',
+    'assets/tutorial/tutorial5.png',
+    'assets/tutorial/tutorial6.png',
+    'assets/tutorial/tutorial7.png',
+    'assets/tutorial/tutorial8.png',
+    'assets/tutorial/tutorial9.png', // 마지막 이미지
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _images.length, vsync: this);
+    _pageController = PageController(initialPage: 0);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+    _tabController.dispose();
+  }
+
+  void escapeTutorial(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const StartTestScreen()),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView.builder(
-        controller: _controller,
-        itemCount: _images.length,
-        itemBuilder: (context, index) {
-          // 마지막 페이지일 경우 특별한 뷰를 생성
-          if (index == _images.length - 1) {
-            return buildLastPage(context, _images[index]);
-          }
-          return buildImagePage(_images[index]);
+      backgroundColor: const Color.fromARGB(255, 242, 235, 227),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 242, 235, 227),
+        //backgroundColor: Colors.pink[200],
+        title: TabPageSelector(
+          controller: _tabController,
+          color: const Color.fromARGB(255, 188, 188, 188),
+          selectedColor: primary,
+          borderStyle: BorderStyle.none,
+        ),
+      ),
+      body: GestureDetector(
+        onTap: () {
+          escapeTutorial(context);
         },
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: _images.length,
+          onPageChanged: (index) {
+            _tabController.animateTo(index);
+          },
+          itemBuilder: (context, index) {
+            // 마지막 페이지일 경우 특별한 뷰를 생성
+            if (index == _images.length - 1) {
+              return buildLastPage(context, _images[index]);
+            }
+            return buildImagePage(_images[index]);
+          },
+        ),
       ),
     );
   }
@@ -70,35 +114,26 @@ class _TutorialScreenState extends State<TutorialScreen> {
               // 취약음 테스트 페이지로 이동
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => StartTestScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const StartTestScreen()),
                 (route) => false,
               );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xfff26647),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              textStyle: TextStyle(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              textStyle: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            child: Text(
+            child: const Text(
               '  start  ',
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ),
         ),
       ],
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Home Screen")),
-      body: Center(child: Text("Welcome to the home screen!")),
     );
   }
 }
