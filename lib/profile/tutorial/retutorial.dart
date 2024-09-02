@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/vulnerablesoundtest/starting_teat_page.dart';
 
 // 프로필에서 튜토리얼 다시 보는 페이지
 class RetutorialScreen extends StatefulWidget {
@@ -9,33 +11,72 @@ class RetutorialScreen extends StatefulWidget {
   _RetutorialScreenState createState() => _RetutorialScreenState();
 }
 
-class _RetutorialScreenState extends State<RetutorialScreen> {
-  final PageController _controller = PageController(initialPage: 0);
+class _RetutorialScreenState extends State<RetutorialScreen>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
+  late PageController _pageController;
+
   final List<String> _images = [
-    'assets/tutorial1.png',
-    'assets/tutorial2.png',
-    'assets/tutorial3.png',
-    'assets/tutorial4.png',
-    'assets/tutorial5.png',
-    'assets/tutorial6.png',
-    'assets/tutorial7.png',
-    'assets/tutorial8.png',
-    'assets/tutorial9.png', // 마지막 이미지
+    'assets/tutorial/tutorial1.png',
+    'assets/tutorial/tutorial2.png',
+    'assets/tutorial/tutorial3.png',
+    'assets/tutorial/tutorial4.png',
+    'assets/tutorial/tutorial5.png',
+    'assets/tutorial/tutorial6.png',
+    'assets/tutorial/tutorial7.png',
+    'assets/tutorial/tutorial8.png',
+    'assets/tutorial/tutorial9.png', // 마지막 이미지
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _images.length, vsync: this);
+    _pageController = PageController(initialPage: 0);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pageController.dispose();
+    _tabController.dispose();
+  }
+
+  void escapeTutorial(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const StartTestScreen()),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView.builder(
-        controller: _controller,
-        itemCount: _images.length,
-        itemBuilder: (context, index) {
-          // 마지막 페이지일 경우 특별한 뷰를 생성
-          if (index == _images.length - 1) {
-            return buildLastPage(context, _images[index]);
-          }
-          return buildImagePage(_images[index]);
-        },
+      backgroundColor: const Color.fromARGB(255, 242, 235, 227),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 242, 235, 227),
+        //backgroundColor: Colors.pink[200],
+        title: TabPageSelector(
+          controller: _tabController,
+          color: const Color.fromARGB(255, 188, 188, 188),
+          selectedColor: primary,
+          borderStyle: BorderStyle.none,
+        ),
+      ),
+      body: GestureDetector(
+        onTap: () => escapeTutorial(context),
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: _images.length,
+          itemBuilder: (context, index) {
+            // 마지막 페이지일 경우 특별한 뷰를 생성
+            if (index == _images.length - 1) {
+              return buildLastPage(context, _images[index]);
+            }
+            return buildImagePage(_images[index]);
+          },
+        ),
       ),
     );
   }
@@ -76,13 +117,13 @@ class _RetutorialScreenState extends State<RetutorialScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xfff26647),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              textStyle: TextStyle(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              textStyle: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            child: Text(
+            child: const Text(
               '  start  ',
               style: TextStyle(color: Colors.white, fontSize: 24),
             ),

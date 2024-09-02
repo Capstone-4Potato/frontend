@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/gettestlist.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testcard.dart';
 
@@ -25,7 +26,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
 
   Future<void> initTestData() async {
     var data = await fetchTestData();
-    // print(data);
+    print(data);
 
     if (data != null) {
       setState(() {
@@ -44,22 +45,22 @@ class _StartTestScreenState extends State<StartTestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: background,
       ),
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: background,
       body: Center(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 160.0),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const SizedBox(height: 160.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text(
                 "Before we start learning,\n let's take a simple test.",
                 style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
@@ -71,8 +72,8 @@ class _StartTestScreenState extends State<StartTestScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text(
                 "It takes about 3 minutes.",
                 style: TextStyle(
@@ -82,7 +83,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 30.0),
+            const SizedBox(height: 30.0),
             ElevatedButton(
               onPressed: () {
                 // Add navigation to the test page
@@ -99,18 +100,19 @@ class _StartTestScreenState extends State<StartTestScreen> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xfff26647),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                textStyle: TextStyle(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                textStyle: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              child: Text(
+              child: const Text(
                 '  start  ',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
-            SizedBox(height: 12.0),
+            const SizedBox(height: 12.0),
             ElevatedButton(
               onPressed: () {
                 // skip 하면 메인으로 이동
@@ -122,13 +124,14 @@ class _StartTestScreenState extends State<StartTestScreen> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                textStyle: TextStyle(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                textStyle: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              child: Text(
+              child: const Text(
                 '  skip  ',
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
