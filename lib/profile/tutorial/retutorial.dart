@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/profile/profile_page.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/starting_test_page.dart';
 
 // 프로필에서 튜토리얼 다시 보는 페이지
@@ -43,11 +44,7 @@ class _RetutorialScreenState extends State<RetutorialScreen>
   }
 
   void escapeTutorial(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const StartTestScreen()),
-      (route) => false,
-    );
+    Navigator.pop(context);
   }
 
   @override
@@ -56,7 +53,6 @@ class _RetutorialScreenState extends State<RetutorialScreen>
       backgroundColor: const Color.fromARGB(255, 242, 235, 227),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 242, 235, 227),
-        //backgroundColor: Colors.pink[200],
         title: TabPageSelector(
           controller: _tabController,
           color: const Color.fromARGB(255, 188, 188, 188),
@@ -69,6 +65,9 @@ class _RetutorialScreenState extends State<RetutorialScreen>
         child: PageView.builder(
           controller: _pageController,
           itemCount: _images.length,
+          onPageChanged: (index) {
+            _tabController.animateTo(index);
+          },
           itemBuilder: (context, index) {
             // 마지막 페이지일 경우 특별한 뷰를 생성
             if (index == _images.length - 1) {

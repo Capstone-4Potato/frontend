@@ -49,6 +49,7 @@ class FeedbackData {
       recommendCardSubcategory
           .add(value['subcategory'] ?? ''); // null인 경우 빈 문자열 처리
     });
+    //print(recommendCard);
 
     return FeedbackData(
       cardId: json['cardId'],

@@ -14,6 +14,7 @@ class _TutorialScreenState extends State<TutorialScreen>
     with TickerProviderStateMixin {
   late PageController _pageController;
   late TabController _tabController;
+
   final List<String> _images = [
     'assets/tutorial/tutorial1.png',
     'assets/tutorial/tutorial2.png',
@@ -54,7 +55,6 @@ class _TutorialScreenState extends State<TutorialScreen>
       backgroundColor: const Color.fromARGB(255, 242, 235, 227),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 242, 235, 227),
-        //backgroundColor: Colors.pink[200],
         title: TabPageSelector(
           controller: _tabController,
           color: const Color.fromARGB(255, 188, 188, 188),
