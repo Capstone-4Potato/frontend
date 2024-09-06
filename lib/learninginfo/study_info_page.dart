@@ -3,6 +3,8 @@ import 'package:flutter_application_1/learninginfo/progress.dart';
 import 'package:flutter_application_1/learninginfo/vulnerable_phonemes.dart';
 
 class StudyInfoPage extends StatefulWidget {
+  const StudyInfoPage({super.key});
+
   @override
   _StudyInfoPageState createState() => _StudyInfoPageState();
 }
@@ -51,13 +53,12 @@ class _StudyInfoPageState extends State<StudyInfoPage> {
         future: combinedData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
                 child: CircularProgressIndicator(
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
             ));
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error loading data'));
+            return const Center(child: Text('Error loading data'));
           } else if (snapshot.hasData) {
             final data = snapshot.data!;
             final progressData = data['progressData'] as Map<String, double>;
@@ -75,7 +76,7 @@ class _StudyInfoPageState extends State<StudyInfoPage> {
               ],
             );
           } else {
-            return Center(child: Text('No data available'));
+            return const Center(child: Text('No data available'));
           }
         },
       ),

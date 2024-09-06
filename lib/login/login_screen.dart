@@ -222,6 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: bam,
+                fontFamily: 'BM_Jua',
                 fontSize: 28.0 * height,
                 fontWeight: FontWeight.w400,
                 wordSpacing: 1.1 * width,

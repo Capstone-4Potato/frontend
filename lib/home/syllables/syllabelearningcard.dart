@@ -63,8 +63,14 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   // 이미지 로드
   Future<void> _loadImage() async {
     try {
-      _imageData = await fetchImage(
+      final imageData = await fetchImage(
           widget.pictures[widget.currentIndex]); // 이미지 데이터 가져오기
+      if (mounted) {
+        // dispose() 이후 setState 방지
+        setState(() {
+          _imageData = imageData; // 이미지 데이터 갱신
+        });
+      }
     } catch (e) {
       print('Error loading image: $e');
     }
@@ -404,7 +410,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                   ),
                 ),
               ),
-            if (_isLoading)
+            if (_isLoading) // 피드백 로딩 중이면 로딩중 Indicator 표시
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 160),
                 child: CircularProgressIndicator(

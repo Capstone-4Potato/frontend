@@ -8,7 +8,8 @@ class LearningProgressScreen extends StatelessWidget {
   final double wordProgress;
   final double sentenceProgress;
 
-  LearningProgressScreen({
+  const LearningProgressScreen({
+    super.key,
     required this.syllableProgress,
     required this.wordProgress,
     required this.sentenceProgress,
@@ -22,7 +23,7 @@ class LearningProgressScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        color: Color.fromARGB(230, 255, 255, 255),
+        color: const Color.fromARGB(230, 255, 255, 255),
         elevation: 3,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -30,29 +31,29 @@ class LearningProgressScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               // SizedBox(height: 10),
-              Text(
+              const Text(
                 'Learning Progress Overview',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               CustomProgressBar(
                 value: syllableProgress / 100,
                 color: const Color(0xFFFE6E88),
                 label: 'Syllable',
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               CustomProgressBar(
                 value: wordProgress / 100,
                 color: const Color(0xFF466CFF),
                 label: 'Word',
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               CustomProgressBar(
                 value: sentenceProgress / 100,
                 color: const Color(0xFF3AB9FE),
                 label: 'Sentence',
               ),
-              SizedBox(height: 7),
+              const SizedBox(height: 7),
             ],
           ),
         ),
@@ -66,7 +67,8 @@ class CustomProgressBar extends StatelessWidget {
   final Color color;
   final String label;
 
-  CustomProgressBar({
+  const CustomProgressBar({
+    super.key,
     required this.value,
     required this.color,
     required this.label,
@@ -76,14 +78,14 @@ class CustomProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
+        SizedBox(
           width: 80,
           child: Text(
             label,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ),
-        SizedBox(width: 5),
+        const SizedBox(width: 5),
         Container(
           // width: 210,
           width: MediaQuery.of(context).size.width * 0.58,
@@ -105,7 +107,7 @@ class CustomProgressBar extends StatelessWidget {
               Center(
                 child: Text(
                   '${(value * 100).toStringAsFixed(2)}%',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87),

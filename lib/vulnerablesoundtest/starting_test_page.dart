@@ -26,18 +26,18 @@ class _StartTestScreenState extends State<StartTestScreen> {
 
   Future<void> initTestData() async {
     var data = await fetchTestData();
-    print(data);
+    //print(data);
 
     if (data != null) {
-      setState(() {
-        testIds = List.generate(data.length, (index) => data[index]['id']);
-        testContents =
-            List.generate(data.length, (index) => data[index]['text']);
-        testPronunciations = List.generate(
-            data.length, (index) => data[index]['engTranslation']);
-        testEngPronunciations = List.generate(
-            data.length, (index) => data[index]['engPronunciation']);
-      });
+      // setState(() {
+      //   testIds = List.generate(data.length, (index) => data[index]['id']);
+      //   testContents =
+      //       List.generate(data.length, (index) => data[index]['text']);
+      //   testPronunciations = List.generate(
+      //       data.length, (index) => data[index]['engTranslation']);
+      //   testEngPronunciations = List.generate(
+      //       data.length, (index) => data[index]['engPronunciation']);
+      // });
     }
   }
 
@@ -56,7 +56,11 @@ class _StartTestScreenState extends State<StartTestScreen> {
               padding: EdgeInsets.all(16.0),
               child: Text(
                 "Before we start learning,\n let's take a simple test.",
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Marine',
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -66,9 +70,11 @@ class _StartTestScreenState extends State<StartTestScreen> {
               child: Text(
                 "View the pronunciation guide on the card,\nand record yourself mimicking it slowly.",
                 style: TextStyle(
-                    fontSize: 16.0,
-                    //fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 74, 74, 74)),
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 74, 74, 74),
+                  fontFamily: 'Marine',
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -77,9 +83,11 @@ class _StartTestScreenState extends State<StartTestScreen> {
               child: Text(
                 "It takes about 3 minutes.",
                 style: TextStyle(
-                    fontSize: 16.0,
-                    //fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 74, 74, 74)),
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 74, 74, 74),
+                  fontFamily: 'Marine',
+                ),
                 textAlign: TextAlign.center,
               ),
             ),

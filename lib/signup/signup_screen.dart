@@ -116,6 +116,7 @@ class _UserInputFormState extends State<UserInputForm> {
                         'Almost Done!',
                         style: TextStyle(
                           color: bam,
+                          fontFamily: 'BM_Jua',
                           fontSize: 30.0 * height,
                           fontWeight: FontWeight.bold,
                         ),
@@ -126,6 +127,7 @@ class _UserInputFormState extends State<UserInputForm> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: primary,
+                          fontFamily: 'BM_Jua',
                           fontSize: 14.0 * height,
                         ),
                       ),
@@ -146,6 +148,7 @@ class _UserInputFormState extends State<UserInputForm> {
                           hintText: 'Birth Year', // 힌트 텍스트 설정
                           hintStyle: TextStyle(
                             color: bam.withOpacity(0.5),
+                            fontFamily: 'BM_Jua',
                             fontSize: 20 * height,
                           ),
                           helperText: ' ',
@@ -236,6 +239,7 @@ class _UserInputFormState extends State<UserInputForm> {
                           hintText: 'Gender', // 힌트 텍스트 설정
                           hintStyle: TextStyle(
                             color: bam.withOpacity(0.5),
+                            fontFamily: 'BM_Jua',
                             fontSize: 20 * height,
                           ),
                           helperText: ' ',
@@ -312,6 +316,7 @@ class _UserInputFormState extends State<UserInputForm> {
                           hintText: 'Nickname',
                           hintStyle: TextStyle(
                             color: bam.withOpacity(0.5),
+                            fontFamily: 'BM_Jua',
                             fontSize: 20 * height,
                           ),
                           helperText: ' ',
@@ -420,6 +425,7 @@ class _UserInputFormState extends State<UserInputForm> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 25 * height,
+                            fontFamily: 'BM_Jua',
                             color: Colors.white,
                             height: 2.6 * height,
                           ),

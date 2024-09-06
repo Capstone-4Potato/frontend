@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
-import 'package:flutter_application_1/vulnerablesoundtest/starting_teat_page.dart';
+import 'package:flutter_application_1/vulnerablesoundtest/starting_test_page.dart';
 
 // 회원가입 -> 튜토리얼
 class TutorialScreen extends StatefulWidget {

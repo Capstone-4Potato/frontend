@@ -38,6 +38,7 @@ dependencies:
   archive: ^3.3.4
   sign_in_with_apple: ^5.0.0
   #flutter_launcher_icons: ^0.12.0
+  fl_chart: ^0.69.0
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +82,13 @@ flutter:
     - family: BM_Jua
       fonts:
         - asset: assets/font/BMJua.otf
+
+    - family: Marine
+      fonts:
+        - asset: assets/font/Marine-Black.ttf
+        - asset: assets/font/Marine-Bold.ttf
+        - asset: assets/font/Marine-Light.ttf
+        - asset: assets/font/Marine-Regular.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

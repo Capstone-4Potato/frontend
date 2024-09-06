@@ -17,7 +17,7 @@ class WordLearningCard extends StatefulWidget {
   final List<String> pronunciations;
   final List<String> engpronunciations;
 
-  WordLearningCard({
+  const WordLearningCard({
     Key? key,
     required this.currentIndex,
     required this.cardIds,
@@ -115,7 +115,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
       barrierLabel: "Feedback",
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
-        return SizedBox();
+        return const SizedBox();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         return Transform(
@@ -137,8 +137,8 @@ class _WordLearningCardState extends State<WordLearningCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Recording Error"),
-          content: Text(
+          title: const Text("Recording Error"),
+          content: const Text(
             "Please try recording again.",
             style: TextStyle(fontSize: 16),
           ),
@@ -147,7 +147,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
               onPressed: () {
                 Navigator.of(context).pop(); // 다이얼로그 닫기
               },
-              child: Text(
+              child: const Text(
                 'OK',
                 style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
               ),
@@ -179,14 +179,14 @@ class _WordLearningCardState extends State<WordLearningCard> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
+          title: const Text("End Learning"),
+          content: const Text("Do you want to end learning?"),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("Continue Learning"),
+              child: const Text("Continue Learning"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -195,7 +195,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("End"),
+              child: const Text("End"),
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
@@ -235,7 +235,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,
@@ -254,8 +254,8 @@ class _WordLearningCardState extends State<WordLearningCard> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
-                  color: Color(0XFFF26647),
+                  icon: const Icon(Icons.arrow_back_ios),
+                  color: const Color(0XFFF26647),
                   onPressed: widget.currentIndex > 0
                       ? () {
                           int nextIndex = widget.currentIndex - 1;
@@ -284,7 +284,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
                     children: <Widget>[
                       Text(
                         currentContent,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 36, fontWeight: FontWeight.bold),
                       ),
                       Text(
@@ -293,7 +293,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
                       ),
                       Text(
                         currentPronunciation,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
                             color: Color.fromARGB(255, 231, 156, 135)),
@@ -304,7 +304,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFF26647),
-                          minimumSize: Size(220, 40),
+                          minimumSize: const Size(220, 40),
                         ),
                         onPressed: _onListenPressed,
                         icon: const Icon(
@@ -324,7 +324,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.arrow_forward_ios),
+                  icon: const Icon(Icons.arrow_forward_ios),
                   color: const Color(0xFFF26647),
                   onPressed: widget.currentIndex < widget.contents.length - 1
                       ? () {
@@ -343,34 +343,35 @@ class _WordLearningCardState extends State<WordLearningCard> {
               ],
             ),
             if (_isLoading)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 160),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 160),
                 child: CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
                 ),
               ),
           ],
         ),
       ),
-      floatingActionButton: Container(
+      floatingActionButton: SizedBox(
         width: 70,
         height: 70,
         child: FloatingActionButton(
-          onPressed: _canRecord && !_isLoading ? _recordAudio : null, // 조건 업데이트
+          onPressed: _canRecord && !_isLoading ? _recordAudio : null,
+          backgroundColor: _isLoading
+              ? const Color.fromARGB(37, 206, 204, 204) // 로딩 중 색상
+              : _canRecord
+                  ? (_isRecording
+                      ? const Color(0xFF976841)
+                      : const Color(0xFFF26647))
+                  : const Color.fromARGB(37, 206, 204, 204),
+          elevation: 0.0,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(35))), // 조건 업데이트
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
             size: 40,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
-          backgroundColor: _isLoading
-              ? const Color.fromARGB(37, 206, 204, 204) // 로딩 중 색상
-              : _canRecord
-                  ? (_isRecording ? Color(0xFF976841) : Color(0xFFF26647))
-                  : const Color.fromARGB(37, 206, 204, 204),
-          elevation: 0.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35))),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

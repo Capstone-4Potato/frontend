@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
-import 'package:flutter_application_1/vulnerablesoundtest/starting_teat_page.dart';
+import 'package:flutter_application_1/vulnerablesoundtest/starting_test_page.dart';
 
 // 프로필에서 튜토리얼 다시 보는 페이지
 class RetutorialScreen extends StatefulWidget {
