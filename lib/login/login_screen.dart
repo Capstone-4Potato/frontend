@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/custom_icons_icons.dart';
 import 'package:flutter_application_1/profile/logout/sign_out_social.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
@@ -14,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -110,6 +112,8 @@ class _LoginScreenState extends State<LoginScreen> {
         User user = await UserApi.instance.me();
         print('사용자 정보 요청 성공'
             '\n회원번호: ${user.id}');
+
+        // 소셜 로그인 정보 전달
         int statusCode = await socialLogin(user.id.toString());
         if (statusCode == 200 || statusCode == 404) {
           setState(() {
@@ -184,6 +188,42 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<Map<String, dynamic>> signInWithGoogle() async {
+    try {
+      print('try');
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      print('구글 계정으로 로그인!');
+      if (googleUser != null) {
+        print('name = ${googleUser.displayName}\n');
+        print('name = ${googleUser.email}\n');
+        print('name = ${googleUser.id}\n');
+
+        int statusCode = await socialLogin(googleUser.id.toString());
+        if (statusCode == 200 || statusCode == 404) {
+          setState(() {
+            _loginPlatform = LoginPlatform.google;
+          });
+          await _saveLoginPlatform(LoginPlatform.google);
+        }
+        return {
+          'statusCode': statusCode,
+          'socialId': googleUser.id,
+        };
+      } else {
+        return {
+          'statusCode': 500,
+          'socialId': '',
+        };
+      }
+    } catch (error) {
+      print('구글계정으로 로그인 실패 $error');
+      return {
+        'statusCode': 500,
+        'socialId': '',
+      }; //
+    }
+  }
+
   void signOut() async {
     await SignOutService.signOut(_loginPlatform);
     setState(() {
@@ -205,25 +245,25 @@ class _LoginScreenState extends State<LoginScreen> {
           children: <Widget>[
             const Spacer(),
             Flexible(
-              flex: 3,
+              flex: 6,
               child: Center(
                 child: SvgPicture.asset(
                   'assets/image/title_logo.svg',
-                  width: 270 * width,
-                  height: 157 * height,
+                  width: 200 * width,
+                  height: 115 * height,
                 ),
               ),
             ),
             const Spacer(
-              flex: 1,
+              flex: 5,
             ),
             Text(
-              'Log in or sign up to\nGet Started !',
+              'Log in or sign up to Get Started !',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: bam,
+                color: bam.withOpacity(0.7),
                 fontFamily: 'BM_Jua',
-                fontSize: 28.0 * height,
+                fontSize: 18.0 * height,
                 fontWeight: FontWeight.w400,
                 wordSpacing: 1.1 * width,
               ),
@@ -232,7 +272,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 10 * height,
             ),
             SignInImageButton(
-              assetName: 'assets/engapple.png',
+              name: 'Apple',
               onPressed: () async {
                 var result = await signInWithApple();
                 int statusCode = result['statusCode'];
@@ -251,9 +291,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 }
               },
+              icon: const Icon(
+                CustomIcons.apple_logo,
+                size: 20,
+                color: Colors.white,
+              ),
+              textColor: Colors.white,
+              buttonColor: Colors.black,
             ),
             SignInImageButton(
-              assetName: 'assets/engkakao.png',
+              name: 'Kakao',
               onPressed: () async {
                 var result = await signInWithKakao();
                 int statusCode = result['statusCode'];
@@ -272,6 +319,41 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 }
               },
+              icon: Icon(
+                CustomIcons.kakaotalk_icon,
+                size: 20,
+                color: bam,
+              ),
+              textColor: bam,
+              buttonColor: const Color.fromARGB(255, 254, 229, 0),
+            ),
+            SignInImageButton(
+              name: 'Google',
+              onPressed: () async {
+                var result = await signInWithGoogle();
+                int statusCode = result['statusCode'];
+                String socialId = result['socialId'];
+                if (statusCode == 404) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              UserInputForm(socialId: socialId)));
+                } else if (statusCode == 200) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainPage()),
+                    (route) => false,
+                  );
+                }
+              },
+              icon: Icon(
+                CustomIcons.google_icon,
+                size: 20,
+                color: bam,
+              ),
+              textColor: bam,
+              buttonColor: Colors.white,
             ),
             const Spacer(flex: 2),
           ],
@@ -281,30 +363,56 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// 소셜로그인이미지 버튼
+// 소셜로그인 버튼
 class SignInImageButton extends StatelessWidget {
-  final String assetName;
+  final String name;
   final VoidCallback onPressed;
+  Icon icon;
+  Color textColor, buttonColor;
 
-  const SignInImageButton({
+  SignInImageButton({
     Key? key,
-    required this.assetName,
+    required this.name,
     required this.onPressed,
+    required this.textColor,
+    required this.icon,
+    required this.buttonColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height / 852;
+    double width = MediaQuery.sizeOf(context).width / 393;
 
     return Padding(
       padding: EdgeInsets.all(10.0 * height),
       child: InkWell(
         onTap: onPressed,
-        child: Image.asset(
-          assetName,
-          width: double.infinity, // Set the image to the width of the screen
-          height: 50 * height, // Set the image height
-          fit: BoxFit.contain, // Cover the button area
+        child: Ink(
+          child: Container(
+            height: 50 * height,
+            width: 343 * width,
+            decoration: BoxDecoration(
+              color: buttonColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                SizedBox(width: 15 * width),
+                Text(
+                  'Continue with $name',
+                  style: TextStyle(
+                    color: textColor,
+                    fontFamily: 'BM_Jua',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

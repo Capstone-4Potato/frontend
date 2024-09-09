@@ -26,6 +26,7 @@
 	<array>
 		<string>kakao1dd4ee9a5ed2afb5fe8f7590fa690198</string>
 		<string>balbambalbamurlscheme</string>
+		<string>com.googleusercontent.apps.1081903661036-ke7n3ugkrc1qdno016pd8giibh0pti92</string>
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
@@ -47,6 +48,14 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>kakao1dd4ee9a5ed2afb5fe8f7590fa690198</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1081903661036-ke7n3ugkrc1qdno016pd8giibh0pti92</string>
 			</array>
 		</dict>
 	</array>
@@ -132,5 +141,9 @@
 	<string>balbambalbamurlscheme</string>
 	<key>UIStatusBarHidden</key>
 	<false/>
+	<key>FLTEnableImpeller</key>
+	<false />
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 </dict>
 </plist>
