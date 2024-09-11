@@ -29,15 +29,15 @@ class _StartTestScreenState extends State<StartTestScreen> {
     //print(data);
 
     if (data != null) {
-      // setState(() {
-      //   testIds = List.generate(data.length, (index) => data[index]['id']);
-      //   testContents =
-      //       List.generate(data.length, (index) => data[index]['text']);
-      //   testPronunciations = List.generate(
-      //       data.length, (index) => data[index]['engTranslation']);
-      //   testEngPronunciations = List.generate(
-      //       data.length, (index) => data[index]['engPronunciation']);
-      // });
+      setState(() {
+        testIds = List.generate(data.length, (index) => data[index]['id']);
+        testContents =
+            List.generate(data.length, (index) => data[index]['text']);
+        testPronunciations = List.generate(
+            data.length, (index) => data[index]['engTranslation']);
+        testEngPronunciations = List.generate(
+            data.length, (index) => data[index]['engPronunciation']);
+      });
     }
   }
 
@@ -99,10 +99,12 @@ class _StartTestScreenState extends State<StartTestScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => TestCard(
-                          testIds: testIds,
-                          testContents: testContents,
-                          testPronunciations: testPronunciations,
-                          testEngPronunciations: testEngPronunciations),
+                        testIds: testIds,
+                        testContents: testContents,
+                        testPronunciations: testPronunciations,
+                        testEngPronunciations: testEngPronunciations,
+                        isRetest: false,
+                      ),
                     ),
                     (route) => false);
               },

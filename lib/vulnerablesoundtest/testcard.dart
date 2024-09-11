@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/home/home_page.dart';
+import 'package:flutter_application_1/learninginfo/progress.dart';
+import 'package:flutter_application_1/learninginfo/study_info_page.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/updatecardweaksound.dart';
@@ -12,12 +15,15 @@ class TestCard extends StatefulWidget {
   final List<String> testContents;
   final List<String> testPronunciations;
   final List<String> testEngPronunciations;
+  final bool isRetest;
 
-  TestCard({
+  const TestCard({
+    super.key,
     required this.testIds,
     required this.testContents,
     required this.testPronunciations,
     required this.testEngPronunciations,
+    required this.isRetest,
   });
 
   @override
@@ -138,14 +144,14 @@ class _TestCardState extends State<TestCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Error'),
-          content: Text(
+          title: const Text('Error'),
+          content: const Text(
             'Please try recording again.',
             style: TextStyle(fontSize: 18),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(
+              child: const Text(
                 'OK',
                 style: TextStyle(color: Color(0xFFF26647), fontSize: 20),
               ),
@@ -186,11 +192,11 @@ class _TestCardState extends State<TestCard> {
           title: Text(title),
           content: Text(
             content,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(
+              child: const Text(
                 'OK',
                 style: TextStyle(color: Color(0xFFF26647), fontSize: 20),
               ),
@@ -198,9 +204,56 @@ class _TestCardState extends State<TestCard> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MainPage(initialIndex: 2)),
+                      builder: (context) => const MainPage(initialIndex: 2)),
                   (route) => false,
                 );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showExitDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("End Learning"),
+          content: const Text("Do you want to end learning?"),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              ),
+              child: const Text("Continue Learning"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              ),
+              child: const Text("End"),
+              onPressed: () {
+                widget.isRetest
+                    ? Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainPage(
+                                  initialIndex: 2,
+                                )),
+                        (route) => false,
+                      )
+                    : Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MainPage()),
+                        (route) => false,
+                      );
               },
             ),
           ],
@@ -222,13 +275,26 @@ class _TestCardState extends State<TestCard> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Pronunciation Test',
           style: TextStyle(
             fontWeight: FontWeight.w600,
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
+            child: IconButton(
+              icon: const Icon(
+                Icons.close,
+                color: Colors.black,
+                size: 30,
+              ),
+              onPressed: _showExitDialog,
+            ),
+          ),
+        ],
       ),
       backgroundColor: const Color(0xFFF5F5F5),
       body: Padding(
@@ -251,16 +317,16 @@ class _TestCardState extends State<TestCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(widget.testContents[_currentIndex],
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 40, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 7),
+                      const SizedBox(height: 7),
                       Text('[${widget.testEngPronunciations[_currentIndex]}]',
                           style:
                               TextStyle(fontSize: 24, color: Colors.grey[700])),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
-                        '${widget.testPronunciations[_currentIndex]}',
-                        style: TextStyle(
+                        widget.testPronunciations[_currentIndex],
+                        style: const TextStyle(
                           fontSize: 24,
                           color: Color.fromARGB(255, 231, 156, 135),
                           fontWeight: FontWeight.w500,
@@ -269,8 +335,8 @@ class _TestCardState extends State<TestCard> {
                     ],
                   ),
                 ),
-                SizedBox(height: 30),
-                Container(
+                const SizedBox(height: 30),
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: Column(
                     children: [
@@ -280,20 +346,20 @@ class _TestCardState extends State<TestCard> {
                             height: 16,
                             decoration: BoxDecoration(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                                  const BorderRadius.all(Radius.circular(10)),
                               color: Colors.grey[300],
                             ),
                           ),
                           Positioned.fill(
                             child: ClipRRect(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                                  const BorderRadius.all(Radius.circular(10)),
                               child: FractionallySizedBox(
                                 alignment: Alignment.centerLeft,
                                 widthFactor:
                                     (_currentIndex + 1) / widget.testIds.length,
                                 child: Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
                                         Color(0xFFf26647),
@@ -309,11 +375,11 @@ class _TestCardState extends State<TestCard> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Text(
                         '${_currentIndex + 1}/${widget.testIds.length}',
-                        style: TextStyle(
-                          color: const Color.fromARGB(129, 0, 0, 0),
+                        style: const TextStyle(
+                          color: Color.fromARGB(129, 0, 0, 0),
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
@@ -327,20 +393,21 @@ class _TestCardState extends State<TestCard> {
         ),
       ),
       // 녹음하기 버튼
-      floatingActionButton: Container(
+      floatingActionButton: SizedBox(
         width: 70,
         height: 70,
         child: FloatingActionButton(
           onPressed: _isRecording ? _stopRecording : _startRecording,
+          backgroundColor:
+              _isRecording ? const Color(0xFF976841) : const Color(0xFFF26647),
+          elevation: 0.0,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(35))),
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
             size: 40,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
-          backgroundColor: _isRecording ? Color(0xFF976841) : Color(0xFFF26647),
-          elevation: 0.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35))),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

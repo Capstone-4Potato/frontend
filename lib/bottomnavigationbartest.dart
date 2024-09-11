@@ -6,7 +6,10 @@ import 'package:flutter_application_1/learninginfo/study_info_page.dart';
 
 class MainPage extends StatefulWidget {
   final int initialIndex;
-  MainPage({this.initialIndex = 0});
+  const MainPage({
+    super.key,
+    this.initialIndex = 0,
+  });
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -16,10 +19,10 @@ class _MainPageState extends State<MainPage> {
 
   // 각 탭에 해당하는 페이지들 정의
   final List<Widget> _pages = [
-    HomePage(),
+    const HomePage(),
     ReviewPage(),
-    StudyInfoPage(),
-    ProfilePage(),
+    const StudyInfoPage(),
+    const ProfilePage(),
   ];
 
   @override
