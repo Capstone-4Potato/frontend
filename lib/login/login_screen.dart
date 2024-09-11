@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
-import 'package:flutter_application_1/custom_icons_icons.dart';
+import 'package:flutter_application_1/custom_icons.dart';
 import 'package:flutter_application_1/profile/logout/sign_out_social.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_application_1/login/login_platform.dart';

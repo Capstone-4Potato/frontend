@@ -66,14 +66,14 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("End Learning"), // 다이얼로그 제목
-          content: Text("Do you want to end learning?"), // 다이얼로그 내용
+          title: const Text("End Learning"), // 다이얼로그 제목
+          content: const Text("Do you want to end learning?"), // 다이얼로그 내용
           actions: [
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("Continue Learning"), // 계속 학습하기 버튼
+              child: const Text("Continue Learning"), // 계속 학습하기 버튼
               onPressed: () {
                 Navigator.of(context).pop(); // 다이얼로그 닫기
               },
@@ -82,7 +82,7 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("End"), // 학습 종료 버튼
+              child: const Text("End"), // 학습 종료 버튼
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
@@ -141,7 +141,7 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'ㄱㅋㄲ',
           style: TextStyle(
             fontWeight: FontWeight.w600,
@@ -168,7 +168,7 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,
@@ -234,12 +234,12 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
                                 color: displayWeakCards[index]
-                                    ? Color.fromARGB(236, 255, 85, 85)
+                                    ? const Color.fromARGB(236, 255, 85, 85)
                                     : Colors.black),
                           ),
                         ),
                         Text(displayEngPronunciations[index],
-                            style: TextStyle(fontSize: 18)),
+                            style: const TextStyle(fontSize: 18)),
                       ],
                     ),
                     // 북마크 버튼
@@ -270,18 +270,6 @@ class _SyllableConsonants1State extends State<SyllableConsonants1> {
                       ),
                     ),
                     // 점수를 나타내는 프로그레스 바
-                    Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: LinearProgressIndicator(
-                          value: displayCardScores[index],
-                          backgroundColor: Colors.grey[200],
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                              Color.fromARGB(255, 255, 129, 101)),
-                          minHeight: 6,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),

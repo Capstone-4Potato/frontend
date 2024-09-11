@@ -102,6 +102,7 @@ Future<FeedbackData?> getFeedback(
     if (response.statusCode == 200) {
       print('Successful feedback submission');
       var responseData = json.decode(response.body);
+      print(responseData);
       return FeedbackData.fromJson(responseData);
     } else if (response.statusCode == 401) {
       // Token expired, attempt to refresh the token
@@ -148,9 +149,9 @@ List<TextSpan> buildTextSpans(String text, List<int> mistakenIndexes) {
     final bool isMistaken = mistakenIndexes.contains(i);
     // 잘못된 문자라면 빨간색, 그렇지 않다면 검정색
     TextStyle textStyle = isMistaken
-        ? TextStyle(
+        ? const TextStyle(
             color: Color(0xFFFF0000), fontSize: 20, fontWeight: FontWeight.bold)
-        : TextStyle(
+        : const TextStyle(
             color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold);
     spans.add(TextSpan(text: text[i], style: textStyle));
   }
@@ -164,7 +165,7 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
   List<Color> colors = [Colors.green, Colors.blue, Colors.purple];
   List<TextSpan> spans = [];
   if (texts.contains('perfect')) {
-    spans.add(TextSpan(
+    spans.add(const TextSpan(
       text: '👍🏼 Excellent 👍🏼',
       style: TextStyle(
         fontSize: 18,
@@ -174,7 +175,7 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
     ));
     return spans;
   } else if (texts.contains('not word') || texts.contains('try again')) {
-    spans.add(TextSpan(
+    spans.add(const TextSpan(
       text: '🥺 Try Again 🥺',
       style: TextStyle(
         fontSize: 18,
@@ -184,7 +185,7 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
     ));
     return spans;
   } else if (texts.contains('drop the extra sound')) {
-    spans.add(TextSpan(
+    spans.add(const TextSpan(
       text: 'Drop the extra sound',
       style: TextStyle(
         fontSize: 18,
@@ -194,7 +195,7 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
     ));
     return spans;
   } else {
-    spans.add(TextSpan(
+    spans.add(const TextSpan(
         text: 'Practice ',
         style: TextStyle(
           fontSize: 14,
@@ -217,7 +218,7 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
         ),
       );
       if (i < texts.length - 1) {
-        spans.add(TextSpan(text: "\n")); // Add commas between items
+        spans.add(const TextSpan(text: "\n")); // Add commas between items
       }
     }
 
@@ -232,87 +233,87 @@ void _handleTap(
   if (category == '음절' && subcategory == '단모음') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableVowels1()),
+      MaterialPageRoute(builder: (context) => const SyllableVowels1()),
     );
   } else if (category == '음절' && subcategory == '이중모음1') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableVowels2()),
+      MaterialPageRoute(builder: (context) => const SyllableVowels2()),
     );
   } else if (category == '음절' && subcategory == '이중모음2') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableVowels3()),
+      MaterialPageRoute(builder: (context) => const SyllableVowels3()),
     );
   } else if (category == '음절' && subcategory == '자음ㄱㅋㄲ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableConsonants1()),
+      MaterialPageRoute(builder: (context) => const SyllableConsonants1()),
     );
   } else if (category == '음절' && subcategory == '자음ㄷㅌㄸ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableConsonants2()),
+      MaterialPageRoute(builder: (context) => const SyllableConsonants2()),
     );
   } else if (category == '음절' && subcategory == '자음ㅂㅍㅃ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableConsonants3()),
+      MaterialPageRoute(builder: (context) => const SyllableConsonants3()),
     );
   } else if (category == '음절' && subcategory == '자음ㅅㅆ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableConsonants4()),
+      MaterialPageRoute(builder: (context) => const SyllableConsonants4()),
     );
   } else if (category == '음절' && subcategory == '자음ㅈㅊㅉ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableConsonants5()),
+      MaterialPageRoute(builder: (context) => const SyllableConsonants5()),
     );
   } else if (category == '음절' && subcategory == '자음ㄴㄹㅁ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableConsonants6()),
+      MaterialPageRoute(builder: (context) => const SyllableConsonants6()),
     );
   } else if (category == '음절' && subcategory == '자음ㅇㅎ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SyllableConsonants7()),
+      MaterialPageRoute(builder: (context) => const SyllableConsonants7()),
     );
   } else if (category == '단어' && subcategory == '받침ㄱ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WordFinalConsonants1()),
+      MaterialPageRoute(builder: (context) => const WordFinalConsonants1()),
     );
   } else if (category == '단어' && subcategory == '받침ㄴ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WordFinalConsonants2()),
+      MaterialPageRoute(builder: (context) => const WordFinalConsonants2()),
     );
   } else if (category == '단어' && subcategory == '받침ㄷ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WordFinalConsonants3()),
+      MaterialPageRoute(builder: (context) => const WordFinalConsonants3()),
     );
   } else if (category == '단어' && subcategory == '받침ㄹ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WordFinalConsonants4()),
+      MaterialPageRoute(builder: (context) => const WordFinalConsonants4()),
     );
   } else if (category == '단어' && subcategory == '받침ㅁ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WordFinalConsonants5()),
+      MaterialPageRoute(builder: (context) => const WordFinalConsonants5()),
     );
   } else if (category == '단어' && subcategory == '받침ㅂ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WordFinalConsonants6()),
+      MaterialPageRoute(builder: (context) => const WordFinalConsonants6()),
     );
   } else if (category == '단어' && subcategory == '받침ㅇ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WordFinalConsonants7()),
+      MaterialPageRoute(builder: (context) => const WordFinalConsonants7()),
     );
   } else {
     print('error');

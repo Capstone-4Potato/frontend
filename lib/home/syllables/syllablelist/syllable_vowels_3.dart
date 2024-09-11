@@ -63,14 +63,14 @@ class _SyllableVowels3State extends State<SyllableVowels3> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
+          title: const Text("End Learning"),
+          content: const Text("Do you want to end learning?"),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("Continue Learning"),
+              child: const Text("Continue Learning"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -79,7 +79,7 @@ class _SyllableVowels3State extends State<SyllableVowels3> {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("End"),
+              child: const Text("End"),
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                   context,
@@ -135,7 +135,7 @@ class _SyllableVowels3State extends State<SyllableVowels3> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'ㅙ ㅖ ㅘ ⋯',
           style: TextStyle(
             fontWeight: FontWeight.w600,
@@ -160,7 +160,7 @@ class _SyllableVowels3State extends State<SyllableVowels3> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,
@@ -227,12 +227,12 @@ class _SyllableVowels3State extends State<SyllableVowels3> {
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
                                 color: displayWeakCards[index]
-                                    ? Color.fromARGB(236, 255, 85, 85)
+                                    ? const Color.fromARGB(236, 255, 85, 85)
                                     : Colors.black),
                           ),
                         ),
                         Text(displayEngPronunciations[index],
-                            style: TextStyle(fontSize: 18)),
+                            style: const TextStyle(fontSize: 18)),
                       ],
                     ),
                     Positioned(
@@ -259,18 +259,6 @@ class _SyllableVowels3State extends State<SyllableVowels3> {
                           updateBookmarkStatus(
                               displayCardIds[index], displayBookmarked[index]);
                         },
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: LinearProgressIndicator(
-                          value: displayCardScores[index], // 현재 값 / 최대 값
-                          backgroundColor: Colors.grey[200],
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                              Color.fromARGB(255, 255, 129, 101)),
-                          minHeight: 6, // 게이지바의 높이를 조정합니다.
-                        ),
                       ),
                     ),
                   ],

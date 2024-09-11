@@ -35,12 +35,7 @@ class LearningProgressScreen extends StatelessWidget {
                 'Learning Progress Overview',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20),
-              CustomProgressBar(
-                value: syllableProgress / 100,
-                color: const Color(0xFFFE6E88),
-                label: 'Syllable',
-              ),
+
               const SizedBox(height: 12),
               CustomProgressBar(
                 value: wordProgress / 100,
