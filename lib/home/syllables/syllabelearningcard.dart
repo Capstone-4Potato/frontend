@@ -44,8 +44,9 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   bool _canRecord = false; // 녹음 가능 여부
   late String _recordedFilePath; // 녹음된 파일 경로
 
-  bool _isLoading = false; // 로딩 중인지 여부
+  bool _isLoading = false; // 피드백 로딩 중인지 여부
   Uint8List? _imageData; // 이미지를 저장할 변수
+  bool _isImageLoading = true; // 이미지 로딩 중인지 여부
 
   @override
   void initState() {
@@ -63,11 +64,15 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   // 이미지 로드
   Future<void> _loadImage() async {
     try {
+      setState(() {
+        _isImageLoading = true;
+      });
       final imageData = await fetchImage(
           widget.pictures[widget.currentIndex]); // 이미지 데이터 가져오기
       if (mounted) {
         // dispose() 이후 setState 방지
         setState(() {
+          _isImageLoading = false;
           _imageData = imageData; // 이미지 데이터 갱신
         });
       }
@@ -232,7 +237,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MainPage(initialIndex: 0)),
+                      builder: (context) => const MainPage(initialIndex: 0)),
                   (route) => false,
                 );
               },
@@ -381,7 +386,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                 ),
               ],
             ),
-            if (!_isLoading && _imageData != null)
+            if (!_isLoading)
               Expanded(
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.82,
@@ -391,12 +396,17 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                   ),
                   child: Column(
                     children: <Widget>[
-                      Image.memory(
-                        _imageData!,
-                        fit: BoxFit.contain,
-                        width: 300,
-                        height: 250,
-                      ),
+                      _isImageLoading // 이미지 로딩 중 표시
+                          ? const SizedBox(
+                              width: 300,
+                              height: 250,
+                              child: Center(child: CircularProgressIndicator()))
+                          : Image.memory(
+                              _imageData!,
+                              fit: BoxFit.contain,
+                              width: 300,
+                              height: 250,
+                            ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                         child: Text(

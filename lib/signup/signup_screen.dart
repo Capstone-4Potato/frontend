@@ -54,6 +54,7 @@ class _UserInputFormState extends State<UserInputForm> {
       //print(1234567);
       switch (response.statusCode) {
         case 200:
+          print('저는 ㅎ ㅔ더에오 : ${response.headers}\n');
           print(response.body);
           String? accessToken = response.headers['access'];
           String? refreshToken = response.headers['refresh'];
