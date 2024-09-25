@@ -84,7 +84,7 @@ class _SyllableVowels1State extends State<SyllableVowels1> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MainPage(initialIndex: 0)),
+                      builder: (context) => const MainPage(initialIndex: 0)),
                   (route) => false,
                 );
               },

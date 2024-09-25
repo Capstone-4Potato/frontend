@@ -26,14 +26,14 @@ class _SyllablesCategoryScreenState extends State<SyllablesCategoryScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
+          title: const Text("End Learning"),
+          content: const Text("Do you want to end learning?"),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("Continue Learning"),
+              child: const Text("Continue Learning"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -42,7 +42,7 @@ class _SyllablesCategoryScreenState extends State<SyllablesCategoryScreen> {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("End"),
+              child: const Text("End"),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(); // Exit the learning screen
@@ -70,7 +70,7 @@ class _SyllablesCategoryScreenState extends State<SyllablesCategoryScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,

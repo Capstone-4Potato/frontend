@@ -10,13 +10,13 @@ import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
 class SentenceLearningCard extends StatefulWidget {
-  final int currentIndex;
+  int currentIndex;
   final List<int> cardIds;
   final List<String> contents;
   final List<String> pronunciations;
   final List<String> engpronunciations;
 
-  const SentenceLearningCard({
+  SentenceLearningCard({
     Key? key,
     required this.currentIndex,
     required this.cardIds,
@@ -39,10 +39,14 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
 
   bool _isLoading = false;
 
+  late PageController pageController; // 페이지 컨트롤러 생성
+
   @override
   void initState() {
     super.initState();
     _initialize();
+    pageController =
+        PageController(initialPage: widget.currentIndex); // PageController 초기화
   }
 
   Future<void> _initialize() async {
@@ -212,6 +216,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
   void dispose() {
     _audioPlayer.dispose();
     _audioRecorder.closeAudioSession();
+    pageController.dispose();
     super.dispose();
   }
 
@@ -243,120 +248,148 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
         ],
       ),
       backgroundColor: const Color(0xFFF5F5F5),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 12),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_ios),
-                  color: const Color(0XFFF26647),
-                  iconSize: 20,
-                  onPressed: widget.currentIndex > 0
-                      ? () {
-                          int nextIndex = widget.currentIndex - 1;
-                          navigateToCard(nextIndex);
-                          TtsService.fetchCorrectAudio(
-                                  widget.cardIds[nextIndex])
-                              .then((_) {
-                            print('Audio fetched and saved successfully.');
-                          }).catchError((error) {
-                            print('Error fetching audio: $error');
-                          });
-                        }
-                      : null,
-                ),
-                Container(
-                  width: cardWidth,
-                  height: cardHeight,
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border:
-                        Border.all(color: const Color(0xFFF26647), width: 3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        currentContent,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        currentEngPronunciation,
-                        style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-                        textAlign: TextAlign.center,
-                      ),
+      body: PageView.builder(
+          controller: pageController,
+          onPageChanged: (value) {
+            setState(() {
+              // currentIndex를 새로 갱신하여 카드 내용을 바꾸도록 설정
+              widget.currentIndex = value;
+            });
+            // 새로 로드된 카드의 발음 오디오 파일 불러오기
+            TtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
+              print('Audio fetched and saved successfully.');
+            }).catchError((error) {
+              print('Error fetching audio: $error');
+            });
+          },
+          itemCount: widget.contents.length,
+          itemBuilder: (context, index) {
+            String currentContent = widget.contents[widget.currentIndex];
+            String currentPronunciation =
+                widget.pronunciations[widget.currentIndex];
+            String currentEngPronunciation =
+                widget.engpronunciations[widget.currentIndex];
 
-                      Text(
-                        currentPronunciation,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 231, 156, 135),
-                        ),
-                        textAlign: TextAlign.center,
+            return Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_ios),
+                        color: const Color(0XFFF26647),
+                        iconSize: 20,
+                        onPressed: widget.currentIndex > 0
+                            ? () {
+                                int nextIndex = widget.currentIndex - 1;
+                                navigateToCard(nextIndex);
+                                TtsService.fetchCorrectAudio(
+                                        widget.cardIds[nextIndex])
+                                    .then((_) {
+                                  print(
+                                      'Audio fetched and saved successfully.');
+                                }).catchError((error) {
+                                  print('Error fetching audio: $error');
+                                });
+                              }
+                            : null,
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      // 발음 듣기 버튼 - correctAudio 들려주기
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF26647),
-                          minimumSize: const Size(240, 40),
-                        ),
-                        onPressed: _onListenPressed,
-                        icon: const Icon(
-                          Icons.volume_up,
+                      Container(
+                        width: cardWidth,
+                        height: cardHeight,
+                        padding: const EdgeInsets.all(12.0),
+                        decoration: BoxDecoration(
                           color: Colors.white,
+                          border: Border.all(
+                              color: const Color(0xFFF26647), width: 3),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        label: const Text(
-                          'Listen',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              currentContent,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              currentEngPronunciation,
+                              style: TextStyle(
+                                  fontSize: 18, color: Colors.grey[700]),
+                              textAlign: TextAlign.center,
+                            ),
+
+                            Text(
+                              currentPronunciation,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromARGB(255, 231, 156, 135),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            // 발음 듣기 버튼 - correctAudio 들려주기
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF26647),
+                                minimumSize: const Size(240, 40),
+                              ),
+                              onPressed: _onListenPressed,
+                              icon: const Icon(
+                                Icons.volume_up,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                'Listen',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.arrow_forward_ios),
+                        color: const Color(0xFFF26647),
+                        iconSize: 20,
+                        onPressed:
+                            widget.currentIndex < widget.contents.length - 1
+                                ? () {
+                                    int nextIndex = widget.currentIndex + 1;
+                                    navigateToCard(nextIndex);
+                                    TtsService.fetchCorrectAudio(
+                                            widget.cardIds[nextIndex])
+                                        .then((_) {
+                                      print(
+                                          'Audio fetched and saved successfully.');
+                                    }).catchError((error) {
+                                      print('Error fetching audio: $error');
+                                    });
+                                  }
+                                : null,
                       ),
                     ],
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios),
-                  color: const Color(0xFFF26647),
-                  iconSize: 20,
-                  onPressed: widget.currentIndex < widget.contents.length - 1
-                      ? () {
-                          int nextIndex = widget.currentIndex + 1;
-                          navigateToCard(nextIndex);
-                          TtsService.fetchCorrectAudio(
-                                  widget.cardIds[nextIndex])
-                              .then((_) {
-                            print('Audio fetched and saved successfully.');
-                          }).catchError((error) {
-                            print('Error fetching audio: $error');
-                          });
-                        }
-                      : null,
-                ),
-              ],
-            ),
-            if (_isLoading)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 160),
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
-                ),
+                  if (_isLoading)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 160),
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
+                      ),
+                    ),
+                ],
               ),
-          ],
-        ),
-      ),
+            );
+          }),
       floatingActionButton: SizedBox(
         width: 70,
         height: 70,

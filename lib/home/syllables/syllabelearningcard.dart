@@ -13,7 +13,7 @@ import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
 class SyllableLearningCard extends StatefulWidget {
-  final int currentIndex;
+  int currentIndex;
   final List<int> cardIds;
   final List<String> contents;
   final List<String> pronunciations;
@@ -21,7 +21,7 @@ class SyllableLearningCard extends StatefulWidget {
   final List<String> explanations;
   final List<String> pictures;
 
-  const SyllableLearningCard({
+  SyllableLearningCard({
     Key? key,
     required this.currentIndex,
     required this.cardIds,
@@ -48,11 +48,15 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   Uint8List? _imageData; // 이미지를 저장할 변수
   bool _isImageLoading = true; // 이미지 로딩 중인지 여부
 
+  late PageController pageController; // 페이지 컨트롤러 생성
+
   @override
   void initState() {
     super.initState();
     _initialize(); // 초기 설정
     _loadImage(); // 이미지 로드
+    pageController =
+        PageController(initialPage: widget.currentIndex); // PageController 초기화
   }
 
   // 초기 설정 : 권한 요청 및 오디오 세션 열기
@@ -252,6 +256,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   void dispose() {
     _audioPlayer.dispose(); // 오디오 플레이어 정리
     _audioRecorder.closeAudioSession(); // 오디오 세션 닫기
+    pageController.dispose();
     super.dispose();
   }
 
@@ -259,12 +264,6 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.70;
     double cardHeight = MediaQuery.of(context).size.height * 0.27;
-
-    String currentContent = widget.contents[widget.currentIndex];
-    String currentPronunciation = widget.pronunciations[widget.currentIndex];
-    String currentEngPronunciation =
-        widget.engpronunciations[widget.currentIndex];
-    String currentExplanation = widget.explanations[widget.currentIndex];
 
     return Scaffold(
       appBar: AppBar(
@@ -284,152 +283,184 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         ],
       ),
       backgroundColor: const Color(0xFFF5F5F5),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 12),
-        child: Column(
-          children: [
-            // 이전 카드로 이동 버튼
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_ios),
-                  color: const Color(0XFFF26647),
-                  onPressed: widget.currentIndex > 0
-                      ? () {
-                          int nextIndex = widget.currentIndex - 1;
-                          navigateToCard(nextIndex);
-                          _loadImage();
-                          TtsService.fetchCorrectAudio(
-                                  widget.cardIds[nextIndex])
-                              .then((_) {
-                            print('Audio fetched and saved successfully.');
-                          }).catchError((error) {
-                            print('Error fetching audio: $error');
-                          });
-                        }
-                      : null,
-                ),
-                Container(
-                  width: cardWidth,
-                  height: cardHeight,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border:
-                        Border.all(color: const Color(0xFFF26647), width: 3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        currentContent,
-                        style: const TextStyle(
-                            fontSize: 38, fontWeight: FontWeight.bold),
+      body: PageView.builder(
+          controller: pageController,
+          onPageChanged: (value) {
+            setState(() {
+              // currentIndex를 새로 갱신하여 카드 내용을 바꾸도록 설정
+              widget.currentIndex = value;
+            });
+            _loadImage(); // 페이지 변경 시 이미지도 새로 로드
+            // 새로 로드된 카드의 발음 오디오 파일 불러오기
+            TtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
+              print('Audio fetched and saved successfully.');
+            }).catchError((error) {
+              print('Error fetching audio: $error');
+            });
+          },
+          itemCount: widget.contents.length,
+          itemBuilder: (context, index) {
+            String currentContent = widget.contents[widget.currentIndex];
+            String currentPronunciation =
+                widget.pronunciations[widget.currentIndex];
+            String currentEngPronunciation =
+                widget.engpronunciations[widget.currentIndex];
+            String currentExplanation =
+                widget.explanations[widget.currentIndex];
+
+            return Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Column(
+                children: [
+                  // 이전 카드로 이동 버튼
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_ios),
+                        color: const Color(0XFFF26647),
+                        onPressed: widget.currentIndex > 0
+                            ? () {
+                                int nextIndex = widget.currentIndex - 1;
+                                navigateToCard(nextIndex);
+                                _loadImage();
+                                TtsService.fetchCorrectAudio(
+                                        widget.cardIds[nextIndex])
+                                    .then((_) {
+                                  print(
+                                      'Audio fetched and saved successfully.');
+                                }).catchError((error) {
+                                  print('Error fetching audio: $error');
+                                });
+                              }
+                            : null,
                       ),
-                      Text(
-                        currentEngPronunciation,
-                        style: TextStyle(fontSize: 24, color: Colors.grey[700]),
-                      ),
-                      Text(
-                        currentPronunciation,
-                        style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromARGB(255, 231, 156, 135)),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      // 발음 듣기 버튼 - correctAudio 들려주기
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF26647),
-                          minimumSize: const Size(220, 40),
-                        ),
-                        onPressed: _onListenPressed,
-                        icon: const Icon(
-                          Icons.volume_up,
+                      Container(
+                        width: cardWidth,
+                        height: cardHeight,
+                        decoration: BoxDecoration(
                           color: Colors.white,
+                          border: Border.all(
+                              color: const Color(0xFFF26647), width: 3),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        label: const Text(
-                          'Listen',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // 다음 카드로 이동 버튼
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios),
-                  color: const Color(0xFFF26647),
-                  onPressed: widget.currentIndex < widget.contents.length - 1
-                      ? () {
-                          int nextIndex = widget.currentIndex + 1;
-                          navigateToCard(nextIndex); // 다음 카드로 이동
-                          _loadImage(); // 이미지 로드
-                          // 다음 카드에 해당하는 올바른 음성 데이터 불러오기
-                          TtsService.fetchCorrectAudio(
-                                  widget.cardIds[nextIndex])
-                              .then((_) {
-                            print('Audio fetched and saved successfully.');
-                          }).catchError((error) {
-                            print('Error fetching audio: $error');
-                          });
-                        }
-                      : null,
-                ),
-              ],
-            ),
-            if (!_isLoading)
-              Expanded(
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.82,
-                  height: MediaQuery.of(context).size.height * 0.54,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF5F5F5),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      _isImageLoading // 이미지 로딩 중 표시
-                          ? const SizedBox(
-                              width: 300,
-                              height: 250,
-                              child: Center(child: CircularProgressIndicator()))
-                          : Image.memory(
-                              _imageData!,
-                              fit: BoxFit.contain,
-                              width: 300,
-                              height: 250,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              currentContent,
+                              style: const TextStyle(
+                                  fontSize: 38, fontWeight: FontWeight.bold),
                             ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        child: Text(
-                          currentExplanation,
-                          style:
-                              TextStyle(fontSize: 13, color: Colors.grey[700]),
-                          textAlign: TextAlign.center,
+                            Text(
+                              currentEngPronunciation,
+                              style: TextStyle(
+                                  fontSize: 24, color: Colors.grey[700]),
+                            ),
+                            Text(
+                              currentPronunciation,
+                              style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color.fromARGB(255, 231, 156, 135)),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            // 발음 듣기 버튼 - correctAudio 들려주기
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF26647),
+                                minimumSize: const Size(220, 40),
+                              ),
+                              onPressed: _onListenPressed,
+                              icon: const Icon(
+                                Icons.volume_up,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                'Listen',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                      // 다음 카드로 이동 버튼
+                      IconButton(
+                        icon: const Icon(Icons.arrow_forward_ios),
+                        color: const Color(0xFFF26647),
+                        onPressed:
+                            widget.currentIndex < widget.contents.length - 1
+                                ? () {
+                                    int nextIndex = widget.currentIndex + 1;
+                                    navigateToCard(nextIndex); // 다음 카드로 이동
+                                    _loadImage(); // 이미지 로드
+                                    // 다음 카드에 해당하는 올바른 음성 데이터 불러오기
+                                    TtsService.fetchCorrectAudio(
+                                            widget.cardIds[nextIndex])
+                                        .then((_) {
+                                      print(
+                                          'Audio fetched and saved successfully.');
+                                    }).catchError((error) {
+                                      print('Error fetching audio: $error');
+                                    });
+                                  }
+                                : null,
                       ),
                     ],
                   ),
-                ),
+                  if (!_isLoading)
+                    Expanded(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.82,
+                        height: MediaQuery.of(context).size.height * 0.54,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFF5F5F5),
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            _isImageLoading // 이미지 로딩 중 표시
+                                ? const SizedBox(
+                                    width: 300,
+                                    height: 250,
+                                    child: Center(
+                                        child: CircularProgressIndicator()))
+                                : Image.memory(
+                                    _imageData!,
+                                    fit: BoxFit.contain,
+                                    width: 300,
+                                    height: 250,
+                                  ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                              child: Text(
+                                currentExplanation,
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey[700]),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  if (_isLoading) // 피드백 로딩 중이면 로딩중 Indicator 표시
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 160),
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
+                      ),
+                    ),
+                ],
               ),
-            if (_isLoading) // 피드백 로딩 중이면 로딩중 Indicator 표시
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 160),
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
-                ),
-              ),
-          ],
-        ),
-      ),
+            );
+          }),
       // 녹음 시작/중지 버튼
       floatingActionButton: SizedBox(
         width: 70,
