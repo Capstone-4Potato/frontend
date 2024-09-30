@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/exit_dialog.dart';
+import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/fetchlearningcardlist.dart';
 import 'package:flutter_application_1/ttsservice.dart';
@@ -66,7 +67,11 @@ class _WordVowelsState extends State<WordVowels> {
         final double height = MediaQuery.of(context).size.height / 852;
         final double width = MediaQuery.of(context).size.width / 393;
 
-        return ExitDialog(width: width, height: height);
+        return ExitDialog(
+          width: width,
+          height: height,
+          page: const MainPage(initialIndex: 0),
+        );
       },
     );
   }

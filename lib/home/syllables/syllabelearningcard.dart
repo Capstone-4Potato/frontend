@@ -5,7 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
-import 'package:flutter_application_1/exit_dialog.dart';
+import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/home/syllables/fetchimage.dart';
 import 'package:flutter_application_1/home/syllables/syllablefeedbackui.dart';
@@ -224,7 +224,11 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         final double height = MediaQuery.of(context).size.height / 852;
         final double width = MediaQuery.of(context).size.width / 393;
 
-        return ExitDialog(width: width, height: height);
+        return ExitDialog(
+          width: width,
+          height: height,
+          page: const MainPage(initialIndex: 0),
+        );
       },
     );
   }

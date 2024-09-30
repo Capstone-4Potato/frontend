@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/home/home_page.dart';
 import 'package:flutter_application_1/learninginfo/progress.dart';
 import 'package:flutter_application_1/learninginfo/study_info_page.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/updatecardweaksound.dart';
+import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
@@ -186,30 +188,15 @@ class _TestCardState extends State<TestCard> {
 
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(
-            content,
-            style: const TextStyle(fontSize: 18),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Color(0xFFF26647), fontSize: 20),
-              ),
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const MainPage(initialIndex: 2)),
-                  (route) => false,
-                );
-              },
-            ),
-          ],
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return SuccessDialog(
+          width: width,
+          height: height,
+          page: const MainPage(initialIndex: 2),
         );
       },
     );
@@ -218,45 +205,15 @@ class _TestCardState extends State<TestCard> {
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("End Learning"),
-          content: const Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("End"),
-              onPressed: () {
-                widget.isRetest
-                    ? Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainPage(
-                                  initialIndex: 2,
-                                )),
-                        (route) => false,
-                      )
-                    : Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainPage()),
-                        (route) => false,
-                      );
-              },
-            ),
-          ],
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(
+          width: width,
+          height: height,
+          page: const MainPage(initialIndex: 2),
         );
       },
     );

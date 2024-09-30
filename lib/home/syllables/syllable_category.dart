@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/class.dart';
-import 'package:flutter_application_1/exit_dialog.dart';
+import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants.dart';
 import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels.dart';
 
@@ -21,7 +22,11 @@ class _SyllablesCategoryScreenState extends State<SyllablesCategoryScreen> {
         final double height = MediaQuery.of(context).size.height / 852;
         final double width = MediaQuery.of(context).size.width / 393;
 
-        return ExitDialog(width: width, height: height);
+        return ExitDialog(
+          width: width,
+          height: height,
+          page: const MainPage(initialIndex: 0),
+        );
       },
     );
   }
