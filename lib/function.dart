@@ -1,24 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_1.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_2.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_3.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_4.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_5.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_6.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_7.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels_1.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels_2.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels_3.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_1.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_2.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_3.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_4.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_5.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_6.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_7.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_final_consonants.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 
@@ -230,90 +217,129 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
 void _handleTap(
     BuildContext context, String category, String subcategory, String text) {
   //페이지 이동 로직 구현
+
   if (category == '음절' && subcategory == '단모음') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableVowels1()),
+      MaterialPageRoute(
+          builder: (context) => SyllableVowels(
+              category: category,
+              subcategory: subcategory,
+              title: 'ㅏㅓㅗㅜ ㅡ ㅣㅐㅔ')),
     );
   } else if (category == '음절' && subcategory == '이중모음1') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableVowels2()),
+      MaterialPageRoute(
+          builder: (context) => SyllableVowels(
+              category: category, subcategory: subcategory, title: 'ㅑㅕㅛㅠ')),
     );
   } else if (category == '음절' && subcategory == '이중모음2') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableVowels3()),
+      MaterialPageRoute(
+          builder: (context) => SyllableVowels(
+              category: category,
+              subcategory: subcategory,
+              title: 'ㅒㅖㅘㅙㅝㅞㅚㅟㅢ')),
     );
   } else if (category == '음절' && subcategory == '자음ㄱㅋㄲ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableConsonants1()),
+      MaterialPageRoute(
+          builder: (context) => SyllableConsonants(
+              category: category, subcategory: subcategory, title: 'ㄱㅋㄲ')),
     );
   } else if (category == '음절' && subcategory == '자음ㄷㅌㄸ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableConsonants2()),
+      MaterialPageRoute(
+          builder: (context) => SyllableConsonants(
+              category: category, subcategory: subcategory, title: 'ㄷㅌㄸ')),
     );
   } else if (category == '음절' && subcategory == '자음ㅂㅍㅃ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableConsonants3()),
+      MaterialPageRoute(
+          builder: (context) => SyllableConsonants(
+              category: category, subcategory: subcategory, title: 'ㅂㅍㅃ')),
     );
   } else if (category == '음절' && subcategory == '자음ㅅㅆ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableConsonants4()),
+      MaterialPageRoute(
+          builder: (context) => SyllableConsonants(
+              category: category, subcategory: subcategory, title: 'ㅅㅆ')),
     );
   } else if (category == '음절' && subcategory == '자음ㅈㅊㅉ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableConsonants5()),
+      MaterialPageRoute(
+          builder: (context) => SyllableConsonants(
+              category: category, subcategory: subcategory, title: 'ㅈㅊㅉ')),
     );
   } else if (category == '음절' && subcategory == '자음ㄴㄹㅁ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableConsonants6()),
+      MaterialPageRoute(
+          builder: (context) => SyllableConsonants(
+              category: category, subcategory: subcategory, title: 'ㄴㄹㅁ')),
     );
   } else if (category == '음절' && subcategory == '자음ㅇㅎ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SyllableConsonants7()),
+      MaterialPageRoute(
+          builder: (context) => SyllableConsonants(
+              category: category, subcategory: subcategory, title: 'ㅇㅎ')),
     );
   } else if (category == '단어' && subcategory == '받침ㄱ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const WordFinalConsonants1()),
+      MaterialPageRoute(
+          builder: (context) => WordFinalConsonants(
+              category: '단어', subcategory: '받침ㄱ', title: 'ㄱ')),
     );
   } else if (category == '단어' && subcategory == '받침ㄴ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const WordFinalConsonants2()),
+      MaterialPageRoute(
+          builder: (context) => WordFinalConsonants(
+              category: '단어', subcategory: '받침ㄴ', title: 'ㄴ')),
     );
   } else if (category == '단어' && subcategory == '받침ㄷ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const WordFinalConsonants3()),
+      MaterialPageRoute(
+          builder: (context) => WordFinalConsonants(
+              category: '단어', subcategory: '받침ㄷ', title: 'ㄷ')),
     );
   } else if (category == '단어' && subcategory == '받침ㄹ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const WordFinalConsonants4()),
+      MaterialPageRoute(
+          builder: (context) => WordFinalConsonants(
+              category: '단어', subcategory: '받침ㄹ', title: 'ㄹ')),
     );
   } else if (category == '단어' && subcategory == '받침ㅁ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const WordFinalConsonants5()),
+      MaterialPageRoute(
+          builder: (context) => WordFinalConsonants(
+              category: '단어', subcategory: '받침ㅁ', title: 'ㅁ')),
     );
   } else if (category == '단어' && subcategory == '받침ㅂ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const WordFinalConsonants6()),
+      MaterialPageRoute(
+          builder: (context) => WordFinalConsonants(
+              category: '단어', subcategory: '받침ㅂ', title: 'ㅂ')),
     );
   } else if (category == '단어' && subcategory == '받침ㅇ') {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const WordFinalConsonants7()),
+      MaterialPageRoute(
+          builder: (context) => WordFinalConsonants(
+              category: '단어', subcategory: '받침ㅇ', title: 'ㅇ')),
     );
   } else {
     print('error');

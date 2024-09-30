@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/class.dart';
-import 'package:flutter_application_1/home/sentecnes/sentencelist/sentence_1.dart';
-import 'package:flutter_application_1/home/sentecnes/sentencelist/sentence_2.dart';
-import 'package:flutter_application_1/home/sentecnes/sentencelist/sentence_3.dart';
-import 'package:flutter_application_1/home/sentecnes/sentencelist/sentence_4.dart';
+import 'package:flutter_application_1/exit_dialog.dart';
+import 'package:flutter_application_1/home/sentecnes/sentencelist/sentence.dart';
 
 class SentencesCategoryScreen extends StatefulWidget {
   const SentencesCategoryScreen({super.key});
@@ -17,33 +15,12 @@ class _SentencesCategoryScreenState extends State<SentencesCategoryScreen> {
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: Text("End"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Exit the learning screen
-              },
-            ),
-          ],
-        );
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(width: width, height: height);
       },
     );
   }
@@ -64,7 +41,7 @@ class _SentencesCategoryScreenState extends State<SentencesCategoryScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,
@@ -97,10 +74,26 @@ class _SentencesCategoryScreenState extends State<SentencesCategoryScreen> {
   // _buildSyllableCard 함수를 수정하여 타이틀과 서브타이틀을 함께 표시합니다.
   Widget _buildSyllableCard(BuildContext context, String title) {
     final Map<String, Widget Function()> navigationMap = {
-      CategoryLists.sentenceTitles[0]: () => const Sentence1(),
-      CategoryLists.sentenceTitles[1]: () => const Sentence2(),
-      CategoryLists.sentenceTitles[2]: () => const Sentence3(),
-      CategoryLists.sentenceTitles[3]: () => const Sentence4(),
+      CategoryLists.sentenceTitles[0]: () => Sentence(
+            category: '문장',
+            subcategory: '기본회화',
+            title: 'Basic Conversation',
+          ),
+      CategoryLists.sentenceTitles[1]: () => Sentence(
+            category: '문장',
+            subcategory: '학교대화',
+            title: 'School Conversation',
+          ),
+      CategoryLists.sentenceTitles[2]: () => Sentence(
+            category: '문장',
+            subcategory: '카페주문',
+            title: 'Ordering at a Cafe',
+          ),
+      CategoryLists.sentenceTitles[3]: () => Sentence(
+            category: '문장',
+            subcategory: '자기소개',
+            title: 'Self Introduction',
+          ),
     };
 
     return Card(

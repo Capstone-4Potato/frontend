@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/exit_dialog.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/fetchlearningcardlist.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/home/words/wordlearningcard.dart';
 
-class WordConsonants3 extends StatefulWidget {
-  const WordConsonants3({super.key});
+class WordConsonants extends StatefulWidget {
+  WordConsonants({
+    super.key,
+    required this.category,
+    required this.subcategory,
+    required this.title,
+  });
+  String category;
+  String subcategory;
+  String title;
 
   @override
-  State<WordConsonants3> createState() => _WordConsonants3State();
+  State<WordConsonants> createState() => _WordConsonantsState();
 }
 
-class _WordConsonants3State extends State<WordConsonants3> {
+class _WordConsonantsState extends State<WordConsonants> {
   late List<int> cardIds = [];
   late List<String> contents = [];
   late List<String> pronunciations = [];
@@ -19,6 +28,7 @@ class _WordConsonants3State extends State<WordConsonants3> {
   late List<double> cardScores = [];
   late List<bool> bookmarked = [];
   late List<bool> weakCards = [];
+
   bool showBookmarkedOnly = false;
 
   @override
@@ -28,7 +38,8 @@ class _WordConsonants3State extends State<WordConsonants3> {
   }
 
   void initFetch() async {
-    var data = await fetchData('단어', '자음ㅂㅍㅃ');
+    var data = await fetchData(widget.category, widget.subcategory);
+    print(widget.subcategory);
     if (data != null) {
       setState(() {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
@@ -50,35 +61,12 @@ class _WordConsonants3State extends State<WordConsonants3> {
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: Text("End"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Exit the learning screen
-                Navigator.of(context).pop();
-                // Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(width: width, height: height);
       },
     );
   }
@@ -118,12 +106,13 @@ class _WordConsonants3State extends State<WordConsonants3> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'ㅂㅍㅃ',
-          style: TextStyle(
+          widget.title,
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 22,
             // fontSize: 18,
           ),
+          textAlign: TextAlign.center,
         ),
         backgroundColor: const Color(0xFFF5F5F5),
         centerTitle: true,
@@ -143,7 +132,7 @@ class _WordConsonants3State extends State<WordConsonants3> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,
@@ -208,12 +197,12 @@ class _WordConsonants3State extends State<WordConsonants3> {
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: displayWeakCards[index]
-                                    ? Color.fromARGB(236, 255, 85, 85)
+                                    ? const Color.fromARGB(236, 255, 85, 85)
                                     : Colors.black),
                           ),
                         ),
                         Text(displayEngPronunciations[index],
-                            style: TextStyle(fontSize: 18)),
+                            style: const TextStyle(fontSize: 18)),
                       ],
                     ),
                     Positioned(

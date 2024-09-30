@@ -2,9 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/class.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_vowels_1.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_vowels_2.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_vowels_3.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_vowels.dart';
 
 class WordVowelTab extends StatefulWidget {
   const WordVowelTab({super.key});
@@ -33,9 +31,21 @@ class _WordVowelTabState extends State<WordVowelTab> {
 
   Widget _buildWordCard(BuildContext context, String title) {
     final Map<String, Widget Function()> navigationMap = {
-      CategoryLists.wordVowels[0]: () => const WordVowels1(),
-      CategoryLists.wordVowels[1]: () => const WordVowels2(),
-      CategoryLists.wordVowels[2]: () => const WordVowels3(),
+      CategoryLists.wordVowels[0]: () => WordVowels(
+            category: '단어',
+            subcategory: '단모음',
+            title: 'ㅏㅓㅗㅜ ㅡ ㅣㅐㅔ',
+          ),
+      CategoryLists.wordVowels[1]: () => WordVowels(
+            category: '단어',
+            subcategory: '이중모음1',
+            title: 'ㅑ ㅕ ㅛ ㅠ',
+          ),
+      CategoryLists.wordVowels[2]: () => WordVowels(
+            category: '단어',
+            subcategory: '이중모음2',
+            title: 'ㅒㅖㅘㅙㅝㅞㅚㅟㅢ',
+          ),
     };
 
     return Card(

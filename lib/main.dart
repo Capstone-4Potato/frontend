@@ -5,6 +5,7 @@ import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/login/login_screen.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_application_1/signup/tutorial.dart';
+import 'package:flutter_application_1/test_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/starting_test_page.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -18,7 +19,7 @@ Future<void> main() async {
   KakaoSdk.init(nativeAppKey: 'f8f93eaab1213c026ea40c425a054ea1');
   Widget initialScreen = await _checkTokenStatus();
 
-  runApp(const MyApp(initialScreen: LoginScreen()));
+  runApp(MyApp(initialScreen: initialScreen));
 }
 
 // 비동기 작업을 통해 토큰 상태를 확인하는 함수

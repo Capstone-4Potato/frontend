@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/exit_dialog.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/fetchlearningcardlist.dart';
 import 'package:flutter_application_1/home/sentecnes/sentencelearningcard.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 
-class Sentence3 extends StatefulWidget {
-  const Sentence3({super.key});
+class Sentence extends StatefulWidget {
+  Sentence({
+    super.key,
+    required this.category,
+    required this.subcategory,
+    required this.title,
+  });
+
+  String category;
+  String subcategory;
+  String title;
 
   @override
-  State<Sentence3> createState() => _Sentence3State();
+  State<Sentence> createState() => _SentenceState();
 }
 
-class _Sentence3State extends State<Sentence3> {
+class _SentenceState extends State<Sentence> {
   late List<int> cardIds = [];
   late List<String> contents = [];
   late List<String> pronunciations = [];
@@ -29,11 +39,13 @@ class _Sentence3State extends State<Sentence3> {
   }
 
   void initFetch() async {
-    var data = await fetchData('문장', '카페주문');
+    var data = await fetchData(widget.category, widget.subcategory);
     if (data != null) {
       setState(() {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
         contents = List.generate(data.length, (index) => data[index]['text']);
+        // pronunciations =
+        //     List.generate(data.length, (index) => data[index]['pronunciation']);
         pronunciations = List.generate(
             data.length, (index) => '${data[index]['engTranslation']}');
         engpronunciations = List.generate(
@@ -51,35 +63,12 @@ class _Sentence3State extends State<Sentence3> {
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: Text("End"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Exit the learning screen
-                Navigator.of(context).pop();
-                // Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(width: width, height: height);
       },
     );
   }
@@ -119,11 +108,12 @@ class _Sentence3State extends State<Sentence3> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Ordering at a Cafe',
+          widget.title,
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: MediaQuery.of(context).size.width * 0.045,
           ),
+          textAlign: TextAlign.center, // Center-align the text in the AppBar
         ),
         backgroundColor: const Color(0xFFF5F5F5),
         centerTitle: true,
@@ -143,7 +133,7 @@ class _Sentence3State extends State<Sentence3> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,
@@ -206,7 +196,7 @@ class _Sentence3State extends State<Sentence3> {
                           Center(
                             child: Text(
                               displayContents[index],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -216,7 +206,7 @@ class _Sentence3State extends State<Sentence3> {
                           Center(
                             child: Text(
                               displayEngPronunciations[index],
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                               textAlign: TextAlign.center,
                             ),
                           ),

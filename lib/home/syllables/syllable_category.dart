@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/class.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_1.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_2.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_3.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_4.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_5.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_6.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants_7.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels_1.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels_2.dart';
-import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels_3.dart';
+import 'package:flutter_application_1/exit_dialog.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants.dart';
+import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels.dart';
 
 class SyllablesCategoryScreen extends StatefulWidget {
   const SyllablesCategoryScreen({super.key});
@@ -23,33 +16,12 @@ class _SyllablesCategoryScreenState extends State<SyllablesCategoryScreen> {
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("End Learning"),
-          content: const Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("End"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Exit the learning screen
-              },
-            ),
-          ],
-        );
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(width: width, height: height);
       },
     );
   }
@@ -106,16 +78,26 @@ class _SyllablesCategoryScreenState extends State<SyllablesCategoryScreen> {
   Widget _buildSyllableCard(
       BuildContext context, String title, String subtitle) {
     final Map<String, Widget Function()> navigationMap = {
-      CategoryLists.syllableTitles[0]: () => const SyllableVowels1(),
-      CategoryLists.syllableTitles[1]: () => const SyllableVowels2(),
-      CategoryLists.syllableTitles[2]: () => const SyllableVowels3(),
-      CategoryLists.syllableTitles[3]: () => const SyllableConsonants1(),
-      CategoryLists.syllableTitles[4]: () => const SyllableConsonants2(),
-      CategoryLists.syllableTitles[5]: () => const SyllableConsonants3(),
-      CategoryLists.syllableTitles[6]: () => const SyllableConsonants4(),
-      CategoryLists.syllableTitles[7]: () => const SyllableConsonants5(),
-      CategoryLists.syllableTitles[8]: () => const SyllableConsonants6(),
-      CategoryLists.syllableTitles[9]: () => const SyllableConsonants7(),
+      CategoryLists.syllableTitles[0]: () => SyllableVowels(
+          category: '음절', subcategory: '단모음', title: 'ㅏㅓㅗㅜ ㅡ ㅣㅐㅔ'),
+      CategoryLists.syllableTitles[1]: () =>
+          SyllableVowels(category: '음절', subcategory: '이중모음1', title: 'ㅑㅕㅛㅠ'),
+      CategoryLists.syllableTitles[2]: () => SyllableVowels(
+          category: '음절', subcategory: '이중모음2', title: 'ㅒㅖㅘㅙㅝㅞㅚㅟㅢ'),
+      CategoryLists.syllableTitles[3]: () => SyllableConsonants(
+          category: '음절', subcategory: '자음ㄱㅋㄲ', title: title),
+      CategoryLists.syllableTitles[4]: () => SyllableConsonants(
+          category: '음절', subcategory: '자음ㄷㅌㄸ', title: title),
+      CategoryLists.syllableTitles[5]: () => SyllableConsonants(
+          category: '음절', subcategory: '자음ㅂㅍㅃ', title: title),
+      CategoryLists.syllableTitles[6]: () =>
+          SyllableConsonants(category: '음절', subcategory: '자음ㅅㅆ', title: title),
+      CategoryLists.syllableTitles[7]: () => SyllableConsonants(
+          category: '음절', subcategory: '자음ㅈㅊㅉ', title: title),
+      CategoryLists.syllableTitles[8]: () => SyllableConsonants(
+          category: '음절', subcategory: '자음ㄴㄹㅁ', title: title),
+      CategoryLists.syllableTitles[9]: () =>
+          SyllableConsonants(category: '음절', subcategory: '자음ㅇㅎ', title: title),
     };
 
     return Card(

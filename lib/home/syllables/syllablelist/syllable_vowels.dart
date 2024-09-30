@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/exit_dialog.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/fetchlearningcardlist.dart';
 import 'package:flutter_application_1/home/syllables/syllabelearningcard.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 
-class SyllableConsonants3 extends StatefulWidget {
-  const SyllableConsonants3({super.key});
+class SyllableVowels extends StatefulWidget {
+  SyllableVowels({
+    super.key,
+    required this.category,
+    required this.subcategory,
+    required this.title,
+  });
+  String category;
+  String subcategory;
+  String title;
 
   @override
-  State<SyllableConsonants3> createState() => _SyllableConsonants3State();
+  State<SyllableVowels> createState() => _SyllableVowelsState();
 }
 
-class _SyllableConsonants3State extends State<SyllableConsonants3> {
+class _SyllableVowelsState extends State<SyllableVowels> {
   late List<int> cardIds = [];
   late List<String> contents = [];
   late List<String> pronunciations = [];
@@ -33,7 +42,7 @@ class _SyllableConsonants3State extends State<SyllableConsonants3> {
   }
 
   void initFetch() async {
-    var data = await fetchData('음절', '자음ㅂㅍㅃ');
+    var data = await fetchData(widget.category, widget.subcategory);
     if (data != null) {
       setState(() {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
@@ -60,37 +69,12 @@ class _SyllableConsonants3State extends State<SyllableConsonants3> {
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("End Learning"),
-          content: const Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("End"),
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MainPage(initialIndex: 0)),
-                  (route) => false,
-                );
-              },
-            ),
-          ],
-        );
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(width: width, height: height);
       },
     );
   }
@@ -135,9 +119,9 @@ class _SyllableConsonants3State extends State<SyllableConsonants3> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'ㅂㅍㅃ',
-          style: TextStyle(
+        title: Text(
+          widget.title,
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 22,
           ),

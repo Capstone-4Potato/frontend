@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/exit_dialog.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/fetchlearningcardlist.dart';
-import 'package:flutter_application_1/home/syllables/syllabelearningcard.dart';
 import 'package:flutter_application_1/ttsservice.dart';
+import 'package:flutter_application_1/home/words/wordlearningcard.dart';
 
-class SyllableConsonants4 extends StatefulWidget {
-  const SyllableConsonants4({super.key});
+class WordFinalConsonants extends StatefulWidget {
+  WordFinalConsonants({
+    super.key,
+    required this.category,
+    required this.subcategory,
+    required this.title,
+  });
+  String category;
+  String subcategory;
+  String title;
 
   @override
-  State<SyllableConsonants4> createState() => _SyllableConsonants4State();
+  State<WordFinalConsonants> createState() => _WordFinalConsonantsState();
 }
 
-class _SyllableConsonants4State extends State<SyllableConsonants4> {
+class _WordFinalConsonantsState extends State<WordFinalConsonants> {
   late List<int> cardIds = [];
   late List<String> contents = [];
   late List<String> pronunciations = [];
@@ -20,10 +29,7 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
   late List<double> cardScores = [];
   late List<bool> bookmarked = [];
   late List<bool> weakCards = [];
-  late List<String> explanations = [];
-  late List<String> pictures = [];
   bool showBookmarkedOnly = false;
-  //bool isLoading = true;
 
   @override
   void initState() {
@@ -32,7 +38,7 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
   }
 
   void initFetch() async {
-    var data = await fetchData('음절', '자음ㅅㅆ');
+    var data = await fetchData(widget.category, widget.subcategory);
     if (data != null) {
       setState(() {
         cardIds = List.generate(data.length, (index) => data[index]['id']);
@@ -47,12 +53,6 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
             data.length, (index) => data[index]['cardScore'] / 100.0);
         weakCards =
             List.generate(data.length, (index) => data[index]['weakCard']);
-        // isLoading = false;
-        explanations =
-            List.generate(data.length, (index) => data[index]['explanation']);
-        pictures =
-            List.generate(data.length, (index) => data[index]['pictureUrl']);
-        //isLoading = false;
       });
     }
   }
@@ -60,37 +60,12 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("End Learning"),
-          content: const Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("End"),
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MainPage(initialIndex: 0)),
-                  (route) => false,
-                );
-              },
-            ),
-          ],
-        );
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(width: width, height: height);
       },
     );
   }
@@ -104,8 +79,6 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
     List<double> displayCardScores = [];
     List<bool> displayBookmarked = [];
     List<bool> displayWeakCards = [];
-    List<String> displayExplanations = [];
-    List<String> displayPictures = [];
 
     if (showBookmarkedOnly) {
       for (int i = 0; i < cardIds.length; i++) {
@@ -117,8 +90,6 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
           displayCardScores.add(cardScores[i]);
           displayBookmarked.add(bookmarked[i]);
           displayWeakCards.add(weakCards[i]);
-          displayExplanations.add(explanations[i]);
-          displayPictures.add(pictures[i]);
         }
       }
     } else {
@@ -129,17 +100,14 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
       displayCardScores = cardScores;
       displayBookmarked = bookmarked;
       displayWeakCards = weakCards;
-      displayExplanations = explanations;
-      displayPictures = pictures;
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'ㅅㅆ',
-          style: TextStyle(
+        title: Text(
+          widget.title,
+          style: const TextStyle(
             fontWeight: FontWeight.w600,
-            // fontSize: 18,
             fontSize: 22,
           ),
         ),
@@ -158,6 +126,7 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
               });
             },
           ),
+          //SizedBox(width: 1),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
@@ -185,20 +154,18 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
           return GestureDetector(
             onTap: () {
               // Fetch and save the correct audio for the selected card
-              TtsService.fetchCorrectAudio(displayCardIds[index]).then((_) {
+              TtsService.fetchCorrectAudio(cardIds[index]).then((_) {
                 print('Audio fetched and saved successfully.');
               });
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SyllableLearningCard(
+                  builder: (context) => WordLearningCard(
                     currentIndex: index,
                     cardIds: displayCardIds,
                     contents: displayContents,
                     pronunciations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
-                    explanations: displayExplanations,
-                    pictures: displayPictures,
                   ),
                 ),
               );
@@ -225,7 +192,7 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
                           child: Text(
                             displayContents[index],
                             style: TextStyle(
-                                fontSize: 28,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: displayWeakCards[index]
                                     ? const Color.fromARGB(236, 255, 85, 85)
@@ -260,6 +227,18 @@ class _SyllableConsonants4State extends State<SyllableConsonants4> {
                           updateBookmarkStatus(
                               displayCardIds[index], displayBookmarked[index]);
                         },
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: LinearProgressIndicator(
+                          value: displayCardScores[index], // 현재 값 / 최대 값
+                          backgroundColor: Colors.grey[200],
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                              Color.fromARGB(255, 255, 129, 101)),
+                          minHeight: 6, // 게이지바의 높이를 조정합니다.
+                        ),
                       ),
                     ),
                   ],

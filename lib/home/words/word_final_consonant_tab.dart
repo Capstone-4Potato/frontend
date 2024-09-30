@@ -2,13 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/class.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_1.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_2.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_3.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_4.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_5.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_6.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_final_consonants_7.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_final_consonants.dart';
 
 class WordFinalConsonantTab extends StatefulWidget {
   const WordFinalConsonantTab({super.key});
@@ -37,13 +31,20 @@ class _WordFinalConsonantTabState extends State<WordFinalConsonantTab> {
 
   Widget _buildWordCard(BuildContext context, String title) {
     final Map<String, Widget Function()> navigationMap = {
-      CategoryLists.wordFinalCosonants[0]: () => const WordFinalConsonants1(),
-      CategoryLists.wordFinalCosonants[1]: () => const WordFinalConsonants2(),
-      CategoryLists.wordFinalCosonants[2]: () => const WordFinalConsonants3(),
-      CategoryLists.wordFinalCosonants[3]: () => const WordFinalConsonants4(),
-      CategoryLists.wordFinalCosonants[4]: () => const WordFinalConsonants5(),
-      CategoryLists.wordFinalCosonants[5]: () => const WordFinalConsonants6(),
-      CategoryLists.wordFinalCosonants[6]: () => const WordFinalConsonants7(),
+      CategoryLists.wordFinalCosonants[0]: () =>
+          WordFinalConsonants(category: '단어', subcategory: '받침ㄱ', title: 'ㄱ'),
+      CategoryLists.wordFinalCosonants[1]: () =>
+          WordFinalConsonants(category: '단어', subcategory: '받침ㄴ', title: 'ㄴ'),
+      CategoryLists.wordFinalCosonants[2]: () =>
+          WordFinalConsonants(category: '단어', subcategory: '받침ㄷ', title: 'ㄷ'),
+      CategoryLists.wordFinalCosonants[3]: () =>
+          WordFinalConsonants(category: '단어', subcategory: '받침ㄹ', title: 'ㄹ'),
+      CategoryLists.wordFinalCosonants[4]: () =>
+          WordFinalConsonants(category: '단어', subcategory: '받침ㅁ', title: 'ㅁ'),
+      CategoryLists.wordFinalCosonants[5]: () =>
+          WordFinalConsonants(category: '단어', subcategory: '받침ㅂ', title: 'ㅂ'),
+      CategoryLists.wordFinalCosonants[6]: () =>
+          WordFinalConsonants(category: '단어', subcategory: '받침ㅇ', title: 'ㅇ'),
     };
 
     return Card(

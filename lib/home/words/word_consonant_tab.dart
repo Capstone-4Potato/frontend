@@ -1,13 +1,7 @@
 // 초성 탭 위젯
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/class.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_consonants_1.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_consonants_2.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_consonants_3.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_consonants_4.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_consonants_5.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_consonants_6.dart';
-import 'package:flutter_application_1/home/words/wordlist/word_consonants_7.dart';
+import 'package:flutter_application_1/home/words/wordlist/word_consonants.dart';
 
 class WordConsonantTab extends StatefulWidget {
   const WordConsonantTab({super.key});
@@ -36,13 +30,20 @@ class _WordConsonantTabState extends State<WordConsonantTab> {
 
   Widget _buildWordCard(BuildContext context, String title) {
     final Map<String, Widget Function()> navigationMap = {
-      CategoryLists.wordConsonants[0]: () => const WordConsonants1(),
-      CategoryLists.wordConsonants[1]: () => const WordConsonants2(),
-      CategoryLists.wordConsonants[2]: () => const WordConsonants3(),
-      CategoryLists.wordConsonants[3]: () => const WordConsonants4(),
-      CategoryLists.wordConsonants[4]: () => const WordConsonants5(),
-      CategoryLists.wordConsonants[5]: () => const WordConsonants6(),
-      CategoryLists.wordConsonants[6]: () => const WordConsonants7(),
+      CategoryLists.wordConsonants[0]: () =>
+          WordConsonants(category: '단어', subcategory: '자음ㄱㅋㄲ', title: 'ㄱㅋㄲ'),
+      CategoryLists.wordConsonants[1]: () =>
+          WordConsonants(category: '단어', subcategory: '자음ㄷㅌㄸ', title: 'ㄷㅌㄸ'),
+      CategoryLists.wordConsonants[2]: () =>
+          WordConsonants(category: '단어', subcategory: '자음ㅂㅍㅃ', title: 'ㅂㅍㅃ'),
+      CategoryLists.wordConsonants[3]: () =>
+          WordConsonants(category: '단어', subcategory: '자음ㅅㅆ', title: 'ㅅㅆ'),
+      CategoryLists.wordConsonants[4]: () =>
+          WordConsonants(category: '단어', subcategory: '자음ㅈㅊㅉ', title: 'ㅈㅊㅉ'),
+      CategoryLists.wordConsonants[5]: () =>
+          WordConsonants(category: '단어', subcategory: '자음ㄴㄹㅁ', title: 'ㄴㄹㅁ'),
+      CategoryLists.wordConsonants[6]: () =>
+          WordConsonants(category: '단어', subcategory: '자음ㅇㅎ', title: 'ㅇㅎ'),
     };
 
     return Card(
