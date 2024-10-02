@@ -196,7 +196,6 @@ class _TestCardState extends State<TestCard> {
         return SuccessDialog(
           width: width,
           height: height,
-          page: const MainPage(initialIndex: 2),
         );
       },
     );

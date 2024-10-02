@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
 import 'package:flutter_application_1/profile/editprofile/editprofile_screen.dart';
 import 'package:flutter_application_1/profile/tutorial/retutorial.dart';
@@ -57,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
       return http.get(
         url,
         headers: <String, String>{
-          'access': '$token',
+          'access': token,
           'Content-Type': 'application/json',
         },
       );
@@ -133,10 +134,9 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       backgroundColor: const Color(0xFFF5F5F5),
       body: isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(const Color(0xFFF26647)),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
             ))
           : ListView(
               children: <Widget>[
@@ -155,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontWeight: FontWeight.w600,
                       color: Colors.deepOrangeAccent),
                 ),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 _buildRoundedTile('Edit profile', Icons.arrow_forward_ios,
                     onTap: () {
                   Navigator.push(
@@ -203,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildRoundedTile(String title, IconData icon,
       {required Function onTap}) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -227,49 +227,95 @@ class _ProfilePageState extends State<ProfilePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          titlePadding: EdgeInsets.all(0),
-          title: Container(
-            padding: EdgeInsets.only(left: 24, top: 24, right: 8),
-            child: Row(
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return Dialog(
+          alignment: Alignment.center,
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 26,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            width: 340 * width,
+            height: 230 * height,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('', style: TextStyle(fontSize: 18)),
-                IconButton(
-                  icon: Icon(Icons.close, size: 30),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                const Padding(
+                  padding: EdgeInsets.only(top: 25.0),
+                  child: Text(
+                    'Are you sure you want to log out?',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromARGB(255, 106, 106, 106),
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        print(
+                            'Current login platform: $_loginPlatform'); // Add this line
+                        await SignOutService.signOut(
+                            _loginPlatform); // 소셜로그인 로그아웃하기
+                        signout(); // 앱 로그아웃하기
+                        _resetUserProfile();
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()),
+                          (route) => false,
+                        );
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.remove('loginPlatform');
+                      },
+                      child: Container(
+                        width: 263 * width,
+                        height: 46 * height,
+                        decoration: BoxDecoration(
+                          color: accent,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Center(
+                            child: Text(
+                          'Log out',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 12.0),
+                        width: 263 * width,
+                        height: 46 * height,
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 190, 189, 184)),
+                        ),
+                        child: const Center(
+                            child: Text(
+                          'Cancle',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        )),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          content: Text(
-            'Are you sure you want to \nlog out?',
-            style: TextStyle(fontSize: 18),
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              child: Text('Log out', style: TextStyle(color: Colors.white)),
-              onPressed: () async {
-                print(
-                    'Current login platform: $_loginPlatform'); // Add this line
-                await SignOutService.signOut(_loginPlatform); // 소셜로그인 로그아웃하기
-                signout(); // 앱 로그아웃하기
-                _resetUserProfile();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                  (route) => false,
-                );
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.remove('loginPlatform');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xfff26647),
-              ),
-            ),
-          ],
         );
       },
     );
