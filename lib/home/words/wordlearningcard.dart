@@ -237,6 +237,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
             setState(() {
               // currentIndex를 새로 갱신하여 카드 내용을 바꾸도록 설정
               widget.currentIndex = value;
+              _canRecord = false;
             });
             // 새로 로드된 카드의 발음 오디오 파일 불러오기
             TtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {

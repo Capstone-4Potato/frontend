@@ -258,6 +258,7 @@ class _CustomSentenceLearningCardState
             setState(() {
               // currentIndex를 새로 갱신하여 카드 내용을 바꾸도록 설정
               widget.currentIndex = value;
+              _canRecord = false;
             });
           },
           itemCount: widget.contents.length,

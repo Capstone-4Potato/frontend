@@ -58,13 +58,13 @@ packages:
     source: hosted
     version: "2.11.0"
   audio_session:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: audio_session
-      sha256: a49af9981eec5d7cd73b37bacb6ee73f8143a6a9f9bd5b6021e6c346b9b6cf4e
+      sha256: "343e83bc7809fbda2591a49e525d6b63213ade10c76f15813be9aed6657b3261"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.19"
+    version: "0.1.21"
   audioplayers:
     dependency: "direct main"
     description:
@@ -270,6 +270,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_blue_plus:
+    dependency: "direct main"
+    description:
+      name: flutter_blue_plus
+      sha256: ddbed8d86199ab4342152b2f5ce9a7ea8b348219f6880da3e7899f0a73d2dae3
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.33.4"
   flutter_cache_manager:
     dependency: "direct main"
     description:
@@ -508,10 +516,10 @@ packages:
     dependency: "direct main"
     description:
       name: just_audio
-      sha256: "5abfab1d199e01ab5beffa61b3e782350df5dad036cb8c83b79fa45fc656614e"
+      sha256: d8e8aaf417d33e345299c17f6457f72bd4ba0c549dc34607abb5183a354edc4d
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.38"
+    version: "0.9.40"
   just_audio_platform_interface:
     dependency: transitive
     description:

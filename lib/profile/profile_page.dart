@@ -297,7 +297,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         child: const Center(
                             child: Text(
-                          'Cancle',
+                          'Cancel',
                           style: TextStyle(
                             color: Colors.black,
                           ),
@@ -389,7 +389,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 child: const Center(
                                     child: Text(
-                                  'Cancle',
+                                  'Cancel',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 14,

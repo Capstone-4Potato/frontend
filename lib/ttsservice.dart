@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart';
@@ -76,7 +77,7 @@ class TtsService {
       }
     } catch (e) {
       print('Error occurred: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -95,6 +96,28 @@ class TtsService {
     final String dir = (await getTemporaryDirectory()).path;
     final String fileName = 'correct_audio_$cardId.wav';
     final File file = File('$dir/$fileName');
+
+    // 오디오 세션 설정 - 블루투스 우선 출력
+    final session = await AudioSession.instance;
+    await session.configure(const AudioSessionConfiguration.speech()); // 스피치 모드
+
+    // 오디오 플레이어에 블루투스 출력 설정 (기본 세션 우선 설정)
+    _audioPlayer.setAudioContext(const AudioContext(
+      iOS: AudioContextIOS(
+        options: [
+          AVAudioSessionOptions.defaultToSpeaker,
+          AVAudioSessionOptions.allowBluetooth,
+          AVAudioSessionOptions.allowBluetoothA2DP,
+        ],
+      ),
+      android: AudioContextAndroid(
+        isSpeakerphoneOn: false,
+        stayAwake: true,
+        contentType: AndroidContentType.speech,
+        usageType: AndroidUsageType.voiceCommunication,
+      ),
+    ));
+
     await _audioPlayer.play(DeviceFileSource(file.path));
   }
 }
