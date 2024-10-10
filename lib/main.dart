@@ -8,10 +8,15 @@ import 'package:flutter_application_1/signup/tutorial.dart';
 import 'package:flutter_application_1/test_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/starting_test_page.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  //WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // 스플래시 화면 보여줘라. (preserve)
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FlutterNativeSplash.remove();
   // 세로 방향 고정
   await SystemChrome.setPreferredOrientations([
     //DeviceOrientation.portraitUp,
