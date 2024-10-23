@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,7 +29,7 @@ Future<void> deleteTokens() async {
 
 // 엑세스 토큰 재발급
 Future<bool> refreshAccessToken() async {
-  String url = 'http://potato.seatnullnull.com/reissue';
+  String url = '$main_url/reissue';
   try {
     String? refreshToken = await getRefreshToken();
     if (refreshToken == null) {

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/home/customsentences/cardlistscreen.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class CustomSentenceScreen extends StatefulWidget {
+  const CustomSentenceScreen({super.key});
+
   @override
   _CustomSentenceScreenState createState() => _CustomSentenceScreenState();
 }
@@ -44,7 +47,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
   Future<void> _loadSentencesFromServer() async {
     String? token = await getAccessToken();
-    const url = 'http://potato.seatnullnull.com/cards/custom';
+    String url = '$main_url/cards/custom';
     try {
       final response = await http.get(
         Uri.parse(url),
@@ -114,7 +117,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         text.length <= _maxChars &&
         _koreanRegExp.hasMatch(text)) {
       String? token = await getAccessToken();
-      const url = 'http://potato.seatnullnull.com/cards/custom';
+      String url = '$main_url/cards/custom';
       try {
         final response = await http.post(
           Uri.parse(url),
@@ -185,7 +188,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
   Future<void> _deleteSentence(int index) async {
     final sentence = _sentences[index];
     String? token = await getAccessToken();
-    final url = 'http://potato.seatnullnull.com/cards/custom/${sentence.id}';
+    final url = '$main_url/custom/${sentence.id}';
     try {
       final response = await http.delete(
         Uri.parse(url),
@@ -243,14 +246,14 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Input Error'),
+          title: const Text('Input Error'),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -264,14 +267,14 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
+          title: const Text("End Learning"),
+          content: const Text("Do you want to end learning?"),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("Continue Learning"),
+              child: const Text("Continue Learning"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -280,7 +283,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("End"),
+              child: const Text("End"),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(); // Exit the learning screen
@@ -318,7 +321,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.close,
                   color: Colors.black,
                   size: 30,
@@ -337,19 +340,19 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                 controller: _controller,
                 decoration: InputDecoration(
                   labelText: 'Please enter a sentence',
-                  labelStyle: TextStyle(color: Colors.black26),
+                  labelStyle: const TextStyle(color: Colors.black26),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       color: Color(0xFFF26647),
                       width: 1.5,
                     ),
                   ),
                   suffixIcon: IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.add,
                       color: Color.fromARGB(255, 246, 114, 114),
                       size: 30,
@@ -361,7 +364,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                 onSubmitted: (text) => _addSentence(),
                 enabled: _sentences.length < _maxSentences,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Expanded(
                 child: ListView.builder(
                   itemCount: _sentences.length,
@@ -369,7 +372,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                     return ListTile(
                       title: Text(_sentences[index].text),
                       trailing: IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.delete,
                           color: Colors.black38,
                         ),
@@ -381,25 +384,27 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
               ),
               Text(
                 'Number of sentences : ${_sentences.length} / $_maxSentences',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xfff26647),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  textStyle: TextStyle(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  textStyle: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Go to Learning',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
             ],
           ),
         ),

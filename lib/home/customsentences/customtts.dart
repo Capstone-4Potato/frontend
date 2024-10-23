@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart';
@@ -13,7 +14,7 @@ class CustomTtsService {
   CustomTtsService._internal();
 
   static final AudioPlayer _audioPlayer = AudioPlayer();
-  static const String _baseUrl = 'http://potato.seatnullnull.com/cards/custom/';
+  static final String _baseUrl = '$main_url/cards/custom/';
 
   String? base64CorrectAudio; // 여기에 base64 오디오 데이터를 저장합니다.
 
@@ -80,7 +81,7 @@ class CustomTtsService {
       }
     } catch (e) {
       print('Error occurred: $e');
-      throw e;
+      rethrow;
     }
   }
 

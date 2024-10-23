@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:audio_session/audio_session.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 import 'package:audioplayers/audioplayers.dart' as audioplayers;
@@ -14,7 +15,7 @@ class TtsService {
 
   static final audioplayers.AudioPlayer _audioPlayer =
       audioplayers.AudioPlayer();
-  static const String _baseUrl = 'http://potato.seatnullnull.com/cards/';
+  static final String _baseUrl = '$main_url/cards/';
 
   String? base64CorrectAudio;
 

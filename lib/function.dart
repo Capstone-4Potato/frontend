@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants.dart';
 import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowels.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/home/words/wordlist/word_final_consonants.dart';
 
@@ -12,7 +13,7 @@ import 'package:flutter/gestures.dart';
 // 음절, 단어, 문장 학습 카드 북마크 API
 Future<void> updateBookmarkStatus(int cardId, bool newStatus) async {
   String? token = await getAccessToken();
-  var url = Uri.parse('http://potato.seatnullnull.com/cards/bookmark/$cardId');
+  var url = Uri.parse('$main_url/cards/bookmark/$cardId');
 
   // Function to make the GET request
   Future<http.Response> makeGetRequest(String token) {
@@ -70,7 +71,7 @@ Future<FeedbackData?> getFeedback(
     'correctAudio': base64correctAudio,
   };
 
-  String url = 'http://potato.seatnullnull.com/cards/$cardId';
+  String url = '$main_url/$cardId';
 
   String? token = await getAccessToken();
   // Function to make the POST request

@@ -1,17 +1,18 @@
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
 // 앱 로그아웃 API
 Future<void> signout() async {
   String? token = await getAccessToken();
-  var url = Uri.parse('http://potato.seatnullnull.com/logout');
+  var url = Uri.parse('$main_url/logout');
 
   // Function to make the signout request
   Future<http.Response> makeSignoutRequest(String token) {
     return http.post(
       url,
       headers: <String, String>{
-        'access': '$token',
+        'access': token,
         'Content-Type': 'application/json',
       },
     );

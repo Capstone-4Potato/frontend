@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/home/home_page.dart';
 import 'package:flutter_application_1/learninginfo/progress.dart';
@@ -71,8 +72,7 @@ class _TestCardState extends State<TestCard> {
   Future<void> _uploadRecording(String? path) async {
     if (path != null) {
       String? token = await getAccessToken();
-      var url = Uri.parse(
-          'http://potato.seatnullnull.com/test/${widget.testIds[_currentIndex]}');
+      var url = Uri.parse('$main_url/test/${widget.testIds[_currentIndex]}');
       var request = http.MultipartRequest('POST', url);
       request.headers['access'] = token!;
 

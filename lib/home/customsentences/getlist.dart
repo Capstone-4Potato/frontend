@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
@@ -7,7 +8,7 @@ Future<List<dynamic>?> fetchCustomList() async {
   try {
     String? token = await getAccessToken();
 
-    var url = Uri.parse('http://potato.seatnullnull.com/cards/custom');
+    var url = Uri.parse('$main_url/cards/custom');
 
     // Set headers with the token
     var headers = <String, String>{

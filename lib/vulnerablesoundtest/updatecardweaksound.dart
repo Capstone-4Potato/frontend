@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
@@ -5,7 +6,7 @@ import 'package:http/http.dart' as http;
 Future<void> updatecardweaksound() async {
   try {
     String? token = await getAccessToken();
-    var url = Uri.parse('http://potato.seatnullnull.com/cards/weaksound');
+    var url = Uri.parse('$main_url/cards/weaksound');
 
     // Function to make the request
     Future<http.Response> makeRequest(String token) {

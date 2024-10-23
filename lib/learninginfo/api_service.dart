@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +18,7 @@ Future<Map<String, dynamic>> checkTestAndFetchPhonemes() async {
 }
 
 Future<List<Map<String, dynamic>>> fetchVulnerablePhonemes() async {
-  var url = Uri.parse('http://potato.seatnullnull.com/test/phonemes');
+  var url = Uri.parse('$main_url/test/phonemes');
   String? token = await getAccessToken();
 
   // Function to make the request
@@ -62,7 +63,7 @@ Future<List<Map<String, dynamic>>> fetchVulnerablePhonemes() async {
 }
 
 Future<String> testStatus() async {
-  var url = Uri.parse('http://potato.seatnullnull.com/test/status');
+  var url = Uri.parse('$main_url/test/status');
   String? token = await getAccessToken();
 
   // Function to make the request

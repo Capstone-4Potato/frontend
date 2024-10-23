@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
 // 회원탈퇴 API
 Future<void> deleteaccount(String nickname) async {
   String? token = await getAccessToken();
-  var url = Uri.parse('http://potato.seatnullnull.com/users');
+  var url = Uri.parse('$main_url/users');
 
   // Function to make the delete request
   Future<http.Response> makeDeleteRequest(String token) {

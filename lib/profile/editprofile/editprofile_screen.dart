@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
@@ -50,7 +51,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
 
     // 요청을 보내는 함수를 별도 메서드로 분리
     Future<http.Response> makeRequest(String token) async {
-      var url = Uri.parse('http://potato.seatnullnull.com/users');
+      var url = Uri.parse('$main_url/users');
       return await http.patch(
         url,
         headers: <String, String>{
@@ -112,14 +113,14 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Success'),
-          content: Text(
+          title: const Text('Success'),
+          content: const Text(
             'Your profile has been updated successfully.',
             style: TextStyle(fontSize: 16),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(
+              child: const Text(
                 'OK',
                 style: TextStyle(color: Color(0xFFF26647), fontSize: 20),
               ),
@@ -128,7 +129,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MainPage(initialIndex: 3)),
+                      builder: (context) => const MainPage(initialIndex: 3)),
                   (route) => false,
                 );
               },
@@ -145,7 +146,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Edit Profile',
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -160,7 +161,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             padding: const EdgeInsets.all(30.0),
             child: Column(
               children: [
-                SizedBox(height: 80),
+                const SizedBox(height: 80),
                 TextFormField(
                   controller: _birthYearController,
                   decoration: InputDecoration(
@@ -172,7 +173,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Color(0xFFF26647),
                         width: 1.5,
                       ),
@@ -190,7 +191,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 25),
+                const SizedBox(height: 25),
                 DropdownButtonFormField<int>(
                   value: _selectedGender,
                   items: const [
@@ -217,16 +218,16 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Color(0xFFF26647),
                         width: 1.5,
                       ),
                     ),
                   ),
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  style: const TextStyle(color: Colors.black, fontSize: 16),
                   dropdownColor: Colors.white,
                 ),
-                SizedBox(height: 25),
+                const SizedBox(height: 25),
                 TextFormField(
                   controller: _nicknameController,
                   decoration: InputDecoration(
@@ -238,7 +239,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
-                      borderSide: BorderSide(
+                      borderSide: const BorderSide(
                         color: Color(0xFFF26647),
                         width: 1.5,
                       ),
@@ -257,18 +258,19 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 60),
+                const SizedBox(height: 60),
                 ElevatedButton(
                   onPressed: _updateProfile,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xfff26647),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                    textStyle: TextStyle(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
+                    textStyle: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Edit Profile',
                     style: TextStyle(color: Colors.white),
                   ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,7 +9,7 @@ Future<List<dynamic>?> fetchData(String category, String subcategory) async {
     String? token = await getAccessToken();
     // Backend server URL
     var url = Uri.parse(
-        'http://potato.seatnullnull.com/cards?category=${Uri.encodeComponent(category)}&subcategory=${Uri.encodeComponent(subcategory)}');
+        '$main_url/cards?category=${Uri.encodeComponent(category)}&subcategory=${Uri.encodeComponent(subcategory)}');
 
     // Function to make the request
     Future<http.Response> makeRequest(String token) {

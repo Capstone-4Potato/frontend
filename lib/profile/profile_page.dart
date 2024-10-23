@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/profile/editprofile/editprofile_screen.dart';
 import 'package:flutter_application_1/profile/tutorial/retutorial.dart';
 import 'package:flutter_application_1/profile/logout/sign_out_social.dart';
@@ -52,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
   // 회원정보 받기 API
   Future<void> userData() async {
     String? token = await getAccessToken();
-    var url = Uri.parse('http://potato.seatnullnull.com/users');
+    var url = Uri.parse('$main_url/users');
 
     // Function to make the get request
     Future<http.Response> makeGetRequest(String token) {

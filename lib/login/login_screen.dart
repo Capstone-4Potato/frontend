@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/custom_icons.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/profile/logout/sign_out_social.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
@@ -47,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // 소셜로그인 API
   Future<int> socialLogin(String? socialId) async {
-    var url = Uri.parse('http://potato.seatnullnull.com/login');
+    var url = Uri.parse('$main_url/login');
 
     try {
       var request = http.MultipartRequest('POST', url);
@@ -286,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (statusCode == 200) {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => const MainPage()),
                     (route) => false,
                   );
                 }
@@ -314,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (statusCode == 200) {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => const MainPage()),
                     (route) => false,
                   );
                 }
@@ -342,7 +343,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (statusCode == 200) {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => MainPage()),
+                    MaterialPageRoute(builder: (context) => const MainPage()),
                     (route) => false,
                   );
                 }

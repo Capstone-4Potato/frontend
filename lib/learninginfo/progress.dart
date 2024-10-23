@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
@@ -117,7 +118,7 @@ class CustomProgressBar extends StatelessWidget {
 }
 
 Future<Map<String, double>> fetchProgressData() async {
-  var url = Uri.parse('http://potato.seatnullnull.com/learning/progress');
+  var url = Uri.parse('$main_url/learning/progress');
   String? token = await getAccessToken();
 
   // Function to make the request

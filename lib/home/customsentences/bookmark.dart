@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,8 +11,7 @@ Future<void> updateCustomBookmark(int cardId, bool newStatus) async {
 
   // 요청을 보내는 함수를 별도 메서드로 분리
   Future<http.Response> makeRequest(String token) async {
-    var url = Uri.parse(
-        'http://potato.seatnullnull.com/cards/custom/bookmark/$cardId');
+    var url = Uri.parse('$main_url/bookmark/$cardId');
     return await http.get(
       url,
       headers: <String, String>{

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/learninginfo/re_test_page.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 class VulnerablePhonemesScreen extends StatelessWidget {
   final List<Map<String, dynamic>> phonemes;
 
-  VulnerablePhonemesScreen({required this.phonemes});
+  const VulnerablePhonemesScreen({super.key, required this.phonemes});
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +32,19 @@ class VulnerablePhonemesScreen extends StatelessWidget {
           0.44; // Default height for the list of phonemes
     }
     // print(cardHeight);
-    return Container(
+    return SizedBox(
       height: cardHeight,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        color: Color.fromARGB(230, 255, 255, 255),
+        color: const Color.fromARGB(230, 255, 255, 255),
         elevation: 3,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Vulnerable Phonemes',
                 style: TextStyle(
                   fontSize: 18,
@@ -51,19 +52,19 @@ class VulnerablePhonemesScreen extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Expanded(child: _buildContent()),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => restartTestScreen()));
+                          builder: (context) => const restartTestScreen()));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xfff26647),
-                  textStyle: TextStyle(
+                  textStyle: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
@@ -71,7 +72,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Pronunciation Test',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -85,7 +86,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
 
   Widget _buildContent() {
     if (phonemes.isEmpty) {
-      return Center(
+      return const Center(
         child: Text(
           'Perfect!\nThere are no vulnerable phonemes.',
           style: TextStyle(fontSize: 18),
@@ -93,7 +94,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
         ),
       );
     } else if (phonemes.length == 1 && phonemes[0].containsKey('status')) {
-      return Center(
+      return const Center(
         child: Text(
           'No test conducted.\nPlease take the test to check for vulnerable phonemes.',
           style: TextStyle(fontSize: 18),
@@ -108,7 +109,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
               vertical: 1.8,
               horizontal: 16.0,
             ),
-            child: Container(
+            child: SizedBox(
               width: double.infinity, // Full width
               height: 58,
               child: Card(
@@ -119,10 +120,10 @@ class VulnerablePhonemesScreen extends StatelessWidget {
                 child: ListTile(
                   leading: CircleAvatar(
                     radius: 14,
-                    backgroundColor: Color.fromARGB(255, 217, 57, 57),
+                    backgroundColor: const Color.fromARGB(255, 217, 57, 57),
                     child: Text(
                       '${phoneme['rank']}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -131,7 +132,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
                   ),
                   title: Text(
                     '${phoneme['phonemeText']}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                       color: Colors.black87,
@@ -148,7 +149,7 @@ class VulnerablePhonemesScreen extends StatelessWidget {
 }
 
 Future<List<Map<String, dynamic>>> fetchVulnerablePhonemes() async {
-  var url = Uri.parse('http://potato.seatnullnull.com/test/phonemes');
+  var url = Uri.parse('$main_url/test/phonemes');
   String? token = await getAccessToken();
 
   // Function to make the request
@@ -199,7 +200,7 @@ Future<List<Map<String, dynamic>>> fetchVulnerablePhonemes() async {
 }
 
 Future<String> testStatus() async {
-  var url = Uri.parse('http://potato.seatnullnull.com/test/status');
+  var url = Uri.parse('$main_url/test/status');
   String? token = await getAccessToken();
 
   // Function to make the request

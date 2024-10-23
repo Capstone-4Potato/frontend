@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_application_1/feedback_data.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,7 +12,7 @@ Future<FeedbackData?> customFeedback(
     'correctAudio': base64correctAudio,
   };
 
-  String url = 'http://potato.seatnullnull.com/cards/custom/$cardId';
+  String url = '$main_url/custom/$cardId';
 
   String? token = await getAccessToken();
   try {
