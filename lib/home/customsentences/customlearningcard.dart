@@ -8,6 +8,8 @@ import 'package:flutter_application_1/home/customsentences/customtts.dart';
 import 'package:flutter_application_1/home/customsentences/feedback.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/permissionservice.dart';
+import 'package:flutter_application_1/widgets/exit_dialog.dart';
+import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
 class CustomSentenceLearningCard extends StatefulWidget {
@@ -139,26 +141,11 @@ class _CustomSentenceLearningCardState
   void showErrorDialog() {
     showDialog(
       context: context,
-      //barrierDismissible: false, // 사용자가 다이얼로그 바깥을 터치하여 닫지 못하게 함
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Recording Error"),
-          content: const Text(
-            "Please try recording again.",
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // 다이얼로그 닫기
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
-              ),
-            ),
-          ],
-        );
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return RecordingErrorDialog(width: width, height: height);
       },
     );
   }
@@ -181,36 +168,15 @@ class _CustomSentenceLearningCardState
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("End Learning"),
-          content: const Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("End"),
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const MainPage(initialIndex: 0)),
-                  (route) => false,
-                );
-              },
-            ),
-          ],
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(
+          width: width,
+          height: height,
+          page: const MainPage(initialIndex: 0),
         );
       },
     );

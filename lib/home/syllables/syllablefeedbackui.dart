@@ -24,7 +24,10 @@ class _FeedbackUIState extends State<FeedbackUI> {
   }
 
   Future<void> _playUserRecording() async {
-    await _audioPlayer.play(DeviceFileSource(widget.recordedFilePath));
+    await _audioPlayer
+        .play(DeviceFileSource(widget.recordedFilePath, mimeType: "audio/mp3"))
+        .onError((error, stackTrace) =>
+            throw Exception("Failed to play Local audio $error"));
   }
 
   @override

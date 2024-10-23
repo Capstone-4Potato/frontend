@@ -110,11 +110,6 @@
 		<string>This app need to access your bluetooth.</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>This app needs access to microphone for recording audio.</string>
-		<key>UIBackgroundModes</key>
-		<array>
-			<string>audio</string>
-			<string>bluetooth-central</string>
-		</array>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UILaunchStoryboardName</key>

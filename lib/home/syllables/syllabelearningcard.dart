@@ -13,6 +13,7 @@ import 'package:flutter_application_1/home/syllables/syllablefeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
+import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -47,7 +48,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   bool _isRecording = false; // 녹음 중인지 여부
   bool _canRecord = false; // 녹음 가능 여부
   late String _recordedFilePath; // 녹음된 파일 경로
-  bool _isBluetoothConnected = false;
+  final bool _isBluetoothConnected = false;
 
   bool _isLoading = false; // 피드백 로딩 중인지 여부
   Uint8List? _imageData; // 이미지를 저장할 변수
@@ -60,7 +61,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     super.initState();
     _initialize(); // 초기 설정
     _loadImage(); // 이미지 로드
-    _checkBluetoothConnection();
+    //_checkBluetoothConnection();
     pageController =
         PageController(initialPage: widget.currentIndex); // PageController 초기화
   }
@@ -71,32 +72,33 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     await _audioRecorder.openAudioSession();
   }
 
-  // 블루투스 연결 상태 확인
-  Future<void> _checkBluetoothConnection() async {
-    // 현재 연결된 블루투스 장치 목록 가져오기
-    List<BluetoothDevice> connectedDevices = FlutterBluePlus.connectedDevices;
+  // // 블루투스 연결 상태 확인
+  // Future<void> _checkBluetoothConnection() async {
+  //   // 현재 연결된 블루투스 장치 목록 가져오기
+  //   List<BluetoothDevice> connectedDevices = FlutterBluePlus.connectedDevices;
 
-    // 연결된 장치가 있는지 확인
-    setState(() {
-      _isBluetoothConnected = connectedDevices.isNotEmpty;
-    });
-  }
+  //   // 연결된 장치가 있는지 확인
+  //   setState(() {
+  //     _isBluetoothConnected = connectedDevices.isNotEmpty;
+  //   });
+  // }
 
   // 오디오 세션 설정
   Future<void> _setupAudioSession() async {
     final session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration.speech());
 
-    if (_isBluetoothConnected) {
-      // 블루투스 연결 시 오디오 라우팅 설정 (네이티브 제어 필요할 수 있음)
-      await session.setActive(true);
-      // 네이티브 플랫폼 통신을 통해 블루투스 연결 제어가 필요할 수 있음
-      print("Bluetooth가 연결된 상태입니다.");
-    } else {
-      // 블루투스 미연결 시 기본 오디오 출력
-      await session.setActive(true);
-      print("Bluetooth가 연결되지 않았습니다. 기본 스피커 사용.");
-    }
+    // if (_isBluetoothConnected) {
+    //   // 블루투스 연결 시 오디오 라우팅 설정 (네이티브 제어 필요할 수 있음)
+    //   await session.setActive(true);
+    //   // 네이티브 플랫폼 통신을 통해 블루투스 연결 제어가 필요할 수 있음
+    //   print("Bluetooth가 연결된 상태입니다.");
+    // } else {
+    //   // 블루투스 미연결 시 기본 오디오 출력
+    //   await session.setActive(true);
+    //   print("Bluetooth가 연결되지 않았습니다. 기본 스피커 사용.");
+    // }
+    await session.setActive(true);
   }
 
   // 이미지 로드
@@ -170,7 +172,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
 
   // 사용자에게 올바른 발음 Listen 버튼 누르면 들려주기
   void _onListenPressed() async {
-    _setupAudioSession();
+    //_setupAudioSession();
     await TtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
     setState(() {
@@ -208,24 +210,10 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Recording Error"),
-          content: const Text(
-            "Please try recording again.",
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // 다이얼로그 닫기
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
-              ),
-            ),
-          ],
-        );
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return RecordingErrorDialog(width: width, height: height);
       },
     );
   }

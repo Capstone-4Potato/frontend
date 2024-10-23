@@ -73,7 +73,6 @@ Future<FeedbackData?> getFeedback(
   String url = 'http://potato.seatnullnull.com/cards/$cardId';
 
   String? token = await getAccessToken();
-
   // Function to make the POST request
   Future<http.Response> makePostRequest(String token) {
     return http.post(

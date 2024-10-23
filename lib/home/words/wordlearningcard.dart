@@ -9,6 +9,7 @@ import 'package:flutter_application_1/feedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
+import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
 class WordLearningCard extends StatefulWidget {
@@ -141,24 +142,10 @@ class _WordLearningCardState extends State<WordLearningCard> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Recording Error"),
-          content: const Text(
-            "Please try recording again.",
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // 다이얼로그 닫기
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
-              ),
-            ),
-          ],
-        );
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return RecordingErrorDialog(width: width, height: height);
       },
     );
   }

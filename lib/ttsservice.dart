@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart' as audioplayers;
 import 'package:path_provider/path_provider.dart';
 
 class TtsService {
@@ -12,7 +12,8 @@ class TtsService {
 
   TtsService._internal();
 
-  static final AudioPlayer _audioPlayer = AudioPlayer();
+  static final audioplayers.AudioPlayer _audioPlayer =
+      audioplayers.AudioPlayer();
   static const String _baseUrl = 'http://potato.seatnullnull.com/cards/';
 
   String? base64CorrectAudio;
@@ -97,27 +98,28 @@ class TtsService {
     final String fileName = 'correct_audio_$cardId.wav';
     final File file = File('$dir/$fileName');
 
-    // 오디오 세션 설정 - 블루투스 우선 출력
-    final session = await AudioSession.instance;
-    await session.configure(const AudioSessionConfiguration.speech()); // 스피치 모드
+    // // 오디오 세션 설정 - 블루투스 우선 출력
+    // final session = await AudioSession.instance;
+    // await session.configure(const AudioSessionConfiguration.speech()); // 스피치 모드
 
-    // 오디오 플레이어에 블루투스 출력 설정 (기본 세션 우선 설정)
-    _audioPlayer.setAudioContext(const AudioContext(
-      iOS: AudioContextIOS(
-        options: [
-          AVAudioSessionOptions.defaultToSpeaker,
-          AVAudioSessionOptions.allowBluetooth,
-          AVAudioSessionOptions.allowBluetoothA2DP,
-        ],
-      ),
-      android: AudioContextAndroid(
-        isSpeakerphoneOn: false,
-        stayAwake: true,
-        contentType: AndroidContentType.speech,
-        usageType: AndroidUsageType.voiceCommunication,
-      ),
-    ));
+    // // 오디오 플레이어에 블루투스 출력 설정 (기본 세션 우선 설정)
+    // _audioPlayer.setAudioContext(audioplayers.AudioContext(
+    //   iOS: audioplayers.AudioContextIOS(
+    //     category: audioplayers.AVAudioSessionCategory.playAndRecord,
+    //     options: const {
+    //       audioplayers.AVAudioSessionOptions.defaultToSpeaker,
+    //       audioplayers.AVAudioSessionOptions.allowBluetooth,
+    //       audioplayers.AVAudioSessionOptions.allowBluetoothA2DP,
+    //     },
+    //   ),
+    //   android: const audioplayers.AudioContextAndroid(
+    //     isSpeakerphoneOn: false,
+    //     stayAwake: true,
+    //     contentType: audioplayers.AndroidContentType.speech,
+    //     usageType: audioplayers.AndroidUsageType.voiceCommunication,
+    //   ),
+    // ));
 
-    await _audioPlayer.play(DeviceFileSource(file.path));
+    await _audioPlayer.play(audioplayers.DeviceFileSource(file.path));
   }
 }
