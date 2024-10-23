@@ -173,6 +173,7 @@ class _WordConsonantsState extends State<WordConsonants> {
                     contents: displayContents,
                     pronunciations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
+                    bookmarked: displayBookmarked,
                   ),
                 ),
               );

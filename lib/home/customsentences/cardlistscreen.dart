@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/home/customsentences/bookmark.dart';
 import 'package:flutter_application_1/home/customsentences/customlearningcard.dart';
 import 'package:flutter_application_1/home/customsentences/customtts.dart';
 import 'package:flutter_application_1/home/customsentences/getlist.dart';
+import 'package:flutter_application_1/widgets/exit_dialog.dart';
 
 class CustomSentences extends StatefulWidget {
   const CustomSentences({super.key});
@@ -49,33 +51,15 @@ class _CustomSentencesState extends State<CustomSentences> {
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("End Learning"),
-          content: Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: Text("End"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Exit the learning screen
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(
+          width: width,
+          height: height,
+          page: const MainPage(initialIndex: 0),
         );
       },
     );
@@ -137,7 +121,7 @@ class _CustomSentencesState extends State<CustomSentences> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,
@@ -173,6 +157,7 @@ class _CustomSentencesState extends State<CustomSentences> {
                     contents: displayContents,
                     pronunciations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
+                    bookmarked: displayBookmarked,
                   ),
                 ),
               );
@@ -199,7 +184,7 @@ class _CustomSentencesState extends State<CustomSentences> {
                           Center(
                             child: Text(
                               displayContents[index],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -209,7 +194,7 @@ class _CustomSentencesState extends State<CustomSentences> {
                           Center(
                             child: Text(
                               displayEngPronunciations[index],
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                               textAlign: TextAlign.center,
                             ),
                           ),

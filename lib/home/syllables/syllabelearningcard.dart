@@ -25,6 +25,7 @@ class SyllableLearningCard extends StatefulWidget {
   final List<String> engpronunciations;
   final List<String> explanations;
   final List<String> pictures;
+  final List<bool> bookmarked;
 
   SyllableLearningCard({
     Key? key,
@@ -35,6 +36,7 @@ class SyllableLearningCard extends StatefulWidget {
     required this.engpronunciations,
     required this.explanations,
     required this.pictures,
+    required this.bookmarked,
   }) : super(key: key);
 
   @override
@@ -231,6 +233,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
           engpronunciations: widget.engpronunciations,
           explanations: widget.explanations,
           pictures: widget.pictures,
+          bookmarked: widget.bookmarked,
         ),
       ),
     );
@@ -271,6 +274,27 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
         actions: [
+          IconButton(
+            icon: Icon(
+              widget.bookmarked[widget.currentIndex]
+                  ? Icons.bookmark
+                  : Icons.bookmark_outline_sharp,
+              color: widget.bookmarked[widget.currentIndex]
+                  ? const Color(0xFFF26647)
+                  : Colors.grey[400],
+              size: 30,
+            ),
+            onPressed: () {
+              setState(() {
+                // 북마크 상태를 토글
+                widget.bookmarked[widget.currentIndex] =
+                    !widget.bookmarked[widget.currentIndex];
+              });
+              // 북마크 상태를 서버에 업데이트
+              updateBookmarkStatus(widget.cardIds[widget.currentIndex],
+                  widget.bookmarked[widget.currentIndex]);
+            },
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(

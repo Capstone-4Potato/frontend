@@ -194,6 +194,7 @@ class _SyllableConsonantsState extends State<SyllableConsonants> {
                     engpronunciations: displayEngPronunciations,
                     explanations: displayExplanations,
                     pictures: displayPictures,
+                    bookmarked: displayBookmarked,
                   ),
                 ),
               );

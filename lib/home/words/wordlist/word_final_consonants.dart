@@ -170,6 +170,7 @@ class _WordFinalConsonantsState extends State<WordFinalConsonants> {
                     contents: displayContents,
                     pronunciations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
+                    bookmarked: displayBookmarked,
                   ),
                 ),
               );

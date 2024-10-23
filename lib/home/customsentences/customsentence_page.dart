@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/home/customsentences/cardlistscreen.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -264,32 +266,15 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
   void _showExitDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("End Learning"),
-          content: const Text("Do you want to end learning?"),
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("Continue Learning"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-              ),
-              child: const Text("End"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(); // Exit the learning screen
-              },
-            ),
-          ],
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return ExitDialog(
+          width: width,
+          height: height,
+          page: const MainPage(initialIndex: 0),
         );
       },
     );

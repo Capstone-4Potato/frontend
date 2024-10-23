@@ -174,6 +174,7 @@ class _SentenceState extends State<Sentence> {
                     contents: displayContents,
                     pronunciations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
+                    bookmarked: displayBookmarked,
                   ),
                 ),
               );

@@ -186,6 +186,7 @@ class _SyllableVowelsState extends State<SyllableVowels> {
                     engpronunciations: displayEngPronunciations,
                     explanations: displayExplanations,
                     pictures: displayPictures,
+                    bookmarked: displayBookmarked,
                   ),
                 ),
               );

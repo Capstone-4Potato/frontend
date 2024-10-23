@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/function.dart';
+import 'package:flutter_application_1/home/customsentences/bookmark.dart';
 import 'package:flutter_application_1/home/customsentences/customfeedback.dart';
 import 'package:flutter_application_1/home/customsentences/customtts.dart';
 import 'package:flutter_application_1/home/customsentences/feedback.dart';
@@ -18,6 +20,7 @@ class CustomSentenceLearningCard extends StatefulWidget {
   final List<String> contents;
   final List<String> pronunciations;
   final List<String> engpronunciations;
+  final List<bool> bookmarked;
 
   CustomSentenceLearningCard({
     Key? key,
@@ -26,6 +29,7 @@ class CustomSentenceLearningCard extends StatefulWidget {
     required this.contents,
     required this.pronunciations,
     required this.engpronunciations,
+    required this.bookmarked,
   }) : super(key: key);
 
   @override
@@ -160,6 +164,7 @@ class _CustomSentenceLearningCardState
           contents: widget.contents,
           pronunciations: widget.pronunciations,
           engpronunciations: widget.engpronunciations,
+          bookmarked: widget.bookmarked,
         ),
       ),
     );
@@ -204,6 +209,27 @@ class _CustomSentenceLearningCardState
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
         actions: [
+          IconButton(
+            icon: Icon(
+              widget.bookmarked[widget.currentIndex]
+                  ? Icons.bookmark
+                  : Icons.bookmark_outline_sharp,
+              color: widget.bookmarked[widget.currentIndex]
+                  ? const Color(0xFFF26647)
+                  : Colors.grey[400],
+              size: 30,
+            ),
+            onPressed: () {
+              setState(() {
+                // 북마크 상태를 토글
+                widget.bookmarked[widget.currentIndex] =
+                    !widget.bookmarked[widget.currentIndex];
+              });
+              // 북마크 상태를 서버에 업데이트
+              updateCustomBookmark(widget.cardIds[widget.currentIndex],
+                  widget.bookmarked[widget.currentIndex]);
+            },
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(

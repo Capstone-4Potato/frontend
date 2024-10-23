@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/signup/tutorial.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +40,7 @@ class _UserInputFormState extends State<UserInputForm> {
 
   // 회원가입 API
   Future<void> signup() async {
-    Uri url = Uri.parse('http://potato.seatnullnull.com/users');
+    Uri url = Uri.parse('$main_url/users');
     try {
       var response = await http.post(
         url,

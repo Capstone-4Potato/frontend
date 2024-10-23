@@ -172,6 +172,7 @@ class _WordVowelsState extends State<WordVowels> {
                     contents: displayContents,
                     pronunciations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
+                    bookmarked: displayBookmarked,
                   ),
                 ),
               );
