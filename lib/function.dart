@@ -71,7 +71,7 @@ Future<FeedbackData?> getFeedback(
     'correctAudio': base64correctAudio,
   };
 
-  String url = '$main_url/$cardId';
+  String url = '$main_url/cards/$cardId';
 
   String? token = await getAccessToken();
   // Function to make the POST request

@@ -11,7 +11,7 @@ Future<void> updateCustomBookmark(int cardId, bool newStatus) async {
 
   // 요청을 보내는 함수를 별도 메서드로 분리
   Future<http.Response> makeRequest(String token) async {
-    var url = Uri.parse('$main_url/bookmark/$cardId');
+    var url = Uri.parse('$main_url/cards/custom/bookmark/$cardId');
     return await http.get(
       url,
       headers: <String, String>{
