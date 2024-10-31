@@ -14,13 +14,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ReportScreen extends StatefulWidget {
+  const ReportScreen({super.key});
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ReportScreen> createState() => _ReportScreenState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ReportScreenState extends State<ReportScreen> {
   static String? nickname;
   static int? age;
   static int? gender;
@@ -128,78 +128,138 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height / 852;
+    double width = MediaQuery.of(context).size.width / 392;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 219, 181),
+        toolbarHeight: 10,
+        backgroundColor: background,
       ),
-      //backgroundColor: const Color(0xFFF5F5F5),
-      backgroundColor: const Color.fromARGB(255, 255, 219, 181),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
             ))
-          : ListView(
-              children: <Widget>[
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 140.0),
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 242, 235, 227),
-                      borderRadius: BorderRadius.circular(100),
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            text: 'Hello,\n',
+                            style: const TextStyle(fontSize: 16),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '$nickname 👋',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Center(
+                          child: CircleAvatar(
+                            radius: 35,
+                            backgroundColor:
+                                const Color.fromARGB(255, 242, 235, 227),
+                            child: Image.asset(
+                              'assets/image/bam_character.png',
+                              width: 65 * width,
+                              height: 65 * height,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Image.asset(
-                      'assets/image/bam_character.png',
-                      width: 30,
-                      height: MediaQuery.of(context).size.height * 0.13,
+                    Row(
+                      children: [
+                        Container(
+                          child: Column(
+                            children: [
+                              const CircleAvatar(
+                                radius: 35,
+                                backgroundColor:
+                                    Color.fromARGB(255, 242, 235, 227),
+                                child: Text(
+                                  '🕰️',
+                                  style: TextStyle(
+                                    fontSize: 28,
+                                  ),
+                                ),
+                              ),
+                              const Text(
+                                'Study Time',
+                                style: TextStyle(
+                                  color: Color(0xFF5E5D58),
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  text: 'Hello,\n',
+                                  style: const TextStyle(fontSize: 16),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: '$nickname 👋',
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                    Column(
+                      children: <Widget>[
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.02),
+                        const SizedBox(height: 40),
+                        _buildRoundedTile(
+                            'Edit profile', Icons.arrow_forward_ios, onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileUpdatePage(
+                                currentnickname: nickname ?? '',
+                                currentage: age ?? -100,
+                                currentgender: gender ?? -1,
+                                onProfileUpdate: _updateUserProfile,
+                              ),
+                            ),
+                          );
+                        }),
+                        _buildRoundedTile('Tutorial', Icons.arrow_forward_ios,
+                            onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RetutorialScreen(),
+                            ),
+                          );
+                        }),
+                        _buildRoundedTile('Log out', Icons.arrow_forward_ios,
+                            onTap: () {
+                          _showLogoutDialog(context);
+                        }),
+                        _buildRoundedTile(
+                            'Delete account', Icons.arrow_forward_ios,
+                            onTap: () {
+                          _showDeleteAccountDialog(context);
+                        }),
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                Text(
-                  nickname ?? '',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.03,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.deepOrangeAccent),
-                ),
-                const SizedBox(height: 40),
-                _buildRoundedTile('Edit profile', Icons.arrow_forward_ios,
-                    onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileUpdatePage(
-                        currentnickname: nickname ?? '',
-                        currentage: age ?? -100,
-                        currentgender: gender ?? -1,
-                        onProfileUpdate: _updateUserProfile,
-                      ),
-                    ),
-                  );
-                }),
-                _buildRoundedTile('Tutorial', Icons.arrow_forward_ios,
-                    onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const RetutorialScreen(),
-                    ),
-                  );
-                }),
-                _buildRoundedTile('Log out', Icons.arrow_forward_ios,
-                    onTap: () {
-                  _showLogoutDialog(context);
-                }),
-                _buildRoundedTile('Delete account', Icons.arrow_forward_ios,
-                    onTap: () {
-                  _showDeleteAccountDialog(context);
-                }),
-              ],
+              ),
             ),
     );
   }

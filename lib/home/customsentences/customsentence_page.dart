@@ -113,6 +113,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
   Future<void> _addSentence() async {
     final text = _controller.text;
+    print(text);
 
     if (text.isNotEmpty &&
         _sentences.length < _maxSentences &&
@@ -323,11 +324,24 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
             children: [
               TextField(
                 controller: _controller,
+                style: const TextStyle(
+                  color: Color(0xFFF26647),
+                ),
+                cursorColor: const Color(0xFFF26647),
                 decoration: InputDecoration(
                   labelText: 'Please enter a sentence',
-                  labelStyle: const TextStyle(color: Colors.black26),
+                  labelStyle: const TextStyle(
+                    color: Color(0xFF71706b),
+                  ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6.0),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFBEBDB8),
+                      width: 1.5,
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
@@ -336,59 +350,82 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                       width: 1.5,
                     ),
                   ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(
-                      Icons.add,
-                      color: Color.fromARGB(255, 246, 114, 114),
-                      size: 30,
-                    ),
-                    onPressed:
-                        _sentences.length < _maxSentences ? _addSentence : null,
-                  ),
+                  suffixIcon: _sentences.isEmpty
+                      ? IconButton(
+                          icon: const Icon(
+                            Icons.add,
+                            color: Color(0xFF71706b),
+                            size: 30,
+                          ),
+                          onPressed: _sentences.length < _maxSentences
+                              ? _addSentence
+                              : null,
+                        )
+                      : Container(),
                 ),
                 onSubmitted: (text) => _addSentence(),
                 enabled: _sentences.length < _maxSentences,
               ),
               const SizedBox(height: 20),
+
               Expanded(
-                child: ListView.builder(
-                  itemCount: _sentences.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(_sentences[index].text),
-                      trailing: IconButton(
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.black38,
+                child: _sentences.isEmpty
+                    ? Center(
+                        child: Container(
+                          width: 356,
+                          height: 197,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            border: Border.all(color: const Color(0xFFEBEBEB)),
+                          ),
+                          child: const Text(
+                            'Got a sentence you'
+                            'd like to practice pronouncing? Just write it in English, we’ll translate it into Korean and save it as a card!',
+                            style: TextStyle(
+                              color: Color(0xFF7F7E79),
+                            ),
+                          ),
                         ),
-                        onPressed: () => _deleteSentence(index),
+                      )
+                    : ListView.builder(
+                        itemCount: _sentences.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(_sentences[index].text),
+                            trailing: IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.black38,
+                              ),
+                              onPressed: () => _deleteSentence(index),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
-              Text(
-                'Number of sentences : ${_sentences.length} / $_maxSentences',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
+              // Text(
+              //   'Number of sentences : ${_sentences.length} / $_maxSentences',
+              //   style:
+              //       const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              // ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xfff26647),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                child: const Text(
-                  'Go to Learning',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: const Color(0xfff26647),
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              //     textStyle: const TextStyle(
+              //       fontSize: 16,
+              //       fontWeight: FontWeight.w500,
+              //     ),
+              //   ),
+              //   child: const Text(
+              //     'Go to Learning',
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              // ),
               const SizedBox(height: 30),
             ],
           ),
