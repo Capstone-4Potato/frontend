@@ -1,18 +1,14 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
 import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/profile/editprofile/editprofile_screen.dart';
-import 'package:flutter_application_1/profile/tutorial/retutorial.dart';
-import 'package:flutter_application_1/profile/logout/sign_out_social.dart';
-import 'package:flutter_application_1/profile/logout/signout.dart';
-import 'package:flutter_application_1/profile/deleteaccount/withdrawal_screen.dart';
-import 'package:flutter_application_1/login/login_screen.dart';
+import 'package:flutter_application_1/new_home/home_cards.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -25,12 +21,12 @@ class _ReportScreenState extends State<ReportScreen> {
   static int? age;
   static int? gender;
   bool isLoading = true;
-  LoginPlatform _loginPlatform = LoginPlatform.none; // Add this line
+
+  int touchedIndex = -1;
 
   @override
   void initState() {
     super.initState();
-    _loadLoginPlatform();
 
     if (nickname == null || age == null || gender == null) {
       userData();
@@ -39,13 +35,6 @@ class _ReportScreenState extends State<ReportScreen> {
         isLoading = false;
       });
     }
-  }
-
-  Future<void> _loadLoginPlatform() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _loginPlatform = LoginPlatform.values[prefs.getInt('loginPlatform') ?? 4];
-    });
   }
 
   // 회원정보 받기 API
@@ -143,7 +132,8 @@ class _ReportScreenState extends State<ReportScreen> {
             ))
           : SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                padding: const EdgeInsets.only(
+                    left: 25.0, right: 25.0, bottom: 50.0),
                 child: Column(
                   children: [
                     Row(
@@ -177,85 +167,157 @@ class _ReportScreenState extends State<ReportScreen> {
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          child: Column(
-                            children: [
-                              const CircleAvatar(
-                                radius: 35,
-                                backgroundColor:
-                                    Color.fromARGB(255, 242, 235, 227),
-                                child: Text(
-                                  '🕰️',
+                    Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: Wrap(
+                        spacing: 40,
+                        children: [
+                          AnalysisItem(
+                            icon: '🕰️',
+                            title: 'Study Time',
+                            value: 15,
+                            unit: 'min',
+                          ),
+                          AnalysisItem(
+                            icon: '📖',
+                            title: 'Learned',
+                            value: 21,
+                            unit: '',
+                          ),
+                          AnalysisItem(
+                            icon: '👍',
+                            title: 'Accuracy',
+                            value: 95,
+                            unit: '%',
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 26.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Weekly Average",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFFBEBDB8),
+                            ),
+                          ),
+                          const Text.rich(
+                            TextSpan(
+                              text: 'NN ',
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Color(0xFF5E5D58),
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: 'cards',
                                   style: TextStyle(
-                                    fontSize: 28,
+                                    fontSize: 15,
+                                    color: Color(0xFFBEBDB8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 32 * height,
+                          ),
+                          SizedBox(
+                            height: 237 * height,
+                            width: 343 * width,
+                            child: BarChart(
+                              weeklyData(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    CustomHomeCard(
+                      contents: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Vulnerable Phonemes",
+                            style: TextStyle(
+                              color: bam,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          // 수평 점선
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 11.0),
+                            child: SizedBox(
+                              width: 343,
+                              height: 1,
+                              child: CustomPaint(
+                                painter: DottedLineHorizontalPainter(),
+                              ),
+                            ),
+                          ),
+                          VulnerableCardItem(
+                            index: 1,
+                            phonemes: 'ㄱ',
+                            title: 'Final consonant',
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 11.0),
+                            child: SizedBox(
+                              width: 343,
+                              height: 1,
+                              child: CustomPaint(
+                                painter: DottedLineHorizontalPainter(),
+                              ),
+                            ),
+                          ),
+                          VulnerableCardItem(
+                            index: 1,
+                            phonemes: 'ㄱ',
+                            title: 'Final consonant',
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 11.0),
+                            child: SizedBox(
+                              width: 343,
+                              height: 1,
+                              child: CustomPaint(
+                                painter: DottedLineHorizontalPainter(),
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: TextButton(
+                              onPressed: () {},
+                              style: TextButton.styleFrom(
+                                backgroundColor: primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 28.0,
+                                  vertical: 3,
+                                ),
+                                child: Text(
+                                  'Pronounciation Test',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
-                              const Text(
-                                'Study Time',
-                                style: TextStyle(
-                                  color: Color(0xFF5E5D58),
-                                ),
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  text: 'Hello,\n',
-                                  style: const TextStyle(fontSize: 16),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: '$nickname 👋',
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.02),
-                        const SizedBox(height: 40),
-                        _buildRoundedTile(
-                            'Edit profile', Icons.arrow_forward_ios, onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfileUpdatePage(
-                                currentnickname: nickname ?? '',
-                                currentage: age ?? -100,
-                                currentgender: gender ?? -1,
-                                onProfileUpdate: _updateUserProfile,
-                              ),
-                            ),
-                          );
-                        }),
-                        _buildRoundedTile('Tutorial', Icons.arrow_forward_ios,
-                            onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RetutorialScreen(),
-                            ),
-                          );
-                        }),
-                        _buildRoundedTile('Log out', Icons.arrow_forward_ios,
-                            onTap: () {
-                          _showLogoutDialog(context);
-                        }),
-                        _buildRoundedTile(
-                            'Delete account', Icons.arrow_forward_ios,
-                            onTap: () {
-                          _showDeleteAccountDialog(context);
-                        }),
-                      ],
+                        ],
+                      ),
+                      boxColor: Colors.white,
                     ),
                   ],
                 ),
@@ -264,279 +326,354 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget _buildRoundedTile(String title, IconData icon,
-      {required Function onTap}) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.black12),
-      ),
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(
-              fontSize: MediaQuery.of(context).size.height * 0.02,
-              fontWeight: FontWeight.w500),
+  // 차트 그리기
+  BarChartData weeklyData() {
+    return BarChartData(
+      maxY: 31.0,
+      barTouchData: BarTouchData(
+        enabled: true,
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipColor: (_) => const Color(0xFFF2EBE3),
+          tooltipHorizontalAlignment: FLHorizontalAlignment.center,
+          tooltipMargin: -10,
+          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            return BarTooltipItem(
+              'Card\n',
+              TextStyle(color: primary),
+              children: <TextSpan>[
+                TextSpan(
+                  text: (rod.toY).toInt().toString(),
+                  style: TextStyle(
+                    color: bam, //widget.touchedBarColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
-        trailing: Icon(icon),
-        onTap: () => onTap(),
+        touchCallback: (FlTouchEvent event, barTouchResponse) {
+          setState(() {
+            if (!event.isInterestedForInteractions ||
+                barTouchResponse == null ||
+                barTouchResponse.spot == null) {
+              touchedIndex = -1;
+              return;
+            }
+            touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex;
+          });
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: getTitles,
+            reservedSize: 38,
+          ),
+        ),
+        rightTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 40,
+            interval: 10,
+            getTitlesWidget: rightTitles,
+          ),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+        leftTitles: const AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: false,
+      ),
+      barGroups: showingGroups(),
+      gridData: FlGridData(
+        show: true,
+        checkToShowHorizontalLine: (value) => value % 10 == 0,
+        getDrawingHorizontalLine: (value) => const FlLine(
+          color: Color(0xFFD8D7D6),
+          strokeWidth: 1,
+          dashArray: [1],
+        ),
+        checkToShowVerticalLine: (value) {
+          if (value == 0) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        getDrawingVerticalLine: (value) => const FlLine(
+          color: Color(0xFFD8D7D6),
+          strokeWidth: 1,
+          dashArray: [1],
+        ),
       ),
     );
   }
 
-  // 로그아웃 다이알로그
-  void _showLogoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
-
-        return Dialog(
-          alignment: Alignment.center,
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 26,
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            width: 340 * width,
-            height: 230 * height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 25.0),
-                  child: Text(
-                    'Are you sure you want to log out?',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(255, 106, 106, 106),
-                    ),
-                  ),
-                ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        print(
-                            'Current login platform: $_loginPlatform'); // Add this line
-                        await SignOutService.signOut(
-                            _loginPlatform); // 소셜로그인 로그아웃하기
-                        signout(); // 앱 로그아웃하기
-                        _resetUserProfile();
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
-                          (route) => false,
-                        );
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.remove('loginPlatform');
-                      },
-                      child: Container(
-                        width: 263 * width,
-                        height: 46 * height,
-                        decoration: BoxDecoration(
-                          color: accent,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Center(
-                            child: Text(
-                          'Log out',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        )),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 12.0),
-                        width: 263 * width,
-                        height: 46 * height,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 190, 189, 184)),
-                        ),
-                        child: const Center(
-                            child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        )),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+  // y축 타이들
+  Widget rightTitles(double value, TitleMeta meta) {
+    const style = TextStyle(
+      color: Color(0xFFBEBDB8),
+      fontWeight: FontWeight.w400,
+      fontSize: 15,
+    );
+    String text;
+    if (value == 0) {
+      text = '${value.toInt()}';
+    } else if (value == 10) {
+      text = '${value.toInt()}';
+    } else if (value == 20) {
+      text = '${value.toInt()}';
+    } else if (value == 30) {
+      text = '${value.toInt()}';
+    } else {
+      return Container();
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 0,
+      child: Center(
+        child: Text(
+          text,
+          style: style,
+        ),
+      ),
     );
   }
 
-  void _showDeleteAccountDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierColor: const Color.fromARGB(255, 21, 21, 21).withOpacity(0.6),
-      builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
+  // 가로 축 title 정의
+  Widget getTitles(double value, TitleMeta meta) {
+    // x 축 text style
+    const style = TextStyle(
+      color: Color(0xFF5E5D58),
+      fontWeight: FontWeight.w400,
+      fontSize: 12,
+    );
+    List<String> days = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
 
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          alignment: Alignment.center,
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 26,
-            vertical: 250,
-          ),
-          child: Container(
-            width: 340 * width,
-            height: 280 * height,
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 21, 21, 21).withOpacity(0.01),
-                borderRadius: BorderRadius.circular(20)),
-            child: Stack(
-              children: [
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        top: 40, bottom: 15, right: 24, left: 24),
-                    width: 340 * width,
-                    height: 220 * height,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 237, 232, 244),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Are you sure?',
-                          style: TextStyle(
-                            color: accent,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16.0),
-                          child: Text(
-                            'If you proceed, you will lose all your\npersonal data. Are you sure you want to\ndelete your account?',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 150, 150, 150),
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                width: 140 * width,
-                                height: 46 * height,
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 206, 201, 214),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Center(
-                                    child: Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => WithdrawalScreen(
-                                      nickname: nickname ?? '',
-                                      onProfileReset: _resetUserProfile,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 140 * width,
-                                height: 46 * height,
-                                decoration: BoxDecoration(
-                                  color: accent,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Center(
-                                    child: Text(
-                                  'Confirm',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 132,
-                  left: 132,
-                  child: Container(
-                    width: 76 * width,
-                    height: 76 * height,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 237, 232, 244),
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(
-                        color: const Color.fromARGB(255, 111, 111, 111),
-                        width: 5,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '!',
-                        style: TextStyle(
-                          color: accent,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+    Widget text = Text(
+      days[value.toInt()],
+      style: style,
+    );
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 12, // 축과 text 간 공간
+
+      child: text,
     );
   }
+
+  // 막대 스타일 지정
+  BarChartGroupData makeGroupData(
+    int x,
+    double y, {
+    bool isTouched = false,
+    List<int> showTooltips = const [],
+  }) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: y,
+          // 막대 안쪽 색깔
+          color: y > 0 // 값이 0 보다 크면 기본 색
+              ? y == 30
+                  ? primary // 가장 큰 값이면 주황색
+                  : const Color(0xFFF9C6A9)
+              : Colors.transparent,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(3),
+            topRight: Radius.circular(3),
+          ),
+          width: 29,
+        ),
+      ],
+      showingTooltipIndicators: showTooltips,
+    );
+  }
+
+  List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
+        switch (i) {
+          case 0:
+            return makeGroupData(0, 8, isTouched: i == touchedIndex);
+          case 1:
+            return makeGroupData(1, 18, isTouched: i == touchedIndex);
+          case 2:
+            return makeGroupData(2, 7, isTouched: i == touchedIndex);
+          case 3:
+            return makeGroupData(3, 15, isTouched: i == touchedIndex);
+          case 4:
+            return makeGroupData(4, 22, isTouched: i == touchedIndex);
+          case 5:
+            return makeGroupData(5, 11.5, isTouched: i == touchedIndex);
+          case 6:
+            return makeGroupData(6, 6.5, isTouched: i == touchedIndex);
+          default:
+            return throw Error();
+        }
+      });
+}
+
+class VulnerableCardItem extends StatelessWidget {
+  VulnerableCardItem({
+    super.key,
+    required this.index,
+    required this.phonemes,
+    required this.title,
+  });
+
+  int index;
+  String phonemes;
+  String title;
+
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height / 852;
+    double width = MediaQuery.of(context).size.width / 392;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '$index',
+          style: const TextStyle(
+            color: Color(0xFFEDCAA8),
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+        Text(
+          phonemes,
+          style: TextStyle(
+            color: bam,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+        Container(
+          width: 195 * width,
+          color: Colors.transparent,
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Color(0xFF5E5D58),
+              fontSize: 15,
+            ),
+          ),
+        ),
+        Container(
+          height: 27 * height,
+          width: 27 * width,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFDBB5),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Text(
+            'X',
+            style: TextStyle(
+              color: primary,
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Study time, Learned, Accuracy 등 수치 항목을 나타내는 위젯
+// ignore: must_be_immutable
+class AnalysisItem extends StatelessWidget {
+  AnalysisItem({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.unit,
+  });
+
+  String icon;
+  String title;
+  int value;
+  String unit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 35,
+          backgroundColor: const Color.fromARGB(255, 242, 235, 227),
+          child: Text(
+            icon,
+            style: const TextStyle(
+              fontSize: 28,
+            ),
+          ),
+        ),
+        Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFF5E5D58),
+          ),
+        ),
+        Text.rich(
+          TextSpan(
+            text: '$value',
+            style: const TextStyle(fontSize: 20),
+            children: <TextSpan>[
+              TextSpan(
+                text: ' $unit',
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFFBEBDB8),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// ## 수평 점선 Custom Painter (horizontal dotted line) 클래스 생성
+class DottedLineHorizontalPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFFD8D7D6)
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    const dashWidth = 1;
+    const dashSpace = 1;
+
+    double startX = 0;
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, 0),
+        Offset(startX + dashWidth, 0),
+        paint,
+      );
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
