@@ -42,37 +42,83 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchUserData() async {
-    var url = Uri.parse('$main_url/home');
-    String? token = await getAccessToken();
-    print('$token');
+    try {
+      var url = Uri.parse('$main_url/home');
+      String? token = await getAccessToken();
+      print('$token');
 
-    // api 요청 함수
-    Future<http.Response> makeRequest(String token) {
-      var headers = <String, String>{
-        'access': token,
-        'Content-Type': 'application/json',
-      };
-      return http.get(url, headers: headers);
-    }
+      // api 요청 함수
+      Future<http.Response> makeRequest(String token) {
+        var headers = <String, String>{
+          'access': token,
+          'Content-Type': 'application/json',
+        };
+        return http.get(url, headers: headers);
+      }
 
-    var response = await makeRequest(token!);
+      var response = await makeRequest(token!);
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      setState(() {
-        userLevel = data['userLevel'];
-        levelExperience = data['levelExperience'];
-        userExperience = data['userExperience'];
-        weeklyAttendance = data['weeklyAttendance'];
-        dailyWordId = data['dailyWordId'];
-        dailyWord = data['dailyWord'];
-        dailyWordPronunciation = data['dailyWordPronunciation'];
-        savedCardNumber = data['savedCardNumber'];
-        missedCardNumber = data['missedCardNumber'];
-        customCardNumber = data['customCardNumber'];
-      });
-    } else {
-      throw Exception('Failed to load user data');
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          userLevel = data['userLevel'];
+          levelExperience = data['levelExperience'];
+          userExperience = data['userExperience'];
+          weeklyAttendance = data['weeklyAttendance'];
+          dailyWordId = data['dailyWordId'];
+          dailyWord = data['dailyWord'];
+          dailyWordPronunciation = data['dailyWordPronunciation'];
+          savedCardNumber = data['savedCardNumber'];
+          missedCardNumber = data['missedCardNumber'];
+          customCardNumber = data['customCardNumber'];
+        });
+      } else if (response.statusCode == 401) {
+        // Token expired, attempt to refresh and retry the request
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the token
+        bool isRefreshed = await refreshAccessToken();
+
+        if (isRefreshed) {
+          // Retry request with new token
+          print('Token refreshed successfully. Retrying request...');
+          String? newToken = await getAccessToken();
+          response = await http.get(url, headers: {
+            'access': '$newToken',
+            'Content-Type': 'application/json'
+          });
+
+          if (response.statusCode == 200) {
+            final data = json.decode(response.body);
+            setState(() {
+              userLevel = data['userLevel'];
+              levelExperience = data['levelExperience'];
+              userExperience = data['userExperience'];
+              weeklyAttendance = data['weeklyAttendance'];
+              dailyWordId = data['dailyWordId'];
+              dailyWord = data['dailyWord'];
+              dailyWordPronunciation = data['dailyWordPronunciation'];
+              savedCardNumber = data['savedCardNumber'];
+              missedCardNumber = data['missedCardNumber'];
+              customCardNumber = data['customCardNumber'];
+            });
+          } else {
+            // Handle other response codes after retry if needed
+            print(
+                'Unhandled server response after retry: ${response.statusCode}');
+            print(json.decode(response.body));
+          }
+        } else {
+          print('Failed to refresh token. Please log in again.');
+        }
+      } else {
+        // Handle other status codes
+        print('Unhandled server response: ${response.statusCode}');
+        print(json.decode(response.body));
+      }
+    } catch (e) {
+      // Handle network request exceptions
+      print("Error during the request: $e");
     }
   }
 
@@ -218,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 25.0, vertical: 23.0),
+                                        horizontal: 25.0, vertical: 21.0),
                                     child: CustomHomeCard(
                                       boxColor: Colors.white,
                                       contents: ContentTodayGoal(
@@ -228,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 150 * height,
+                                    height: 140 * height,
                                     width: 360,
                                     child: Swiper(
                                       viewportFraction: 0.95,

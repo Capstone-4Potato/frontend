@@ -1,13 +1,20 @@
+import 'dart:convert';
+
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/custom_cards_screen.dart';
 import 'package:flutter_application_1/new_home/learning_course_screen.dart';
 import 'package:flutter_application_1/new_home/missed_cards_screen.dart';
 import 'package:flutter_application_1/new_home/saved_cards_screen.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class CustomHomeCard extends StatelessWidget {
   CustomHomeCard({
@@ -43,7 +50,7 @@ class CustomHomeCard extends StatelessWidget {
   }
 }
 
-class ContentTodayGoal extends StatelessWidget {
+class ContentTodayGoal extends StatefulWidget {
   ContentTodayGoal({
     super.key,
     required this.weeklyAttendance,
@@ -52,8 +59,107 @@ class ContentTodayGoal extends StatelessWidget {
   List<String> weeklyAttendance;
 
   @override
+  State<ContentTodayGoal> createState() => _ContentTodayGoalState();
+}
+
+class _ContentTodayGoalState extends State<ContentTodayGoal> {
+  Map<DateTime, List<int>> _attendanceDates = {};
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> fetchAttendanceData() async {
+    try {
+      String? token = await getAccessToken();
+
+      var url = Uri.parse('$main_url/home/attendance');
+
+      // Set headers with the token
+      var headers = <String, String>{
+        'access': '$token',
+        'Content-Type': 'application/json',
+      };
+
+      var response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final attendanceByMonth =
+            data["attendanceByMonth"] as Map<String, dynamic>;
+
+        Map<DateTime, List<int>> attendanceDates = {};
+
+        attendanceByMonth.forEach((month, days) {
+          DateTime monthDate = DateTime.parse("$month-01");
+          attendanceDates[monthDate] = List<int>.from(days);
+        });
+
+        setState(() {
+          _attendanceDates = attendanceDates;
+        });
+      } else if (response.statusCode == 401) {
+        // Token expired, attempt to refresh and retry the request
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the token
+        bool isRefreshed = await refreshAccessToken();
+
+        if (isRefreshed) {
+          // Retry request with new token
+          print('Token refreshed successfully. Retrying request...');
+          String? newToken = await getAccessToken();
+          response = await http.get(url, headers: {
+            'access': '$newToken',
+            'Content-Type': 'application/json'
+          });
+          if (response.statusCode == 200) {
+            final data = json.decode(response.body);
+            final attendanceByMonth =
+                data["attendanceByMonth"] as Map<String, dynamic>;
+
+            Map<DateTime, List<int>> attendanceDates = {};
+
+            attendanceByMonth.forEach((month, days) {
+              DateTime monthDate = DateTime.parse("$month-01");
+              attendanceDates[monthDate] = List<int>.from(days);
+            });
+
+            setState(() {
+              _attendanceDates = attendanceDates;
+            });
+          } else {
+            // Handle other response codes after retry if needed
+            print(
+                'Unhandled server response after retry: ${response.statusCode}');
+            print(json.decode(response.body));
+          }
+        } else {
+          print('Failed to refresh token. Please log in again.');
+        }
+      } else {
+        // Handle other status codes
+        print('Unhandled server response: ${response.statusCode}');
+        print(json.decode(response.body));
+      }
+    } catch (e) {
+      // Handle network request exceptions
+      print("Error during the request: $e");
+    }
+  }
+
+  bool _isAttendanceDay(DateTime day) {
+    final monthDate = DateTime(day.year, day.month, 1);
+    final days = _attendanceDates[monthDate] ?? [];
+    print(days);
+    return days.contains(day.day);
+  }
+
+  @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height / 852;
+    double width = MediaQuery.of(context).size.width / 392;
     List days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
     return Column(
@@ -128,21 +234,254 @@ class ContentTodayGoal extends StatelessWidget {
             color: Color.fromARGB(255, 213, 213, 213),
           ),
         ),
-        Center(
-          child: Wrap(
-            spacing: 11.0,
-            children: List.generate(7, (index) {
-              return weeklyAttendance[index] == "F" // 출석 안했으면
-                  ? NoStamp(
-                      days: days,
-                      index: index,
-                    ) // 스탬프 없음
-                  : Stamp(
-                      // 출석하면 스탬프
-                      days: days,
-                      index: index,
-                    );
-            }),
+        GestureDetector(
+          onTap: () {
+            fetchAttendanceData();
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    backgroundColor: Colors.transparent,
+                    insetPadding: EdgeInsets.symmetric(horizontal: 20 * width),
+                    child: Container(
+                      height: 404 * height,
+                      width: 353 * width,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 24.0 * width, vertical: 10.0 * height),
+                        child: TableCalendar(
+                          focusedDay: DateTime.now(),
+                          firstDay: DateTime(2024),
+                          lastDay: DateTime(2025),
+                          headerVisible: true,
+                          daysOfWeekStyle: DaysOfWeekStyle(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: primary,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            dowTextFormatter: (date, locale) {
+                              String dowText =
+                                  DateFormat("EEE").format(date).toUpperCase();
+                              return dowText;
+                            },
+                            weekdayStyle: const TextStyle(
+                              color: Color(0xFF666560),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
+                            weekendStyle: const TextStyle(
+                              color: Color(0xFF666560),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
+                          ),
+                          daysOfWeekHeight: 40,
+                          headerStyle: HeaderStyle(
+                            headerMargin: const EdgeInsets.all(0),
+                            headerPadding: const EdgeInsets.all(0),
+                            formatButtonVisible: false,
+                            titleCentered: true,
+                            titleTextFormatter: (date, locale) {
+                              String title =
+                                  DateFormat("MMM, yyyy").format(date);
+                              return title;
+                            },
+                            titleTextStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            leftChevronIcon: const Icon(
+                              Icons.arrow_left,
+                              color: Colors.black,
+                              size: 30,
+                            ),
+                            rightChevronIcon: const Icon(
+                              Icons.arrow_right,
+                              color: Colors.black,
+                              size: 30,
+                            ),
+                          ),
+                          calendarBuilders: CalendarBuilders(
+                            //디폴트 값 셀 빌더
+                            defaultBuilder: (context, day, focusedDay) {
+                              return _isAttendanceDay(day)
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 30 * height,
+                                          width: 30 * width,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: primary,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Text(
+                                            day.day.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 30 * height,
+                                          width: 30 * width,
+                                          alignment: Alignment.center,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Text(
+                                            day.day.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                            },
+                            todayBuilder: (context, day, focusedDay) {
+                              return _isAttendanceDay(day)
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 30 * height,
+                                          width: 30 * width,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: primary,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Text(
+                                            day.day.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 30 * height,
+                                          width: 30 * width,
+                                          alignment: Alignment.center,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Text(
+                                            day.day.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                            },
+                            outsideBuilder: (context, day, focusedDay) {
+                              return _isAttendanceDay(day)
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 30 * height,
+                                          width: 30 * width,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: primary.withOpacity(0.5),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Text(
+                                            day.day.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 30 * height,
+                                          width: 30 * width,
+                                          alignment: Alignment.center,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Text(
+                                            day.day.toString(),
+                                            style: const TextStyle(
+                                              color: Color(0xFFC0C0C0),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                });
+          },
+          child: Center(
+            child: Wrap(
+              spacing: 11.0,
+              children: List.generate(7, (index) {
+                return widget.weeklyAttendance[index] == "F" // 출석 안했으면
+                    ? NoStamp(
+                        days: days,
+                        index: index,
+                      ) // 스탬프 없음
+                    : Stamp(
+                        // 출석하면 스탬프
+                        days: days,
+                        index: index,
+                      );
+              }),
+            ),
           ),
         ),
       ],

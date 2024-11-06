@@ -332,6 +332,8 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                   labelText: 'Please enter a sentence',
                   labelStyle: const TextStyle(
                     color: Color(0xFF71706b),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(6.0),
