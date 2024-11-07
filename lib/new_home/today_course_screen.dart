@@ -7,6 +7,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/fetch_today_course.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodayCourseScreen extends StatefulWidget {
   const TodayCourseScreen({super.key});
@@ -17,16 +18,7 @@ class TodayCourseScreen extends StatefulWidget {
 
 class _TodayCourseScreenState extends State<TodayCourseScreen> {
   List<Map<String, dynamic>> cardDetailsList = []; // 카드 정보를 담을 리스트
-
-  List<int> idList = [];
-  List<String> textList = [];
-  List<String> correctAudio = [];
-  List<String> cardTranslationList = [];
-  List<String> cardPronunciationList = [];
-  List<String> pictureUrlList = [];
-  List<String> explanationList = [];
-  List<bool> weakCardList = [];
-  List<bool> bookmarkList = [];
+  List<int> cardList = []; // 학습할 카드 리스트
 
   bool isLoading = true;
 
@@ -70,21 +62,39 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
   }
 
   Future<void> fetchAllCards() async {
-    List<int> cardIdList = await fetchTodayCourse(); // card id 리스트들
-
-    for (int cardId in cardIdList) {
+    for (int cardId in cardList) {
       await fetchTodayCourseCardList(cardId); // 각 카드 정보 가져오기
-      print(cardDetailsList[cardId]);
     }
-    setState(() {
-      isLoading = false; // 모든 카드 정보 로딩 후 로딩 상태 업데이트
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false; // 모든 카드 정보 로딩 후 로딩 상태 업데이트
+      });
+    }
+  }
+
+  // 학습 카드 리스트 불러오기
+  Future<void> loadCardList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? savedCardIdList = prefs.getStringList('cardIdList');
+
+    if (savedCardIdList != null && savedCardIdList.isNotEmpty) {
+      // 카드 리스트가 이미 저장되어 있으면, 해당 리스트를 int 리스트로 변환
+      setState(() {
+        cardList = savedCardIdList.map(int.parse).toList();
+        print(cardList);
+        //isLoading = false; // 모든 카드 정보 로딩 후 로딩 상태 업데이트
+        fetchAllCards();
+      });
+    } else {
+      // 카드 리스트가 없으면 새로 요청하여 저장
+      cardList = await fetchTodayCourse();
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    fetchAllCards();
+    loadCardList();
   }
 
   @override
@@ -99,7 +109,21 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
                 color: primary,
               ),
             )
-          : Container(),
+          : cardDetailsList.isEmpty
+              ? const Center(
+                  child: Text("No cards available."),
+                )
+              : ListView.builder(
+                  itemCount: cardDetailsList.length,
+                  itemBuilder: (context, index) {
+                    var cardDetail = cardDetailsList[index];
+                    return ListTile(
+                      title: Text("Card ${cardDetail['id']}"),
+                      subtitle: Text(
+                          "Pronunciation: ${cardDetail['cardPronunciation']}"),
+                    );
+                  },
+                ),
     );
   }
 }

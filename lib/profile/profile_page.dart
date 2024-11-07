@@ -1,3 +1,4 @@
+import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
@@ -128,12 +129,45 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width / 393;
+    double height = MediaQuery.of(context).size.height / 852;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 219, 181),
+        leading: Column(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: bam,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+        centerTitle: false,
+        titleSpacing: 0,
+        backgroundColor: const Color(0xFFF2EBE3),
+        bottom: PreferredSize(
+          preferredSize: Size(392 * width, 84 * height),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 24.0, bottom: 24.0),
+                child: Text(
+                  'Settings',
+                  style: TextStyle(
+                    color: bam,
+                    fontSize: 36 * width,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      //backgroundColor: const Color(0xFFF5F5F5),
-      backgroundColor: const Color.fromARGB(255, 255, 219, 181),
+      backgroundColor: const Color(0xFFF5F5F5),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(
@@ -141,35 +175,26 @@ class _ProfilePageState extends State<ProfilePage> {
             ))
           : ListView(
               children: <Widget>[
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 140.0),
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 242, 235, 227),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Image.asset(
-                      'assets/image/bam_character.png',
-                      width: 30,
-                      height: MediaQuery.of(context).size.height * 0.13,
+                  padding: EdgeInsets.only(
+                    left: 44.0 * width,
+                    right: 44.0 * width,
+                    top: 16 * height,
+                    bottom: 10 * height,
+                  ),
+                  child: const Text(
+                    'Account',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                Text(
-                  nickname ?? '',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: MediaQuery.of(context).size.height * 0.03,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.deepOrangeAccent),
+                const Divider(
+                  color: Color(0xFFBEBDB8),
                 ),
-                const SizedBox(height: 40),
-                _buildRoundedTile('Edit profile', Icons.arrow_forward_ios,
-                    onTap: () {
+                _buildSettingsItem('Edit profile', Icons.person, onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -182,7 +207,32 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   );
                 }),
-                _buildRoundedTile('Tutorial', Icons.arrow_forward_ios,
+                _buildSettingsItem('Log out', Icons.logout, onTap: () {
+                  _showLogoutDialog(context);
+                }),
+                _buildSettingsItem('Delete account', Icons.delete, onTap: () {
+                  _showDeleteAccountDialog(context);
+                }),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 44.0 * width,
+                    right: 44.0 * width,
+                    top: 16 * height,
+                    bottom: 10 * height,
+                  ),
+                  child: const Text(
+                    'Tutorial',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                const Divider(
+                  color: Color(0xFFBEBDB8),
+                ),
+                _buildSettingsItem('Tutorial', Icons.collections_bookmark_sharp,
                     onTap: () {
                   Navigator.push(
                     context,
@@ -191,37 +241,59 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   );
                 }),
-                _buildRoundedTile('Log out', Icons.arrow_forward_ios,
-                    onTap: () {
-                  _showLogoutDialog(context);
-                }),
-                _buildRoundedTile('Delete account', Icons.arrow_forward_ios,
-                    onTap: () {
-                  _showDeleteAccountDialog(context);
-                }),
               ],
             ),
     );
   }
 
-  Widget _buildRoundedTile(String title, IconData icon,
-      {required Function onTap}) {
+  Widget _buildSettingsItem(
+    String title,
+    IconData icon, {
+    required Function onTap,
+  }) {
+    double width = MediaQuery.of(context).size.width / 393;
+    double height = MediaQuery.of(context).size.height / 852;
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.black12),
+      margin: EdgeInsets.symmetric(horizontal: 24 * height, vertical: 0),
+      decoration: const BoxDecoration(
+        color: Color(0xFFF5F5F5),
       ),
       child: ListTile(
+        leading: Padding(
+          padding: EdgeInsets.only(left: 17.0 * width),
+          child: Icon(
+            icon,
+            color: Colors.black,
+            size: 24,
+          ),
+        ),
         title: Text(
           title,
           style: TextStyle(
-              fontSize: MediaQuery.of(context).size.height * 0.02,
-              fontWeight: FontWeight.w500),
+            color: const Color(0xFF5B5A56),
+            fontSize: 20 * height,
+            fontWeight: FontWeight.w400,
+          ),
         ),
-        trailing: Icon(icon),
+        trailing: Padding(
+          padding: EdgeInsets.only(right: 3.0 * width),
+          child: Container(
+            height: 24 * height,
+            width: 24 * width,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF2EBE3),
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: const Icon(
+              Icons.arrow_forward_ios,
+              color: Color(0xFF92918C),
+              size: 16,
+            ),
+          ),
+        ),
         onTap: () => onTap(),
+        contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
       ),
     );
   }

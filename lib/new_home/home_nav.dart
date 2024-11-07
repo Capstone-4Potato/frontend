@@ -2,8 +2,10 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/learninginfo/study_info_page.dart';
+import 'package:flutter_application_1/new_home/fetch_today_course.dart';
 import 'package:flutter_application_1/new_home/home_screen.dart';
 import 'package:flutter_application_1/new_home/today_course_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeNav extends StatefulWidget {
   const HomeNav({
@@ -24,7 +26,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width * 393;
+    double width = MediaQuery.of(context).size.width / 393;
     double height = MediaQuery.of(context).size.height / 852;
 
     List<IconData> iconList = [
@@ -36,35 +38,35 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: _screens[_bottomNavIndex], // 현재 선택된 화면을 표시
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          Navigator.push<void>(
-            context,
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) => const TodayCourseScreen(),
+      floatingActionButton: Container(
+        width: 98,
+        height: 98,
+        decoration: BoxDecoration(
+          color: accent,
+          borderRadius: BorderRadius.circular(100),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 4,
+              spreadRadius: 1,
+              offset: const Offset(0, 4),
             ),
-          );
-        },
-        child: Container(
-          width: 98,
-          height: 98,
-          decoration: BoxDecoration(
-            color: accent,
-            borderRadius: BorderRadius.circular(100),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 4,
-                spreadRadius: 1,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Icon(
+          ],
+        ),
+        child: IconButton(
+          icon: const Icon(
             Icons.menu_book_outlined,
-            color: Colors.white,
             size: 44,
           ),
+          color: Colors.white,
+          onPressed: () {
+            Navigator.push<void>(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const TodayCourseScreen(),
+              ),
+            );
+          },
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

@@ -1,5 +1,7 @@
+import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/home/customsentences/cardlistscreen.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/main.dart';
@@ -41,10 +43,26 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
   final int _maxChars = 25;
   final RegExp _koreanRegExp = RegExp(r'^[\uAC00-\uD7A3\s.?!]+$');
 
+  late Color addButtonIconColor = const Color(0xFF71706B); // + 버튼 아이콘 색
+  late Color addButtonColor = Colors.transparent; // + 버튼 배경 색
+
   @override
   void initState() {
     super.initState();
     _loadSentencesFromServer();
+    _controller.addListener(_updateSuffixIconColor);
+  }
+
+  void _updateSuffixIconColor() {
+    setState(() {
+      // 텍스트가 입력된 경우 파란색, 없을 때 회색으로 설정
+      addButtonIconColor = _controller.text.isNotEmpty
+          ? const Color.fromARGB(255, 245, 245, 245)
+          : const Color(0xFF71706B);
+      addButtonColor = _controller.text.isNotEmpty
+          ? const Color(0xFFF26647)
+          : Colors.transparent;
+    });
   }
 
   Future<void> _loadSentencesFromServer() async {
@@ -175,6 +193,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
             _showErrorDialog('Failed to refresh token. Please log in again.');
           }
         } else {
+          print(response.statusCode);
           _showErrorDialog('Failed to add sentence. Please try again.');
         }
       } catch (e) {
@@ -295,27 +314,25 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
     return DismissKeyboard(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            color: bam,
+            //onPressed: _showExitDialog,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(
             'Custom Sentences',
             style: TextStyle(
+              color: bam,
               fontWeight: FontWeight.w600,
               fontSize: 22,
             ),
           ),
+          centerTitle: false,
+          titleSpacing: 0,
           backgroundColor: const Color(0xFFF5F5F5),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.black,
-                  size: 30,
-                ),
-                onPressed: _showExitDialog,
-              ),
-            ),
-          ],
         ),
         backgroundColor: const Color(0xFFF5F5F5),
         body: Padding(
@@ -329,47 +346,55 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                 ),
                 cursorColor: const Color(0xFFF26647),
                 decoration: InputDecoration(
-                  labelText: 'Please enter a sentence',
-                  labelStyle: const TextStyle(
-                    color: Color(0xFF71706b),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                    borderSide: const BorderSide(
-                      color: Color(0xFFBEBDB8),
-                      width: 1.5,
+                    labelText: 'Please enter a sentence',
+                    labelStyle: const TextStyle(
+                      color: Color(0xFF71706b),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: const BorderSide(
-                      color: Color(0xFFF26647),
-                      width: 1.5,
+                    floatingLabelStyle: const TextStyle(
+                      color: Color.fromARGB(255, 181, 181, 181),
                     ),
-                  ),
-                  suffixIcon: _sentences.isEmpty
-                      ? IconButton(
-                          icon: const Icon(
-                            Icons.add,
-                            color: Color(0xFF71706b),
-                            size: 30,
-                          ),
-                          onPressed: _sentences.length < _maxSentences
-                              ? _addSentence
-                              : null,
-                        )
-                      : Container(),
-                ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFBEBDB8),
+                        width: 1.5,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFF26647),
+                        width: 1.5,
+                      ),
+                    ),
+                    suffixIcon: Container(
+                      height: 30,
+                      width: 0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: addButtonColor,
+                      ),
+                      child: IconButton(
+                        padding: const EdgeInsets.all(0),
+                        color: addButtonIconColor,
+                        icon: const Icon(
+                          Icons.add,
+                          size: 15,
+                        ),
+                        onPressed: _sentences.length < _maxSentences
+                            ? _addSentence
+                            : null,
+                      ),
+                    )),
                 onSubmitted: (text) => _addSentence(),
                 enabled: _sentences.length < _maxSentences,
               ),
               const SizedBox(height: 20),
-
               Expanded(
                 child: _sentences.isEmpty
                     ? Center(
@@ -406,28 +431,28 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                         },
                       ),
               ),
-              // Text(
-              //   'Number of sentences : ${_sentences.length} / $_maxSentences',
-              //   style:
-              //       const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              // ),
+              Text(
+                'Number of sentences : ${_sentences.length} / $_maxSentences',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
               const SizedBox(height: 16),
-              // ElevatedButton(
-              //   onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: const Color(0xfff26647),
-              //     padding:
-              //         const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              //     textStyle: const TextStyle(
-              //       fontSize: 16,
-              //       fontWeight: FontWeight.w500,
-              //     ),
-              //   ),
-              //   child: const Text(
-              //     'Go to Learning',
-              //     style: TextStyle(color: Colors.white),
-              //   ),
-              // ),
+              ElevatedButton(
+                onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xfff26647),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                child: const Text(
+                  'Go to Learning',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
               const SizedBox(height: 30),
             ],
           ),

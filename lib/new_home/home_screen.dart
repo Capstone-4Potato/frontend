@@ -114,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         // Handle other status codes
         print('Unhandled server response: ${response.statusCode}');
+
         print(json.decode(response.body));
       }
     } catch (e) {

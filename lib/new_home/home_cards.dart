@@ -5,8 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/home/customsentences/customsentence_page.dart';
 import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/new_home/custom_cards_screen.dart';
+import 'package:flutter_application_1/new_home/new_custom/custom_cards_screen.dart';
 import 'package:flutter_application_1/new_home/learning_course_screen.dart';
 import 'package:flutter_application_1/new_home/missed_cards_screen.dart';
 import 'package:flutter_application_1/new_home/saved_cards_screen.dart';
@@ -64,6 +65,7 @@ class ContentTodayGoal extends StatefulWidget {
 
 class _ContentTodayGoalState extends State<ContentTodayGoal> {
   Map<DateTime, List<int>> _attendanceDates = {};
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -98,6 +100,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
 
         setState(() {
           _attendanceDates = attendanceDates;
+          isLoading = false; // 로딩 중 상태 변환
         });
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh and retry the request
@@ -128,6 +131,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
 
             setState(() {
               _attendanceDates = attendanceDates;
+              isLoading = false; // 로딩 중 상태 변환
             });
           } else {
             // Handle other response codes after retry if needed
@@ -253,214 +257,221 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 24.0 * width, vertical: 10.0 * height),
-                        child: TableCalendar(
-                          focusedDay: DateTime.now(),
-                          firstDay: DateTime(2024),
-                          lastDay: DateTime(2025),
-                          headerVisible: true,
-                          daysOfWeekStyle: DaysOfWeekStyle(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: primary,
-                                  width: 2,
+                        child: isLoading
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                color: primary,
+                              ))
+                            : TableCalendar(
+                                focusedDay: DateTime.now(),
+                                firstDay: DateTime(2024),
+                                lastDay: DateTime(2025),
+                                headerVisible: true,
+                                daysOfWeekStyle: DaysOfWeekStyle(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: primary,
+                                        width: 2,
+                                      ),
+                                    ),
+                                  ),
+                                  dowTextFormatter: (date, locale) {
+                                    String dowText = DateFormat("EEE")
+                                        .format(date)
+                                        .toUpperCase();
+                                    return dowText;
+                                  },
+                                  weekdayStyle: const TextStyle(
+                                    color: Color(0xFF666560),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                  weekendStyle: const TextStyle(
+                                    color: Color(0xFF666560),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                daysOfWeekHeight: 40,
+                                headerStyle: HeaderStyle(
+                                  headerMargin: const EdgeInsets.all(0),
+                                  headerPadding: const EdgeInsets.all(0),
+                                  formatButtonVisible: false,
+                                  titleCentered: true,
+                                  titleTextFormatter: (date, locale) {
+                                    String title =
+                                        DateFormat("MMM, yyyy").format(date);
+                                    return title;
+                                  },
+                                  titleTextStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  leftChevronIcon: const Icon(
+                                    Icons.arrow_left,
+                                    color: Colors.black,
+                                    size: 30,
+                                  ),
+                                  rightChevronIcon: const Icon(
+                                    Icons.arrow_right,
+                                    color: Colors.black,
+                                    size: 30,
+                                  ),
+                                ),
+                                calendarBuilders: CalendarBuilders(
+                                  //디폴트 값 셀 빌더
+                                  defaultBuilder: (context, day, focusedDay) {
+                                    return _isAttendanceDay(day)
+                                        ? Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: 30 * height,
+                                                width: 30 * width,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: primary,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  day.day.toString(),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: 30 * height,
+                                                width: 30 * width,
+                                                alignment: Alignment.center,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  day.day.toString(),
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                  },
+                                  todayBuilder: (context, day, focusedDay) {
+                                    return _isAttendanceDay(day)
+                                        ? Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: 30 * height,
+                                                width: 30 * width,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: primary,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  day.day.toString(),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: 30 * height,
+                                                width: 30 * width,
+                                                alignment: Alignment.center,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  day.day.toString(),
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                  },
+                                  outsideBuilder: (context, day, focusedDay) {
+                                    return _isAttendanceDay(day)
+                                        ? Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: 30 * height,
+                                                width: 30 * width,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      primary.withOpacity(0.5),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  day.day.toString(),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: 30 * height,
+                                                width: 30 * width,
+                                                alignment: Alignment.center,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  day.day.toString(),
+                                                  style: const TextStyle(
+                                                    color: Color(0xFFC0C0C0),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                  },
                                 ),
                               ),
-                            ),
-                            dowTextFormatter: (date, locale) {
-                              String dowText =
-                                  DateFormat("EEE").format(date).toUpperCase();
-                              return dowText;
-                            },
-                            weekdayStyle: const TextStyle(
-                              color: Color(0xFF666560),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                            ),
-                            weekendStyle: const TextStyle(
-                              color: Color(0xFF666560),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                            ),
-                          ),
-                          daysOfWeekHeight: 40,
-                          headerStyle: HeaderStyle(
-                            headerMargin: const EdgeInsets.all(0),
-                            headerPadding: const EdgeInsets.all(0),
-                            formatButtonVisible: false,
-                            titleCentered: true,
-                            titleTextFormatter: (date, locale) {
-                              String title =
-                                  DateFormat("MMM, yyyy").format(date);
-                              return title;
-                            },
-                            titleTextStyle: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            leftChevronIcon: const Icon(
-                              Icons.arrow_left,
-                              color: Colors.black,
-                              size: 30,
-                            ),
-                            rightChevronIcon: const Icon(
-                              Icons.arrow_right,
-                              color: Colors.black,
-                              size: 30,
-                            ),
-                          ),
-                          calendarBuilders: CalendarBuilders(
-                            //디폴트 값 셀 빌더
-                            defaultBuilder: (context, day, focusedDay) {
-                              return _isAttendanceDay(day)
-                                  ? Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 30 * height,
-                                          width: 30 * width,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: primary,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Text(
-                                            day.day.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 30 * height,
-                                          width: 30 * width,
-                                          alignment: Alignment.center,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Text(
-                                            day.day.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                            },
-                            todayBuilder: (context, day, focusedDay) {
-                              return _isAttendanceDay(day)
-                                  ? Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 30 * height,
-                                          width: 30 * width,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: primary,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Text(
-                                            day.day.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 30 * height,
-                                          width: 30 * width,
-                                          alignment: Alignment.center,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Text(
-                                            day.day.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                            },
-                            outsideBuilder: (context, day, focusedDay) {
-                              return _isAttendanceDay(day)
-                                  ? Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 30 * height,
-                                          width: 30 * width,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: primary.withOpacity(0.5),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Text(
-                                            day.day.toString(),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 30 * height,
-                                          width: 30 * width,
-                                          alignment: Alignment.center,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Text(
-                                            day.day.toString(),
-                                            style: const TextStyle(
-                                              color: Color(0xFFC0C0C0),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                            },
-                          ),
-                        ),
                       ),
                     ),
                   );
@@ -657,18 +668,29 @@ class ContentCustomCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: primary,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-                    child: Text(
-                      'Try it →',
-                      style: TextStyle(
-                        color: Colors.white,
+                InkWell(
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const CustomSentenceScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: primary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+                      child: Text(
+                        'Try it →',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),

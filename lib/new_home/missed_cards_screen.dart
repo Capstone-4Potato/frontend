@@ -44,28 +44,29 @@ class _MissedCardsScreenState extends State<MissedCardsScreen> {
       var data = json.decode(response.body);
 
       Map<String, dynamic> cardList = data['cardList'];
+      if (mounted) {
+        setState(() {
+          // 리스트 초기화
+          idList.clear();
+          textList.clear();
+          cardScoreList.clear();
+          weakCardList.clear();
+          bookmarkList.clear();
 
-      setState(() {
-        // 리스트 초기화
-        idList.clear();
-        textList.clear();
-        cardScoreList.clear();
-        weakCardList.clear();
-        bookmarkList.clear();
-
-        // 중첩 루프를 사용해 모든 카드 데이터를 리스트에 추가
-        for (var entry in cardList.values) {
-          for (var card in entry) {
-            idList.add(card['id']);
-            textList.add(card['text']);
-            cardPronunciationList.add(card['cardPronunciation']);
-            cardScoreList.add(card['cardScore']);
-            weakCardList.add(card['weakCard']);
-            bookmarkList.add(card['bookmarked']);
+          // 중첩 루프를 사용해 모든 카드 데이터를 리스트에 추가
+          for (var entry in cardList.values) {
+            for (var card in entry) {
+              idList.add(card['id']);
+              textList.add(card['text']);
+              cardPronunciationList.add(card['cardPronunciation']);
+              cardScoreList.add(card['cardScore']);
+              weakCardList.add(card['weakCard']);
+              bookmarkList.add(card['bookmarked']);
+            }
           }
-        }
-        isLoading = false;
-      });
+          isLoading = false;
+        });
+      }
     } else {
       throw Exception('Failed to load card list');
     }
