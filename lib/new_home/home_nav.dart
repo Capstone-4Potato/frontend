@@ -5,6 +5,7 @@ import 'package:flutter_application_1/learninginfo/study_info_page.dart';
 import 'package:flutter_application_1/new_home/fetch_today_course.dart';
 import 'package:flutter_application_1/new_home/home_screen.dart';
 import 'package:flutter_application_1/new_home/today_course_screen.dart';
+import 'package:flutter_application_1/new_report/report_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeNav extends StatefulWidget {
@@ -21,7 +22,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const StudyInfoPage(),
+    const ReportScreen(),
   ];
 
   @override

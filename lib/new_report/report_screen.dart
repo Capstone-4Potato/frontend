@@ -17,102 +17,143 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  static String? nickname;
-  static int? age;
-  static int? gender;
-  bool isLoading = true;
+  String? nickname;
+  int? studyDays;
+  int? totalLearned;
+  double? accuracy;
+  int? weeklyAverageCards;
+  int? sundayCards;
+  int? mondayCards;
+  int? tuesdayCards;
+  int? wednesdayCards;
+  int? thursdayCards;
+  int? fridayCards;
+  int? saturdayCards;
 
-  int touchedIndex = -1;
+  List<Map<String, dynamic>>? weakPhonemes = [];
+
+  bool isLoading = true; // 로딩 중 표시
+
+  int touchedIndex = -1; // 그래프 터치 index
 
   @override
   void initState() {
     super.initState();
-
-    if (nickname == null || age == null || gender == null) {
-      userData();
-    } else {
-      setState(() {
-        isLoading = false;
-      });
-    }
+    fetchReportData();
   }
 
-  // 회원정보 받기 API
-  Future<void> userData() async {
-    String? token = await getAccessToken();
-    var url = Uri.parse('$main_url/users');
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
-    // Function to make the get request
-    Future<http.Response> makeGetRequest(String token) {
-      return http.get(
-        url,
-        headers: <String, String>{
-          'access': token,
-          'Content-Type': 'application/json',
-        },
-      );
-    }
-
+  Future<void> fetchReportData() async {
     try {
-      var response = await makeGetRequest(token!);
+      String? token = await getAccessToken();
+
+      var url = Uri.parse('$main_url/report');
+
+      // Set headers with the token
+      var headers = <String, String>{
+        'access': '$token',
+        'Content-Type': 'application/json',
+      };
+
+      var response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
-        print(response.body);
-        var data = json.decode(response.body);
-        setState(() {
-          nickname = data['name'];
-          age = data['age'];
-          gender = data['gender'];
-          isLoading = false;
-        });
+        final data = json.decode(response.body);
+
+        if (mounted) {
+          setState(() {
+            nickname = data['nickname'];
+            studyDays = data['studyDays'];
+            totalLearned = data['totalLearned'];
+            accuracy =
+                data['accuracy'] != null ? data['accuracy'].toDouble() : 0.0;
+            weeklyAverageCards = data['weeklyAverageCards'];
+            sundayCards = data['sundayCards'];
+            mondayCards = data['mondayCards'];
+            tuesdayCards = data['tuesdayCards'];
+            wednesdayCards = data['wednesdayCards'];
+            thursdayCards = data['thursdayCards'];
+            fridayCards = data['fridayCards'];
+            saturdayCards = data['saturdayCards'];
+
+            // weakPhonemes 리스트 처리
+            weakPhonemes = (data['weakPhonemes'] ?? [])
+                .map<Map<String, dynamic>>((phoneme) => {
+                      'rank': phoneme['rank'],
+                      'phonemeId': phoneme['phonemeId'],
+                      'phonemeText': phoneme['phonemeText'],
+                    })
+                .toList();
+
+            isLoading = false; // 로딩 중 상태 변환
+          });
+        }
       } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh the token
+        // Token expired, attempt to refresh and retry the request
         print('Access token expired. Refreshing token...');
 
-        // Refresh the access token
+        // Refresh the token
         bool isRefreshed = await refreshAccessToken();
-        if (isRefreshed) {
-          // Retry the get request with the new token
-          token = await getAccessToken();
-          response = await makeGetRequest(token!);
 
+        if (isRefreshed) {
+          // Retry request with new token
+          print('Token refreshed successfully. Retrying request...');
+          String? newToken = await getAccessToken();
+          response = await http.get(url, headers: {
+            'access': '$newToken',
+            'Content-Type': 'application/json'
+          });
           if (response.statusCode == 200) {
-            print(response.body);
-            var data = json.decode(response.body);
-            setState(() {
-              nickname = data['name'];
-              age = data['age'];
-              gender = data['gender'];
-              isLoading = false;
-            });
+            final data = json.decode(response.body);
+            if (mounted) {
+              setState(() {
+                nickname = data['nickname'];
+                studyDays = data['studyDays'];
+                totalLearned = data['totalLearned'];
+                accuracy = data['accuracy'].toDouble();
+                weeklyAverageCards = data['weeklyAverageCards'];
+                sundayCards = data['sundayCards'];
+                mondayCards = data['mondayCards'];
+                tuesdayCards = data['tuesdayCards'];
+                wednesdayCards = data['wednesdayCards'];
+                thursdayCards = data['thursdayCards'];
+                fridayCards = data['fridayCards'];
+                saturdayCards = data['saturdayCards'];
+
+                // weakPhonemes 리스트 처리
+                weakPhonemes = (data['weakPhonemes'] ?? [])
+                    .map<Map<String, dynamic>>((phoneme) => {
+                          'rank': phoneme['rank'],
+                          'phonemeId': phoneme['phonemeId'],
+                          'phonemeText': phoneme['phonemeText'],
+                        })
+                    .toList();
+
+                isLoading = false; // 로딩 중 상태 변환
+              });
+            }
           } else {
-            throw Exception('Failed to fetch user data after refreshing token');
+            // Handle other response codes after retry if needed
+            print(
+                'Unhandled server response after retry: ${response.statusCode}');
+            print(json.decode(response.body));
           }
         } else {
-          throw Exception('Failed to refresh access token');
+          print('Failed to refresh token. Please log in again.');
         }
       } else {
-        throw Exception('Failed to fetch user data');
+        // Handle other status codes
+        print('Unhandled server response: ${response.statusCode}');
+        print(json.decode(response.body));
       }
     } catch (e) {
-      print('Network error occurred: $e');
+      // Handle network request exceptions
+      print("Error during the request: $e");
     }
-  }
-
-  void _updateUserProfile(String newNickname, int newAge, int newGender) {
-    setState(() {
-      nickname = newNickname;
-      age = newAge;
-      gender = newGender;
-    });
-  }
-
-  void _resetUserProfile() {
-    setState(() {
-      nickname = null;
-      age = null;
-      gender = null;
-    });
   }
 
   @override
@@ -174,7 +215,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         children: [
                           AnalysisItem(
                             icon: '🕰️',
-                            title: 'Study Time',
+                            title: 'Study Days',
                             value: 15,
                             unit: 'min',
                           ),
