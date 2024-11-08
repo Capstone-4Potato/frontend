@@ -164,7 +164,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height / 852;
     double width = MediaQuery.of(context).size.width / 392;
-    List days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    List days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,8 +239,9 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
           ),
         ),
         GestureDetector(
-          onTap: () {
-            fetchAttendanceData();
+          onTap: () async {
+            // fetchAttendanceData 가 끝난 뒤에 Dialog 호출
+            await fetchAttendanceData();
             showDialog(
                 context: context,
                 builder: (context) {
