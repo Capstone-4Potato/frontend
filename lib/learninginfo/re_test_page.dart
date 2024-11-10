@@ -15,6 +15,7 @@ class _restartTestScreenState extends State<restartTestScreen> {
   late List<String> testContents = [];
   late List<String> testPronunciations = [];
   late List<String> testEngPronunciations = [];
+  late List<String> testEngTranslation = [];
 
   @override
   void initState() {
@@ -30,10 +31,12 @@ class _restartTestScreenState extends State<restartTestScreen> {
         testIds = List.generate(data.length, (index) => data[index]['id']);
         testContents =
             List.generate(data.length, (index) => data[index]['text']);
-        testPronunciations = List.generate(
-            data.length, (index) => data[index]['engTranslation']);
+        testPronunciations =
+            List.generate(data.length, (index) => data[index]['pronunciation']);
         testEngPronunciations = List.generate(
             data.length, (index) => data[index]['engPronunciation']);
+        testEngTranslation = List.generate(
+            data.length, (index) => data[index]['engTranslation']);
       });
     }
   }
@@ -86,7 +89,7 @@ class _restartTestScreenState extends State<restartTestScreen> {
             ElevatedButton(
               onPressed: () async {
                 //취약음 삭제
-                deletePhonemes();
+                deleteAllPhonemes();
                 // Add navigation to the test page
                 Navigator.pushAndRemoveUntil(
                     context,

@@ -67,8 +67,8 @@ class _CustomCardsScreenState extends State<CustomCardsScreen> {
             engTranslationList.add(card['engTranslation']);
             engPronunciationList.add(card['engPronunciation']);
             cardScoreList.add(card['cardScore']);
-            pictureUrlList.add(card['pictureUrl']);
-            explanationList.add(card['explanation']);
+            //pictureUrlList.add(card['pictureUrl']); // null 이라서 그냥 안받음
+            //explanationList.add(card['explanation']);
             weakCardList.add(card['weakCard']);
             bookmarkList.add(card['bookmark']);
           }

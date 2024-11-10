@@ -63,14 +63,14 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("End Reviewing"),
-          content: Text("Do you want to end reviewing?"),
+          title: const Text("End Reviewing"),
+          content: const Text("Do you want to end reviewing?"),
           actions: [
             TextButton(
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("Continue Reviewing"),
+              child: const Text("Continue Reviewing"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -79,7 +79,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
               style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
               ),
-              child: Text("End"),
+              child: const Text("End"),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(); // Exit the learning screen
@@ -126,7 +126,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.close,
                   color: Colors.black,
                   size: 30,
@@ -137,7 +137,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
           ],
         ),
         backgroundColor: const Color(0xFFF5F5F5),
-        body: Center(
+        body: const Center(
           child: Text(
             "There's nothing to review.\nPlease proceed with learning first.",
             textAlign: TextAlign.center,
@@ -208,7 +208,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.close,
                 color: Colors.black,
                 size: 30,
@@ -271,7 +271,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
                           Center(
                             child: Text(
                               displayContents[index],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -281,7 +281,7 @@ class _ReviewSentence1State extends State<ReviewSentence1> {
                           Center(
                             child: Text(
                               displayEngPronunciations[index],
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                               textAlign: TextAlign.center,
                             ),
                           ),

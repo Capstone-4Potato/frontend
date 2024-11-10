@@ -4,9 +4,9 @@ import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
 // 전체 취약음 삭제
-Future<void> deletePhonemes() async {
+Future<void> deleteAllPhonemes() async {
   try {
-    var url = Uri.parse('$main_url/phonemes');
+    var url = Uri.parse('$main_url/test/all/phonemes');
     String? token = await getAccessToken();
 
     // Function to make the delete request

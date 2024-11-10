@@ -1,8 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/learninginfo/deletephonemes.dart';
+import 'package:flutter_application_1/learninginfo/re_test_page.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/home_cards.dart';
@@ -88,6 +91,21 @@ class _ReportScreenState extends State<ReportScreen> {
                       'phonemeText': phoneme['phonemeText'],
                     })
                 .toList();
+
+            // 데이터 출력 확인용
+            print("Nickname: $nickname");
+            print("Study Days: $studyDays");
+            print("Total Learned: $totalLearned");
+            print("Accuracy: $accuracy");
+            print("Weekly Average Cards: $weeklyAverageCards");
+            print("Sunday Cards: $sundayCards");
+            print("Monday Cards: $mondayCards");
+            print("Tuesday Cards: $tuesdayCards");
+            print("Wednesday Cards: $wednesdayCards");
+            print("Thursday Cards: $thursdayCards");
+            print("Friday Cards: $fridayCards");
+            print("Saturday Cards: $saturdayCards");
+            print("Weak Phonemes: $weakPhonemes");
 
             isLoading = false; // 로딩 중 상태 변환
           });
@@ -216,19 +234,19 @@ class _ReportScreenState extends State<ReportScreen> {
                           AnalysisItem(
                             icon: '🕰️',
                             title: 'Study Days',
-                            value: 15,
-                            unit: 'min',
+                            value: studyDays!,
+                            unit: 'days',
                           ),
                           AnalysisItem(
                             icon: '📖',
                             title: 'Learned',
-                            value: 21,
+                            value: totalLearned!,
                             unit: '',
                           ),
                           AnalysisItem(
                             icon: '👍',
                             title: 'Accuracy',
-                            value: 95,
+                            value: accuracy!,
                             unit: '%',
                           ),
                         ],
@@ -247,14 +265,14 @@ class _ReportScreenState extends State<ReportScreen> {
                               color: Color(0xFFBEBDB8),
                             ),
                           ),
-                          const Text.rich(
+                          Text.rich(
                             TextSpan(
-                              text: 'NN ',
-                              style: TextStyle(
+                              text: '$weeklyAverageCards ',
+                              style: const TextStyle(
                                 fontSize: 24,
                                 color: Color(0xFF5E5D58),
                               ),
-                              children: <TextSpan>[
+                              children: const <TextSpan>[
                                 TextSpan(
                                   text: 'cards',
                                   style: TextStyle(
@@ -266,13 +284,15 @@ class _ReportScreenState extends State<ReportScreen> {
                             ),
                           ),
                           Container(
-                            height: 32 * height,
+                            height: 12 * height,
                           ),
-                          SizedBox(
-                            height: 237 * height,
-                            width: 343 * width,
-                            child: BarChart(
-                              weeklyData(),
+                          AspectRatio(
+                            aspectRatio: 382 / 265,
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 30.0),
+                              child: BarChart(
+                                weeklyData(),
+                              ),
                             ),
                           ),
                         ],
@@ -301,39 +321,38 @@ class _ReportScreenState extends State<ReportScreen> {
                               ),
                             ),
                           ),
-                          VulnerableCardItem(
-                            index: 1,
-                            phonemes: 'ㄱ',
-                            title: 'Final consonant',
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 11.0),
-                            child: SizedBox(
-                              width: 343,
-                              height: 1,
-                              child: CustomPaint(
-                                painter: DottedLineHorizontalPainter(),
-                              ),
-                            ),
-                          ),
-                          VulnerableCardItem(
-                            index: 1,
-                            phonemes: 'ㄱ',
-                            title: 'Final consonant',
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 11.0),
-                            child: SizedBox(
-                              width: 343,
-                              height: 1,
-                              child: CustomPaint(
-                                painter: DottedLineHorizontalPainter(),
-                              ),
-                            ),
+                          Column(
+                            children:
+                                List.generate(weakPhonemes!.length, (index) {
+                              return VulnerableCardItem(
+                                index: index + 1,
+                                phonemes: weakPhonemes![index]['phonemeText']
+                                    .split(' ')[2],
+                                title: weakPhonemes![index]['phonemeText']
+                                    .split(' ')
+                                    .sublist(0, 2)
+                                    .join(' '),
+                                phonemeId: weakPhonemes![index]['phonemeId'],
+                                onDelete: () {
+                                  setState(() {
+                                    weakPhonemes!
+                                        .removeAt(index); // 리스트에서 항목 삭제
+                                  });
+                                },
+                              );
+                            }),
                           ),
                           Center(
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext builder) =>
+                                        const restartTestScreen(),
+                                  ),
+                                );
+                              },
                               style: TextButton.styleFrom(
                                 backgroundColor: primary,
                                 shape: RoundedRectangleBorder(
@@ -370,7 +389,9 @@ class _ReportScreenState extends State<ReportScreen> {
   // 차트 그리기
   BarChartData weeklyData() {
     return BarChartData(
-      maxY: 31.0,
+      maxY: 20,
+      minY: 0,
+      alignment: BarChartAlignment.center,
       barTouchData: BarTouchData(
         enabled: true,
         touchTooltipData: BarTouchTooltipData(
@@ -412,13 +433,14 @@ class _ReportScreenState extends State<ReportScreen> {
           sideTitles: SideTitles(
             showTitles: true,
             getTitlesWidget: getTitles,
-            reservedSize: 38,
+            reservedSize: 30,
+            interval: 1,
           ),
         ),
         rightTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 40,
+            reservedSize: 30,
             interval: 10,
             getTitlesWidget: rightTitles,
           ),
@@ -434,29 +456,25 @@ class _ReportScreenState extends State<ReportScreen> {
           ),
         ),
       ),
-      borderData: FlBorderData(
-        show: false,
-      ),
       barGroups: showingGroups(),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(
+          color: const Color(0xFFD8D7D6),
+        ),
+      ),
       gridData: FlGridData(
         show: true,
-        checkToShowHorizontalLine: (value) => value % 10 == 0,
         getDrawingHorizontalLine: (value) => const FlLine(
           color: Color(0xFFD8D7D6),
           strokeWidth: 1,
-          dashArray: [1],
+          dashArray: [1, 1],
         ),
-        checkToShowVerticalLine: (value) {
-          if (value == 0) {
-            return true;
-          } else {
-            return false;
-          }
-        },
+        verticalInterval: 1 / 7,
         getDrawingVerticalLine: (value) => const FlLine(
           color: Color(0xFFD8D7D6),
           strokeWidth: 1,
-          dashArray: [1],
+          dashArray: [1, 1],
         ),
       ),
     );
@@ -483,7 +501,7 @@ class _ReportScreenState extends State<ReportScreen> {
     }
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 0,
+      space: 10,
       child: Center(
         child: Text(
           text,
@@ -501,7 +519,7 @@ class _ReportScreenState extends State<ReportScreen> {
       fontWeight: FontWeight.w400,
       fontSize: 12,
     );
-    List<String> days = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'];
+    List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 
     Widget text = Text(
       days[value.toInt()],
@@ -510,7 +528,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 12, // 축과 text 간 공간
+      space: 10, // 축과 text 간 공간
 
       child: text,
     );
@@ -523,6 +541,9 @@ class _ReportScreenState extends State<ReportScreen> {
     bool isTouched = false,
     List<int> showTooltips = const [],
   }) {
+    double height = MediaQuery.of(context).size.height / 852;
+    double width = MediaQuery.of(context).size.width / 392;
+
     return BarChartGroupData(
       x: x,
       barRods: [
@@ -530,15 +551,15 @@ class _ReportScreenState extends State<ReportScreen> {
           toY: y,
           // 막대 안쪽 색깔
           color: y > 0 // 값이 0 보다 크면 기본 색
-              ? y == 30
-                  ? primary // 가장 큰 값이면 주황색
+              ? x == DateTime.now().weekday % 7
+                  ? primary // 오늘 요일은 주황색
                   : const Color(0xFFF9C6A9)
               : Colors.transparent,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(3),
             topRight: Radius.circular(3),
           ),
-          width: 29,
+          width: 29 * width,
         ),
       ],
       showingTooltipIndicators: showTooltips,
@@ -548,19 +569,26 @@ class _ReportScreenState extends State<ReportScreen> {
   List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
         switch (i) {
           case 0:
-            return makeGroupData(0, 8, isTouched: i == touchedIndex);
+            return makeGroupData(0, sundayCards!.toDouble(),
+                isTouched: i == touchedIndex);
           case 1:
-            return makeGroupData(1, 18, isTouched: i == touchedIndex);
+            return makeGroupData(1, tuesdayCards!.toDouble(),
+                isTouched: i == touchedIndex);
           case 2:
-            return makeGroupData(2, 7, isTouched: i == touchedIndex);
+            return makeGroupData(2, wednesdayCards!.toDouble(),
+                isTouched: i == touchedIndex);
           case 3:
-            return makeGroupData(3, 15, isTouched: i == touchedIndex);
+            return makeGroupData(3, thursdayCards!.toDouble(),
+                isTouched: i == touchedIndex);
           case 4:
-            return makeGroupData(4, 22, isTouched: i == touchedIndex);
+            return makeGroupData(4, fridayCards!.toDouble(),
+                isTouched: i == touchedIndex);
           case 5:
-            return makeGroupData(5, 11.5, isTouched: i == touchedIndex);
+            return makeGroupData(5, saturdayCards!.toDouble(),
+                isTouched: i == touchedIndex);
           case 6:
-            return makeGroupData(6, 6.5, isTouched: i == touchedIndex);
+            return makeGroupData(6, mondayCards!.toDouble(),
+                isTouched: i == touchedIndex);
           default:
             return throw Error();
         }
@@ -573,61 +601,133 @@ class VulnerableCardItem extends StatelessWidget {
     required this.index,
     required this.phonemes,
     required this.title,
+    required this.phonemeId,
+    required this.onDelete,
   });
 
   int index;
   String phonemes;
   String title;
+  int phonemeId;
+
+  VoidCallback onDelete;
+
+  // 취약음소 삭제 API
+  Future<void> deletePhonemes(int phonemeId) async {
+    String? token = await getAccessToken();
+    var url = Uri.parse('$main_url/test/phonemes/$phonemeId');
+
+    // Function to make the delete request
+    Future<http.Response> makeDeleteRequest(String token) {
+      return http.delete(
+        url,
+        headers: <String, String>{
+          'access': token,
+          'Content-Type': 'application/json',
+        },
+      );
+    }
+
+    try {
+      var response = await makeDeleteRequest(token!);
+
+      if (response.statusCode == 200) {
+        onDelete(); // 성공 시 콜백 호출
+        print(response.body);
+      } else if (response.statusCode == 401) {
+        // Token expired, attempt to refresh the token
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the access token
+        bool isRefreshed = await refreshAccessToken();
+        if (isRefreshed) {
+          // Retry the delete request with the new token
+          token = await getAccessToken();
+          response = await makeDeleteRequest(token!);
+
+          if (response.statusCode == 200) {
+            onDelete(); // 성공 시 콜백 호출
+            print(response.body);
+          } else {
+            throw Exception('Failed to delete account after refreshing token');
+          }
+        } else {
+          throw Exception('Failed to refresh access token');
+        }
+      } else {
+        throw Exception('Failed to delete account');
+      }
+    } catch (e) {
+      // Handle errors that occur during the request
+      print("Error deleting account: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height / 852;
     double width = MediaQuery.of(context).size.width / 392;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        Text(
-          '$index',
-          style: const TextStyle(
-            color: Color(0xFFEDCAA8),
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-        ),
-        Text(
-          phonemes,
-          style: TextStyle(
-            color: bam,
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-        ),
-        Container(
-          width: 195 * width,
-          color: Colors.transparent,
-          child: Text(
-            title,
-            style: const TextStyle(
-              color: Color(0xFF5E5D58),
-              fontSize: 15,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '$index',
+              style: const TextStyle(
+                color: Color(0xFFEDCAA8),
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
             ),
-          ),
+            Text(
+              phonemes,
+              style: TextStyle(
+                color: bam,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+            Container(
+              width: 195 * width,
+              color: Colors.transparent,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Color(0xFF5E5D58),
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                await deletePhonemes(phonemeId);
+              },
+              child: Container(
+                height: 27 * height,
+                width: 27 * width,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: primary,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: const Icon(
+                  Icons.cancel,
+                  color: Color(0xFFFFDBB5),
+                  size: 27,
+                ),
+              ),
+            ),
+          ],
         ),
-        Container(
-          height: 27 * height,
-          width: 27 * width,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFDBB5),
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: Text(
-            'X',
-            style: TextStyle(
-              color: primary,
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 11.0),
+          child: SizedBox(
+            width: 343,
+            height: 1,
+            child: CustomPaint(
+              painter: DottedLineHorizontalPainter(),
             ),
           ),
         ),
@@ -649,7 +749,7 @@ class AnalysisItem extends StatelessWidget {
 
   String icon;
   String title;
-  int value;
+  var value;
   String unit;
 
   @override
@@ -675,7 +775,11 @@ class AnalysisItem extends StatelessWidget {
         Text.rich(
           TextSpan(
             text: '$value',
-            style: const TextStyle(fontSize: 20),
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF5E5D58),
+            ),
             children: <TextSpan>[
               TextSpan(
                 text: ' $unit',
