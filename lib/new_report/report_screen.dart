@@ -327,10 +327,16 @@ class _ReportScreenState extends State<ReportScreen> {
                               return VulnerableCardItem(
                                 index: index + 1,
                                 phonemes: weakPhonemes![index]['phonemeText']
-                                    .split(' ')[2],
+                                    .split(' ')
+                                    .last,
                                 title: weakPhonemes![index]['phonemeText']
                                     .split(' ')
-                                    .sublist(0, 2)
+                                    .sublist(
+                                        0,
+                                        weakPhonemes![index]['phonemeText']
+                                                .split(' ')
+                                                .length -
+                                            1)
                                     .join(' '),
                                 phonemeId: weakPhonemes![index]['phonemeId'],
                                 onDelete: () {
@@ -572,23 +578,24 @@ class _ReportScreenState extends State<ReportScreen> {
             return makeGroupData(0, sundayCards!.toDouble(),
                 isTouched: i == touchedIndex);
           case 1:
-            return makeGroupData(1, tuesdayCards!.toDouble(),
+            return makeGroupData(1, mondayCards!.toDouble(),
                 isTouched: i == touchedIndex);
           case 2:
-            return makeGroupData(2, wednesdayCards!.toDouble(),
+            return makeGroupData(2, tuesdayCards!.toDouble(),
                 isTouched: i == touchedIndex);
           case 3:
-            return makeGroupData(3, thursdayCards!.toDouble(),
+            return makeGroupData(3, wednesdayCards!.toDouble(),
                 isTouched: i == touchedIndex);
           case 4:
-            return makeGroupData(4, fridayCards!.toDouble(),
+            return makeGroupData(4, thursdayCards!.toDouble(),
                 isTouched: i == touchedIndex);
           case 5:
-            return makeGroupData(5, saturdayCards!.toDouble(),
+            return makeGroupData(5, fridayCards!.toDouble(),
                 isTouched: i == touchedIndex);
           case 6:
-            return makeGroupData(6, mondayCards!.toDouble(),
+            return makeGroupData(6, saturdayCards!.toDouble(),
                 isTouched: i == touchedIndex);
+
           default:
             return throw Error();
         }
@@ -655,11 +662,11 @@ class VulnerableCardItem extends StatelessWidget {
           throw Exception('Failed to refresh access token');
         }
       } else {
-        throw Exception('Failed to delete account');
+        throw Exception('Failed to delete phoneme');
       }
     } catch (e) {
       // Handle errors that occur during the request
-      print("Error deleting account: $e");
+      print("Error deleting phoneme: $e");
     }
   }
 

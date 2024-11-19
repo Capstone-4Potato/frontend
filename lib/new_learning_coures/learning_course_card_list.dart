@@ -6,8 +6,8 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
-class LearningCourseScreen extends StatefulWidget {
-  LearningCourseScreen({
+class LearningCourseCardList extends StatefulWidget {
+  LearningCourseCardList({
     super.key,
     required this.level,
   });
@@ -15,10 +15,10 @@ class LearningCourseScreen extends StatefulWidget {
   int level;
 
   @override
-  State<LearningCourseScreen> createState() => _LearningCourseScreenState();
+  State<LearningCourseCardList> createState() => _LearningCourseCardListState();
 }
 
-class _LearningCourseScreenState extends State<LearningCourseScreen> {
+class _LearningCourseCardListState extends State<LearningCourseCardList> {
   List<int> idList = [];
   List<String> textList = [];
   List<String> engTranslationList = [];

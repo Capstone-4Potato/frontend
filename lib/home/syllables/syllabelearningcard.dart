@@ -74,32 +74,11 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     await _audioRecorder.openAudioSession();
   }
 
-  // // 블루투스 연결 상태 확인
-  // Future<void> _checkBluetoothConnection() async {
-  //   // 현재 연결된 블루투스 장치 목록 가져오기
-  //   List<BluetoothDevice> connectedDevices = FlutterBluePlus.connectedDevices;
-
-  //   // 연결된 장치가 있는지 확인
-  //   setState(() {
-  //     _isBluetoothConnected = connectedDevices.isNotEmpty;
-  //   });
-  // }
-
   // 오디오 세션 설정
   Future<void> _setupAudioSession() async {
     final session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration.speech());
 
-    // if (_isBluetoothConnected) {
-    //   // 블루투스 연결 시 오디오 라우팅 설정 (네이티브 제어 필요할 수 있음)
-    //   await session.setActive(true);
-    //   // 네이티브 플랫폼 통신을 통해 블루투스 연결 제어가 필요할 수 있음
-    //   print("Bluetooth가 연결된 상태입니다.");
-    // } else {
-    //   // 블루투스 미연결 시 기본 오디오 출력
-    //   await session.setActive(true);
-    //   print("Bluetooth가 연결되지 않았습니다. 기본 스피커 사용.");
-    // }
     await session.setActive(true);
   }
 

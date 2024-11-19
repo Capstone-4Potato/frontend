@@ -2,7 +2,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/learninginfo/study_info_page.dart';
-import 'package:flutter_application_1/new_home/fetch_today_course.dart';
+import 'package:flutter_application_1/new_today_course/fetch_today_course.dart';
 import 'package:flutter_application_1/new_home/home_screen.dart';
 import 'package:flutter_application_1/new_today_course/today_course_screen.dart';
 import 'package:flutter_application_1/new_report/report_screen.dart';
@@ -43,7 +43,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
         width: 98,
         height: 98,
         decoration: BoxDecoration(
-          color: accent,
+          color: primary,
           borderRadius: BorderRadius.circular(100),
           boxShadow: [
             BoxShadow(

@@ -8,9 +8,10 @@ import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/home/customsentences/customsentence_page.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/new_custom/custom_cards_screen.dart';
-import 'package:flutter_application_1/new_home/learning_course_screen.dart';
+import 'package:flutter_application_1/new_learning_coures/learning_course_card_list.dart';
 import 'package:flutter_application_1/new_home/missed_cards_screen.dart';
 import 'package:flutter_application_1/new_home/saved_cards_screen.dart';
+import 'package:flutter_application_1/new_learning_coures/learning_course_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -156,7 +157,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
   bool _isAttendanceDay(DateTime day) {
     final monthDate = DateTime(day.year, day.month, 1);
     final days = _attendanceDates[monthDate] ?? [];
-    print(days);
+
     return days.contains(day.day);
   }
 
@@ -705,7 +706,7 @@ class ContentCustomCard extends StatelessWidget {
   }
 }
 
-class ContentTodayMenu extends StatelessWidget {
+class ContentTodayMenu extends StatefulWidget {
   ContentTodayMenu({
     super.key,
     required this.level,
@@ -719,6 +720,11 @@ class ContentTodayMenu extends StatelessWidget {
   int missedCardNumber;
   int customCardNumber;
 
+  @override
+  State<ContentTodayMenu> createState() => _ContentTodayMenuState();
+}
+
+class _ContentTodayMenuState extends State<ContentTodayMenu> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height / 852;
@@ -740,9 +746,9 @@ class ContentTodayMenu extends StatelessWidget {
             Navigator.push<void>(
               context,
               MaterialPageRoute<void>(
-                builder: (BuildContext context) => LearningCourseScreen(
-                  level: level,
-                ),
+                builder: (BuildContext context) => const LearningCourseScreen(
+                    //level: widget.level,
+                    ),
               ),
             );
           },
@@ -760,7 +766,7 @@ class ContentTodayMenu extends StatelessWidget {
               ),
             );
           },
-          count: savedCardNumber,
+          count: widget.savedCardNumber,
           showCount: true,
         ),
         MenuItem(
@@ -774,21 +780,28 @@ class ContentTodayMenu extends StatelessWidget {
               ),
             );
           },
-          count: missedCardNumber,
+          count: widget.missedCardNumber,
           showCount: true,
         ),
         MenuItem(
           title: 'Custom Sentence',
           icon: Icons.type_specimen,
-          onTap: () {
-            Navigator.push<void>(
+          onTap: () async {
+            Navigator.push<int>(
               context,
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) => const CustomCardsScreen(),
+              MaterialPageRoute<int>(
+                builder: (BuildContext context) => const CustomSentenceScreen(),
               ),
-            );
+            ).then((cnt) {
+              if (cnt != null) {
+                // 반환된 cnt를 이용해 데이터 갱신 작업 수행
+                setState(() {
+                  widget.customCardNumber = cnt;
+                });
+              }
+            });
           },
-          count: customCardNumber,
+          count: widget.customCardNumber,
           showCount: true,
         ),
       ],

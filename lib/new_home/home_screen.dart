@@ -9,6 +9,7 @@ import 'package:flutter_application_1/learninginfo/progress.dart';
 import 'package:flutter_application_1/learninginfo/study_info_page.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/home_cards.dart';
+import 'package:flutter_application_1/new_notification/notification_screen.dart';
 import 'package:flutter_application_1/profile/profile_page.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
@@ -214,9 +215,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       // 상단 메뉴 아이콘들
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Icon(
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push<void>(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    const NotificationScreen(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
                             Icons.notifications,
                             color: bam,
                             size: 24,
