@@ -174,10 +174,28 @@ class _ReportScreenState extends State<ReportScreen> {
     }
   }
 
+  int getMaxCardValue() {
+    // weakPhonemes의 6~12번째 값을 가져오기
+    List<int> values = [
+      sundayCards!,
+      mondayCards!,
+      tuesdayCards!,
+      wednesdayCards!,
+      thursdayCards!,
+      fridayCards!,
+      saturdayCards!
+    ];
+
+    // 최댓값 계산
+    return values.reduce((value, element) => value > element ? value : element);
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height / 852;
     double width = MediaQuery.of(context).size.width / 392;
+
+    int maxCardValue = (getMaxCardValue().toDouble() ~/ 5) * 5 + 5;
 
     return Scaffold(
       appBar: AppBar(
@@ -291,7 +309,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 30.0),
                               child: BarChart(
-                                weeklyData(),
+                                weeklyData(maxCardValue),
                               ),
                             ),
                           ),
@@ -393,9 +411,9 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   // 차트 그리기
-  BarChartData weeklyData() {
+  BarChartData weeklyData(int maxCardValue) {
     return BarChartData(
-      maxY: 20,
+      maxY: maxCardValue.toDouble(),
       minY: 0,
       alignment: BarChartAlignment.center,
       barTouchData: BarTouchData(
@@ -403,18 +421,25 @@ class _ReportScreenState extends State<ReportScreen> {
         touchTooltipData: BarTouchTooltipData(
           getTooltipColor: (_) => const Color(0xFFF2EBE3),
           tooltipHorizontalAlignment: FLHorizontalAlignment.center,
-          tooltipMargin: -10,
+          tooltipMargin: 10,
+          tooltipRoundedRadius: 4.0,
+          tooltipPadding:
+              const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8.0),
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
             return BarTooltipItem(
-              'Card\n',
-              TextStyle(color: primary),
+              (rod.toY).toInt().toString(),
+              const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
               children: <TextSpan>[
-                TextSpan(
-                  text: (rod.toY).toInt().toString(),
+                const TextSpan(
+                  text: ' cards',
                   style: TextStyle(
-                    color: bam, //widget.touchedBarColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF92918C), //widget.touchedBarColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
@@ -447,8 +472,18 @@ class _ReportScreenState extends State<ReportScreen> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            interval: 10,
-            getTitlesWidget: rightTitles,
+            interval: (maxCardValue / 5).toDouble(),
+            getTitlesWidget: (value, meta) {
+              return Container(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(value.toInt().toString(),
+                    style: const TextStyle(
+                      color: Color(0xFFBEBDB8),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                    )),
+              );
+            },
           ),
         ),
         topTitles: const AxisTitles(
@@ -471,6 +506,7 @@ class _ReportScreenState extends State<ReportScreen> {
       ),
       gridData: FlGridData(
         show: true,
+        horizontalInterval: (maxCardValue / 3).toDouble(),
         getDrawingHorizontalLine: (value) => const FlLine(
           color: Color(0xFFD8D7D6),
           strokeWidth: 1,
@@ -483,36 +519,16 @@ class _ReportScreenState extends State<ReportScreen> {
           dashArray: [1, 1],
         ),
       ),
-    );
-  }
-
-  // y축 타이들
-  Widget rightTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: Color(0xFFBEBDB8),
-      fontWeight: FontWeight.w400,
-      fontSize: 15,
-    );
-    String text;
-    if (value == 0) {
-      text = '${value.toInt()}';
-    } else if (value == 10) {
-      text = '${value.toInt()}';
-    } else if (value == 20) {
-      text = '${value.toInt()}';
-    } else if (value == 30) {
-      text = '${value.toInt()}';
-    } else {
-      return Container();
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 10,
-      child: Center(
-        child: Text(
-          text,
-          style: style,
-        ),
+      extraLinesData: ExtraLinesData(
+        horizontalLines: [
+          HorizontalLine(
+            y: weeklyAverageCards!.toDouble(),
+            color: weeklyAverageCards!.toDouble() == 0
+                ? Colors.transparent
+                : const Color(0xFFF26647),
+            strokeWidth: 1.0,
+          )
+        ],
       ),
     );
   }
@@ -558,7 +574,7 @@ class _ReportScreenState extends State<ReportScreen> {
           // 막대 안쪽 색깔
           color: y > 0 // 값이 0 보다 크면 기본 색
               ? x == DateTime.now().weekday % 7
-                  ? primary // 오늘 요일은 주황색
+                  ? const Color(0xFFF26647) // 오늘 요일은 주황색
                   : const Color(0xFFF9C6A9)
               : Colors.transparent,
           borderRadius: const BorderRadius.only(
