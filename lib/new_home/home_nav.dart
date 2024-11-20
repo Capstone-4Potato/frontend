@@ -43,7 +43,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
         width: 98,
         height: 98,
         decoration: BoxDecoration(
-          color: primary,
+          color: const Color(0xFFF26647),
           borderRadius: BorderRadius.circular(100),
           boxShadow: [
             BoxShadow(

@@ -100,6 +100,23 @@ flutter:
         - asset: assets/font/Marine-Light.ttf
         - asset: assets/font/Marine-Regular.ttf
 
+    - family: MADE-Tommy-Soft
+      fonts:
+        - asset: assets/font/MADE-Tommy-Soft-Thin.otf
+          weight: 100
+        - asset: assets/font/MADE-Tommy-Soft-Light.otf
+          weight: 300
+        - asset: assets/font/MADE-Tommy-Soft-Regular.otf
+          weight: 400
+        - asset: assets/font/MADE-Tommy-Soft-Medium.otf
+          weight: 500
+        - asset: assets/font/MADE-Tommy-Soft-Bold.otf
+          weight: 700
+        - asset: assets/font/MADE-Tommy-Soft-ExtraBold.otf
+          weight: 800
+        - asset: assets/font/MADE-Tommy-Soft-Black.otf
+          weight: 900
+
     - family: CustomIcons
       fonts:
         - asset: assets/icon/CustomIcons.ttf

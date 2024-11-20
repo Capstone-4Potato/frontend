@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/home/customsentences/customsentence_page.dart';
+import 'package:flutter_application_1/new_home/new_custom/customsentence_page.dart';
 import 'package:flutter_application_1/home/sentecnes/sentence_category.dart';
 import 'package:flutter_application_1/home/syllables/syllable_category.dart';
 import 'package:flutter_application_1/home/words/word_category.dart';
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SyllablesCategoryScreen()),
+                      builder: (context) => const SyllablesCategoryScreen()),
                 );
               },
             ),
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => WordsCategoryScreen()),
+                      builder: (context) => const WordsCategoryScreen()),
                 );
               },
             ),
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SentencesCategoryScreen()),
+                      builder: (context) => const SentencesCategoryScreen()),
                 );
               },
             ),
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CustomSentenceScreen()),
+                      builder: (context) => const CustomSentenceScreen()),
                 );
               },
             ),

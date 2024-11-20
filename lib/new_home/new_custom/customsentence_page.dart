@@ -1,4 +1,3 @@
-import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
@@ -22,12 +21,15 @@ class Sentence {
   final String text;
   final String engTranslation;
   final bool bookmark;
+  String createdAt;
 
-  Sentence(
-      {required this.id,
-      required this.text,
-      required this.engTranslation,
-      required this.bookmark});
+  Sentence({
+    required this.id,
+    required this.text,
+    required this.engTranslation,
+    required this.bookmark,
+    required this.createdAt,
+  });
 
   factory Sentence.fromJson(Map<String, dynamic> json) {
     return Sentence(
@@ -35,6 +37,7 @@ class Sentence {
       text: json['text'],
       engTranslation: json['engTranslation'],
       bookmark: json['bookmark'] ?? false,
+      createdAt: json['createdAt'] ?? DateTime.now().toIso8601String(),
     );
   }
 
@@ -43,6 +46,7 @@ class Sentence {
         'text': text,
         'engTranslation': engTranslation,
         'bookmark': bookmark,
+        'createdAt': createdAt,
       };
 }
 
@@ -54,6 +58,9 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
   late Color addButtonIconColor = const Color(0xFF71706B); // + 버튼 아이콘 색
   late Color addButtonColor = Colors.transparent; // + 버튼 배경 색
+
+  bool isLoading = false;
+  bool isAddLoading = false;
 
   @override
   void initState() {
@@ -77,6 +84,9 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
   Future<void> _loadSentencesFromServer() async {
     String? token = await getAccessToken();
     String url = '$main_url/home/custom';
+    setState(() {
+      isLoading = true;
+    });
     try {
       final response = await http.get(
         Uri.parse(url),
@@ -93,6 +103,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
           _sentences.addAll(
             responseData.map((data) => Sentence.fromJson(data)).toList(),
           );
+          isLoading = false;
         });
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh and retry the request
@@ -120,6 +131,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
               _sentences.addAll(
                 responseData.map((data) => Sentence.fromJson(data)).toList(),
               );
+              isLoading = false;
             });
           } else {
             _showErrorDialog(
@@ -141,6 +153,9 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
   Future<void> _addSentence() async {
     final text = _controller.text;
     print(text);
+    setState(() {
+      isAddLoading = true;
+    });
 
     if (text.isNotEmpty &&
         _sentences.length < _maxSentences &&
@@ -164,6 +179,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
           setState(() {
             _sentences.add(newSentence);
             _controller.clear();
+            isAddLoading = false;
           });
         } else if (response.statusCode == 401) {
           // Token expired, attempt to refresh and retry the request
@@ -193,6 +209,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                 setState(() {
                   _sentences.add(newSentence);
                   _controller.clear();
+                  isAddLoading = false;
                 });
               }
             } else {
@@ -203,7 +220,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
             _showErrorDialog('Failed to refresh token. Please log in again.');
           }
         } else {
-          print(response.statusCode);
+          print("${response.statusCode}");
           _showErrorDialog('Failed to add sentence. Please try again.');
         }
       } catch (e) {
@@ -221,6 +238,11 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
     final sentence = _sentences[index];
     String? token = await getAccessToken();
     final url = '$main_url/cards/custom/${sentence.id}';
+
+    setState(() {
+      isAddLoading = true;
+    });
+
     try {
       final response = await http.delete(
         Uri.parse(url),
@@ -234,6 +256,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         print(response.body);
         setState(() {
           _sentences.removeAt(index);
+          isAddLoading = false;
         });
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh and retry the request
@@ -258,18 +281,28 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
             print(retryResponse.body);
             setState(() {
               _sentences.removeAt(index);
+              isAddLoading = false;
             });
           }
         } else {
           _showErrorDialog('Failed to refresh token. Please log in again.');
+          setState(() {
+            isAddLoading = false;
+          });
         }
       } else {
         _showErrorDialog('Failed to delete sentence. Please try again.');
+        setState(() {
+          isAddLoading = false;
+        });
       }
     } catch (e) {
       // Handle network request exceptions
       print("Error during the request: $e");
-      _showErrorDialog('Failed to delete sentence. Please try again.');
+      _showErrorDialog('Error during the request.');
+      setState(() {
+        isAddLoading = false;
+      });
     }
   }
 
@@ -319,6 +352,17 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         MaterialPageRoute(builder: (context) => const CustomSentences()),
       );
     }
+  }
+
+  bool isToday(String createdAt) {
+    // 현재 날짜 가져오기
+    DateTime now = DateTime.now();
+    DateTime dateTime = DateTime.parse(createdAt);
+
+    // 년, 월, 일이 동일한지 비교
+    return dateTime.year == now.year &&
+        dateTime.month == now.month &&
+        dateTime.day == now.day;
   }
 
   @override
@@ -409,97 +453,131 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
               ),
               const SizedBox(height: 20),
               Expanded(
-                child: _sentences.isEmpty
-                    ? Center(
-                        child: Container(
-                          width: 356,
-                          height: 197,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(color: const Color(0xFFEBEBEB)),
-                          ),
-                          child: const Text(
-                            'Got a sentence you'
-                            'd like to practice pronouncing? Just write it in English, we’ll translate it into Korean and save it as a card!',
-                            style: TextStyle(
-                              color: Color(0xFF7F7E79),
-                            ),
-                          ),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: _sentences.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFEBEBEB),
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.17),
-                                    blurRadius: 5,
-                                    offset: const Offset(2, 2),
+                child: isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
+                      ))
+                    : _sentences.isEmpty
+                        ? Center(
+                            child: isAddLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Color(0xFFF26647)),
+                                  ))
+                                : Container(
+                                    width: 356,
+                                    height: 197,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      border: Border.all(
+                                          color: const Color(0xFFEBEBEB)),
+                                    ),
+                                    child: const Text(
+                                      'Got a sentence you'
+                                      'd like to practice pronouncing? Just write it in English, we’ll translate it into Korean and save it as a card!',
+                                      style: TextStyle(
+                                        color: Color(0xFF7F7E79),
+                                      ),
+                                    ),
                                   ),
-                                ],
-                              ),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 10.0),
-                                title: Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 10),
-                                      width: 8,
-                                      height: 8,
+                          )
+                        : Stack(
+                            children: [
+                              ListView.builder(
+                                itemCount: _sentences.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0),
+                                    child: Container(
                                       decoration: BoxDecoration(
-                                        color: primary,
-                                        borderRadius: BorderRadius.circular(10),
+                                        color: const Color(0xFFEBEBEB),
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.17),
+                                            blurRadius: 5,
+                                            offset: const Offset(2, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 10.0,
+                                                horizontal: 10.0),
+                                        title: Row(
+                                          children: [
+                                            if (isToday(
+                                                _sentences[index].createdAt))
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 10),
+                                                width: 8,
+                                                height: 8,
+                                                decoration: BoxDecoration(
+                                                  color: primary,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  _sentences[index]
+                                                      .engTranslation,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  _sentences[index].text,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        trailing: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: Colors.black38,
+                                              ),
+                                              onPressed: () =>
+                                                  _deleteSentence(index),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          _sentences[index].engTranslation,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        Text(
-                                          _sentences[index].text,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                trailing: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.black38,
-                                      ),
-                                      onPressed: () => _deleteSentence(index),
-                                    ),
-                                  ],
-                                ),
+                                  );
+                                },
                               ),
-                            ),
-                          );
-                        },
-                      ),
+                              if (isAddLoading)
+                                const Center(
+                                    child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color(0xFFF26647)),
+                                )),
+                            ],
+                          ),
               ),
               const SizedBox(height: 16),
               ElevatedButton(

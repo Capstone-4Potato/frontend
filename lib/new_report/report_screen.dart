@@ -38,6 +38,7 @@ class _ReportScreenState extends State<ReportScreen> {
   bool isLoading = true; // 로딩 중 표시
 
   int touchedIndex = -1; // 그래프 터치 index
+  int maxCardValue = 0;
 
   @override
   void initState() {
@@ -82,6 +83,7 @@ class _ReportScreenState extends State<ReportScreen> {
             thursdayCards = data['thursdayCards'];
             fridayCards = data['fridayCards'];
             saturdayCards = data['saturdayCards'];
+            maxCardValue = (getMaxCardValue().toDouble() ~/ 5) * 5 + 5;
 
             // weakPhonemes 리스트 처리
             weakPhonemes = (data['weakPhonemes'] ?? [])
@@ -141,6 +143,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 thursdayCards = data['thursdayCards'];
                 fridayCards = data['fridayCards'];
                 saturdayCards = data['saturdayCards'];
+                maxCardValue = (getMaxCardValue().toDouble() ~/ 5) * 5 + 5;
 
                 // weakPhonemes 리스트 처리
                 weakPhonemes = (data['weakPhonemes'] ?? [])
@@ -194,8 +197,6 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height / 852;
     double width = MediaQuery.of(context).size.width / 392;
-
-    int maxCardValue = (getMaxCardValue().toDouble() ~/ 5) * 5 + 5;
 
     return Scaffold(
       appBar: AppBar(
