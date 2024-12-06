@@ -12,6 +12,7 @@ import 'package:flutter_application_1/new_home/missed_cards_screen.dart';
 import 'package:flutter_application_1/new_home/saved_cards_screen.dart';
 import 'package:flutter_application_1/new_learning_coures/learning_course_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -385,6 +386,10 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 decoration: BoxDecoration(
                                                   color: primary,
                                                   shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                      color: const Color(
+                                                          0xFFFFDBB5),
+                                                      width: 3.w),
                                                 ),
                                                 child: Text(
                                                   day.day.toString(),
@@ -405,9 +410,13 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 height: 30 * height,
                                                 width: 30 * width,
                                                 alignment: Alignment.center,
-                                                decoration: const BoxDecoration(
+                                                decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                      color: const Color(
+                                                          0xFFFFDBB5),
+                                                      width: 3.w),
                                                 ),
                                                 child: Text(
                                                   day.day.toString(),
