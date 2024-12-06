@@ -5,6 +5,7 @@ import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_learning_coures/unit_class.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -21,6 +22,8 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
   List<String> levels = ['Beginner', 'Intermediate', 'Advanced'];
   int? value = 0;
 
+  final ScrollController _scrollController = ScrollController();
+
   bool isLoading = false;
 
   @override
@@ -29,6 +32,34 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
     _getLearningCourseList();
   }
 
+  /// 특정 인덱스로 스크롤 이동 함수
+  void _scrollToIndex(int index) {
+    // 컨트롤러가 연결되어 있는지 확인
+    if (_scrollController.hasClients) {
+      // 특정 섹션의 위치를 계산
+      double offset;
+      switch (index) {
+        case 0:
+          offset = 0;
+          break;
+        case 1:
+          offset = 620.h;
+          break;
+        case 2:
+          offset = 1500.h;
+          break;
+        default:
+          offset = 0;
+      }
+      _scrollController.animateTo(
+        offset,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  //
   Future<void> _getLearningCourseList() async {
     String? token = await getAccessToken();
     String url = '$main_url/home/course';
@@ -126,9 +157,6 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width / 393;
-    double height = MediaQuery.of(context).size.height / 852;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF2EBE3),
@@ -196,6 +224,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                       onSelected: (bool selected) {
                         setState(() {
                           value = index;
+                          _scrollToIndex(index);
                         });
                       },
                     );
@@ -206,16 +235,17 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               child: Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 21.0),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 21.0.h),
                     child: Center(
                       child: Text(
                         'Each unit is organized by pronunciation difficulty.\nStart with Unit 1 and move up as you improve!',
                         style: TextStyle(
-                          color: Color(0xFf92918C),
-                          fontSize: 12,
+                          color: const Color(0xFf92918C),
+                          fontSize: 12.h,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -241,8 +271,8 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 LevelDivider(level: levels[0]),
-                                const SizedBox(
-                                  height: 21,
+                                SizedBox(
+                                  height: 21.h,
                                 ),
                                 Wrap(
                                   direction: Axis.vertical,

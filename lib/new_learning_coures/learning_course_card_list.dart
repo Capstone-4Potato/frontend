@@ -6,6 +6,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 
+/// 레벨 별로 카드 리스트 불러옴
 class LearningCourseCardList extends StatefulWidget {
   LearningCourseCardList({
     super.key,
