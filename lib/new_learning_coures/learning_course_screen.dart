@@ -21,9 +21,9 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
   final List<Unit> _units = [];
 
   List<String> levels = ['Beginner', 'Intermediate', 'Advanced'];
-  int? value = 0;
+  int? value = 0; // 선택된 ChoiceChip 인덱스
 
-  final ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController = ScrollController();
 
   bool isLoading = false;
 
@@ -31,6 +31,28 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
   void initState() {
     super.initState();
     _getLearningCourseList();
+    // ScrollController 초기화 및 리스너 등록
+    _scrollController = ScrollController()
+      ..addListener(() {
+        final scrollPosition = _scrollController.offset;
+
+        setState(() {
+          if (scrollPosition >= 0 && scrollPosition < 620) {
+            value = 0; // Beginner
+          } else if (scrollPosition >= 620 && scrollPosition < 1480) {
+            value = 1; // Intermediate
+          } else if (scrollPosition >= 1480) {
+            value = 2; // Advanced
+          }
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    // ScrollController 해제
+    _scrollController.dispose();
+    super.dispose();
   }
 
   /// 특정 인덱스로 스크롤 이동 함수
@@ -183,17 +205,17 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 18.0, bottom: 15.0),
+            padding: EdgeInsets.only(top: 18.0.h, bottom: 15.0.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Wrap(
                   direction: Axis.horizontal,
-                  spacing: 8,
+                  spacing: 8.w,
                   children: List<Widget>.generate(levels.length, (index) {
                     return ChoiceChip(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 2),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 15.w, vertical: 2.h),
                       label: Container(
                         alignment: Alignment.center,
                         child: Text(
@@ -202,18 +224,18 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                             color: value == index
                                 ? Colors.white
                                 : const Color(0xFF92918C),
-                            fontSize: 12,
+                            fontSize: 12.h,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                       side: BorderSide.none,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
-                      labelStyle: const TextStyle(
+                      labelStyle: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 12.h,
                         fontWeight: FontWeight.w500,
                       ),
                       selected: value == index,
