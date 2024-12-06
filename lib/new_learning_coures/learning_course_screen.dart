@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new_learning_coures/learning_course_card_list.dart';
 import 'package:flutter_application_1/new_learning_coures/unit_class.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,7 +47,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
           offset = 620.h;
           break;
         case 2:
-          offset = 1500.h;
+          offset = 1480.h;
           break;
         default:
           offset = 0;
@@ -158,6 +159,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0, // 스크롤 엘레베이션 0
         backgroundColor: const Color(0xFFF2EBE3),
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -410,230 +412,298 @@ class UnitItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.0.w),
       child: completedNumber == 0 // 학습하지 않은 상태
-          ? Container(
-              height: 96.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24.0.r),
-                border: Border.all(
-                  color: const Color(0xFFBEBDB8),
+          ? GestureDetector(
+              onTap: () {
+                Navigator.push<void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => LearningCourseCardList(
+                      level: id,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: title == "Conversation Practice" ||
+                        title == "Tongue Twisters"
+                    ? 77.h
+                    : 96.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24.0.r),
+                  border: Border.all(
+                    color: const Color(0xFFBEBDB8),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: 30.0.w, top: 15.0.h, bottom: 15.0.h, right: 20.0.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 24.h,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 300.w,
-                      child: Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 16.h,
-                          fontWeight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                      left: 30.0.w, top: 15.0.h, bottom: 15.0.h, right: 20.0.w),
+                  child: title == "Conversation Practice" ||
+                          title == "Tongue Twisters"
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 300.w,
+                              child: Text(
+                                subtitle,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: const Color(0xFF63625C),
+                                  fontSize: 16.h,
+                                  fontWeight: FontWeight.w400,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                overflow:
+                                    TextOverflow.ellipsis, // 넘칠 경우 말줄임표 추가
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              title,
+                              style: TextStyle(
+                                color: const Color(0xFF666560),
+                                fontSize: 24.h,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 300.w,
+                              child: Text(
+                                subtitle,
+                                style: TextStyle(
+                                  color: const Color(0xFF63625C),
+                                  fontSize: 16.h,
+                                  fontWeight: FontWeight.w400,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                overflow:
+                                    TextOverflow.ellipsis, // 넘칠 경우 말줄임표 추가
+                              ),
+                            ),
+                          ],
                         ),
-                        overflow: TextOverflow.ellipsis, // 넘칠 경우 말줄임표 추가
-                      ),
-                    ),
-                  ],
                 ),
               ),
             )
           : completedNumber == totalNumber // 학습 완료한 상태
-              ? Container(
-                  height: 96.h,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFF3E6),
-                    borderRadius: BorderRadius.circular(24.0.r),
-                    border: Border.all(color: const Color(0xFFF26647)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 30.0.w,
-                            top: 15.0.h,
-                            bottom: 15.0.w,
-                            right: 20.0.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              title,
-                              style: TextStyle(
-                                fontSize: 24.h,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 256.w,
-                              child: Text(
-                                subtitle,
+              ? GestureDetector(
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            LearningCourseCardList(
+                          level: id,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 96.h,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF3E6),
+                      borderRadius: BorderRadius.circular(24.0.r),
+                      border: Border.all(color: const Color(0xFFF26647)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 30.0.w,
+                              top: 15.0.h,
+                              bottom: 15.0.w,
+                              right: 20.0.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                title,
                                 style: TextStyle(
-                                  fontSize: 14.h,
-                                  fontWeight: FontWeight.w400,
-                                  overflow: TextOverflow.ellipsis,
-                                  // letterSpacing: -0.2,
+                                  fontSize: 24.h,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                //maxLines: 2,
-                                overflow:
-                                    TextOverflow.ellipsis, // 넘칠 경우 말줄임표 추가
                               ),
+                              SizedBox(
+                                width: 256.w,
+                                child: Text(
+                                  subtitle,
+                                  style: TextStyle(
+                                    fontSize: 14.h,
+                                    fontWeight: FontWeight.w400,
+                                    overflow: TextOverflow.ellipsis,
+                                    // letterSpacing: -0.2,
+                                  ),
+                                  //maxLines: 2,
+                                  overflow:
+                                      TextOverflow.ellipsis, // 넘칠 경우 말줄임표 추가
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Center(
+                          child: Container(
+                            width: 45.w,
+                            height: 28.h,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFF26647),
+                              shape: BoxShape.circle,
                             ),
-                          ],
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          width: 45.w,
-                          height: 28.h,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF26647),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.check,
-                            color: Colors.white,
-                            size: 24.h,
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 24.h,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 )
-              : Container(
-                  // 학습 중인 상태
-                  height: 116.h,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24.0.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.17),
-                        offset: const Offset(2, 2),
-                        blurRadius: 5,
+              : GestureDetector(
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            LearningCourseCardList(
+                          level: id,
+                        ),
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 30.0.w,
-                            top: 15.0.h,
-                            bottom: 15.0.h,
-                            right: 20.0.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              title,
-                              style: TextStyle(
-                                fontSize: 24.h,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 256.w,
-                              child: Text(
-                                subtitle,
+                    );
+                  },
+                  child: Container(
+                    // 학습 중인 상태
+                    height: 116.h,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24.0.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.17),
+                          offset: const Offset(2, 2),
+                          blurRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 30.0.w,
+                              top: 15.0.h,
+                              bottom: 15.0.h,
+                              right: 20.0.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                title,
                                 style: TextStyle(
-                                  fontSize: 14.h,
-                                  fontWeight: FontWeight.w400,
-                                  overflow: TextOverflow.ellipsis,
-                                  // letterSpacing: -0.2,
+                                  fontSize: 24.h,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                //maxLines: 2,
-                                overflow:
-                                    TextOverflow.ellipsis, // 넘칠 경우 말줄임표 추가
                               ),
-                            ),
-                            Container(
-                              height: 16.h,
-                              width: 245.w,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFBEBDB8),
-                                borderRadius: BorderRadius.circular(16.r),
+                              SizedBox(
+                                width: 256.w,
+                                child: Text(
+                                  subtitle,
+                                  style: TextStyle(
+                                    fontSize: 14.h,
+                                    fontWeight: FontWeight.w400,
+                                    overflow: TextOverflow.ellipsis,
+                                    // letterSpacing: -0.2,
+                                  ),
+                                  //maxLines: 2,
+                                  overflow:
+                                      TextOverflow.ellipsis, // 넘칠 경우 말줄임표 추가
+                                ),
                               ),
-                              //alignment: Alignment.center,
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    width: (completedNumber) /
-                                        (totalNumber) *
-                                        245.w,
-                                    height: 16.h,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFF26647),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(16.0.r),
-                                        bottomLeft: Radius.circular(16.0.r),
+                              Container(
+                                height: 16.h,
+                                width: 245.w,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFBEBDB8),
+                                  borderRadius: BorderRadius.circular(16.r),
+                                ),
+                                //alignment: Alignment.center,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: (completedNumber) /
+                                          (totalNumber) *
+                                          245.w,
+                                      height: 16.h,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFF26647),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(16.0.r),
+                                          bottomLeft: Radius.circular(16.0.r),
+                                        ),
                                       ),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 4.0.h,
-                                          bottom: 8.0.h,
-                                          left: 5.0.w,
-                                          right: 4.0.w),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFFB8A71),
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(16.0.r),
-                                            bottomLeft: Radius.circular(16.0.r),
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 4.0.h,
+                                            bottom: 8.0.h,
+                                            left: 5.0.w,
+                                            right: 4.0.w),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFFB8A71),
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(16.0.r),
+                                              bottomLeft:
+                                                  Radius.circular(16.0.r),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      '$completedNumber / $totalNumber',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.h,
-                                        fontWeight: FontWeight.w500,
+                                    Center(
+                                      child: Text(
+                                        '$completedNumber / $totalNumber',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12.h,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 45.w,
-                        height: double.maxFinite,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF26647),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(24.r),
-                            bottomRight: Radius.circular(24.r),
+                            ],
                           ),
                         ),
-                        child: Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                          size: 24.h,
+                        Container(
+                          width: 45.w,
+                          height: double.maxFinite,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF26647),
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(24.r),
+                              bottomRight: Radius.circular(24.r),
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                            size: 24.h,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
     );
