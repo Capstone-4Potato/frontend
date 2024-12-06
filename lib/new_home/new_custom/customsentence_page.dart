@@ -37,7 +37,7 @@ class Sentence {
       text: json['text'],
       engTranslation: json['engTranslation'],
       bookmark: json['bookmark'] ?? false,
-      createdAt: json['createdAt'] ?? DateTime.now().toIso8601String(),
+      createdAt: json['createdAt'] ?? DateTime(2024, 10, 10).toIso8601String(),
     );
   }
 
@@ -488,6 +488,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                         : Stack(
                             children: [
                               ListView.builder(
+                                reverse: true,
                                 itemCount: _sentences.length,
                                 itemBuilder: (context, index) {
                                   return Padding(
@@ -580,22 +581,22 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                           ),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xfff26647),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                child: const Text(
-                  'Go to Learning',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: const Color(0xfff26647),
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              //     textStyle: const TextStyle(
+              //       fontSize: 16,
+              //       fontWeight: FontWeight.w500,
+              //     ),
+              //   ),
+              //   child: const Text(
+              //     'Go to Learning',
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              // ),
               const SizedBox(height: 30),
             ],
           ),

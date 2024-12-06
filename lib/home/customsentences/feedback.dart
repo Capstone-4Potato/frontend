@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
@@ -12,7 +13,7 @@ Future<FeedbackData?> customFeedback(
     'correctAudio': base64correctAudio,
   };
 
-  String url = '$main_url/custom/$cardId';
+  String url = '$main_url/cards/custom/$cardId';
 
   String? token = await getAccessToken();
   try {
@@ -21,7 +22,7 @@ Future<FeedbackData?> customFeedback(
       headers: {'access': '$token', "Content-Type": "application/json"},
       body: jsonEncode(feedbackRequest),
     );
-    //print('post 했음');
+
     if (response.statusCode == 200) {
       print('성공');
       var responseData = json.decode(response.body);
@@ -48,6 +49,9 @@ Future<FeedbackData?> customFeedback(
           var responseData = json.decode(response.body);
           print(responseData);
           return FeedbackData.fromJson(responseData);
+        } else if (response.statusCode == 500) {
+          // 다이알로그 띄우기
+          // {statusCode: 500, exceptionName: AiGenerationFailException, message: {"detail":"No non-silent samples to save"}, exceptionLevel: ERROR}
         } else {
           // Handle other response codes after retry if needed
           print(
@@ -70,4 +74,5 @@ Future<FeedbackData?> customFeedback(
     print("Error during the request: $e");
     return null;
   }
+  return null;
 }

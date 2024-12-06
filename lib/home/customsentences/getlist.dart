@@ -8,7 +8,7 @@ Future<List<dynamic>?> fetchCustomList() async {
   try {
     String? token = await getAccessToken();
 
-    var url = Uri.parse('$main_url/home/cards/custom');
+    var url = Uri.parse('$main_url/home/custom');
 
     // Set headers with the token
     var headers = <String, String>{

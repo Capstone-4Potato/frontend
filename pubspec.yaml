@@ -48,6 +48,7 @@ dependencies:
   audioplayers: ^6.1.0
   audio_session: ^0.1.21
   flutter_blue_plus: ^1.33.4
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:

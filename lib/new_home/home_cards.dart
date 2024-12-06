@@ -650,9 +650,6 @@ class ContentCustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height / 852;
-    double width = MediaQuery.of(context).size.width / 392;
-
     return Stack(
       children: [
         Column(
@@ -676,6 +673,63 @@ class ContentCustomCard extends StatelessWidget {
                       MaterialPageRoute<void>(
                         builder: (BuildContext context) =>
                             const CustomSentenceScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: primary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+                      child: Text(
+                        'Try it →',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class ContentLearningCourseCard extends StatelessWidget {
+  const ContentLearningCourseCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Let's go to study!",
+              style: TextStyle(
+                fontSize: 21,
+                color: bam,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                            const LearningCourseScreen(),
                       ),
                     );
                   },

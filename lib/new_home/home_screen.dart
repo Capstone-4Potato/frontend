@@ -12,6 +12,7 @@ import 'package:flutter_application_1/new_home/home_cards.dart';
 import 'package:flutter_application_1/new_notification/notification_screen.dart';
 import 'package:flutter_application_1/profile/profile_page.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int? savedCardNumber; // Saved Card 수
   int? missedCardNumber; // Missed Card 수
   int? customCardNumber; // Custom Card 수
+
+  double progressValue = 0;
 
   @override
   void initState() {
@@ -139,6 +142,10 @@ class _HomeScreenState extends State<HomeScreen> {
       CustomHomeCard(
           boxColor: const Color.fromARGB(255, 242, 235, 227),
           contents: const ContentCustomCard()),
+      CustomHomeCard(
+        boxColor: const Color(0xFFDFEAFB),
+        contents: const ContentLearningCourseCard(),
+      ),
     ];
 
     return userLevel == null
@@ -178,13 +185,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               Center(
                                 child: SimpleCircularProgressBar(
                                   size: 220,
-                                  maxValue: userExperience! / levelExperience!,
+                                  maxValue: levelExperience!.toDouble(),
                                   progressStrokeWidth: 6,
                                   backStrokeWidth: 6,
                                   progressColors: [
                                     progress_color,
                                   ],
                                   backColor: back_progress_color,
+                                  startAngle: 180,
+                                  valueNotifier: ValueNotifier(
+                                      userExperience!.toDouble()), // 진행 상태 연결
                                 ),
                               ),
                               Center(

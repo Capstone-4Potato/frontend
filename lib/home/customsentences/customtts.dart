@@ -34,7 +34,7 @@ class CustomTtsService {
         print('customtts fetch complete');
 
         final jsonData = jsonDecode(response.body);
-        final String base64correctAudio = jsonData['correctAudio'];
+        final String? base64correctAudio = jsonData['correctAudio'];
         // print(base64correctAudio);
         _instance.base64CorrectAudio = base64correctAudio;
         // Save audio to a file
@@ -85,8 +85,8 @@ class CustomTtsService {
     }
   }
 
-  Future<void> saveAudioToFile(int cardId, String base64String) async {
-    final bytes = base64Decode(base64String);
+  Future<void> saveAudioToFile(int cardId, String? base64String) async {
+    final bytes = base64Decode(base64String!);
     final String dir = (await getTemporaryDirectory()).path;
     final String fileName =
         'custom_correct_audio_$cardId.wav'; // 파일 이름을 cardId에 기반하여 생성

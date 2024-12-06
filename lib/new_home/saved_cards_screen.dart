@@ -44,26 +44,27 @@ class _SavedCardScreenState extends State<SavedCardScreen> {
       var data = json.decode(response.body);
 
       List<dynamic> cardList = data['cardList'];
+      if (mounted) {
+        setState(() {
+          // 리스트 초기화
+          idList.clear();
+          textList.clear();
+          cardScoreList.clear();
+          weakCardList.clear();
+          bookmarkList.clear();
 
-      setState(() {
-        // 리스트 초기화
-        idList.clear();
-        textList.clear();
-        cardScoreList.clear();
-        weakCardList.clear();
-        bookmarkList.clear();
-
-        // 변수 리스트에 데이터 저장
-        for (var card in cardList) {
-          idList.add(card['id']);
-          textList.add(card['text']);
-          cardPronunciationList.add(card['cardPronunciation']);
-          cardScoreList.add(card['cardScore']);
-          weakCardList.add(card['weakCard']);
-          bookmarkList.add(card['bookmark']);
-        }
-        isLoading = false;
-      });
+          // 변수 리스트에 데이터 저장
+          for (var card in cardList) {
+            idList.add(card['id']);
+            textList.add(card['text']);
+            cardPronunciationList.add(card['cardPronunciation']);
+            cardScoreList.add(card['cardScore']);
+            weakCardList.add(card['weakCard']);
+            bookmarkList.add(card['bookmark']);
+          }
+          isLoading = false;
+        });
+      }
     } else {
       throw Exception('Failed to load card list');
     }

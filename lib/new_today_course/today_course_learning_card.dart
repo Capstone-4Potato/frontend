@@ -140,7 +140,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         final audioFile = File(path); // 녹음된 파일 불러오기
         final fileBytes = await audioFile.readAsBytes(); // 파일을 바이트로 읽기
         final base64userAudio = base64Encode(fileBytes); // Base64 인코딩
-        print("유저 : $base64userAudio");
+        debugPrint("유저 : $base64userAudio");
         final currentCardId = widget.ids[_currentIndex];
         final base64correctAudio = widget.correctAudios[_currentIndex];
         print("정답 : $base64correctAudio");
