@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 
 class MissedCardsScreen extends StatefulWidget {
@@ -81,7 +83,28 @@ class _MissedCardsScreenState extends State<MissedCardsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Saved Cards')),
+      appBar: AppBar(
+        scrolledUnderElevation: 0, // 스크롤 엘레베이션 0
+        backgroundColor: const Color(0xFFF2EBE3),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: bam,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+        title: Text(
+          'Missed Cards',
+          style: TextStyle(
+            color: bam,
+          ),
+        ),
+      ),
       body: isLoading
           ? Center(
               child: CircularProgressIndicator(
@@ -97,11 +120,11 @@ class _MissedCardsScreenState extends State<MissedCardsScreen> {
                 )
               : GridView.builder(
                   padding: const EdgeInsets.all(15),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 15,
-                    mainAxisSpacing: 15,
-                    childAspectRatio: 6 / 4.3,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1,
+                    crossAxisSpacing: 15.w,
+                    mainAxisSpacing: 15.w,
+                    childAspectRatio: 3.3 / 1,
                   ),
                   itemCount: idList.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -120,30 +143,137 @@ class _MissedCardsScreenState extends State<MissedCardsScreen> {
                               topRight: Radius.circular(12),
                             ),
                           ),
-                          child: Stack(
-                            children: [
-                              // 카드의 내용 표시
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(
-                                    child: Text(
-                                      textList[index],
-                                      style: TextStyle(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold,
-                                          color: weakCardList[index]
-                                              ? const Color.fromARGB(
-                                                  236, 255, 85, 85)
-                                              : Colors.black),
+                          child: (idList[index] >= 1684) // 문장이 아닌 단어이면
+                              ? Stack(
+                                  children: [
+                                    // 카드의 내용 표시
+                                    SizedBox(
+                                      width: 360.w,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              textList[index],
+                                              style: TextStyle(
+                                                  fontSize: 20.h,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: weakCardList[
+                                                          index] // 취약음이면
+                                                      ? const Color.fromARGB(
+                                                          236, 255, 85, 85)
+                                                      : Colors.black),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Text(cardPronunciationList[index],
-                                      style: const TextStyle(fontSize: 18)),
-                                ],
-                              ),
-                            ],
-                          ),
+                                    Positioned(
+                                      top: 0.2.h,
+                                      right: 0.2.w,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          bookmarkList[index]
+                                              ? Icons.bookmark
+                                              : Icons.bookmark_border_sharp,
+                                          color: bookmarkList[index]
+                                              ? const Color(0xFFF26647)
+                                              : Colors.grey[400],
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            bookmarkList[index] =
+                                                !bookmarkList[index];
+                                          });
+                                          updateBookmarkStatus(
+                                              idList[index],
+                                              bookmarkList[
+                                                  index]); // 북마크 상태 서버에 업데이트
+                                        },
+                                      ),
+                                    ),
+                                    Positioned.fill(
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: LinearProgressIndicator(
+                                          value: cardScoreList[index]
+                                              .toDouble(), // 현재 값 / 최대 값
+                                          backgroundColor: Colors.grey[200],
+                                          valueColor:
+                                              const AlwaysStoppedAnimation<
+                                                      Color>(
+                                                  Color.fromARGB(
+                                                      255, 255, 129, 101)),
+                                          minHeight: 6.h, // 게이지바의 높이를 조정합니다.
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Stack(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0.w),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              textList[index],
+                                              style: TextStyle(
+                                                fontSize: 20.h,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 0.2.h,
+                                      right: 0.2.w,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          bookmarkList[index]
+                                              ? Icons.bookmark
+                                              : Icons.bookmark_outline_sharp,
+                                          color: bookmarkList[index]
+                                              ? const Color(0xFFF26647)
+                                              : Colors.grey[400],
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            bookmarkList[index] =
+                                                !bookmarkList[index];
+                                          });
+                                          updateBookmarkStatus(
+                                              idList[index],
+                                              bookmarkList[
+                                                  index]); // 북마크 상태 서버에 업데이트
+                                        },
+                                      ),
+                                    ),
+                                    Positioned.fill(
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: LinearProgressIndicator(
+                                          value: cardScoreList[index]
+                                              .toDouble(), // 현재 값 / 최대 값
+                                          backgroundColor: Colors.grey[200],
+                                          valueColor:
+                                              const AlwaysStoppedAnimation<
+                                                      Color>(
+                                                  Color.fromARGB(
+                                                      255, 255, 129, 101)),
+                                          minHeight: 6.h, // 게이지바의 높이를 조정합니다.
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                         ),
                       ),
                     );
