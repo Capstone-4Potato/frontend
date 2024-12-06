@@ -3,7 +3,7 @@ import 'package:flutter_application_1/new_learning_coures/unit_subtitle_class.da
 class Unit {
   final int id;
   final int totalNumber;
-  final int completedNumber;
+  int completedNumber;
   final String level;
   final String title;
   final String subtitle;
