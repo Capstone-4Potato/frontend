@@ -3,7 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/function.dart';
+import 'package:flutter_application_1/home/sentecnes/sentencelearningcard.dart';
+import 'package:flutter_application_1/home/syllables/syllabelearningcard.dart';
+import 'package:flutter_application_1/home/words/wordlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
@@ -132,16 +136,66 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
           : GridView.builder(
               padding: EdgeInsets.all(15.w),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 15.w,
-                mainAxisSpacing: 15.h,
-                childAspectRatio: 6 / 4.3,
+                crossAxisCount: widget.level < 16 ? 2 : 1,
+                crossAxisSpacing: widget.level < 16 ? 15.w : 12.w,
+                mainAxisSpacing: widget.level < 16 ? 15.h : 4.h,
+                childAspectRatio: widget.level < 16 || widget.level == 25
+                    ? 6 / 4.3
+                    : 10 / 3.4,
               ),
               itemCount: idList.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () {
-                    // 추후 추가
+                    // 학습 카드 선택 시, 해당 카드의 올바른 발음 음성 불러오고 해당 카드 화면으로 이동
+                    TtsService.fetchCorrectAudio(idList[index]).then((_) {
+                      print('Audio fetched and saved successfully.');
+                    });
+                    if (widget.level == 1) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SyllableLearningCard(
+                            currentIndex: index,
+                            cardIds: idList,
+                            texts: textList,
+                            translations: engTranslationList,
+                            engpronunciations: engPronunciationList,
+                            explanations: explanationList,
+                            pictures: pictureUrlList,
+                            bookmarked: bookmarkList,
+                          ),
+                        ),
+                      );
+                    } else if (widget.level < 16) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WordLearningCard(
+                            currentIndex: index,
+                            cardIds: idList,
+                            texts: textList,
+                            translations: engTranslationList,
+                            engpronunciations: engPronunciationList,
+                            bookmarked: bookmarkList,
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SentenceLearningCard(
+                            currentIndex: index,
+                            cardIds: idList,
+                            contents: textList,
+                            pronunciations: engTranslationList,
+                            engpronunciations: engPronunciationList,
+                            bookmarked: bookmarkList,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   child: Opacity(
                     // 카드의 학습 완료 정도에 따라 투명도 조절
@@ -154,66 +208,140 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                           topRight: Radius.circular(12.r),
                         ),
                       ),
-                      child: Stack(
-                        children: [
-                          // 카드의 내용 표시
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Text(
-                                  textList[index],
-                                  style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold,
-                                      color: weakCardList[index]
-                                          ? const Color.fromARGB(
-                                              236, 255, 85, 85)
-                                          : Colors.black),
+                      child: (widget.level < 16)
+                          ? Stack(
+                              children: [
+                                // 카드의 내용 표시
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        textList[index],
+                                        style: TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold,
+                                            color: weakCardList[index] // 취약음이면
+                                                ? const Color.fromARGB(
+                                                    236, 255, 85, 85)
+                                                : Colors.black),
+                                      ),
+                                    ),
+                                    Text(
+                                      "[${engPronunciationList[index]}]",
+                                      style: TextStyle(fontSize: 18.h),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Text(
-                                "[${engPronunciationList[index]}]",
-                                style: TextStyle(fontSize: 18.h),
-                              ),
-                            ],
-                          ),
-                          Positioned(
-                            top: 0.2.h,
-                            right: 0.2.w,
-                            child: IconButton(
-                              icon: Icon(
-                                bookmarkList[index]
-                                    ? Icons.bookmark
-                                    : Icons.bookmark_border_sharp,
-                                color: bookmarkList[index]
-                                    ? const Color(0xFFF26647)
-                                    : Colors.grey[400],
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  bookmarkList[index] = !bookmarkList[index];
-                                });
-                                updateBookmarkStatus(idList[index],
-                                    bookmarkList[index]); // 북마크 상태 서버에 업데이트
-                              },
+                                Positioned(
+                                  top: 0.2.h,
+                                  right: 0.2.w,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      bookmarkList[index]
+                                          ? Icons.bookmark
+                                          : Icons.bookmark_border_sharp,
+                                      color: bookmarkList[index]
+                                          ? const Color(0xFFF26647)
+                                          : Colors.grey[400],
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        bookmarkList[index] =
+                                            !bookmarkList[index];
+                                      });
+                                      updateBookmarkStatus(
+                                          idList[index],
+                                          bookmarkList[
+                                              index]); // 북마크 상태 서버에 업데이트
+                                    },
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: LinearProgressIndicator(
+                                      value: cardScoreList[index]
+                                          .toDouble(), // 현재 값 / 최대 값
+                                      backgroundColor: Colors.grey[200],
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                              Color.fromARGB(
+                                                  255, 255, 129, 101)),
+                                      minHeight: 6, // 게이지바의 높이를 조정합니다.
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Stack(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0.w),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          textList[index],
+                                          style: TextStyle(
+                                            fontSize: 20.h,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          engTranslationList[index],
+                                          style: TextStyle(fontSize: 16.h),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 0.2.h,
+                                  right: 0.2.w,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      bookmarkList[index]
+                                          ? Icons.bookmark
+                                          : Icons.bookmark_outline_sharp,
+                                      color: bookmarkList[index]
+                                          ? const Color(0xFFF26647)
+                                          : Colors.grey[400],
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        bookmarkList[index] =
+                                            !bookmarkList[index];
+                                      });
+                                      updateBookmarkStatus(
+                                          idList[index],
+                                          bookmarkList[
+                                              index]); // 북마크 상태 서버에 업데이트
+                                    },
+                                  ),
+                                ),
+                                Positioned.fill(
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: LinearProgressIndicator(
+                                      value: cardScoreList[index]
+                                          .toDouble(), // 현재 값 / 최대 값
+                                      backgroundColor: Colors.grey[200],
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                              Color.fromARGB(
+                                                  255, 255, 129, 101)),
+                                      minHeight: 6.h, // 게이지바의 높이를 조정합니다.
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Positioned.fill(
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: LinearProgressIndicator(
-                                value: cardScoreList[index]
-                                    .toDouble(), // 현재 값 / 최대 값
-                                backgroundColor: Colors.grey[200],
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                    Color.fromARGB(255, 255, 129, 101)),
-                                minHeight: 6, // 게이지바의 높이를 조정합니다.
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                 );

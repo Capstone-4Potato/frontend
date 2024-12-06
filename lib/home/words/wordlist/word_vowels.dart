@@ -169,8 +169,8 @@ class _WordVowelsState extends State<WordVowels> {
                   builder: (context) => WordLearningCard(
                     currentIndex: index,
                     cardIds: displayCardIds,
-                    contents: displayContents,
-                    pronunciations: displayPronunciations,
+                    texts: displayContents,
+                    translations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
                     bookmarked: displayBookmarked,
                   ),

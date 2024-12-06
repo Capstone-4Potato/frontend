@@ -15,8 +15,8 @@ import 'package:flutter_sound/flutter_sound.dart';
 class WordLearningCard extends StatefulWidget {
   int currentIndex;
   final List<int> cardIds;
-  final List<String> contents;
-  final List<String> pronunciations;
+  final List<String> texts;
+  final List<String> translations;
   final List<String> engpronunciations;
   final List<bool> bookmarked;
 
@@ -24,8 +24,8 @@ class WordLearningCard extends StatefulWidget {
     Key? key,
     required this.currentIndex,
     required this.cardIds,
-    required this.contents,
-    required this.pronunciations,
+    required this.texts,
+    required this.translations,
     required this.engpronunciations,
     required this.bookmarked,
   }) : super(key: key);
@@ -159,8 +159,8 @@ class _WordLearningCardState extends State<WordLearningCard> {
         builder: (context) => WordLearningCard(
           currentIndex: newIndex,
           cardIds: widget.cardIds,
-          contents: widget.contents,
-          pronunciations: widget.pronunciations,
+          texts: widget.texts,
+          translations: widget.translations,
           engpronunciations: widget.engpronunciations,
           bookmarked: widget.bookmarked,
         ),
@@ -198,8 +198,8 @@ class _WordLearningCardState extends State<WordLearningCard> {
     double cardWidth = MediaQuery.of(context).size.width * 0.70;
     double cardHeight = MediaQuery.of(context).size.height * 0.27;
 
-    String currentContent = widget.contents[widget.currentIndex];
-    String currentPronunciation = widget.pronunciations[widget.currentIndex];
+    String currentContent = widget.texts[widget.currentIndex];
+    String currentTranslation = widget.translations[widget.currentIndex];
     String currentEngPronunciation =
         widget.engpronunciations[widget.currentIndex];
 
@@ -257,11 +257,11 @@ class _WordLearningCardState extends State<WordLearningCard> {
               print('Error fetching audio: $error');
             });
           },
-          itemCount: widget.contents.length,
+          itemCount: widget.texts.length,
           itemBuilder: (context, index) {
-            String currentContent = widget.contents[widget.currentIndex];
+            String currentContent = widget.texts[widget.currentIndex];
             String currentPronunciation =
-                widget.pronunciations[widget.currentIndex];
+                widget.translations[widget.currentIndex];
             String currentEngPronunciation =
                 widget.engpronunciations[widget.currentIndex];
 
@@ -308,7 +308,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
                                   fontSize: 36, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              currentEngPronunciation,
+                              "[$currentEngPronunciation]",
                               style: TextStyle(
                                   fontSize: 22, color: Colors.grey[700]),
                             ),
@@ -347,21 +347,20 @@ class _WordLearningCardState extends State<WordLearningCard> {
                       IconButton(
                         icon: const Icon(Icons.arrow_forward_ios),
                         color: const Color(0xFFF26647),
-                        onPressed:
-                            widget.currentIndex < widget.contents.length - 1
-                                ? () {
-                                    int nextIndex = widget.currentIndex + 1;
-                                    navigateToCard(nextIndex);
-                                    TtsService.fetchCorrectAudio(
-                                            widget.cardIds[nextIndex])
-                                        .then((_) {
-                                      print(
-                                          'Audio fetched and saved successfully.');
-                                    }).catchError((error) {
-                                      print('Error fetching audio: $error');
-                                    });
-                                  }
-                                : null,
+                        onPressed: widget.currentIndex < widget.texts.length - 1
+                            ? () {
+                                int nextIndex = widget.currentIndex + 1;
+                                navigateToCard(nextIndex);
+                                TtsService.fetchCorrectAudio(
+                                        widget.cardIds[nextIndex])
+                                    .then((_) {
+                                  print(
+                                      'Audio fetched and saved successfully.');
+                                }).catchError((error) {
+                                  print('Error fetching audio: $error');
+                                });
+                              }
+                            : null,
                       ),
                     ],
                   ),

@@ -189,8 +189,8 @@ class _SyllableConsonantsState extends State<SyllableConsonants> {
                   builder: (context) => SyllableLearningCard(
                     currentIndex: index,
                     cardIds: displayCardIds,
-                    contents: displayContents,
-                    pronunciations: displayPronunciations,
+                    texts: displayContents,
+                    translations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
                     explanations: displayExplanations,
                     pictures: displayPictures,

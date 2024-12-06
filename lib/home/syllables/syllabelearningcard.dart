@@ -20,8 +20,8 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 class SyllableLearningCard extends StatefulWidget {
   int currentIndex;
   final List<int> cardIds;
-  final List<String> contents;
-  final List<String> pronunciations;
+  final List<String> texts;
+  final List<String> translations;
   final List<String> engpronunciations;
   final List<String> explanations;
   final List<String> pictures;
@@ -31,8 +31,8 @@ class SyllableLearningCard extends StatefulWidget {
     Key? key,
     required this.currentIndex,
     required this.cardIds,
-    required this.contents,
-    required this.pronunciations,
+    required this.texts,
+    required this.translations,
     required this.engpronunciations,
     required this.explanations,
     required this.pictures,
@@ -207,8 +207,8 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         builder: (context) => SyllableLearningCard(
           currentIndex: newIndex,
           cardIds: widget.cardIds,
-          contents: widget.contents,
-          pronunciations: widget.pronunciations,
+          texts: widget.texts,
+          translations: widget.translations,
           engpronunciations: widget.engpronunciations,
           explanations: widget.explanations,
           pictures: widget.pictures,
@@ -304,11 +304,11 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
             print('Error fetching audio: $error');
           });
         },
-        itemCount: widget.contents.length,
+        itemCount: widget.texts.length,
         itemBuilder: (context, index) {
-          String currentContent = widget.contents[widget.currentIndex];
+          String currentContent = widget.texts[widget.currentIndex];
           String currentPronunciation =
-              widget.pronunciations[widget.currentIndex];
+              widget.translations[widget.currentIndex];
           String currentEngPronunciation =
               widget.engpronunciations[widget.currentIndex];
           String currentExplanation = widget.explanations[widget.currentIndex];
@@ -357,7 +357,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                                 fontSize: 38, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            currentEngPronunciation,
+                            "[$currentEngPronunciation]",
                             style: TextStyle(
                                 fontSize: 24, color: Colors.grey[700]),
                           ),
@@ -398,8 +398,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                     IconButton(
                       icon: const Icon(Icons.arrow_forward_ios),
                       color: const Color(0xFFF26647),
-                      onPressed: widget.currentIndex <
-                              widget.contents.length - 1
+                      onPressed: widget.currentIndex < widget.texts.length - 1
                           ? () {
                               int nextIndex = widget.currentIndex + 1;
                               navigateToCard(nextIndex); // 다음 카드로 이동

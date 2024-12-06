@@ -167,8 +167,8 @@ class _WordFinalConsonantsState extends State<WordFinalConsonants> {
                   builder: (context) => WordLearningCard(
                     currentIndex: index,
                     cardIds: displayCardIds,
-                    contents: displayContents,
-                    pronunciations: displayPronunciations,
+                    texts: displayContents,
+                    translations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
                     bookmarked: displayBookmarked,
                   ),
