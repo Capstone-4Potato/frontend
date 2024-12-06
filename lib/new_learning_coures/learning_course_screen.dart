@@ -419,6 +419,7 @@ class UnitItem extends StatelessWidget {
                   MaterialPageRoute<void>(
                     builder: (BuildContext context) => LearningCourseCardList(
                       level: id,
+                      subTitle: subtitle,
                     ),
                   ),
                 );
@@ -501,6 +502,7 @@ class UnitItem extends StatelessWidget {
                         builder: (BuildContext context) =>
                             LearningCourseCardList(
                           level: id,
+                          subTitle: subtitle,
                         ),
                       ),
                     );
@@ -577,6 +579,7 @@ class UnitItem extends StatelessWidget {
                         builder: (BuildContext context) =>
                             LearningCourseCardList(
                           level: id,
+                          subTitle: subtitle,
                         ),
                       ),
                     );

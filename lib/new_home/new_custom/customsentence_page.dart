@@ -581,22 +581,22 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                           ),
               ),
               const SizedBox(height: 16),
-              // ElevatedButton(
-              //   onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: const Color(0xfff26647),
-              //     padding:
-              //         const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              //     textStyle: const TextStyle(
-              //       fontSize: 16,
-              //       fontWeight: FontWeight.w500,
-              //     ),
-              //   ),
-              //   child: const Text(
-              //     'Go to Learning',
-              //     style: TextStyle(color: Colors.white),
-              //   ),
-              // ),
+              ElevatedButton(
+                onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xfff26647),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                child: const Text(
+                  'Go to Learning',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
               const SizedBox(height: 30),
             ],
           ),
