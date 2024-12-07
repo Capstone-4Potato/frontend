@@ -23,29 +23,22 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
   List<String> levels = ['Beginner', 'Intermediate', 'Advanced'];
   int? value = 0; // 선택된 ChoiceChip 인덱스
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   bool isLoading = false;
+
+  // 각 Container에 대한 GlobalKey
+  final GlobalKey _beginnerKey = GlobalKey();
+  final GlobalKey _intermediateKey = GlobalKey();
+  final GlobalKey _advancedKey = GlobalKey();
+
+  // AppBar 아래 Header Container Key
+  final GlobalKey _headerKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _getLearningCourseList();
-    // ScrollController 초기화 및 리스너 등록
-    _scrollController = ScrollController()
-      ..addListener(() {
-        final scrollPosition = _scrollController.offset;
-
-        setState(() {
-          if (scrollPosition >= 0 && scrollPosition < 620) {
-            value = 0; // Beginner
-          } else if (scrollPosition >= 620 && scrollPosition < 1480) {
-            value = 1; // Intermediate
-          } else if (scrollPosition >= 1480) {
-            value = 2; // Advanced
-          }
-        });
-      });
   }
 
   @override
@@ -56,30 +49,50 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
   }
 
   /// 특정 인덱스로 스크롤 이동 함수
-  void _scrollToIndex(int index) {
-    // 컨트롤러가 연결되어 있는지 확인
-    if (_scrollController.hasClients) {
-      // 특정 섹션의 위치를 계산
-      double offset;
-      switch (index) {
-        case 0:
-          offset = 0;
-          break;
-        case 1:
-          offset = 620.h;
-          break;
-        case 2:
-          offset = 1480.h;
-          break;
-        default:
-          offset = 0;
-      }
-      _scrollController.animateTo(
-        offset,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
+  void _scrollToLevel(int index) {
+    GlobalKey targetKey;
+
+    switch (index) {
+      case 0:
+        targetKey = _beginnerKey;
+        break;
+      case 1:
+        targetKey = _intermediateKey;
+        break;
+      case 2:
+        targetKey = _advancedKey;
+        break;
+      default:
+        return;
     }
+
+    // 해당 GlobalKey의 RenderObject 위치 계산
+    final RenderBox? renderBox =
+        targetKey.currentContext?.findRenderObject() as RenderBox?;
+    final position = renderBox?.localToGlobal(
+          Offset.zero,
+          ancestor: context.findRenderObject(),
+        ) ??
+        Offset.zero;
+
+    // AppBar 높이 계산 (직접 선언)
+    const double appBarHeight = kToolbarHeight; // 기본 AppBar 높이
+
+    // Header Container 높이 계산
+    final headerRenderBox =
+        _headerKey.currentContext?.findRenderObject() as RenderBox?;
+    final headerHeight = headerRenderBox?.size.height ?? 0;
+
+    // 스크롤 애니메이션 수행
+    _scrollController.animateTo(
+      position.dy +
+          _scrollController.offset -
+          appBarHeight -
+          headerHeight -
+          100.h,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   /// 레벨 별 학습 현황 조회
@@ -205,6 +218,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
       body: Column(
         children: [
           Padding(
+            key: _headerKey,
             padding: EdgeInsets.only(top: 18.0.h, bottom: 15.0.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -246,8 +260,8 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                       autofocus: true,
                       onSelected: (bool selected) {
                         setState(() {
-                          value = index;
-                          _scrollToIndex(index);
+                          value = selected ? index : value; // 선택된 상태 업데이트
+                          _scrollToLevel(index);
                         });
                       },
                     );
@@ -305,6 +319,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                                     4,
                                     (index) {
                                       return UnitItem(
+                                        key: index == 0 ? _beginnerKey : null,
                                         id: _units[index].id,
                                         title: _units[index].title,
                                         subtitle: _units[index].subtitle,
@@ -328,6 +343,9 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                                     (index) {
                                       final unit = _units.sublist(4, 11)[index];
                                       return UnitItem(
+                                        key: index == 0
+                                            ? _intermediateKey
+                                            : null,
                                         id: unit.id,
                                         title: unit.title,
                                         subtitle: unit.subtitle,
@@ -362,6 +380,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                                       final unit =
                                           _units.sublist(11, 18)[index];
                                       return UnitItem(
+                                        key: index == 0 ? _advancedKey : null,
                                         id: unit.id,
                                         title: unit.title,
                                         subtitle: unit.subtitle,
