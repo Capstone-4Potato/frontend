@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart' as audioplayers;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/syllables/fetchimage.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_application_1/learninginfo/study_info_page.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/updatecardweaksound.dart';
+import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
@@ -156,7 +158,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         } else {
           setState(() {
             _isLoading = false; // 로딩 종료
-            _showUploadErrorDialog(); // 오류 다이얼로그 표시
+            showErrorDialog(); // 오류 다이얼로그 표시
           });
         }
       }
@@ -227,19 +229,19 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
             } else {
               print(
                   'File upload failed after token refresh with status: ${retryResponse.statusCode}');
-              _showUploadErrorDialog();
+              showErrorDialog();
             }
           } else {
             print('Failed to refresh access token');
-            _showUploadErrorDialog();
+            showErrorDialog();
           }
         } else {
           print('File upload failed with status: ${response.statusCode}');
-          _showUploadErrorDialog();
+          showErrorDialog();
         }
       } catch (e) {
         print('Error uploading file: $e');
-        _showUploadErrorDialog();
+        showErrorDialog();
       }
     }
   }
@@ -307,32 +309,17 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     );
   }
 
-  void _showUploadErrorDialog() {
-    if (mounted) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Error'),
-            content: const Text(
-              'Please try recording again.',
-              style: TextStyle(fontSize: 18),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text(
-                  'OK',
-                  style: TextStyle(color: Color(0xFFF26647), fontSize: 20),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+  // 오류 다이얼로그 표시
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final double height = MediaQuery.of(context).size.height / 852;
+        final double width = MediaQuery.of(context).size.width / 393;
+
+        return RecordingErrorDialog(width: width, height: height);
+      },
+    );
   }
 
   void _showCompletionDialog() async {
@@ -522,10 +509,13 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                         ),
                       ),
                       _isImageLoading // 이미지 로딩 중 표시
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 300,
                               height: 250,
-                              child: Center(child: CircularProgressIndicator()))
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: primary,
+                              )))
                           : Image.memory(
                               _imageData!,
                               fit: BoxFit.contain,

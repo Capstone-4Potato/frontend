@@ -152,6 +152,9 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
   Future<void> loadCardList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? savedCardIdList = prefs.getStringList('cardIdList');
+    setState(() {
+      isLoading = true;
+    });
 
     if (savedCardIdList != null && savedCardIdList.isNotEmpty) {
       // 카드 리스트가 이미 저장되어 있으면, 해당 리스트를 int 리스트로 변환
@@ -165,6 +168,9 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
       // 카드 리스트가 없으면 새로 요청하여 저장
       cardList = await fetchTodayCourse();
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -176,10 +182,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("Today's Course!"),
-      // ),
-      body: isLoading
+      body: isLoading || cardDetailsList.length < 10
           ? Center(
               child: CircularProgressIndicator(
                 color: primary,
