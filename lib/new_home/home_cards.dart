@@ -163,8 +163,6 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height / 852;
-    double width = MediaQuery.of(context).size.width / 392;
     List days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
     return Column(
@@ -173,39 +171,39 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
         Text(
           "Today's Goal",
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 12.h,
             color: bam,
           ),
         ),
         Container(
-          height: 5 * height,
+          height: 5.h,
         ),
         Row(
           children: [
             Container(
-              width: 246,
-              height: 13 * height,
+              width: 246.w,
+              height: 13.h,
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 235, 235, 235),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Container(
-                height: 13 * height,
-                width: 13 / 20 * 246,
+                height: 13.h,
+                width: 13 / 20 * 246.w,
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   color: primary,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomLeft: Radius.circular(20)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.r),
+                      bottomLeft: Radius.circular(20.r)),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 9.0),
+              padding: EdgeInsets.only(left: 9.0.w),
               child: Container(
-                padding: const EdgeInsets.only(top: 3.0),
+                padding: EdgeInsets.only(top: 3.0.h),
                 decoration: const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -218,15 +216,15 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                   '13/20',
                   style: TextStyle(
                     color: bam,
-                    fontSize: 14,
+                    fontSize: 14.h,
                   ),
                 ),
               ),
             ),
-            const Text(
+            Text(
               '▼',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 14.h,
               ),
             ),
           ],
@@ -248,17 +246,17 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                 builder: (context) {
                   return Dialog(
                     backgroundColor: Colors.transparent,
-                    insetPadding: EdgeInsets.symmetric(horizontal: 20 * width),
+                    insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Container(
-                      height: 404 * height,
-                      width: 353 * width,
+                      height: 404.h,
+                      width: 353.w,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 24.0 * width, vertical: 10.0 * height),
+                            horizontal: 24.0.w, vertical: 10.0.h),
                         child: isLoading
                             ? Center(
                                 child: CircularProgressIndicator(
@@ -274,7 +272,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                     border: Border(
                                       bottom: BorderSide(
                                         color: primary,
-                                        width: 2,
+                                        width: 2.w,
                                       ),
                                     ),
                                   ),
@@ -284,15 +282,15 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                         .toUpperCase();
                                     return dowText;
                                   },
-                                  weekdayStyle: const TextStyle(
-                                    color: Color(0xFF666560),
+                                  weekdayStyle: TextStyle(
+                                    color: const Color(0xFF666560),
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 12,
+                                    fontSize: 12.h,
                                   ),
-                                  weekendStyle: const TextStyle(
-                                    color: Color(0xFF666560),
+                                  weekendStyle: TextStyle(
+                                    color: const Color(0xFF666560),
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 12,
+                                    fontSize: 12.h,
                                   ),
                                 ),
                                 daysOfWeekHeight: 40,
@@ -306,20 +304,20 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                         DateFormat("MMM, yyyy").format(date);
                                     return title;
                                   },
-                                  titleTextStyle: const TextStyle(
+                                  titleTextStyle: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 16,
+                                    fontSize: 16.h,
                                     fontWeight: FontWeight.w600,
                                   ),
-                                  leftChevronIcon: const Icon(
+                                  leftChevronIcon: Icon(
                                     Icons.arrow_left,
                                     color: Colors.black,
-                                    size: 30,
+                                    size: 30.h,
                                   ),
-                                  rightChevronIcon: const Icon(
+                                  rightChevronIcon: Icon(
                                     Icons.arrow_right,
                                     color: Colors.black,
-                                    size: 30,
+                                    size: 30.h,
                                   ),
                                 ),
                                 calendarBuilders: CalendarBuilders(
@@ -331,8 +329,8 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                height: 30 * height,
-                                                width: 30 * width,
+                                                height: 30.h,
+                                                width: 30.h,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: primary,
@@ -340,9 +338,9 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 ),
                                                 child: Text(
                                                   day.day.toString(),
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 14,
+                                                    fontSize: 14.h,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
@@ -354,8 +352,8 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                height: 30 * height,
-                                                width: 30 * width,
+                                                height: 30.h,
+                                                width: 30.w,
                                                 alignment: Alignment.center,
                                                 decoration: const BoxDecoration(
                                                   color: Colors.white,
@@ -380,8 +378,8 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                height: 30 * height,
-                                                width: 30 * width,
+                                                height: 30.h,
+                                                width: 30.h,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: primary,
@@ -407,8 +405,8 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                height: 30 * height,
-                                                width: 30 * width,
+                                                height: 30.h,
+                                                width: 30.w,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
@@ -420,9 +418,9 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 ),
                                                 child: Text(
                                                   day.day.toString(),
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: 14,
+                                                    fontSize: 14.h,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
@@ -437,8 +435,8 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                height: 30 * height,
-                                                width: 30 * width,
+                                                height: 30.h,
+                                                width: 30.w,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color:
@@ -447,9 +445,9 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 ),
                                                 child: Text(
                                                   day.day.toString(),
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 14,
+                                                    fontSize: 14.h,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
@@ -461,8 +459,8 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                height: 30 * height,
-                                                width: 30 * width,
+                                                height: 30.h,
+                                                width: 30.w,
                                                 alignment: Alignment.center,
                                                 decoration: const BoxDecoration(
                                                   color: Colors.white,
@@ -470,9 +468,10 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 ),
                                                 child: Text(
                                                   day.day.toString(),
-                                                  style: const TextStyle(
-                                                    color: Color(0xFFC0C0C0),
-                                                    fontSize: 14,
+                                                  style: TextStyle(
+                                                    color:
+                                                        const Color(0xFFC0C0C0),
+                                                    fontSize: 14.h,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
@@ -489,7 +488,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
           },
           child: Center(
             child: Wrap(
-              spacing: 11.0,
+              spacing: 11.0.w,
               children: List.generate(7, (index) {
                 return widget.weeklyAttendance[index] == "F" // 출석 안했으면
                     ? NoStamp(
@@ -525,14 +524,14 @@ class NoStamp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      height: 32,
-      width: 32,
+      height: 32.h,
+      width: 32.w,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(100),
         border: Border.all(
           color: const Color.fromARGB(255, 213, 213, 213),
-          width: 3,
+          width: 3.w,
         ),
       ),
       child: Text(
@@ -561,14 +560,14 @@ class Stamp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      height: 32,
-      width: 32,
+      height: 32.h,
+      width: 32.w,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(100),
         border: Border.all(
           color: primary,
-          width: 3,
+          width: 3.w,
         ),
       ),
       child: Text(
@@ -591,9 +590,6 @@ class ContentTodayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height / 852;
-    double width = MediaQuery.of(context).size.width / 392;
-
     return Stack(
       children: [
         Column(
@@ -603,14 +599,14 @@ class ContentTodayCard extends StatelessWidget {
             Text(
               "Today's Card",
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.h,
                 color: bam,
               ),
             ),
             Text(
               dailyWord!,
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 30.h,
                 color: bam,
               ),
             ),
@@ -618,12 +614,11 @@ class ContentTodayCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: 200 * width,
+                  width: 200.w,
                   child: Text(
                     "[$dailyWordPronunciation]",
                     style: TextStyle(
-                      fontSize: 12,
-                      //fontSize: 18,
+                      fontSize: 12.h,
                       color: bam,
                     ),
                     softWrap: true,
@@ -632,12 +627,12 @@ class ContentTodayCard extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: primary,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(20.r),
                   ),
-                  child: const Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-                    child: Text(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 14.0.w, vertical: 8.0.h),
+                    child: const Text(
                       'Try it →',
                       style: TextStyle(
                         color: Colors.white,
@@ -668,7 +663,7 @@ class ContentCustomCard extends StatelessWidget {
             Text(
               "Say your own\nCustom sentence!",
               style: TextStyle(
-                fontSize: 21,
+                fontSize: 21.h,
                 color: bam,
               ),
             ),
@@ -725,7 +720,7 @@ class ContentLearningCourseCard extends StatelessWidget {
             Text(
               "Let's go to study!",
               style: TextStyle(
-                fontSize: 21,
+                fontSize: 21.h,
                 color: bam,
               ),
             ),
@@ -797,7 +792,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
         Text(
           "Menu",
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 16.h,
             color: bam,
           ),
         ),
@@ -892,12 +887,12 @@ class MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: Divider(
-            height: 1,
-            thickness: 1,
-            color: Color.fromARGB(255, 213, 213, 213),
+            height: 1.h,
+            thickness: 1.w,
+            color: const Color.fromARGB(255, 213, 213, 213),
           ),
         ),
         Row(
@@ -911,13 +906,13 @@ class MenuItem extends StatelessWidget {
                   color: bam,
                 ),
                 Container(
-                  width: 8,
+                  width: 8.w,
                 ),
                 Text(
                   title,
                   style: TextStyle(
                     color: bam,
-                    fontSize: 18,
+                    fontSize: 18.h,
                   ),
                 ),
               ],
@@ -926,24 +921,24 @@ class MenuItem extends StatelessWidget {
               children: [
                 showCount
                     ? Container(
-                        width: 26,
-                        height: 26,
+                        width: 26.w,
+                        height: 26.h,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: progress_color,
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
                           "$count",
-                          style: const TextStyle(
-                            color: Color.fromARGB(255, 160, 87, 50),
-                            fontSize: 16,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 160, 87, 50),
+                            fontSize: 16.h,
                           ),
                         ),
                       )
                     : Container(),
                 Container(
-                  width: 15,
+                  width: 15.w,
                 ),
                 GestureDetector(
                   onTap: onTap,

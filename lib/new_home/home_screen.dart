@@ -12,6 +12,7 @@ import 'package:flutter_application_1/new_home/home_cards.dart';
 import 'package:flutter_application_1/new_notification/notification_screen.dart';
 import 'package:flutter_application_1/profile/profile_page.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:http/http.dart' as http;
@@ -157,10 +158,10 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Container(
                 color: primary,
-                height: 60 * height, // appbar size
+                height: 60.h, // appbar size
               ),
               Container(
-                height: 700 * height,
+                height: 700.h,
                 color: primary,
                 child: Stack(
                   children: [
@@ -169,13 +170,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         Container(
                           // 캐릭터와 레벨
                           alignment: Alignment.topCenter,
-                          height: 265 * height,
+                          height: 265.h,
                           color: primary,
                           child: Stack(
                             children: [
                               Center(
                                 child: CircleAvatar(
-                                  radius: 101,
+                                  radius: 101.r,
                                   backgroundColor:
                                       const Color.fromARGB(255, 242, 235, 227),
                                   child: Image.asset(
@@ -184,10 +185,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Center(
                                 child: SimpleCircularProgressBar(
-                                  size: 220,
+                                  size: 220.w,
                                   maxValue: levelExperience!.toDouble(),
-                                  progressStrokeWidth: 6,
-                                  backStrokeWidth: 6,
+                                  progressStrokeWidth: 6.w,
+                                  backStrokeWidth: 6.w,
                                   progressColors: [
                                     progress_color,
                                   ],
@@ -202,16 +203,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 25.0, vertical: 7.0),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 25.0.w, vertical: 7.0.h),
                                       decoration: BoxDecoration(
                                         color: progress_color,
-                                        borderRadius: BorderRadius.circular(25),
+                                        borderRadius:
+                                            BorderRadius.circular(25.r),
                                       ),
                                       child: Text('Level $userLevel'),
                                     ),
                                     Container(
-                                      height: 10 * height,
+                                      height: 10.h,
                                     ),
                                   ],
                                 ),
@@ -238,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: Icon(
                             Icons.notifications,
                             color: bam,
-                            size: 24,
+                            size: 24.sp,
                           ),
                         ),
                         IconButton(
@@ -254,16 +256,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           icon: Icon(
                             Icons.settings,
                             color: bam,
-                            size: 24,
+                            size: 24.sp,
                           ),
                         ),
                       ],
                     ),
                     DraggableScrollableSheet(
                       // 드래그 시트
-                      initialChildSize: 401 / 665 * height,
-                      minChildSize: 400 / 665 * height,
-                      maxChildSize: 665 / 665 * height,
+                      initialChildSize: (401 / 665).h,
+                      minChildSize: (400 / 665).h,
+                      maxChildSize: (665 / 665).h,
                       shouldCloseOnMinExtent: true,
                       expand: true,
                       builder: (BuildContext context,
@@ -272,19 +274,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           controller: scrollController,
                           physics: const ClampingScrollPhysics(),
                           child: Container(
-                              decoration: const BoxDecoration(
-                                color: Color.fromARGB(255, 245, 245, 245),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 245, 245, 245),
                                 borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20.r),
+                                  topRight: Radius.circular(20.r),
                                 ),
                               ),
                               height: MediaQuery.of(context).size.height,
                               child: Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 25.0, vertical: 21.0),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 25.0.w, vertical: 21.0.h),
                                     child: CustomHomeCard(
                                       boxColor: Colors.white,
                                       contents: ContentTodayGoal(
@@ -294,16 +296,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 140 * height,
-                                    width: 360,
+                                    height: 140.h,
+                                    width: 360.w,
                                     child: Swiper(
                                       viewportFraction: 0.95,
                                       scale: 0.9,
                                       autoplay: true,
                                       itemBuilder: (context, index) {
                                         return Container(
-                                            margin: const EdgeInsets.symmetric(
-                                              vertical: 5,
+                                            margin: EdgeInsets.symmetric(
+                                              vertical: 5.h,
                                             ), // 좌우 간격 추가
                                             child: widgetList[index]);
                                       },
@@ -314,14 +316,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             activeColor: primary,
                                             color: const Color.fromARGB(
                                                 255, 235, 235, 235),
-                                            size: 9.0,
-                                            space: 4.0),
+                                            size: 9.0.h,
+                                            space: 4.0.h),
                                       ),
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 25.0, vertical: 23.0),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 25.0.w, vertical: 23.0.h),
                                     child: CustomHomeCard(
                                       boxColor: Colors.white,
                                       contents: ContentTodayMenu(
