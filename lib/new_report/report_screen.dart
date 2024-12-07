@@ -634,6 +634,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                                                           backgroundColor =
                                                                           Colors
                                                                               .white;
+                                                                      print(
+                                                                          index);
                                                                       return Material(
                                                                         color: (_currentPageIndex == 0 && initialConsonants[index]['weak'] == true) ||
                                                                                 (_currentPageIndex == 1 && vowels[index]['weak'] == true) ||

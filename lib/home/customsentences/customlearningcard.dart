@@ -17,7 +17,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 class CustomSentenceLearningCard extends StatefulWidget {
   int currentIndex;
   final List<int> cardIds;
-  final List<String> contents;
+  final List<String> texts;
   final List<String> pronunciations;
   final List<String> engpronunciations;
   final List<bool> bookmarked;
@@ -26,7 +26,7 @@ class CustomSentenceLearningCard extends StatefulWidget {
     Key? key,
     required this.currentIndex,
     required this.cardIds,
-    required this.contents,
+    required this.texts,
     required this.pronunciations,
     required this.engpronunciations,
     required this.bookmarked,
@@ -161,7 +161,7 @@ class _CustomSentenceLearningCardState
         builder: (context) => CustomSentenceLearningCard(
           currentIndex: newIndex,
           cardIds: widget.cardIds,
-          contents: widget.contents,
+          texts: widget.texts,
           pronunciations: widget.pronunciations,
           engpronunciations: widget.engpronunciations,
           bookmarked: widget.bookmarked,
@@ -200,7 +200,7 @@ class _CustomSentenceLearningCardState
     double cardWidth = MediaQuery.of(context).size.width * 0.74;
     double cardHeight = MediaQuery.of(context).size.height * 0.32;
 
-    String currentContent = widget.contents[widget.currentIndex];
+    String currentContent = widget.texts[widget.currentIndex];
     String currentPronunciation = widget.pronunciations[widget.currentIndex];
     String currentEngPronunciation =
         widget.engpronunciations[widget.currentIndex];
@@ -253,7 +253,7 @@ class _CustomSentenceLearningCardState
               _canRecord = false;
             });
           },
-          itemCount: widget.contents.length,
+          itemCount: widget.texts.length,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.only(top: 12),
@@ -345,21 +345,20 @@ class _CustomSentenceLearningCardState
                         icon: const Icon(Icons.arrow_forward_ios),
                         color: const Color(0xFFF26647),
                         iconSize: 20,
-                        onPressed:
-                            widget.currentIndex < widget.contents.length - 1
-                                ? () {
-                                    int nextIndex = widget.currentIndex + 1;
-                                    navigateToCard(nextIndex);
-                                    CustomTtsService.fetchCorrectAudio(
-                                            widget.cardIds[nextIndex])
-                                        .then((_) {
-                                      print(
-                                          'Audio fetched and saved successfully.');
-                                    }).catchError((error) {
-                                      print('Error fetching audio: $error');
-                                    });
-                                  }
-                                : null,
+                        onPressed: widget.currentIndex < widget.texts.length - 1
+                            ? () {
+                                int nextIndex = widget.currentIndex + 1;
+                                navigateToCard(nextIndex);
+                                CustomTtsService.fetchCorrectAudio(
+                                        widget.cardIds[nextIndex])
+                                    .then((_) {
+                                  print(
+                                      'Audio fetched and saved successfully.');
+                                }).catchError((error) {
+                                  print('Error fetching audio: $error');
+                                });
+                              }
+                            : null,
                       ),
                     ],
                   ),

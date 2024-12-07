@@ -154,7 +154,7 @@ class _CustomSentencesState extends State<CustomSentences> {
                   builder: (context) => CustomSentenceLearningCard(
                     currentIndex: index,
                     cardIds: displayCardIds,
-                    contents: displayContents,
+                    texts: displayContents,
                     pronunciations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
                     bookmarked: displayBookmarked,

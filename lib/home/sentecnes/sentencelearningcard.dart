@@ -15,7 +15,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 class SentenceLearningCard extends StatefulWidget {
   int currentIndex;
   final List<int> cardIds;
-  final List<String> contents;
+  final List<String> texts;
   final List<String> pronunciations;
   final List<String> engpronunciations;
   final List<bool> bookmarked;
@@ -24,7 +24,7 @@ class SentenceLearningCard extends StatefulWidget {
     Key? key,
     required this.currentIndex,
     required this.cardIds,
-    required this.contents,
+    required this.texts,
     required this.pronunciations,
     required this.engpronunciations,
     required this.bookmarked,
@@ -159,7 +159,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
         builder: (context) => SentenceLearningCard(
           currentIndex: newIndex,
           cardIds: widget.cardIds,
-          contents: widget.contents,
+          texts: widget.texts,
           pronunciations: widget.pronunciations,
           engpronunciations: widget.engpronunciations,
           bookmarked: widget.bookmarked,
@@ -198,7 +198,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
     double cardWidth = MediaQuery.of(context).size.width * 0.74;
     double cardHeight = MediaQuery.of(context).size.height * 0.28;
 
-    String currentContent = widget.contents[widget.currentIndex];
+    String currentContent = widget.texts[widget.currentIndex];
     String currentPronunciation = widget.pronunciations[widget.currentIndex];
     String currentEngPronunciation =
         widget.engpronunciations[widget.currentIndex];
@@ -257,9 +257,9 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
               print('Error fetching audio: $error');
             });
           },
-          itemCount: widget.contents.length,
+          itemCount: widget.texts.length,
           itemBuilder: (context, index) {
-            String currentContent = widget.contents[widget.currentIndex];
+            String currentContent = widget.texts[widget.currentIndex];
             String currentPronunciation =
                 widget.pronunciations[widget.currentIndex];
             String currentEngPronunciation =
@@ -355,21 +355,20 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
                         icon: const Icon(Icons.arrow_forward_ios),
                         color: const Color(0xFFF26647),
                         iconSize: 20,
-                        onPressed:
-                            widget.currentIndex < widget.contents.length - 1
-                                ? () {
-                                    int nextIndex = widget.currentIndex + 1;
-                                    navigateToCard(nextIndex);
-                                    TtsService.fetchCorrectAudio(
-                                            widget.cardIds[nextIndex])
-                                        .then((_) {
-                                      print(
-                                          'Audio fetched and saved successfully.');
-                                    }).catchError((error) {
-                                      print('Error fetching audio: $error');
-                                    });
-                                  }
-                                : null,
+                        onPressed: widget.currentIndex < widget.texts.length - 1
+                            ? () {
+                                int nextIndex = widget.currentIndex + 1;
+                                navigateToCard(nextIndex);
+                                TtsService.fetchCorrectAudio(
+                                        widget.cardIds[nextIndex])
+                                    .then((_) {
+                                  print(
+                                      'Audio fetched and saved successfully.');
+                                }).catchError((error) {
+                                  print('Error fetching audio: $error');
+                                });
+                              }
+                            : null,
                       ),
                     ],
                   ),

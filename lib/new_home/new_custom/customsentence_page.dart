@@ -3,6 +3,7 @@ import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/home/customsentences/cardlistscreen.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
+import 'package:flutter_application_1/home/customsentences/customlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
@@ -21,7 +22,7 @@ class Sentence {
   final String text;
   final String engTranslation;
   final bool bookmark;
-  String createdAt;
+  String? createdAt;
 
   Sentence({
     required this.id,
@@ -52,6 +53,15 @@ class Sentence {
 
 class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
   final List<Sentence> _sentences = [];
+  List<int> idList = [];
+  List<String> textList = [];
+  List<String> engTranslationList = [];
+  List<String> engPronunciationList = [];
+  List<int> cardScoreList = [];
+  List<bool> weakCardList = [];
+  List<bool> bookmarkList = [];
+  List<String> createdAtList = [];
+
   final TextEditingController _controller = TextEditingController();
   final int _maxSentences = 10;
   final int _maxChars = 25;
@@ -99,12 +109,38 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
       if (response.statusCode == 200) {
         final List<dynamic> responseData =
             json.decode(response.body)['cardList'];
-        setState(() {
-          _sentences.addAll(
-            responseData.map((data) => Sentence.fromJson(data)).toList(),
-          );
-          isLoading = false;
-        });
+
+        if (mounted) {
+          setState(() {
+            _sentences.addAll(
+              responseData.map((data) => Sentence.fromJson(data)).toList(),
+            );
+
+            // 리스트 초기화
+            idList.clear();
+            textList.clear();
+            engTranslationList.clear();
+            engPronunciationList.clear();
+            cardScoreList.clear();
+            weakCardList.clear();
+            bookmarkList.clear();
+            createdAtList.clear();
+            // 변수 리스트에 데이터 저장
+            for (var card in responseData) {
+              idList.add(card['id']);
+              textList.add(card['text']);
+              engTranslationList.add(card['engTranslation']);
+              engPronunciationList.add(card['engPronunciation']);
+              cardScoreList.add(card['cardScore']);
+              weakCardList.add(card['weakCard']);
+              bookmarkList.add(card['bookmark']);
+              createdAtList.add(card['createdAt'] ??
+                  DateTime(2024, 10, 10).toIso8601String()); // 기본값 추가
+            }
+            isLoading = false;
+            print(idList);
+          });
+        }
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh and retry the request
         print('Access token expired. Refreshing token...');
@@ -494,77 +530,101 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 10.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFEBEBEB),
-                                        borderRadius: BorderRadius.circular(8),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.17),
-                                            blurRadius: 5,
-                                            offset: const Offset(2, 2),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CustomSentenceLearningCard(
+                                              currentIndex: index,
+                                              cardIds: idList,
+                                              texts: textList,
+                                              pronunciations:
+                                                  engTranslationList,
+                                              engpronunciations:
+                                                  engPronunciationList,
+                                              bookmarked: bookmarkList,
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                      child: ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 10.0,
-                                                horizontal: 10.0),
-                                        title: Row(
-                                          children: [
-                                            if (isToday(
-                                                _sentences[index].createdAt))
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    right: 10),
-                                                width: 8,
-                                                height: 8,
-                                                decoration: BoxDecoration(
-                                                  color: primary,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  _sentences[index]
-                                                      .engTranslation,
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  _sentences[index].text,
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ],
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFEBEBEB),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black
+                                                  .withOpacity(0.17),
+                                              blurRadius: 5,
+                                              offset: const Offset(2, 2),
                                             ),
                                           ],
                                         ),
-                                        trailing: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.delete,
-                                                color: Colors.black38,
+                                        child: ListTile(
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  vertical: 10.0,
+                                                  horizontal: 10.0),
+                                          title: Row(
+                                            children: [
+                                              if (isToday(
+                                                  _sentences[index].createdAt!))
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  width: 8,
+                                                  height: 8,
+                                                  decoration: BoxDecoration(
+                                                    color: primary,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    _sentences[index]
+                                                        .engTranslation,
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    _sentences[index].text,
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              onPressed: () =>
-                                                  _deleteSentence(index),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
+                                          trailing: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.delete,
+                                                  color: Colors.black38,
+                                                ),
+                                                onPressed: () =>
+                                                    _deleteSentence(index),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -581,23 +641,27 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                           ),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _sentences.isNotEmpty ? _navigateToLearning : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xfff26647),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                child: const Text(
-                  'Go to Learning',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 30),
+              // ElevatedButton(
+              //   onPressed: _sentences.isNotEmpty
+              //       ? () {
+              //           // _sentences[]
+              //         }
+              //       : null,
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: const Color(0xfff26647),
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              //     textStyle: const TextStyle(
+              //       fontSize: 16,
+              //       fontWeight: FontWeight.w500,
+              //     ),
+              //   ),
+              //   child: const Text(
+              //     'Go to Learning',
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              // ),
+              //const SizedBox(height: 30),
             ],
           ),
         ),

@@ -188,7 +188,7 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                           builder: (context) => SentenceLearningCard(
                             currentIndex: index,
                             cardIds: idList,
-                            contents: textList,
+                            texts: textList,
                             pronunciations: engTranslationList,
                             engpronunciations: engPronunciationList,
                             bookmarked: bookmarkList,

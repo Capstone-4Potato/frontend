@@ -7,6 +7,7 @@ import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/custom_icons.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
 import 'package:flutter_application_1/profile/logout/sign_out_social.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
@@ -287,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (statusCode == 200) {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const MainPage()),
+                    MaterialPageRoute(builder: (context) => const HomeNav()),
                     (route) => false,
                   );
                 }
@@ -315,7 +316,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (statusCode == 200) {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const MainPage()),
+                    MaterialPageRoute(builder: (context) => const HomeNav()),
                     (route) => false,
                   );
                 }
@@ -343,7 +344,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (statusCode == 200) {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const MainPage()),
+                    MaterialPageRoute(builder: (context) => const HomeNav()),
                     (route) => false,
                   );
                 }

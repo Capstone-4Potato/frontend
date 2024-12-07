@@ -171,7 +171,7 @@ class _SentenceState extends State<Sentence> {
                   builder: (context) => SentenceLearningCard(
                     currentIndex: index,
                     cardIds: displayCardIds,
-                    contents: displayContents,
+                    texts: displayContents,
                     pronunciations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
                     bookmarked: displayBookmarked,
