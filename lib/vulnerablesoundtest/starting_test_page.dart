@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/gettestlist.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testcard.dart';
 
@@ -128,7 +129,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
                 // skip 하면 메인으로 이동
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => MainPage()),
+                  MaterialPageRoute(builder: (context) => const HomeNav()),
                   (route) => false,
                 );
               },
