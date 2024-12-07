@@ -83,10 +83,6 @@ class _TestScreenState extends State<TestScreen> {
                                 colors: [
                                   bam.withOpacity(0.2),
                                   bam.withOpacity(0.2),
-                                  // Color.fromARGB(55, 249, 149, 179),
-                                  // Color.fromARGB(55, 248, 114, 154),
-                                  // Color.fromARGB(55, 237, 87, 132),
-                                  // Color.fromARGB(155, 237, 52, 108),
                                 ],
                               ),
                             ),
@@ -105,10 +101,6 @@ class _TestScreenState extends State<TestScreen> {
                                 colors: [
                                   primary.withOpacity(0.4),
                                   primary.withOpacity(0.4),
-                                  // Color.fromARGB(55, 149, 232, 249),
-                                  // Color.fromARGB(55, 114, 224, 248),
-                                  // Color.fromARGB(55, 87, 227, 237),
-                                  // Color.fromARGB(55, 52, 234, 237),
                                 ],
                               ),
                             ),
@@ -140,12 +132,6 @@ class _TestScreenState extends State<TestScreen> {
                     ),
                   ),
                 ),
-                // ElevatedButton(
-                //   onPressed: audioData!.huAudioBytes != null
-                //       ? () => playAudio(audioData!.huAudioBytes)
-                //       : null, // hu_audio 데이터를 이용하여 재생
-                //   child: const Text('Play hu_audio'),
-                // ),
               ],
             ),
           );
@@ -278,7 +264,6 @@ class AudioData {
   double huDuration;
   double aiDuration;
 
-  // 생성자
   AudioData({
     required this.huData,
     required this.aiData,
@@ -288,7 +273,6 @@ class AudioData {
     required this.aiDuration,
   });
 
-  // JSON 데이터를 파싱하여 AudioData 객체를 생성하는 팩토리 메서드
   factory AudioData.fromJson(Map<String, dynamic> json) {
     return AudioData(
       huData: (json['hu_data'] as List)
@@ -305,18 +289,16 @@ class AudioData {
   }
 }
 
-// Time과 Amplitude 데이터를 저장할 클래스
 class DataPoint {
   final double time;
   final double amplitude;
 
   DataPoint({required this.time, required this.amplitude});
 
-  // JSON 데이터로부터 DataPoint 객체를 생성하는 팩토리 메서드
   factory DataPoint.fromJson(Map<String, dynamic> json) {
     return DataPoint(
-      time: json['Time (s)'], // JSON의 "Time (s)" 필드를 사용
-      amplitude: json['Amplitude'], // JSON의 "Amplitude" 필드를 사용
+      time: json['Time (s)'],
+      amplitude: json['Amplitude'],
     );
   }
 }

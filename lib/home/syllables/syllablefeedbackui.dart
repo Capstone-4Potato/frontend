@@ -1,14 +1,26 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/feedback_data.dart';
+import 'package:flutter_application_1/function.dart';
+import 'package:flutter_application_1/test_screen.dart';
 import 'package:flutter_application_1/ttsservice.dart';
+import 'package:flutter_application_1/widgets/audio_graph.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+/// 한글자 음절 피드백 창
 class FeedbackUI extends StatefulWidget {
   final FeedbackData feedbackData;
   final String recordedFilePath;
+  String text;
 
-  const FeedbackUI(
-      {super.key, required this.feedbackData, required this.recordedFilePath});
+  FeedbackUI({
+    super.key,
+    required this.feedbackData,
+    required this.recordedFilePath,
+    required this.text,
+  });
 
   @override
   State<FeedbackUI> createState() => _FeedbackUIState();
@@ -32,102 +44,457 @@ class _FeedbackUIState extends State<FeedbackUI> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Dialog(
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.topRight,
-            children: <Widget>[
-              Container(
-                width: constraints.maxWidth * 0.8,
-                height: constraints.maxHeight * 0.45,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: constraints.maxWidth * 0.025),
-                      child: Row(
-                        children: [
-                          SizedBox(width: constraints.maxWidth * 0.025),
-                        ],
-                      ),
+    // recommendCard의 key값 가져오기
+    String recommendCardKey = widget.feedbackData.getRecommendCardKey();
+
+    return widget.feedbackData.userScore == 100
+        ? DraggableScrollableSheet(
+            // 드래그 시트
+            initialChildSize: (734 / 853).h,
+            minChildSize: (700 / 853).h,
+            maxChildSize: (734 / 853).h,
+            shouldCloseOnMinExtent: true,
+            expand: true,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return Material(
+                type: MaterialType.transparency,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFCCEDFF),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.r),
+                      topRight: Radius.circular(30.r),
                     ),
-                    SizedBox(
-                      height: constraints.maxHeight * 0.057,
-                    ),
-                    Expanded(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/graph.png',
-                          ),
-                          Positioned(
-                            left: constraints.maxWidth * 0.0468,
-                            bottom: constraints.minHeight * 0.1712,
-                            child: Image.memory(
-                              widget.feedbackData.userWaveformImage,
-                              width: constraints.maxWidth * 0.6,
-                              height: constraints.maxHeight * 0.14,
+                  ),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 20.0.h),
+                          child: Text.rich(
+                            TextSpan(
+                              text: widget.feedbackData.userScore.toString(),
+                              style: TextStyle(
+                                fontSize: 74.h,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Pretendard',
+                                color: const Color(0xFFF26647),
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: '%',
+                                  style: TextStyle(
+                                    fontSize: 24.h,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Pretendard',
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Positioned(
-                            left: constraints.maxWidth * 0.0468,
-                            bottom: constraints.maxHeight * 0.034,
-                            child: Image.memory(
-                              widget.feedbackData.correctWaveformImage,
-                              width: constraints.maxWidth * 0.6,
-                              height: constraints.maxHeight * 0.14,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
+                      Positioned(
+                        top: 70.h,
+                        child: Image.asset(
+                          'assets/image/feedback_background.png',
+                          width: 395.w,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              right: 16.w,
+                              child: IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 200.0.h),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+                                    Container(
+                                      width: 340.w,
+                                      height: 60.h,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.w),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Correct',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20.h,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Text(
+                                            widget.text,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 32.h,
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: 'Pretendard',
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 42.w,
+                                            height: 42.h,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFF1BEA7),
+                                              shape: BoxShape.circle, // 원형 테두리
+                                              border: Border.all(
+                                                color: const Color(
+                                                    0xFFE87A49), // 테두리 색상
+                                                width: 4.0.w, // 테두리 두께
+                                              ),
+                                            ),
+                                            child: IconButton(
+                                              icon: const Icon(Icons.volume_up),
+                                              color: Colors.black,
+                                              iconSize: 20.0.w,
+                                              onPressed: () {
+                                                TtsService.instance
+                                                    .playCachedAudio(widget
+                                                        .feedbackData.cardId);
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 9.h,
+                                    ),
+                                    Container(
+                                      width: 340.w,
+                                      height: 60.h,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.w),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'User',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20.h,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Text(
+                                            widget.text,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 32.h,
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: 'Pretendard',
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 42.w,
+                                            height: 42.h,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFEBEBEB),
+                                              shape: BoxShape.circle, // 원형 테두리
+                                              border: Border.all(
+                                                color: const Color(
+                                                    0xFFBEBDB8), // 테두리 색상
+                                                width: 4.0.w, // 테두리 두께
+                                              ),
+                                            ),
+                                            child: IconButton(
+                                              icon: const Icon(Icons.volume_up),
+                                              color: Colors.black,
+                                              iconSize: 20.0.w,
+                                              onPressed: () {
+                                                _playUserRecording;
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 32.h,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          //height: 28.h,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12.w, vertical: 3.h),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10.r),
+                                          ),
+                                          child: Text(
+                                            recommendCardKey == "Perfect"
+                                                ? "👍🏼 $recommendCardKey 👍🏼"
+                                                : "🥺 $recommendCardKey 🥺",
+                                            style: TextStyle(
+                                              color: const Color(0xFF15B931),
+                                              fontWeight: FontWeight.w600,
+                                              fontFamily: 'Pretendard',
+                                              fontSize: 32.h,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    AudioGraphWidget(
+                                      feedbackData: widget.feedbackData,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+        : DraggableScrollableSheet(
+            // 드래그 시트
+            initialChildSize: (652 / 853).h,
+            minChildSize: (400 / 665).h,
+            maxChildSize: (652 / 853).h,
+            shouldCloseOnMinExtent: true,
+            expand: true,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return Material(
+                type: MaterialType.transparency,
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF9F7F5),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.r),
+                      topRight: Radius.circular(30.r),
                     ),
-                  ],
-                ),
-              ),
-              Positioned(
-                right: 14,
-                bottom: constraints.maxHeight * 0.26,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.volume_up,
-                    color: Color(0xFF644829),
                   ),
-                  iconSize: constraints.maxHeight * 0.03,
-                  onPressed: _playUserRecording,
-                ),
-              ),
-              Positioned(
-                right: 14,
-                bottom: constraints.maxHeight * 0.12,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.volume_up,
-                    color: Color(0xFFF26647),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          right: 16.w,
+                          child: IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Text.rich(
+                              TextSpan(
+                                text: widget.feedbackData.userScore.toString(),
+                                style: TextStyle(
+                                  fontSize: 74.h,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Pretendard',
+                                  color: const Color(0xFFF26647),
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: '%',
+                                    style: TextStyle(
+                                      fontSize: 24.h,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Pretendard',
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            Container(
+                              width: 340.w,
+                              height: 60.h,
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Correct',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20.h,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.text,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 32.h,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Pretendard',
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 42.w,
+                                    height: 42.h,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF1BEA7),
+                                      shape: BoxShape.circle, // 원형 테두리
+                                      border: Border.all(
+                                        color:
+                                            const Color(0xFFE87A49), // 테두리 색상
+                                        width: 4.0.w, // 테두리 두께
+                                      ),
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.volume_up),
+                                      color: Colors.black,
+                                      iconSize: 20.0.w,
+                                      onPressed: () {
+                                        TtsService.instance.playCachedAudio(
+                                            widget.feedbackData.cardId);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 9.h,
+                            ),
+                            Container(
+                              width: 340.w,
+                              height: 60.h,
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.r),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'User',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 20.h,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    widget.text,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 32.h,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Pretendard',
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 42.w,
+                                    height: 42.h,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFEBEBEB),
+                                      shape: BoxShape.circle, // 원형 테두리
+                                      border: Border.all(
+                                        color:
+                                            const Color(0xFFBEBDB8), // 테두리 색상
+                                        width: 4.0.w, // 테두리 두께
+                                      ),
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(Icons.volume_up),
+                                      color: Colors.black,
+                                      iconSize: 20.0.w,
+                                      onPressed: () {
+                                        _playUserRecording;
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 32.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  //height: 28.h,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w, vertical: 3.h),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  child: Text(
+                                    recommendCardKey == "Perfect"
+                                        ? "👍🏼 $recommendCardKey 👍🏼"
+                                        : "🥺 $recommendCardKey 🥺",
+                                    style: TextStyle(
+                                      color: const Color(0xFF15B931),
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Pretendard',
+                                      fontSize: 32.h,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            AudioGraphWidget(
+                              feedbackData: widget.feedbackData,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  iconSize: constraints.maxHeight * 0.03,
-                  onPressed: () {
-                    TtsService.instance
-                        .playCachedAudio(widget.feedbackData.cardId);
-                  },
                 ),
-              ),
-              Positioned(
-                right: 5,
-                top: 5,
-                child: IconButton(
-                  icon: const Icon(Icons.close),
-                  iconSize: constraints.maxHeight * 0.034,
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+              );
+            },
+          );
   }
 }

@@ -9,7 +9,8 @@ class CustomFeedback extends StatefulWidget {
   final FeedbackData feedbackData;
   final String recordedFilePath;
 
-  CustomFeedback({required this.feedbackData, required this.recordedFilePath});
+  const CustomFeedback(
+      {super.key, required this.feedbackData, required this.recordedFilePath});
 
   @override
   State<CustomFeedback> createState() => _CustomFeedbackState();
@@ -40,14 +41,14 @@ class _CustomFeedbackState extends State<CustomFeedback> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.62,
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: constraints.maxHeight * 0.05),
                     RichText(
                       text: TextSpan(
                         children: customUserText(
-                            widget.feedbackData.userAudioText,
+                            "widget.feedbackData.userAudioText,",
                             widget.feedbackData.mistakenIndexes),
                       ),
                     ),
@@ -63,7 +64,7 @@ class _CustomFeedbackState extends State<CustomFeedback> {
                               child: LinearProgressIndicator(
                                 value: widget.feedbackData.userScore / 100.0,
                                 backgroundColor: Colors.grey[300],
-                                valueColor: AlwaysStoppedAnimation<Color>(
+                                valueColor: const AlwaysStoppedAnimation<Color>(
                                     Color(0xFFF26647)),
                                 minHeight: constraints.maxHeight * 0.016,
                               ),
@@ -75,7 +76,7 @@ class _CustomFeedbackState extends State<CustomFeedback> {
                             style: TextStyle(
                                 fontSize: constraints.maxHeight * 0.02,
                                 fontWeight: FontWeight.w700,
-                                color: Color(0xFFF26647)),
+                                color: const Color(0xFFF26647)),
                           ),
                         ],
                       ),
@@ -107,19 +108,15 @@ class _CustomFeedbackState extends State<CustomFeedback> {
                           Positioned(
                             left: constraints.maxWidth * 0.0468,
                             bottom: constraints.minHeight * 0.1712,
-                            child: Image.memory(
-                              widget.feedbackData.userWaveformImage,
-                              width: constraints.maxWidth * 0.6,
-                              height: constraints.maxHeight * 0.14,
+                            child: Container(
+                              child: const Text('원래는 그림이어따'),
                             ),
                           ),
                           Positioned(
                             left: constraints.maxWidth * 0.0468,
                             bottom: constraints.maxHeight * 0.034,
-                            child: Image.memory(
-                              widget.feedbackData.correctWaveformImage,
-                              width: constraints.maxWidth * 0.6,
-                              height: constraints.maxHeight * 0.14,
+                            child: Container(
+                              child: const Text('원래는 그림이어따!!!!'),
                             ),
                           ),
                         ],
@@ -133,7 +130,7 @@ class _CustomFeedbackState extends State<CustomFeedback> {
                 right: 14,
                 bottom: constraints.maxHeight * 0.26,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.volume_up,
                     color: Color(0xFF644829),
                   ),
@@ -147,7 +144,7 @@ class _CustomFeedbackState extends State<CustomFeedback> {
                 right: 14,
                 bottom: constraints.maxHeight * 0.12,
                 child: IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.volume_up,
                     color: Color(0xFFF26647),
                   ),
@@ -162,7 +159,7 @@ class _CustomFeedbackState extends State<CustomFeedback> {
                 right: 5,
                 top: 5,
                 child: IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   iconSize: constraints.maxHeight * 0.034,
                   onPressed: () => Navigator.of(context).pop(),
                 ),

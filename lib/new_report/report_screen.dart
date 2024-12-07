@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learninginfo/deletephonemes.dart';
 import 'package:flutter_application_1/learninginfo/re_test_page.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/home_cards.dart';
 import 'package:flutter_application_1/new_report/phonemes_class.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 

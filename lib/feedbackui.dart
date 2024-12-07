@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/ttsservice.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FeedbackUI extends StatefulWidget {
   final FeedbackData feedbackData;
   final String recordedFilePath;
   // 필수 매개변수로 피드백 데이터와 녹음된 파일 경로를 받는다
-  const FeedbackUI(
-      {super.key, required this.feedbackData, required this.recordedFilePath});
+  const FeedbackUI({
+    super.key,
+    required this.feedbackData,
+    required this.recordedFilePath,
+  });
 
   @override
   State<FeedbackUI> createState() => _FeedbackUIState();
@@ -34,9 +38,9 @@ class _FeedbackUIState extends State<FeedbackUI> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Dialog(
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.topRight,
+          insetPadding: EdgeInsets.only(top: 199.h, right: 0.w),
+          backgroundColor: const Color(0xFFF9F7F5),
+          child: Column(
             children: <Widget>[
               Container(
                 width: constraints.maxWidth * 0.8,
@@ -49,7 +53,7 @@ class _FeedbackUIState extends State<FeedbackUI> {
                       // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
                       text: TextSpan(
                         children: buildTextSpans(
-                          widget.feedbackData.userAudioText,
+                          widget.feedbackData.cardId.toString(),
                           widget.feedbackData.mistakenIndexes,
                         ),
                       ),
@@ -114,19 +118,15 @@ class _FeedbackUIState extends State<FeedbackUI> {
                           Positioned(
                             left: constraints.maxWidth * 0.0468,
                             bottom: constraints.minHeight * 0.1712,
-                            child: Image.memory(
-                              widget.feedbackData.userWaveformImage,
-                              width: constraints.maxWidth * 0.6,
-                              height: constraints.maxHeight * 0.14,
+                            child: Container(
+                              child: const Text('원래는 그림이어따'),
                             ),
                           ),
                           Positioned(
                             left: constraints.maxWidth * 0.0468,
                             bottom: constraints.maxHeight * 0.034,
-                            child: Image.memory(
-                              widget.feedbackData.correctWaveformImage,
-                              width: constraints.maxWidth * 0.6,
-                              height: constraints.maxHeight * 0.14,
+                            child: Container(
+                              child: const Text('원래는 그림이어따!!!'),
                             ),
                           ),
                         ],

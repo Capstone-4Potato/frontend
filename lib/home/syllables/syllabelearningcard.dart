@@ -6,6 +6,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/test_screen.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/home/syllables/fetchimage.dart';
@@ -165,22 +166,17 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
     showGeneralDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       barrierLabel: "Feedback",
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
         return const SizedBox();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return Transform(
-          transform: Matrix4.translationValues(0.0, 140, 0.0),
-          child: Opacity(
-            opacity: animation.value,
-            child: FeedbackUI(
-              feedbackData: feedbackData,
-              recordedFilePath: _recordedFilePath,
-            ),
-          ),
+        return FeedbackUI(
+          feedbackData: feedbackData,
+          recordedFilePath: _recordedFilePath,
+          text: widget.texts[widget.currentIndex], // 카드 한글 발음
         );
       },
     );

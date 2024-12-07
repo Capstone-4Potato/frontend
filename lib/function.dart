@@ -6,6 +6,7 @@ import 'package:flutter_application_1/home/syllables/syllablelist/syllable_vowel
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/home/words/wordlist/word_final_consonants.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
@@ -89,7 +90,8 @@ Future<FeedbackData?> getFeedback(
     if (response.statusCode == 200) {
       print('Successful feedback submission');
       var responseData = json.decode(response.body);
-      print(responseData);
+      //print("feedback : $responseData");
+      //print('${responseData['correctAudio']}');
       return FeedbackData.fromJson(responseData);
     } else if (response.statusCode == 401) {
       // Token expired, attempt to refresh the token
@@ -129,19 +131,25 @@ Future<FeedbackData?> getFeedback(
 }
 
 // 단어, 문장, 사용자문장 피드백 화면에서 잘못발음한 텍스트 표현하기 위함
-List<TextSpan> buildTextSpans(String text, List<int> mistakenIndexes) {
+List<TextSpan> buildTextSpans(String text, List<int>? mistakenIndexes) {
   List<TextSpan> spans = [];
-
-  for (int i = 0; i < text.length; i++) {
-    final bool isMistaken = mistakenIndexes.contains(i);
-    // 잘못된 문자라면 빨간색, 그렇지 않다면 검정색
-    TextStyle textStyle = isMistaken
-        ? const TextStyle(
-            color: Color(0xFFFF0000), fontSize: 20, fontWeight: FontWeight.bold)
-        : const TextStyle(
-            color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold);
-    spans.add(TextSpan(text: text[i], style: textStyle));
-  }
+  if (mistakenIndexes != null)
+    for (int i = 0; i < text.length; i++) {
+      final bool isMistaken = mistakenIndexes.contains(i);
+      // 잘못된 문자라면 빨간색, 그렇지 않다면 검정색
+      TextStyle textStyle = isMistaken
+          ? TextStyle(
+              color: const Color(0xFFDE0000),
+              fontSize: 32.h,
+              fontWeight: FontWeight.w600,
+            )
+          : TextStyle(
+              color: Colors.black,
+              fontSize: 32.h,
+              fontWeight: FontWeight.w600,
+            );
+      spans.add(TextSpan(text: text[i], style: textStyle));
+    }
   return spans;
 }
 

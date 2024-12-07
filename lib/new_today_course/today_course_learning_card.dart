@@ -299,6 +299,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
             child: FeedbackUI(
               feedbackData: feedbackData,
               recordedFilePath: _recordedFilePath,
+              text: widget.texts[_currentIndex],
             ),
           ),
         );
