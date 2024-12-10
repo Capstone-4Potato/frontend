@@ -14,7 +14,7 @@ import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
-class SentenceLearningCard extends StatefulWidget {
+class TongueTwistersLearningCard extends StatefulWidget {
   int currentIndex;
   final List<int> cardIds;
   final List<String> texts;
@@ -22,7 +22,7 @@ class SentenceLearningCard extends StatefulWidget {
   final List<String> engpronunciations;
   final List<bool> bookmarked;
 
-  SentenceLearningCard({
+  TongueTwistersLearningCard({
     Key? key,
     required this.currentIndex,
     required this.cardIds,
@@ -33,10 +33,12 @@ class SentenceLearningCard extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SentenceLearningCard> createState() => _SentenceLearningCardState();
+  State<TongueTwistersLearningCard> createState() =>
+      _TongueTwistersLearningCardState();
 }
 
-class _SentenceLearningCardState extends State<SentenceLearningCard> {
+class _TongueTwistersLearningCardState
+    extends State<TongueTwistersLearningCard> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
@@ -153,7 +155,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => SentenceLearningCard(
+        builder: (context) => TongueTwistersLearningCard(
           currentIndex: newIndex,
           cardIds: widget.cardIds,
           texts: widget.texts,
@@ -193,7 +195,9 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.74;
-    double cardHeight = MediaQuery.of(context).size.height * 0.35;
+    double cardHeight = widget.currentIndex != 0
+        ? MediaQuery.of(context).size.height * 0.38
+        : MediaQuery.of(context).size.height * 0.58;
 
     String currentContent = widget.texts[widget.currentIndex];
     String currentPronunciation = widget.pronunciations[widget.currentIndex];
@@ -238,7 +242,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
           ),
         ],
       ),
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: PageView.builder(
           controller: pageController,
           onPageChanged: (value) {
@@ -371,9 +375,9 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
                     ],
                   ),
                   if (_isLoading)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 160),
-                      child: CircularProgressIndicator(
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 100.h),
+                      child: const CircularProgressIndicator(
                         valueColor:
                             AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
                       ),

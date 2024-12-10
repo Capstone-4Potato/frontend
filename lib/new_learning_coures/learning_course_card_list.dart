@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/sentecnes/sentencelearningcard.dart';
+import 'package:flutter_application_1/home/sentecnes/tongue_twisters_learing_card.dart';
 import 'package:flutter_application_1/home/syllables/syllabelearningcard.dart';
 import 'package:flutter_application_1/home/words/wordlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
@@ -181,11 +182,25 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                           ),
                         ),
                       );
-                    } else {
+                    } else if (widget.level < 23) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => SentenceLearningCard(
+                            currentIndex: index,
+                            cardIds: idList,
+                            texts: textList,
+                            pronunciations: engTranslationList,
+                            engpronunciations: engPronunciationList,
+                            bookmarked: bookmarkList,
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TongueTwistersLearningCard(
                             currentIndex: index,
                             cardIds: idList,
                             texts: textList,
@@ -225,11 +240,17 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                                                 ? const Color.fromARGB(
                                                     236, 255, 85, 85)
                                                 : Colors.black),
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     Text(
                                       "[${engPronunciationList[index]}]",
-                                      style: TextStyle(fontSize: 18.h),
+                                      style: TextStyle(
+                                        fontSize: 18.h,
+                                      ),
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
                                 ),
@@ -289,6 +310,8 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                           textAlign: TextAlign.center,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                       Center(
@@ -296,6 +319,8 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                                           engTranslationList[index],
                                           style: TextStyle(fontSize: 16.h),
                                           textAlign: TextAlign.center,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ],
