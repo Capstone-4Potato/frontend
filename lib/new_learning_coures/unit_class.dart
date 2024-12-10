@@ -26,23 +26,23 @@ class Unit {
     // level 설정
     if (id >= 1 && id <= 4) {
       level = "Beginner";
-    } else if (id >= 5 && id <= 11) {
+    } else if (id >= 5 && id <= 15) {
       level = "Intermediate";
     } else {
       level = "Advanced";
     }
 
     // title 설정
-    if (id >= 1 && id <= 11) {
+    if (id >= 1 && id <= 15) {
       title = "Unit $id";
-    } else if (id >= 12 && id <= 18) {
+    } else if (id >= 16 && id <= 22) {
       title = "Conversation Practice";
     } else {
       title = "Tongue Twisters";
     }
 
     // subtitle 설정
-    if (id >= 5 && id <= 11) {
+    if (id >= 5 && id <= 15) {
       subtitle = UnitSubtitle.getIntermediateSubtitle(id);
     } else {
       subtitle = UnitSubtitle.getSubtitle(id);

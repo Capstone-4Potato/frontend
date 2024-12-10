@@ -338,9 +338,9 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                                   direction: Axis.vertical,
                                   spacing: 16,
                                   children: List<Widget>.generate(
-                                    _units.sublist(4, 11).length,
+                                    _units.sublist(4, 15).length,
                                     (index) {
-                                      final unit = _units.sublist(4, 11)[index];
+                                      final unit = _units.sublist(4, 15)[index];
                                       return UnitItem(
                                         key: index == 0
                                             ? _intermediateKey
@@ -374,10 +374,10 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                                   direction: Axis.vertical,
                                   spacing: 16,
                                   children: List<Widget>.generate(
-                                    _units.sublist(11, 18).length,
+                                    _units.sublist(15, 18).length,
                                     (index) {
                                       final unit =
-                                          _units.sublist(11, 18)[index];
+                                          _units.sublist(15, 18)[index];
                                       return UnitItem(
                                         key: index == 0 ? _advancedKey : null,
                                         id: unit.id,
