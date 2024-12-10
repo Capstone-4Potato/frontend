@@ -52,10 +52,13 @@ class _ReportScreenState extends State<ReportScreen> {
   late PageController pageController; // 페이지 컨트롤러 생성
   int _currentPageIndex = 0;
 
+  Future<void>? _fetchPhonemeFuture;
+
   @override
   void initState() {
     super.initState();
     fetchReportData();
+    _fetchPhonemeFuture = fetchPhoneme();
     pageController = PageController(initialPage: 0); // PageController 초기화
   }
 
@@ -68,6 +71,11 @@ class _ReportScreenState extends State<ReportScreen> {
   void _onPageChanged(int index) {
     setState(() {
       _currentPageIndex = index;
+      _currentPageIndex == 0
+          ? initialConsonants.length
+          : _currentPageIndex == 1
+              ? vowels.length
+              : finalConsonants.length;
     });
   }
 
@@ -84,6 +92,7 @@ class _ReportScreenState extends State<ReportScreen> {
     }
   }
 
+  // report 화면 데이터 요청 함수
   Future<void> fetchReportData() async {
     try {
       String? token = await getAccessToken();
@@ -226,6 +235,7 @@ class _ReportScreenState extends State<ReportScreen> {
     return values.reduce((value, element) => value > element ? value : element);
   }
 
+  // 모든 취약음소와 사용자가 가진 취약음소 여부 반환
   Future<void> fetchPhoneme() async {
     try {
       String? token = await getAccessToken();
@@ -573,114 +583,134 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 ),
                                               ),
                                             ),
-                                            Expanded(
-                                              child: PageView.builder(
-                                                controller: pageController,
-                                                physics:
-                                                    const NeverScrollableScrollPhysics(), // 스와이프 방지
-                                                onPageChanged: _onPageChanged,
-                                                itemCount: phonemes.length,
-                                                itemBuilder: ((context, index) {
-                                                  var category =
-                                                      phonemes[index];
+                                            FutureBuilder<void>(
+                                              future: _fetchPhonemeFuture,
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  // 로딩 상태
+                                                  return const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  );
+                                                } else if (snapshot.hasError) {
+                                                  // 에러 상태
+                                                  return Center(
+                                                    child: Text(
+                                                        'Error: ${snapshot.error}'),
+                                                  );
+                                                } else {
+                                                  return Expanded(
+                                                    child: PageView.builder(
+                                                      controller:
+                                                          pageController,
+                                                      physics:
+                                                          const NeverScrollableScrollPhysics(), // 스와이프 방지
+                                                      onPageChanged: (index) {
+                                                        _onPageChanged(index);
+                                                      },
+                                                      itemCount:
+                                                          phonemes.length,
+                                                      itemBuilder:
+                                                          ((context, index) {
+                                                        var category =
+                                                            phonemes[index];
 
-                                                  return Container(
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      color: Color(0xFFF5F5F5),
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                        bottomLeft:
-                                                            Radius.circular(
-                                                                16.0),
-                                                        bottomRight:
-                                                            Radius.circular(
-                                                                16.0),
-                                                      ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 27.0,
-                                                          vertical: 22.0),
-                                                      child: Column(
-                                                        children: [
-                                                          Expanded(
-                                                            child: GridView
-                                                                .builder(
-                                                                    gridDelegate:
-                                                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                                                      crossAxisCount:
-                                                                          2, // 행당 아이템 수
-                                                                      crossAxisSpacing:
-                                                                          20.0, // 열 간격
-                                                                      mainAxisSpacing:
-                                                                          20.0, // 행 간격
-                                                                      childAspectRatio:
-                                                                          138 /
-                                                                              88, // 가로:세로 비율
-                                                                    ),
-                                                                    itemCount: _currentPageIndex ==
-                                                                            0
-                                                                        ? initialConsonants
-                                                                            .length
-                                                                        : _currentPageIndex ==
-                                                                                1
-                                                                            ? vowels
-                                                                                .length
-                                                                            : finalConsonants
-                                                                                .length,
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                            index) {
-                                                                      Color
-                                                                          backgroundColor =
-                                                                          Colors
-                                                                              .white;
-                                                                      print(
-                                                                          index);
-                                                                      return Material(
-                                                                        color: (_currentPageIndex == 0 && initialConsonants[index]['weak'] == true) ||
-                                                                                (_currentPageIndex == 1 && vowels[index]['weak'] == true) ||
-                                                                                (_currentPageIndex == 2 && finalConsonants[index]['weak'] == true)
-                                                                            ? const Color(0xFFDADADA)
-                                                                            : Colors.white,
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(12.0),
-                                                                        child:
-                                                                            InkWell(
-                                                                          onTap:
-                                                                              () {},
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(12.0),
-                                                                          child:
-                                                                              Container(
-                                                                            alignment:
-                                                                                Alignment.center,
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(12.0),
-                                                                              border: Border.all(color: (_currentPageIndex == 0 && initialConsonants[index]['weak'] == true) || (_currentPageIndex == 1 && vowels[index]['weak'] == true) || (_currentPageIndex == 2 && finalConsonants[index]['weak'] == true) ? Colors.transparent : const Color(0xFFF26647)),
-                                                                            ),
-                                                                            child:
-                                                                                Text(
-                                                                              category.elements[index],
-                                                                              style: const TextStyle(
-                                                                                fontSize: 32,
-                                                                                color: Color(0xFF282722),
-                                                                              ),
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                                    }),
+                                                        final currentList =
+                                                            _currentPageIndex ==
+                                                                    0
+                                                                ? initialConsonants
+                                                                : _currentPageIndex ==
+                                                                        1
+                                                                    ? vowels
+                                                                    : finalConsonants;
+
+                                                        return Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: const Color(
+                                                                0xFFF5F5F5),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .only(
+                                                              bottomLeft: Radius
+                                                                  .circular(
+                                                                      16.0.r),
+                                                              bottomRight: Radius
+                                                                  .circular(
+                                                                      16.0.r),
+                                                            ),
                                                           ),
-                                                        ],
-                                                      ),
+                                                          child: Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        27.0.w,
+                                                                    vertical:
+                                                                        22.0.h),
+                                                            child: Column(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: GridView
+                                                                      .builder(
+                                                                          gridDelegate:
+                                                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                                                            crossAxisCount:
+                                                                                2, // 행당 아이템 수
+                                                                            crossAxisSpacing:
+                                                                                20.0, // 열 간격
+                                                                            mainAxisSpacing:
+                                                                                20.0, // 행 간격
+                                                                            childAspectRatio:
+                                                                                138 / 88, // 가로:세로 비율
+                                                                          ),
+                                                                          itemCount: currentList
+                                                                              .length,
+                                                                          itemBuilder:
+                                                                              (context, index) {
+                                                                            Color
+                                                                                backgroundColor =
+                                                                                Colors.white;
+
+                                                                            // 리스트 길이 검증
+                                                                            if (index >=
+                                                                                currentList.length) {
+                                                                              return const SizedBox.shrink();
+                                                                            }
+
+                                                                            return Material(
+                                                                              color: currentList[index]['weak'] ? const Color(0xFFDADADA) : Colors.white,
+                                                                              borderRadius: BorderRadius.circular(12.0.r),
+                                                                              child: InkWell(
+                                                                                onTap: () {},
+                                                                                borderRadius: BorderRadius.circular(12.0.r),
+                                                                                child: Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  decoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(12.0),
+                                                                                    border: Border.all(color: (_currentPageIndex == 0 && initialConsonants[index]['weak'] == true) || (_currentPageIndex == 1 && vowels[index]['weak'] == true) || (_currentPageIndex == 2 && finalConsonants[index]['weak'] == true) ? Colors.transparent : const Color(0xFFF26647)),
+                                                                                  ),
+                                                                                  child: Text(
+                                                                                    currentList[index]['text'] ?? 'N/A',
+                                                                                    style: const TextStyle(
+                                                                                      fontSize: 32,
+                                                                                      color: Color(0xFF282722),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                          }),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }),
                                                     ),
                                                   );
-                                                }),
-                                              ),
+                                                }
+                                              },
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
