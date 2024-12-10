@@ -43,6 +43,7 @@ class _ReportScreenState extends State<ReportScreen> {
   List<Map<String, dynamic>> initialConsonants = [];
   List<Map<String, dynamic>> vowels = [];
   List<Map<String, dynamic>> finalConsonants = [];
+  List<int> addPhonemes = []; // 추가할 취약음소
 
   bool isLoading = true; // 로딩 중 표시
 
@@ -325,6 +326,72 @@ class _ReportScreenState extends State<ReportScreen> {
     }
   }
 
+  // 취약음소 서버에 추가
+  Future<void> postAddPhonemes() async {
+    try {
+      String? token = await getAccessToken();
+
+      var url = Uri.parse('$main_url/test/add');
+
+      // Set headers with the token
+      var headers = <String, String>{
+        'access': '$token',
+        'Content-Type': 'application/json',
+      };
+
+      var body = json.encode(addPhonemes);
+
+      var response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        print('POST 요청 성공: ${response.body}');
+        setState(() {
+          addPhonemes.clear(); // 요청 성공 후 리스트 초기화
+        });
+      } else if (response.statusCode == 401) {
+        // Token expired, attempt to refresh and retry the request
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the token
+        bool isRefreshed = await refreshAccessToken();
+
+        if (isRefreshed) {
+          // Retry request with new token
+          print('Token refreshed successfully. Retrying request...');
+          String? newToken = await getAccessToken();
+          response = await http.post(
+            url,
+            headers: {
+              'access': '$newToken',
+              'Content-Type': 'application/json'
+            },
+            body: body,
+          );
+          if (response.statusCode == 200) {
+            print('POST 요청 성공: ${response.body}');
+            setState(() {
+              addPhonemes.clear(); // 요청 성공 후 리스트 초기화
+            });
+          } else {
+            // Handle other response codes after retry if needed
+            print(
+                'Unhandled server response after retry: ${response.statusCode}');
+            print(json.decode(response.body));
+          }
+        } else {
+          print('Failed to refresh token. Please log in again.');
+        }
+      } else {
+        // Handle other status codes
+        print('Unhandled server response: ${response.statusCode}');
+        print(json.decode(response.body));
+      }
+    } catch (e) {
+      // Handle network request exceptions
+      print("Error during the request: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height / 852;
@@ -469,6 +536,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
                               showDialog(
                                   context: context,
+                                  barrierDismissible: true,
                                   builder: (BuildContext context) {
                                     return StatefulBuilder(
                                         builder: (context, setDialogState) {
@@ -679,16 +747,31 @@ class _ReportScreenState extends State<ReportScreen> {
                                                                             }
 
                                                                             return Material(
-                                                                              color: currentList[index]['weak'] ? const Color(0xFFDADADA) : Colors.white,
+                                                                              color: currentList[index]['weak'] || addPhonemes.contains(currentList[index]['id']) ? const Color(0xFFDADADA) : Colors.white,
                                                                               borderRadius: BorderRadius.circular(12.0.r),
                                                                               child: InkWell(
-                                                                                onTap: () {},
+                                                                                onTap: () {
+                                                                                  setDialogState(() {
+                                                                                    if (currentList[index]['weak']) {
+                                                                                      null;
+                                                                                    } else if (!addPhonemes.contains(currentList[index]['id'])) {
+                                                                                      addPhonemes.add(currentList[index]['id']); // 선택된 인덱스 추가
+                                                                                      weakPhonemes!.add(currentList[index]); // 취약음소 목록에 추가
+                                                                                    } else {
+                                                                                      addPhonemes.remove(currentList[index]['id']);
+                                                                                      weakPhonemes!.remove(currentList[index]); // 취약음소 목록에서 제거
+                                                                                    }
+                                                                                  });
+                                                                                  print('선택된 인덱스: $addPhonemes');
+                                                                                },
                                                                                 borderRadius: BorderRadius.circular(12.0.r),
                                                                                 child: Container(
                                                                                   alignment: Alignment.center,
                                                                                   decoration: BoxDecoration(
                                                                                     borderRadius: BorderRadius.circular(12.0),
-                                                                                    border: Border.all(color: (_currentPageIndex == 0 && initialConsonants[index]['weak'] == true) || (_currentPageIndex == 1 && vowels[index]['weak'] == true) || (_currentPageIndex == 2 && finalConsonants[index]['weak'] == true) ? Colors.transparent : const Color(0xFFF26647)),
+                                                                                    border: Border.all(
+                                                                                      color: currentList[index]['weak'] || addPhonemes.contains(currentList[index]['id']) ? Colors.transparent : const Color(0xFFF26647),
+                                                                                    ),
                                                                                   ),
                                                                                   child: Text(
                                                                                     currentList[index]['text'] ?? 'N/A',
@@ -716,7 +799,11 @@ class _ReportScreenState extends State<ReportScreen> {
                                               padding: const EdgeInsets.only(
                                                   top: 12.0),
                                               child: TextButton(
-                                                onPressed: () {},
+                                                onPressed: () async {
+                                                  await postAddPhonemes(); // POST 요청 보내기
+
+                                                  Navigator.pop(context);
+                                                },
                                                 style: TextButton.styleFrom(
                                                   backgroundColor:
                                                       const Color(0xFFF26647),
@@ -829,6 +916,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   onPressed: () async {
                                     bool check =
                                         await getTestCheck(); // 이전에 진행하던 테스트가 있는지 체크
+                                    print("취약음소 테스트 존재 여부 $check");
                                     check
                                         ? showDialog(
                                             context: context,
