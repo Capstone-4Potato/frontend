@@ -11,6 +11,7 @@ import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/syllables/fetchimage.dart';
 import 'package:flutter_application_1/home/syllables/syllablefeedbackui.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new_today_course/today_feedback_ui.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/home/home_page.dart';
@@ -149,17 +150,26 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
         final feedbackData = await getFeedback(
             currentCardId, base64userAudio, base64correctAudio); // 피드백 데이터 가져오기
+        if (feedbackData == null) {
+          showErrorDialog();
+          return;
+        }
+        if (mounted) {
+          setState(() {
+            _isLoading = false; // 로딩 종료
+          });
+          // 다이얼로그를 보여주고 닫힌 후 처리하기
+          showFeedbackDialog(context, feedbackData);
 
-        if (mounted && feedbackData != null) {
-          setState(() {
-            _isLoading = false; // 로딩 종료
-          });
-          showFeedbackDialog(context, feedbackData); // 피드백 다이얼로그 표시
-        } else {
-          setState(() {
-            _isLoading = false; // 로딩 종료
-            showErrorDialog(); // 오류 다이얼로그 표시
-          });
+          // 다이얼로그가 닫힌 후 실행할 코드
+          if (mounted) {
+            setState(() {
+              if (feedbackData.userScore == 100) {
+                _isRecorded = true; // 녹음 완료 상태 설정
+              }
+            });
+            _nextCard(); // 다음 카드로 이동
+          }
         }
       }
     } else {
@@ -169,6 +179,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
       );
       setState(() {
         _isRecording = true; // 녹음 상태 활성화
+        // _isRecorded = true; // 녹음 함
       });
     }
   }
@@ -267,19 +278,22 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   }
 
   void _nextCard() {
+    print('Before: currentIndex = $_currentIndex'); // 디버깅용
+
     if (_isRecorded) {
       if (_currentIndex < widget.ids.length - 1) {
         setState(() {
           _currentIndex++;
           _isRecorded = false;
+          print('After: currentIndex = $_currentIndex'); // 디버깅용
         });
       } else {
-        // 마지막 카드일 경우 처리
+        print('Last card reached');
         _showCompletionDialog();
       }
     } else {
-      // 녹음이 완료되지 않았을 때 처리
-      // _showErrorDialog();
+      print('Recording not completed!');
+      // showErrorDialog();
     }
   }
 
@@ -287,23 +301,17 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
     showGeneralDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       barrierLabel: "Feedback",
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
         return const SizedBox();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return Transform(
-          transform: Matrix4.translationValues(0.0, 140, 0.0),
-          child: Opacity(
-            opacity: animation.value,
-            child: FeedbackUI(
-              feedbackData: feedbackData,
-              recordedFilePath: _recordedFilePath,
-              text: widget.texts[_currentIndex],
-            ),
-          ),
+        return TodayFeedbackUI(
+          feedbackData: feedbackData,
+          recordedFilePath: _recordedFilePath,
+          text: widget.texts[_currentIndex - 1], // 카드 한글 발음
         );
       },
     );

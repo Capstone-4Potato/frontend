@@ -26,7 +26,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
   }
 
   Future<void> initTestData() async {
-    var data = await fetchTestData();
+    var data = await getTestNewData();
     //print(data);
 
     if (data != null) {

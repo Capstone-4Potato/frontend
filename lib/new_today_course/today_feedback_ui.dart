@@ -10,12 +10,12 @@ import 'package:flutter_application_1/widgets/audio_graph.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 한글자 음절 피드백 창
-class SyllableFeedbackUI extends StatefulWidget {
+class TodayFeedbackUI extends StatefulWidget {
   final FeedbackData feedbackData;
   final String recordedFilePath;
   String text;
 
-  SyllableFeedbackUI({
+  TodayFeedbackUI({
     super.key,
     required this.feedbackData,
     required this.recordedFilePath,
@@ -23,10 +23,10 @@ class SyllableFeedbackUI extends StatefulWidget {
   });
 
   @override
-  State<SyllableFeedbackUI> createState() => _SyllableFeedbackUIState();
+  State<TodayFeedbackUI> createState() => _TodayFeedbackUIState();
 }
 
-class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
+class _TodayFeedbackUIState extends State<TodayFeedbackUI> {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
@@ -108,7 +108,6 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
                         padding: EdgeInsets.symmetric(vertical: 20.h),
                         child: Stack(
                           children: [
-                            // 나가기 버튼
                             Positioned(
                               right: 16.w,
                               child: IconButton(
@@ -127,7 +126,6 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
                                     SizedBox(
                                       height: 20.h,
                                     ),
-                                    // 올바른 발음 기호
                                     Container(
                                       width: 340.w,
                                       height: 60.h,
@@ -159,36 +157,12 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
                                               fontFamily: 'Pretendard',
                                             ),
                                           ),
-                                          Container(
-                                            width: 42.w,
-                                            height: 42.h,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFFF1BEA7),
-                                              shape: BoxShape.circle, // 원형 테두리
-                                              border: Border.all(
-                                                color: const Color(
-                                                    0xFFE87A49), // 테두리 색상
-                                                width: 4.0.w, // 테두리 두께
-                                              ),
-                                            ),
-                                            child: IconButton(
-                                              icon: const Icon(Icons.volume_up),
-                                              color: Colors.black,
-                                              iconSize: 20.0.w,
-                                              onPressed: () {
-                                                TtsService.instance
-                                                    .playCachedAudio(widget
-                                                        .feedbackData.cardId);
-                                              },
-                                            ),
-                                          ),
                                         ],
                                       ),
                                     ),
                                     SizedBox(
                                       height: 9.h,
                                     ),
-                                    // 유저 발음 기호
                                     Container(
                                       width: 340.w,
                                       height: 60.h,
@@ -218,27 +192,6 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
                                               fontSize: 32.h,
                                               fontWeight: FontWeight.w600,
                                               fontFamily: 'Pretendard',
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 42.w,
-                                            height: 42.h,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFFEBEBEB),
-                                              shape: BoxShape.circle, // 원형 테두리
-                                              border: Border.all(
-                                                color: const Color(
-                                                    0xFFBEBDB8), // 테두리 색상
-                                                width: 4.0.w, // 테두리 두께
-                                              ),
-                                            ),
-                                            child: IconButton(
-                                              icon: const Icon(Icons.volume_up),
-                                              color: Colors.black,
-                                              iconSize: 20.0.w,
-                                              onPressed: () {
-                                                _playUserRecording();
-                                              },
                                             ),
                                           ),
                                         ],
@@ -452,7 +405,7 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
                                       color: Colors.black,
                                       iconSize: 20.0.w,
                                       onPressed: () {
-                                        _playUserRecording();
+                                        _playUserRecording;
                                       },
                                     ),
                                   ),

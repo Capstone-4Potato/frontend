@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/feedbackui.dart';
+import 'package:flutter_application_1/wordfeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
@@ -65,11 +65,11 @@ class _WordLearningCardState extends State<WordLearningCard> {
       if (path != null) {
         setState(() {
           _isRecording = false;
-          //_canRecord = false;
           _recordedFilePath = path;
           _isLoading = true; // 로딩 시작
         });
         final audioFile = File(path);
+        print(path);
         final fileBytes = await audioFile.readAsBytes();
         final base64userAudio = base64Encode(fileBytes);
         final currentCardId = widget.cardIds[widget.currentIndex];
@@ -78,7 +78,6 @@ class _WordLearningCardState extends State<WordLearningCard> {
         if (base64correctAudio != null) {
           final feedbackData = await getFeedback(
               currentCardId, base64userAudio, base64correctAudio);
-          //print(feedbackData);
 
           if (mounted && feedbackData != null) {
             setState(() {
@@ -119,22 +118,17 @@ class _WordLearningCardState extends State<WordLearningCard> {
   void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
     showGeneralDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       barrierLabel: "Feedback",
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
         return const SizedBox();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return Transform(
-          transform: Matrix4.translationValues(0.0, 115, 0.0),
-          child: Opacity(
-            opacity: animation.value,
-            child: FeedbackUI(
-              feedbackData: feedbackData,
-              recordedFilePath: _recordedFilePath,
-            ),
-          ),
+        return WordFeedbackUI(
+          feedbackData: feedbackData,
+          recordedFilePath: _recordedFilePath,
+          text: widget.texts[widget.currentIndex], // 카드 한글 발음
         );
       },
     );

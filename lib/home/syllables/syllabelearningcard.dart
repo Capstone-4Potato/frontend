@@ -64,7 +64,6 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     super.initState();
     _initialize(); // 초기 설정
     _loadImage(); // 이미지 로드
-    //_checkBluetoothConnection();
     pageController =
         PageController(initialPage: widget.currentIndex); // PageController 초기화
   }
@@ -173,7 +172,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         return const SizedBox();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return FeedbackUI(
+        return SyllableFeedbackUI(
           feedbackData: feedbackData,
           recordedFilePath: _recordedFilePath,
           text: widget.texts[widget.currentIndex], // 카드 한글 발음

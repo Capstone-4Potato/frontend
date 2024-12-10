@@ -289,20 +289,19 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                     ),
                   ),
                   isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
-                        ))
+                      ? SizedBox(
+                          height: 500.h,
+                          child: const Center(
+                              child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFFF26647)),
+                          )),
+                        )
                       : _units.isEmpty
                           ? const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Center(
-                                    child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Color(0xFFF26647)),
-                                )),
+                                Center(child: Text('Server Error!')),
                               ],
                             )
                           : Column(

@@ -130,10 +130,144 @@ Future<FeedbackData?> getFeedback(
   }
 }
 
+// 음절, 단어, 문장 사용자 피드백 API
+Future<FeedbackData?> getTodayFeedback(
+    int cardId, String base64userAudio, String base64correctAudio) async {
+  Map<String, dynamic> feedbackRequest = {
+    'userAudio': base64userAudio,
+    'correctAudio': base64correctAudio,
+  };
+
+  String url = '$main_url/cards/today/$cardId';
+
+  String? token = await getAccessToken();
+  // Function to make the POST request
+  Future<http.Response> makePostRequest(String token) {
+    return http.post(
+      Uri.parse(url),
+      headers: {'access': token, "Content-Type": "application/json"},
+      body: jsonEncode(feedbackRequest),
+    );
+  }
+
+  try {
+    var response = await makePostRequest(token!);
+
+    if (response.statusCode == 200) {
+      print('Successful feedback submission');
+      var responseData = json.decode(response.body);
+      print("feedback : $responseData");
+      //print('${responseData['correctAudio']}');
+      return FeedbackData.fromJson(responseData);
+    } else if (response.statusCode == 401) {
+      // Token expired, attempt to refresh the token
+      print('Access token expired. Refreshing token...');
+
+      // Refresh the access token
+      bool isRefreshed = await refreshAccessToken();
+      if (isRefreshed) {
+        // Retry the feedback request with the new token
+        token = await getAccessToken();
+        response = await makePostRequest(token!);
+
+        if (response.statusCode == 200) {
+          print('Successful feedback submission after token refresh');
+          var responseData = json.decode(response.body);
+          return FeedbackData.fromJson(responseData);
+        } else {
+          print(
+              'Failed to submit feedback after token refresh: ${response.statusCode}');
+          return null;
+        }
+      } else {
+        print('Failed to refresh access token');
+        return null;
+      }
+    } else {
+      // Handle all other HTTP status codes
+      print('Unhandled server response: ${response.statusCode}');
+      print(json.decode(response.body));
+      return null;
+    }
+  } catch (e) {
+    // Handle exceptions that occur during the network request
+    print("Error during the request: $e");
+    return null;
+  }
+}
+
+// 음절, 단어, 문장 사용자 피드백 API
+Future<FeedbackData?> getCustomFeedback(
+    int cardId, String base64userAudio, String base64correctAudio) async {
+  Map<String, dynamic> feedbackRequest = {
+    'userAudio': base64userAudio,
+    'correctAudio': base64correctAudio,
+  };
+
+  String url = '$main_url/cards/custom/$cardId';
+
+  String? token = await getAccessToken();
+  // Function to make the POST request
+  Future<http.Response> makePostRequest(String token) {
+    return http.post(
+      Uri.parse(url),
+      headers: {'access': token, "Content-Type": "application/json"},
+      body: jsonEncode(feedbackRequest),
+    );
+  }
+
+  try {
+    var response = await makePostRequest(token!);
+
+    if (response.statusCode == 200) {
+      print('Successful feedback submission');
+      var responseData = json.decode(response.body);
+      print("feedback : $responseData");
+      //print('${responseData['correctAudio']}');
+      return FeedbackData.fromJson(responseData);
+    } else if (response.statusCode == 401) {
+      // Token expired, attempt to refresh the token
+      print('Access token expired. Refreshing token...');
+
+      // Refresh the access token
+      bool isRefreshed = await refreshAccessToken();
+      if (isRefreshed) {
+        // Retry the feedback request with the new token
+        token = await getAccessToken();
+        response = await makePostRequest(token!);
+
+        if (response.statusCode == 200) {
+          print('Successful feedback submission after token refresh');
+          var responseData = json.decode(response.body);
+          return FeedbackData.fromJson(responseData);
+        } else {
+          print(
+              'Failed to submit feedback after token refresh: ${response.statusCode}');
+          return null;
+        }
+      } else {
+        print('Failed to refresh access token');
+        return null;
+      }
+    } else {
+      // Handle all other HTTP status codes
+      print('Unhandled server response: ${response.statusCode}');
+      print(json.decode(response.body));
+      return null;
+    }
+  } catch (e) {
+    // Handle exceptions that occur during the network request
+    print("Error during the request: $e");
+    return null;
+  }
+}
+
 // 단어, 문장, 사용자문장 피드백 화면에서 잘못발음한 텍스트 표현하기 위함
 List<TextSpan> buildTextSpans(String text, List<int>? mistakenIndexes) {
   List<TextSpan> spans = [];
+  print(text);
   if (mistakenIndexes != null)
+    // ignore: curly_braces_in_flow_control_structures
     for (int i = 0; i < text.length; i++) {
       final bool isMistaken = mistakenIndexes.contains(i);
       // 잘못된 문자라면 빨간색, 그렇지 않다면 검정색
@@ -147,6 +281,7 @@ List<TextSpan> buildTextSpans(String text, List<int>? mistakenIndexes) {
               color: Colors.black,
               fontSize: 32.h,
               fontWeight: FontWeight.w600,
+              fontFamily: 'Pretendard',
             );
       spans.add(TextSpan(text: text[i], style: textStyle));
     }

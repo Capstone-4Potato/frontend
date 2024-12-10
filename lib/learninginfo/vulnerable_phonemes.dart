@@ -60,7 +60,9 @@ class VulnerablePhonemesScreen extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const restartTestScreen()));
+                          builder: (context) => RestartTestScreen(
+                                check: false,
+                              )));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xfff26647),

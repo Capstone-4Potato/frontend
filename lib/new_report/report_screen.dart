@@ -14,6 +14,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/home_cards.dart';
 import 'package:flutter_application_1/new_report/phonemes_class.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/vulnerablesoundtest/gettestlist.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -795,14 +796,62 @@ class _ReportScreenState extends State<ReportScreen> {
                               padding: const EdgeInsets.only(top: 12.0),
                               child: Center(
                                 child: TextButton(
-                                  onPressed: () {
-                                    Navigator.push<void>(
-                                      context,
-                                      MaterialPageRoute<void>(
-                                        builder: (BuildContext builder) =>
-                                            const restartTestScreen(),
-                                      ),
-                                    );
+                                  onPressed: () async {
+                                    bool check =
+                                        await getTestCheck(); // 이전에 진행하던 테스트가 있는지 체크
+                                    check
+                                        ? showDialog(
+                                            context: context,
+                                            builder:
+                                                (BuildContext buidContext) {
+                                              return AlertDialog(
+                                                title: const Text(
+                                                    "Previous Test Found"),
+                                                content: Text(
+                                                  'There is a previous test in progress. Would you like to continue or start over?',
+                                                  style:
+                                                      TextStyle(fontSize: 16.h),
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      // 이전 테스트 계속하기 로직 추가 가능
+                                                    },
+                                                    child:
+                                                        const Text('CONTINUE'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                      Navigator.push<void>(
+                                                        context,
+                                                        MaterialPageRoute<void>(
+                                                          builder: (BuildContext
+                                                                  builder) =>
+                                                              RestartTestScreen(
+                                                            check: check,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: const Text(
+                                                        'START OVER'),
+                                                  ),
+                                                ],
+                                              );
+                                            })
+                                        : Navigator.push<void>(
+                                            context,
+                                            MaterialPageRoute<void>(
+                                              builder: (BuildContext builder) =>
+                                                  RestartTestScreen(
+                                                check: check,
+                                              ),
+                                            ),
+                                          );
                                   },
                                   style: TextButton.styleFrom(
                                     backgroundColor: primary,

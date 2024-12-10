@@ -37,25 +37,27 @@ class AudioData {
 /// 피드백 데이터
 class FeedbackData {
   final int cardId;
+  String userAudioText;
   final List<int> mistakenIndexes;
   final int userScore;
   final Map<String, Map<String, dynamic>> recommendCard;
-  final List<String> recommendCardId;
+  final List<String> recommendCardKey;
   final List<String> recommendCardText;
-  final List<String> recommendCardCategory;
-  final List<String> recommendCardSubcategory;
+  final List<int> recommendCardId;
+  final List<String> recommendCardCorrectAudio;
   final List<AmplitudeData>? correctAudio;
   final List<AmplitudeData>? userAudio;
 
   FeedbackData({
     required this.cardId,
+    required this.userAudioText,
     required this.mistakenIndexes,
     required this.userScore,
     required this.recommendCard,
-    required this.recommendCardId,
+    required this.recommendCardKey,
     required this.recommendCardText,
-    required this.recommendCardCategory,
-    required this.recommendCardSubcategory,
+    required this.recommendCardId,
+    required this.recommendCardCorrectAudio,
     required this.correctAudio,
     required this.userAudio,
   });
@@ -63,10 +65,10 @@ class FeedbackData {
   factory FeedbackData.fromJson(Map<String, dynamic> json) {
     // recommendCard 처리
     Map<String, Map<String, dynamic>> recommendCard = {};
-    List<String> recommendCardId = [];
+    List<String> recommendCardKey = [];
     List<String> recommendCardText = [];
-    List<String> recommendCardCategory = [];
-    List<String> recommendCardSubcategory = [];
+    List<int> recommendCardId = [];
+    List<String> recommendCardCorrectAudio = [];
     List<AmplitudeData>? correctAudio = [];
 
     if (json['recommendCard'] != null && json['recommendCard'] is Map) {
@@ -74,10 +76,10 @@ class FeedbackData {
           Map<String, Map<String, dynamic>>.from(json['recommendCard']);
 
       recommendCard.forEach((key, value) {
-        recommendCardId.add(key);
+        recommendCardKey.add(key);
+        recommendCardId.add(value['id'] ?? 0);
         recommendCardText.add(value['text'] ?? '');
-        recommendCardCategory.add(value['category'] ?? '');
-        recommendCardSubcategory.add(value['subcategory'] ?? '');
+        recommendCardCorrectAudio.add(value['correctAudio'] ?? '');
       });
     }
 
@@ -95,12 +97,13 @@ class FeedbackData {
           : [],
       userScore: json['userScore'] ?? 0,
       recommendCard: recommendCard,
-      recommendCardId: recommendCardId,
+      recommendCardKey: recommendCardKey,
       recommendCardText: recommendCardText,
-      recommendCardCategory: recommendCardCategory,
-      recommendCardSubcategory: recommendCardSubcategory,
+      recommendCardId: recommendCardId,
+      recommendCardCorrectAudio: recommendCardCorrectAudio,
       correctAudio: correctAudioList,
       userAudio: userAudioList,
+      userAudioText: json['userAudio']['text'],
     );
   }
 

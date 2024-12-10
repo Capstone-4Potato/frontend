@@ -67,6 +67,10 @@ class ContentTodayGoal extends StatefulWidget {
 class _ContentTodayGoalState extends State<ContentTodayGoal> {
   Map<DateTime, List<int>> _attendanceDates = {};
   bool isLoading = true;
+  // 드롭다운 목록에 사용할 데이터 리스트
+  final List<String> _items = ['10', '15', '30'];
+  // 현재 선택된 값
+  String? _selectedItem;
 
   @override
   void initState() {
@@ -200,32 +204,37 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 9.0.w),
-              child: Container(
-                padding: EdgeInsets.only(top: 3.0.h),
-                decoration: const BoxDecoration(
+            DropdownButton<String>(
+              value: _selectedItem, // 선택된 값
+              hint: Container(
+                decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: Color.fromARGB(255, 213, 213, 213),
-                      width: 1.0, // 밑줄 두께
+                      color: const Color.fromARGB(255, 213, 213, 213),
+                      width: 1.0.w, // 밑줄 두께
                     ),
                   ),
                 ),
                 child: Text(
-                  '13/20',
+                  '$_selectedItem!/$_selectedItem!',
                   style: TextStyle(
                     color: bam,
-                    fontSize: 14.h,
+                    fontSize: 8.h,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-              ),
-            ),
-            Text(
-              '▼',
-              style: TextStyle(
-                fontSize: 14.h,
-              ),
+              ), // 아무것도 선택되지 않았을 때 표시할 텍스트
+              items: _items.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(item), // 각 항목의 텍스트
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedItem = newValue; // 선택된 값을 업데이트
+                });
+              },
             ),
           ],
         ),
@@ -723,6 +732,14 @@ class ContentLearningCourseCard extends StatelessWidget {
                 fontSize: 21.h,
                 color: bam,
               ),
+            ),
+            Text(
+              'Learning Course',
+              style: TextStyle(
+                  color: primary,
+                  fontSize: 18.h,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Pretendard'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

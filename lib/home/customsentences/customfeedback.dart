@@ -82,21 +82,21 @@ class _CustomFeedbackState extends State<CustomFeedback> {
                       ),
                     ),
                     SizedBox(height: constraints.maxHeight * 0.02),
-                    SizedBox(
-                      height: constraints.maxHeight * 0.06,
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: recommendText(
-                            widget.feedbackData.recommendCardId,
-                            widget.feedbackData.recommendCardText,
-                            widget.feedbackData.recommendCardCategory,
-                            widget.feedbackData.recommendCardSubcategory,
-                            context,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: constraints.maxHeight * 0.06,
+                    //   child: RichText(
+                    //     textAlign: TextAlign.center,
+                    //     text: TextSpan(
+                    //       children: recommendText(
+                    //         widget.feedbackData.recommendCardId,
+                    //         widget.feedbackData.recommendCardText,
+                    //         widget.feedbackData.recommendCardCategory,
+                    //         widget.feedbackData.recommendCardSubcategory,
+                    //         context,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(height: constraints.maxHeight * 0.027),
                     Expanded(
                       child: Stack(

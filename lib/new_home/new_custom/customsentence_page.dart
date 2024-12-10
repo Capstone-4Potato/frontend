@@ -21,6 +21,7 @@ class Sentence {
   final int id;
   final String text;
   final String engTranslation;
+  final String engPronunciation;
   final bool bookmark;
   String? createdAt;
 
@@ -28,6 +29,7 @@ class Sentence {
     required this.id,
     required this.text,
     required this.engTranslation,
+    required this.engPronunciation,
     required this.bookmark,
     required this.createdAt,
   });
@@ -37,6 +39,7 @@ class Sentence {
       id: json['id'],
       text: json['text'],
       engTranslation: json['engTranslation'],
+      engPronunciation: json['engPronunciation'],
       bookmark: json['bookmark'] ?? false,
       createdAt: json['createdAt'] ?? DateTime(2024, 10, 10).toIso8601String(),
     );
@@ -46,6 +49,7 @@ class Sentence {
         'id': id,
         'text': text,
         'engTranslation': engTranslation,
+        'engPronunciation': engPronunciation,
         'bookmark': bookmark,
         'createdAt': createdAt,
       };
@@ -188,7 +192,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
   Future<void> _addSentence() async {
     final text = _controller.text;
-    print(text);
+
     setState(() {
       isAddLoading = true;
     });
@@ -214,6 +218,13 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
           final newSentence = Sentence.fromJson(responseData);
           setState(() {
             _sentences.add(newSentence);
+            idList.add(newSentence.id);
+            textList.add(newSentence.text);
+            print(textList);
+            engPronunciationList.add(newSentence.engPronunciation);
+            engTranslationList.add(newSentence.engTranslation);
+            createdAtList.add(newSentence.createdAt!);
+            bookmarkList.add(false);
             _controller.clear();
             isAddLoading = false;
           });
@@ -244,6 +255,13 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
               if (mounted) {
                 setState(() {
                   _sentences.add(newSentence);
+                  idList.add(newSentence.id);
+                  textList.add(newSentence.text);
+                  print(textList);
+                  engPronunciationList.add(newSentence.engPronunciation);
+                  engTranslationList.add(newSentence.engTranslation);
+                  createdAtList.add(newSentence.createdAt!);
+                  bookmarkList.add(false);
                   _controller.clear();
                   isAddLoading = false;
                 });
@@ -524,7 +542,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                         : Stack(
                             children: [
                               ListView.builder(
-                                reverse: true,
+                                reverse: false,
                                 itemCount: _sentences.length,
                                 itemBuilder: (context, index) {
                                   return Padding(

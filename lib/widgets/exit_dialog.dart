@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
 
 class ExitDialog extends StatelessWidget {
   ExitDialog({
@@ -65,7 +66,7 @@ class ExitDialog extends StatelessWidget {
                   onTap: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => page),
+                      MaterialPageRoute(builder: (context) => const HomeNav()),
                       (route) => false,
                     );
                   },

@@ -3,14 +3,19 @@ import 'package:flutter_application_1/learninginfo/deletephonemes.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/gettestlist.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testcard.dart';
 
-class restartTestScreen extends StatefulWidget {
-  const restartTestScreen({super.key});
+class RestartTestScreen extends StatefulWidget {
+  RestartTestScreen({
+    super.key,
+    required this.check,
+  });
+
+  bool check;
 
   @override
-  State<restartTestScreen> createState() => _restartTestScreenState();
+  State<RestartTestScreen> createState() => _RestartTestScreenState();
 }
 
-class _restartTestScreenState extends State<restartTestScreen> {
+class _RestartTestScreenState extends State<RestartTestScreen> {
   late List<int> testIds = [];
   late List<String> testContents = [];
   late List<String> testPronunciations = [];
@@ -24,7 +29,8 @@ class _restartTestScreenState extends State<restartTestScreen> {
   }
 
   Future<void> initTestData() async {
-    var data = await fetchTestData();
+    var data =
+        widget.check ? await getTestContinueData() : await getTestNewData();
 
     if (data != null) {
       setState(() {
@@ -88,8 +94,6 @@ class _restartTestScreenState extends State<restartTestScreen> {
             const SizedBox(height: 30.0),
             ElevatedButton(
               onPressed: () async {
-                //취약음 삭제
-                deleteAllPhonemes();
                 // Add navigation to the test page
                 Navigator.pushAndRemoveUntil(
                     context,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/main.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_application_1/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,72 +58,64 @@ class _TestCardState extends State<TestCard> {
     setState(() {
       _isRecording = true;
     });
+
     String fileName = 'audio_record_${widget.testIds[_currentIndex]}.wav';
-    await _recorder.startRecorder(toFile: fileName);
+    String filePath = await getRecordingPath(fileName); // 절대 경로 가져오기
+
+    await _recorder.startRecorder(toFile: filePath);
   }
 
   Future<void> _stopRecording() async {
     var path = await _recorder.stopRecorder();
-    setState(() {
-      _isRecording = false;
-      _isRecorded = true;
-    });
-    await _uploadRecording(path);
+
+    if (path != null) {
+      print('Recording file saved to: $path');
+      setState(() {
+        _isRecording = false;
+        _isRecorded = true;
+      });
+      await _uploadRecording(path);
+    } else {
+      print('Error: Recording path is null');
+    }
+  }
+
+  Future<String> getRecordingPath(String fileName) async {
+    final directory = await getApplicationDocumentsDirectory();
+    return '${directory.path}/$fileName';
   }
 
   // 서버로 사용자가 녹음한 오디오 전송
   Future<void> _uploadRecording(String? path) async {
-    if (path != null) {
+    if (path != null && File(path).existsSync()) {
+      print('Uploading file: $path');
       String? token = await getAccessToken();
       var url = Uri.parse('$main_url/test/${widget.testIds[_currentIndex]}');
       var request = http.MultipartRequest('POST', url);
-      request.headers['access'] = token!;
+      request.headers['access'] = token ?? '';
 
       request.files.add(await http.MultipartFile.fromPath('userAudio', path));
+      print('Headers: ${request.headers}');
+      print('Files: ${request.files}');
 
       try {
         var response = await request.send();
+        String responseBody = await response.stream.bytesToString();
 
         if (response.statusCode == 200) {
-          String responseBody = await response.stream.bytesToString();
-          print('File uploaded successfully');
-          print('Response body: $responseBody');
+          print('Upload successful: $responseBody');
           _nextCard();
-        } else if (response.statusCode == 401) {
-          // Token expired, attempt to refresh the token
-          print('Access token expired. Refreshing token...');
-
-          // Refresh the access token
-          bool isRefreshed = await refreshAccessToken();
-          if (isRefreshed) {
-            // Retry the upload request with the new token
-            token = await getAccessToken();
-            request.headers['access'] = token!;
-
-            var retryResponse = await request.send();
-
-            if (retryResponse.statusCode == 200) {
-              String responseBody = await retryResponse.stream.bytesToString();
-              print('File uploaded successfully after token refresh');
-              print('Response body: $responseBody');
-              _nextCard();
-            } else {
-              print(
-                  'File upload failed after token refresh with status: ${retryResponse.statusCode}');
-              _showUploadErrorDialog();
-            }
-          } else {
-            print('Failed to refresh access token');
-            _showUploadErrorDialog();
-          }
         } else {
-          print('File upload failed with status: ${response.statusCode}');
+          print('Upload failed with status: ${response.statusCode}');
+          print('Response: $responseBody');
           _showUploadErrorDialog();
         }
       } catch (e) {
         print('Error uploading file: $e');
         _showUploadErrorDialog();
       }
+    } else {
+      print('Error: File does not exist at path $path');
     }
   }
 

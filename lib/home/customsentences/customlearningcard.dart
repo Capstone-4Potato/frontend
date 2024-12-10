@@ -111,8 +111,13 @@ class _CustomSentenceLearningCardState
   }
 
   void _onListenPressed() async {
-    await CustomTtsService.instance
-        .playCachedAudio(widget.cardIds[widget.currentIndex]);
+    print('${widget.cardIds[widget.currentIndex]}');
+    CustomTtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex])
+        .then((_) {
+      print('Audio fetched and saved successfully.');
+    }).catchError((error) {
+      print('Error fetching audio: $error');
+    });
     setState(() {
       _canRecord = true;
     });

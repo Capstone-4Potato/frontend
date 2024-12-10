@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/feedbackui.dart';
+import 'package:flutter_application_1/wordfeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
@@ -130,9 +130,10 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
           transform: Matrix4.translationValues(0.0, 112, 0.0),
           child: Opacity(
             opacity: animation.value,
-            child: FeedbackUI(
+            child: WordFeedbackUI(
               feedbackData: feedbackData,
               recordedFilePath: _recordedFilePath,
+              text: widget.texts[widget.currentIndex], // 카드 한글 발음
             ),
           ),
         );
