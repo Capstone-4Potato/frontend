@@ -39,6 +39,9 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
   void initState() {
     super.initState();
     _getLearningCourseList();
+    _scrollController.addListener(() {
+      _updateChoiceChipByScroll();
+    });
   }
 
   @override
@@ -46,6 +49,35 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
     // ScrollController 해제
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _updateChoiceChipByScroll() {
+    final double offset = _scrollController.offset;
+
+    final beginnerPosition = _getWidgetPosition(_beginnerKey);
+    final intermediatePosition = _getWidgetPosition(_intermediateKey);
+    final advancedPosition = _getWidgetPosition(_advancedKey);
+
+    setState(() {
+      if (offset >= advancedPosition) {
+        value = 2; // Advanced
+      } else if (offset >= intermediatePosition) {
+        value = 1; // Intermediate
+      } else {
+        value = 0; // Beginner
+      }
+    });
+  }
+
+  double _getWidgetPosition(GlobalKey key) {
+    final RenderBox? renderBox =
+        key.currentContext?.findRenderObject() as RenderBox?;
+    final position = renderBox?.localToGlobal(
+          Offset.zero,
+          ancestor: context.findRenderObject(),
+        ) ??
+        Offset.zero;
+    return position.dy;
   }
 
   /// 특정 인덱스로 스크롤 이동 함수
@@ -260,7 +292,8 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                       autofocus: true,
                       onSelected: (bool selected) {
                         setState(() {
-                          value = selected ? index : value; // 선택된 상태 업데이트
+                          // value = selected ? index : value; // 선택된 상태 업데이트
+                          value = index; // 선택된 상태 업데이트
                           _scrollToLevel(index);
                         });
                       },
