@@ -137,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
       CustomHomeCard(
           boxColor: Colors.white,
           contents: ContentTodayCard(
+            dailyWordId: dailyWordId,
             dailyWord: dailyWord,
             dailyWordPronunciation: dailyWordPronunciation,
           )),

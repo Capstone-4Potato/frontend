@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/new_home/new_custom/customsentence_page.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new_home/today_learning_card.dart';
 import 'package:flutter_application_1/new_learning_coures/learning_course_card_list.dart';
 import 'package:flutter_application_1/new_home/missed_cards_screen.dart';
 import 'package:flutter_application_1/new_home/saved_cards_screen.dart';
@@ -590,10 +591,12 @@ class Stamp extends StatelessWidget {
 class ContentTodayCard extends StatelessWidget {
   ContentTodayCard({
     super.key,
+    required this.dailyWordId,
     required this.dailyWord,
     required this.dailyWordPronunciation,
   });
 
+  int? dailyWordId;
   String? dailyWord;
   String? dailyWordPronunciation;
 
@@ -633,18 +636,30 @@ class ContentTodayCard extends StatelessWidget {
                     softWrap: true,
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: primary,
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 14.0.w, vertical: 8.0.h),
-                    child: const Text(
-                      'Try it →',
-                      style: TextStyle(
-                        color: Colors.white,
+                InkWell(
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => TodayLearningCard(
+                          cardId: dailyWordId!,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: primary,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 14.0.w, vertical: 8.0.h),
+                      child: const Text(
+                        'Try it →',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
