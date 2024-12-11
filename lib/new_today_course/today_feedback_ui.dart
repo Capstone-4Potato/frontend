@@ -148,13 +148,51 @@ class _TodayFeedbackUIState extends State<TodayFeedbackUI> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          Text(
-                                            widget.text,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 32.h,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Pretendard',
+                                          SizedBox(
+                                            width: 155.w,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  widget.text,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 32.h,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: 'Pretendard',
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: 42.w,
+                                                  height: 42.h,
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFFF1BEA7),
+                                                    shape: BoxShape
+                                                        .circle, // 원형 테두리
+                                                    border: Border.all(
+                                                      color: const Color(
+                                                          0xFFE87A49), // 테두리 색상
+                                                      width: 4.0.w, // 테두리 두께
+                                                    ),
+                                                  ),
+                                                  child: IconButton(
+                                                    icon: const Icon(
+                                                        Icons.volume_up),
+                                                    color: Colors.black,
+                                                    iconSize: 20.0.w,
+                                                    onPressed: () {
+                                                      TtsService.instance
+                                                          .playCachedAudio(
+                                                              widget
+                                                                  .feedbackData
+                                                                  .cardId);
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
@@ -185,13 +223,51 @@ class _TodayFeedbackUIState extends State<TodayFeedbackUI> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          Text(
-                                            widget.feedbackData.userText,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 32.h,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Pretendard',
+                                          SizedBox(
+                                            width: 155.w,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  widget.feedbackData.userText
+                                                          .isEmpty
+                                                      ? widget.text
+                                                      : widget.feedbackData
+                                                          .userText,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 32.h,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: 'Pretendard',
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: 42.w,
+                                                  height: 42.h,
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFFEBEBEB),
+                                                    shape: BoxShape
+                                                        .circle, // 원형 테두리
+                                                    border: Border.all(
+                                                      color: const Color(
+                                                          0xFFBEBDB8), // 테두리 색상
+                                                      width: 4.0.w, // 테두리 두께
+                                                    ),
+                                                  ),
+                                                  child: IconButton(
+                                                    icon: const Icon(
+                                                        Icons.volume_up),
+                                                    color: Colors.black,
+                                                    iconSize: 20.0.w,
+                                                    onPressed: () {
+                                                      _playUserRecording();
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],

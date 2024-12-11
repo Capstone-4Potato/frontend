@@ -4,8 +4,8 @@ import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-// 오늘의 단어 리스트 받아오는 API
-Future<List<int>> fetchTodayCourse() async {
+/// 오늘의 단어 리스트 받아오는 API
+Future<List<int>> postTodayCourse() async {
   List<int> cardIdList = [];
   SharedPreferences prefs = await SharedPreferences.getInstance();
 

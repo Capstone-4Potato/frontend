@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
 
 class SuccessDialog extends StatelessWidget {
   const SuccessDialog({
@@ -52,8 +53,7 @@ class SuccessDialog extends StatelessWidget {
               onTap: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const MainPage(initialIndex: 2)),
+                  MaterialPageRoute(builder: (context) => const HomeNav()),
                   (route) => false,
                 );
               },

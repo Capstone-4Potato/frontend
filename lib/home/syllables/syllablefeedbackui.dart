@@ -212,7 +212,7 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
                                             ),
                                           ),
                                           Text(
-                                            widget.text,
+                                            widget.feedbackData.userText,
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 32.h,

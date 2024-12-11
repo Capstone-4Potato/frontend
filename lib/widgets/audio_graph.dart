@@ -25,6 +25,7 @@ class AudioGraphWidget extends StatelessWidget {
       width: 280.h, // 그래프의 너비
       child: LineChart(
         LineChartData(
+          lineTouchData: const LineTouchData(enabled: false),
           borderData: FlBorderData(
               show: true,
               border: const Border(

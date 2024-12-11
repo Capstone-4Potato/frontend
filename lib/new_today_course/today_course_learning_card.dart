@@ -22,6 +22,7 @@ import 'package:flutter_application_1/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -73,6 +74,8 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
   audioplayers.AudioPlayer audioPlayer = audioplayers.AudioPlayer();
 
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+
   @override
   void initState() {
     super.initState();
@@ -84,6 +87,13 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   Future<void> _initializeRecorder() async {
     await Permission.microphone.request();
     await _recorder.openAudioSession();
+  }
+
+  // 마지막 학습 카드 ID 저장
+  Future<void> saveLastFinishedCard(int cardId) async {
+    await secureStorage.write(
+        key: 'lastFinishedCardId', value: cardId.toString());
+    print("Saved last finished card ID: $cardId");
   }
 
   // Base64 오디오 데이터를 디코딩하고 AudioPlayer로 재생
@@ -285,6 +295,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         setState(() {
           _currentIndex++;
           _isRecorded = false;
+          saveLastFinishedCard(widget.ids[_currentIndex]);
           print('After: currentIndex = $_currentIndex'); // 디버깅용
         });
       } else {
@@ -364,7 +375,14 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     );
   }
 
-  void _showExitDialog() {
+  void _showExitDialog() async {
+    // 현재까지 학습한 마지막 카드 ID 저장
+    if (widget.ids.isNotEmpty) {
+      int lastCardId = widget.ids.last; // 현재까지 학습한 마지막 카드 ID
+      await saveLastFinishedCard(lastCardId);
+      print("Saved last finished card ID: $lastCardId");
+    }
+
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -514,29 +532,6 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                           color: Color.fromARGB(129, 0, 0, 0),
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      _isImageLoading // 이미지 로딩 중 표시
-                          ? SizedBox(
-                              width: 300,
-                              height: 250,
-                              child: Center(
-                                  child: CircularProgressIndicator(
-                                color: primary,
-                              )))
-                          : Image.memory(
-                              _imageData!,
-                              fit: BoxFit.contain,
-                              width: 300,
-                              height: 250,
-                            ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        child: Text(
-                          widget.explanations[_currentIndex],
-                          style:
-                              TextStyle(fontSize: 13, color: Colors.grey[700]),
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],

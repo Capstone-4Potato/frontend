@@ -230,7 +230,11 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  widget.feedbackData.userText,
+                                                  widget.feedbackData.userText
+                                                          .isEmpty
+                                                      ? widget.text
+                                                      : widget.feedbackData
+                                                          .userText,
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 32.h,

@@ -8,6 +8,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_today_course/fetch_today_course.dart';
 import 'package:flutter_application_1/new_today_course/today_course_learning_card.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,6 +37,10 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
 
   bool isLoading = true;
 
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  int lastFinishedCardId = 0; // 마지막 학습 완료 카드 ID
+
+  /// 카드 번호별 정보 요청해서 저장
   Future<void> fetchTodayCourseCardList(int cardId) async {
     String? token = await getAccessToken();
     var url = Uri.parse('$main_url/cards/$cardId');
@@ -78,7 +83,6 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
               'weakCard': data['weakCard'],
               'bookmark': data['bookmark'],
             });
-            isLoading = false;
           });
         }
       } else if (response.statusCode == 401) {
@@ -118,7 +122,6 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
                   'weakCard': data['weakCard'],
                   'bookmark': data['bookmark'],
                 });
-                isLoading = false;
               });
             }
             print(response.body);
@@ -137,15 +140,69 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     }
   }
 
+  /// 카드 리스트에 있는 카드 id별로 카드 정보 저장
   Future<void> fetchAllCards() async {
     for (int cardId in cardList) {
       await fetchTodayCourseCardList(cardId); // 각 카드 정보 가져오기
     }
-    if (mounted) {
-      setState(() {
-        isLoading = false; // 모든 카드 정보 로딩 후 로딩 상태 업데이트
-      });
+    // if (mounted) {
+    //   setState(() {
+    //     isLoading = false; // 모든 카드 정보 로딩 후 로딩 상태 업데이트
+    //   });
+    // }
+  }
+
+  Future<void> filterCardsAfterLastFinished() async {
+    lastFinishedCardId = await loadLastFinishedCard();
+    print(lastFinishedCardId);
+    setState(() {
+      // 마지막 학습한 카드 이후의 카드만 남기기
+      cardList =
+          cardList.where((cardId) => cardId > lastFinishedCardId).toList();
+      print("hihi : $cardList");
+    });
+
+    if (cardList.isEmpty) {
+      // 카드가 모두 끝난 경우 새 카드 요청
+      print("All cards finished. Fetching new cards...");
+      await postTodayCourse();
+    } else {
+      fetchAllCards();
     }
+  }
+
+  // 마지막 학습 카드 ID 저장
+  Future<void> saveLastFinishedCard(int cardId) async {
+    await secureStorage.write(
+        key: 'lastFinishedCardId', value: cardId.toString());
+    print("Saved last finished card ID: $cardId");
+  }
+
+  // 마지막 학습 카드 ID 불러오기
+  Future<int> loadLastFinishedCard() async {
+    String? savedCardId = await secureStorage.read(key: 'lastFinishedCardId');
+    return savedCardId != null ? int.parse(savedCardId) : 0;
+  }
+
+  Future<void> fetchTodayCourseCards() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      // 새로운 카드 리스트 요청
+      cardList = await postTodayCourse();
+      if (cardList.isNotEmpty) {
+        await fetchAllCards();
+        // lastFinishedCard 초기화
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.remove(
+            'lastFinishedCard'); // SharedPreferences에서 lastFinishedCard 값 제거
+      } else {
+        print("No cards available from server.");
+      }
+    } catch (e) {
+      print("Error fetching new cards: $e");
+    } finally {}
   }
 
   // 학습 카드 리스트 불러오기
@@ -157,20 +214,23 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     });
 
     if (savedCardIdList != null && savedCardIdList.isNotEmpty) {
-      // 카드 리스트가 이미 저장되어 있으면, 해당 리스트를 int 리스트로 변환
       setState(() {
         cardList = savedCardIdList.map(int.parse).toList();
         print(cardList);
-        //isLoading = false; // 모든 카드 정보 로딩 후 로딩 상태 업데이트
-        fetchAllCards();
+      });
+      //await filterCardsAfterLastFinished();
+      await fetchTodayCourseCards();
+      setState(() {
+        isLoading = false;
       });
     } else {
-      // 카드 리스트가 없으면 새로 요청하여 저장
-      cardList = await fetchTodayCourse();
+      // 카드 리스트가 비어있으면 서버에서 새로 요청
+      print("Fetching new cards...");
+      await fetchTodayCourseCards();
+      setState(() {
+        isLoading = false;
+      });
     }
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -182,27 +242,23 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading || cardDetailsList.length < 10
+      body: isLoading
           ? Center(
               child: CircularProgressIndicator(
                 color: primary,
               ),
             )
-          : cardDetailsList.isEmpty
-              ? const Center(
-                  child: Text("No cards available."),
-                )
-              : TodayCourseLearningCard(
-                  ids: ids,
-                  texts: texts,
-                  correctAudios: correctAudios,
-                  cardTranslations: cardTranslations,
-                  cardPronunciations: cardPronunciations,
-                  pictureUrls: pictureUrls,
-                  explanations: explanations,
-                  weakCards: weakCards,
-                  bookmarks: bookmarks,
-                ),
+          : TodayCourseLearningCard(
+              ids: ids,
+              texts: texts,
+              correctAudios: correctAudios,
+              cardTranslations: cardTranslations,
+              cardPronunciations: cardPronunciations,
+              pictureUrls: pictureUrls,
+              explanations: explanations,
+              weakCards: weakCards,
+              bookmarks: bookmarks,
+            ),
     );
   }
 }
