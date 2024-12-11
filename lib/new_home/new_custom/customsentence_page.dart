@@ -7,6 +7,7 @@ import 'package:flutter_application_1/home/customsentences/customlearningcard.da
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
+import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -364,18 +365,9 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
     if (mounted) {
       showDialog(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Input Error'),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
-              ),
-            ],
+        builder: (BuildContext context) {
+          return RecordingErrorDialog(
+            text: message,
           );
         },
       );

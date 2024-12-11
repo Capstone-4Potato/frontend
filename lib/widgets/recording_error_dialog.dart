@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RecordingErrorDialog extends StatelessWidget {
-  const RecordingErrorDialog({
+  RecordingErrorDialog({
     super.key,
-    required this.width,
-    required this.height,
+    this.text = "Please try recording again.",
   });
 
-  final double width;
-  final double height;
+  String text;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +20,8 @@ class RecordingErrorDialog extends StatelessWidget {
       ),
       child: Container(
         padding: const EdgeInsets.all(24),
-        width: 333 * width,
-        height: 230 * height,
+        width: 333.w,
+        height: 230.h,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -53,8 +52,8 @@ class RecordingErrorDialog extends StatelessWidget {
                 Navigator.pop(context);
               },
               child: Container(
-                width: 148 * width,
-                height: 44 * height,
+                width: 148.w,
+                height: 44.h,
                 decoration: BoxDecoration(
                   color: accent,
                   borderRadius: BorderRadius.circular(20),

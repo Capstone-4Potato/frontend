@@ -22,6 +22,7 @@ Future<List<dynamic>?> getTestNewData() async {
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
+      print("import new test data");
       return data;
     } else if (response.statusCode == 401) {
       // Token expired, attempt to refresh the token
@@ -65,6 +66,7 @@ Future<List<dynamic>?> getTestContinueData() async {
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
+      print("import 기존 test data");
       return data;
     } else if (response.statusCode == 401) {
       // Token expired, attempt to refresh the token

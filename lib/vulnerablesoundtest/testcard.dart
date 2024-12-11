@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_application_1/learninginfo/study_info_page.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/updatecardweaksound.dart';
+import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
@@ -89,12 +91,22 @@ class _TestCardState extends State<TestCard> {
   Future<void> _uploadRecording(String? path) async {
     if (path != null && File(path).existsSync()) {
       print('Uploading file: $path');
+
       String? token = await getAccessToken();
       var url = Uri.parse('$main_url/test/${widget.testIds[_currentIndex]}');
+
+      // multipart/form-data 요청 생성
       var request = http.MultipartRequest('POST', url);
       request.headers['access'] = token ?? '';
 
-      request.files.add(await http.MultipartFile.fromPath('userAudio', path));
+      // 'userAudio' 필드에 파일 추가
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'userAudio', // 서버에서 요구하는 필드명
+          path, // 파일 경로
+        ),
+      );
+
       print('Headers: ${request.headers}');
       print('Files: ${request.files}');
 
@@ -140,24 +152,7 @@ class _TestCardState extends State<TestCard> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: const Text(
-            'Please try recording again.',
-            style: TextStyle(fontSize: 18),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Color(0xFFF26647), fontSize: 20),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        return RecordingErrorDialog();
       },
     );
   }
