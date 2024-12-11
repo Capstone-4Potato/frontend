@@ -186,7 +186,7 @@ class _TodayFeedbackUIState extends State<TodayFeedbackUI> {
                                             ),
                                           ),
                                           Text(
-                                            widget.text,
+                                            widget.feedbackData.userText,
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 32.h,
@@ -380,7 +380,7 @@ class _TodayFeedbackUIState extends State<TodayFeedbackUI> {
                                     ),
                                   ),
                                   Text(
-                                    widget.text,
+                                    widget.feedbackData.userText,
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 32.h,

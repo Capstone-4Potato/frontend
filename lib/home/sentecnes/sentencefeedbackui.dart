@@ -207,7 +207,7 @@ class _SentenceFeedbackUIState extends State<SentenceFeedbackUI> {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  widget.text,
+                                                  widget.feedbackData.userText,
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 16.h,
@@ -454,7 +454,7 @@ class _SentenceFeedbackUIState extends State<SentenceFeedbackUI> {
                                               // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
                                               text: TextSpan(
                                                 children: buildTextSpans(
-                                                  widget.text,
+                                                  widget.feedbackData.userText,
                                                   widget.feedbackData
                                                       .mistakenIndexes,
                                                 ),
@@ -693,7 +693,7 @@ class _SentenceFeedbackUIState extends State<SentenceFeedbackUI> {
                                               // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
                                               text: TextSpan(
                                                 children: buildTextSpans(
-                                                  widget.text,
+                                                  widget.feedbackData.userText,
                                                   widget.feedbackData
                                                       .mistakenIndexes,
                                                 ),

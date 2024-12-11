@@ -249,11 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Flexible(
               flex: 6,
               child: Center(
-                child: SvgPicture.asset(
-                  'assets/image/title_logo.svg',
-                  width: 200 * width,
-                  height: 115 * height,
-                ),
+                child: Image.asset('assets/image/title_logo.png'),
               ),
             ),
             const Spacer(

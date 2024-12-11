@@ -38,6 +38,7 @@ class AudioData {
 class FeedbackData {
   final int cardId;
   String userAudioText;
+  String userText;
   final List<int> mistakenIndexes;
   final int userScore;
   final Map<String, Map<String, dynamic>> recommendCard;
@@ -51,6 +52,7 @@ class FeedbackData {
   FeedbackData({
     required this.cardId,
     required this.userAudioText,
+    required this.userText,
     required this.mistakenIndexes,
     required this.userScore,
     required this.recommendCard,
@@ -104,6 +106,7 @@ class FeedbackData {
       correctAudio: correctAudioList,
       userAudio: userAudioList,
       userAudioText: json['userAudio']['text'],
+      userText: json['userText'],
     );
   }
 

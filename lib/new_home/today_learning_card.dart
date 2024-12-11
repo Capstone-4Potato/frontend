@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
@@ -59,6 +60,9 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
 
   // 학습카드 리스트 API (음절, 단어, 문장)
   Future<void> fetchData() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       String? token = await getAccessToken();
       // Backend server URL
@@ -82,6 +86,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
           cardPronunciation = data['cardPronunciation'];
           cardSummary = data['cardSummary'];
           cardCorrectAudio = data['correctAudio'];
+          _isLoading = false;
         });
         print("테스트 입니다: ${response.body}");
       } else if (response.statusCode == 401) {
@@ -102,12 +107,16 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
               cardPronunciation = data['cardPronunciation'];
               cardSummary = data['cardSummary'];
               cardCorrectAudio = data['correctAudio'];
+              _isLoading = false;
             });
           }
         }
       }
     } catch (e) {
       print(e);
+      setState(() {
+        _isLoading = false;
+      });
     }
     return; // Return null if there's an error or unsuccessful fetch
   }
@@ -262,75 +271,83 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
       backgroundColor: const Color(0xFFF5F5F5),
       body: Padding(
         padding: const EdgeInsets.only(top: 12),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  width: cardWidth,
-                  height: cardHeight,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border:
-                        Border.all(color: const Color(0xFFF26647), width: 3),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        cardText,
-                        style: TextStyle(
-                            fontSize: 36.h, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "[$cardPronunciation]",
-                        style: TextStyle(fontSize: 22, color: Colors.grey[700]),
-                      ),
-                      Text(
-                        cardPronunciation,
-                        style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                            color: Color.fromARGB(255, 231, 156, 135)),
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF26647),
-                          minimumSize: const Size(220, 40),
-                        ),
-                        onPressed: _onListenPressed,
-                        icon: const Icon(
-                          Icons.volume_up,
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: primary,
+                ),
+              )
+            : Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: cardWidth,
+                        height: cardHeight,
+                        decoration: BoxDecoration(
                           color: Colors.white,
+                          border: Border.all(
+                              color: const Color(0xFFF26647), width: 3),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        label: const Text(
-                          'Listen',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              cardText,
+                              style: TextStyle(
+                                  fontSize: 36.h, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "[$cardPronunciation]",
+                              style: TextStyle(
+                                  fontSize: 22, color: Colors.grey[700]),
+                            ),
+                            Text(
+                              cardPronunciation,
+                              style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color.fromARGB(255, 231, 156, 135)),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF26647),
+                                minimumSize: const Size(220, 40),
+                              ),
+                              onPressed: _onListenPressed,
+                              icon: const Icon(
+                                Icons.volume_up,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                'Listen',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            if (_isLoading)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 160),
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
-                ),
+                  if (_isLoading)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 160),
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
+                      ),
+                    ),
+                ],
               ),
-          ],
-        ),
       ),
       floatingActionButton: SizedBox(
         width: 70,
