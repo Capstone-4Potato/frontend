@@ -381,6 +381,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                   titleTextStyle: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.h,
+                                    fontFamily: "Pretendard",
                                     fontWeight: FontWeight.w600,
                                   ),
                                   leftChevronIcon: Icon(
@@ -981,73 +982,74 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: Divider(
-            height: 1.h,
-            thickness: 1.w,
-            color: const Color.fromARGB(255, 213, 213, 213),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(
-                  icon,
-                  color: bam,
-                ),
-                Container(
-                  width: 8.w,
-                ),
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: bam,
-                    fontSize: 18.h,
-                  ),
-                ),
-              ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Divider(
+              height: 1.h,
+              thickness: 1.w,
+              color: const Color.fromARGB(255, 213, 213, 213),
             ),
-            Row(
-              children: [
-                showCount
-                    ? Container(
-                        width: 26.w,
-                        height: 26.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: progress_color,
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                        child: Text(
-                          "$count",
-                          style: TextStyle(
-                            color: const Color.fromARGB(255, 160, 87, 50),
-                            fontSize: 16.h,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    icon,
+                    color: bam,
+                  ),
+                  Container(
+                    width: 8.w,
+                  ),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      color: bam,
+                      fontSize: 18.h,
+                    ),
+                  ),
+                ],
+              ),
+              // 카드 갯수 표시 & 화살표 아이콘
+              Row(
+                children: [
+                  showCount
+                      ? Container(
+                          width: 26.w,
+                          height: 26.h,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: progress_color,
+                            borderRadius: BorderRadius.circular(4.r),
                           ),
-                        ),
-                      )
-                    : Container(),
-                Container(
-                  width: 15.w,
-                ),
-                GestureDetector(
-                  onTap: onTap,
-                  child: Icon(
+                          child: Text(
+                            "$count",
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 160, 87, 50),
+                              fontSize: 16.h,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                  Container(
+                    width: 15.w,
+                  ),
+                  Icon(
                     Icons.arrow_forward_ios,
                     color: bam,
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
