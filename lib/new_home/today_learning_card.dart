@@ -278,74 +278,84 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                 ),
               )
             : Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  Column(
                     children: [
-                      Container(
-                        width: cardWidth,
-                        height: cardHeight,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                              color: const Color(0xFFF26647), width: 3),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              cardText,
-                              style: TextStyle(
-                                  fontSize: 36.h, fontWeight: FontWeight.bold),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: cardWidth,
+                            height: cardHeight,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color: const Color(0xFFF26647), width: 3),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            Text(
-                              "[$cardPronunciation]",
-                              style: TextStyle(
-                                  fontSize: 22, color: Colors.grey[700]),
-                            ),
-                            Text(
-                              cardPronunciation,
-                              style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color.fromARGB(255, 231, 156, 135)),
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFF26647),
-                                minimumSize: const Size(220, 40),
-                              ),
-                              onPressed: _onListenPressed,
-                              icon: const Icon(
-                                Icons.volume_up,
-                                color: Colors.white,
-                              ),
-                              label: const Text(
-                                'Listen',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  cardText,
+                                  style: TextStyle(
+                                      fontSize: 36.h,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ),
+                                Text(
+                                  "[$cardPronunciation]",
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.grey[700]),
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFF26647),
+                                    minimumSize: const Size(220, 40),
+                                  ),
+                                  onPressed: _onListenPressed,
+                                  icon: const Icon(
+                                    Icons.volume_up,
+                                    color: Colors.white,
+                                  ),
+                                  label: const Text(
+                                    'Listen',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                      if (_isLoading)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 160),
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFFF26647)),
+                          ),
+                        ),
                     ],
                   ),
-                  if (_isLoading)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 160),
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
+                  Center(
+                    child: SizedBox(
+                      width: 250.w,
+                      child: Text(
+                        cardSummary,
+                        style: TextStyle(
+                          fontSize: 28.w,
+                        ),
                       ),
                     ),
+                  ),
                 ],
               ),
       ),

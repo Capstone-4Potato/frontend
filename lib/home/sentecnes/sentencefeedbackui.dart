@@ -139,36 +139,54 @@ class _SentenceFeedbackUIState extends State<SentenceFeedbackUI> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            widget.text,
+                                            'Correct',
                                             style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 16.h,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Pretendard',
+                                              fontSize: 20.h,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          Container(
-                                            width: 42.w,
-                                            height: 42.h,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFFF1BEA7),
-                                              shape: BoxShape.circle, // 원형 테두리
-                                              border: Border.all(
-                                                color: const Color(
-                                                    0xFFE87A49), // 테두리 색상
-                                                width: 4.0.w, // 테두리 두께
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                widget.text,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16.h,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: 'Pretendard',
+                                                ),
                                               ),
-                                            ),
-                                            child: IconButton(
-                                              icon: const Icon(Icons.volume_up),
-                                              color: Colors.black,
-                                              iconSize: 20.0.w,
-                                              onPressed: () {
-                                                TtsService.instance
-                                                    .playCachedAudio(widget
-                                                        .feedbackData.cardId);
-                                              },
-                                            ),
+                                              Container(
+                                                width: 42.w,
+                                                height: 42.h,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      const Color(0xFFF1BEA7),
+                                                  shape:
+                                                      BoxShape.circle, // 원형 테두리
+                                                  border: Border.all(
+                                                    color: const Color(
+                                                        0xFFE87A49), // 테두리 색상
+                                                    width: 4.0.w, // 테두리 두께
+                                                  ),
+                                                ),
+                                                child: IconButton(
+                                                  icon: const Icon(
+                                                      Icons.volume_up),
+                                                  color: Colors.black,
+                                                  iconSize: 20.0.w,
+                                                  onPressed: () {
+                                                    TtsService.instance
+                                                        .playCachedAudio(widget
+                                                            .feedbackData
+                                                            .cardId);
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -381,9 +399,10 @@ class _SentenceFeedbackUIState extends State<SentenceFeedbackUI> {
                                           children: [
                                             Text(
                                               widget.text,
+                                              softWrap: true,
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 32.h,
+                                                fontSize: 16.h,
                                                 fontWeight: FontWeight.w600,
                                                 fontFamily: 'Pretendard',
                                               ),

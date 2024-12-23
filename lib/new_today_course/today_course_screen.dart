@@ -145,11 +145,6 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     for (int cardId in cardList) {
       await fetchTodayCourseCardList(cardId); // 각 카드 정보 가져오기
     }
-    // if (mounted) {
-    //   setState(() {
-    //     isLoading = false; // 모든 카드 정보 로딩 후 로딩 상태 업데이트
-    //   });
-    // }
   }
 
   Future<void> filterCardsAfterLastFinished() async {
@@ -167,7 +162,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
       print("All cards finished. Fetching new cards...");
       await postTodayCourse();
     } else {
-      fetchAllCards();
+      //fetchAllCards();
     }
   }
 
@@ -190,7 +185,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     });
     try {
       // 새로운 카드 리스트 요청
-      cardList = await postTodayCourse();
+
       if (cardList.isNotEmpty) {
         await fetchAllCards();
         // lastFinishedCard 초기화
@@ -216,21 +211,24 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     if (savedCardIdList != null && savedCardIdList.isNotEmpty) {
       setState(() {
         cardList = savedCardIdList.map(int.parse).toList();
-        print(cardList);
       });
-      //await filterCardsAfterLastFinished();
-      await fetchTodayCourseCards();
-      setState(() {
-        isLoading = false;
-      });
+
+      // 마지막 학습한 카드 이후 카드 필터링
+      await filterCardsAfterLastFinished();
+
+      // 카드 정보를 한 번만 요청
+      if (cardList.isNotEmpty) {
+        await fetchAllCards(); // 이미 필터링된 카드 리스트로만 정보 요청
+      }
     } else {
       // 카드 리스트가 비어있으면 서버에서 새로 요청
       print("Fetching new cards...");
       await fetchTodayCourseCards();
-      setState(() {
-        isLoading = false;
-      });
     }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override

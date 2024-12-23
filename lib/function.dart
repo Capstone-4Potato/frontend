@@ -274,12 +274,12 @@ List<TextSpan> buildTextSpans(String text, List<int>? mistakenIndexes) {
       TextStyle textStyle = isMistaken
           ? TextStyle(
               color: const Color(0xFFDE0000),
-              fontSize: 32.h,
+              fontSize: 16.h,
               fontWeight: FontWeight.w600,
             )
           : TextStyle(
               color: Colors.black,
-              fontSize: 32.h,
+              fontSize: 16.h,
               fontWeight: FontWeight.w600,
               fontFamily: 'Pretendard',
             );

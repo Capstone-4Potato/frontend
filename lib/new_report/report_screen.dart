@@ -933,17 +933,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 actions: <Widget>[
                                                   TextButton(
                                                     onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
                                                       // 이전 테스트 계속하기 로직 추가 가능
-                                                    },
-                                                    child:
-                                                        const Text('CONTINUE'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
                                                       Navigator.push<void>(
                                                         context,
                                                         MaterialPageRoute<void>(
@@ -955,8 +945,24 @@ class _ReportScreenState extends State<ReportScreen> {
                                                         ),
                                                       );
                                                     },
-                                                    child: const Text(
-                                                        'START OVER'),
+                                                    child:
+                                                        const Text('CONTINUE'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.push<void>(
+                                                        context,
+                                                        MaterialPageRoute<void>(
+                                                          builder: (BuildContext
+                                                                  builder) =>
+                                                              RestartTestScreen(
+                                                            check: false,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child:
+                                                        const Text('NEW START'),
                                                   ),
                                                 ],
                                               );

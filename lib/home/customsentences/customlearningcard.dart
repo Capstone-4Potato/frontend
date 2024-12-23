@@ -77,9 +77,10 @@ class _CustomSentenceLearningCardState
         final base64userAudio = base64Encode(fileBytes);
         final currentCardId = widget.cardIds[widget.currentIndex];
         final base64correctAudio = CustomTtsService.instance.base64CorrectAudio;
-
+        print("user : $base64userAudio");
+        print("correct : $base64correctAudio");
         if (base64correctAudio != null) {
-          final feedbackData = await customFeedback(
+          final feedbackData = await getCustomFeedback(
               currentCardId, base64userAudio, base64correctAudio);
 
           if (mounted && feedbackData != null) {

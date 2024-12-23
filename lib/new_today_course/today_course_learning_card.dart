@@ -11,6 +11,7 @@ import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/syllables/fetchimage.dart';
 import 'package:flutter_application_1/home/syllables/syllablefeedbackui.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
 import 'package:flutter_application_1/new_today_course/today_feedback_ui.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
@@ -27,6 +28,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodayCourseLearningCard extends StatefulWidget {
   List<int> ids = [];
@@ -76,6 +78,9 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
+  // 학습한 카드 갯수 변수
+  int learnedCardCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -87,6 +92,17 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   Future<void> _initializeRecorder() async {
     await Permission.microphone.request();
     await _recorder.openAudioSession();
+  }
+
+  // 카드 학습 후 학습한 카드 갯수 업데이트
+  Future<void> incrementLearnedCardCount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int currentCount = prefs.getInt('learnedCardCount') ?? 0;
+    currentCount++;
+    await prefs.setInt('learnedCardCount', currentCount);
+    setState(() {
+      learnedCardCount = currentCount;
+    });
   }
 
   // 마지막 학습 카드 ID 저장
@@ -293,6 +309,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     if (_isRecorded) {
       if (_currentIndex < widget.ids.length - 1) {
         setState(() {
+          incrementLearnedCardCount();
           _currentIndex++;
           _isRecorded = false;
           saveLastFinishedCard(widget.ids[_currentIndex]);
@@ -322,7 +339,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         return TodayFeedbackUI(
           feedbackData: feedbackData,
           recordedFilePath: _recordedFilePath,
-          text: widget.texts[_currentIndex - 1], // 카드 한글 발음
+          text: widget.texts[_currentIndex], // 카드 한글 발음
         );
       },
     );
@@ -393,7 +410,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         return ExitDialog(
           width: width,
           height: height,
-          page: const MainPage(initialIndex: 2),
+          page: const HomeNav(),
         );
       },
     );

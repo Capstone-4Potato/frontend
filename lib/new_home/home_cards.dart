@@ -14,6 +14,8 @@ import 'package:flutter_application_1/new_home/saved_cards_screen.dart';
 import 'package:flutter_application_1/new_learning_coures/learning_course_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -73,9 +75,39 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
   // 현재 선택된 값
   String? _selectedItem;
 
+  final FlutterSecureStorage _storage =
+      const FlutterSecureStorage(); // Secure storage 인스턴스
+  int totalCard = 10; // 선택된 카드 수를 저장할 변수  // 학습한 카드 갯수 변수
+  int learnedCardCount = 0;
+
   @override
   void initState() {
     super.initState();
+    _loadTotalCard();
+    loadLearnedCardCount();
+  }
+
+  // 학습한 카드 갯수 불러오기
+  Future<void> loadLearnedCardCount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      learnedCardCount = prefs.getInt('learnedCardCount') ?? 0;
+    });
+  }
+
+  // 앱 시작 시 secure storage에서 totalCard 값을 불러오는 함수
+  Future<void> _loadTotalCard() async {
+    String? savedCard = await _storage.read(key: 'totalCard');
+    if (savedCard != null) {
+      setState(() {
+        totalCard = int.parse(savedCard); // 저장된 값을 불러와 totalCard 변수에 할당
+      });
+    }
+  }
+
+  // 선택된 카드 수를 secure storage에 저장하는 함수
+  Future<void> _saveTotalCard(int value) async {
+    await _storage.write(key: 'totalCard', value: value.toString());
   }
 
   Future<void> fetchAttendanceData() async {
@@ -195,7 +227,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
               ),
               child: Container(
                 height: 13.h,
-                width: 13 / 20 * 246.w,
+                width: learnedCardCount / totalCard * 246.w,
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   color: primary,
@@ -206,7 +238,35 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
               ),
             ),
             DropdownButton<String>(
-              value: _selectedItem, // 선택된 값
+              value: totalCard.toString(), // 선택된 값
+              selectedItemBuilder: (BuildContext context) {
+                return <Widget>[
+                  Text(
+                    '$learnedCardCount / $totalCard', // 선택된 값과 학습한 카드 갯수 표시
+                    style: TextStyle(
+                      color: bam,
+                      fontSize: 10.h,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    '$learnedCardCount / $totalCard', // 선택된 값과 학습한 카드 갯수 표시
+                    style: TextStyle(
+                      color: bam,
+                      fontSize: 10.h,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    '$learnedCardCount / $totalCard', // 선택된 값과 학습한 카드 갯수 표시
+                    style: TextStyle(
+                      color: bam,
+                      fontSize: 10.h,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ];
+              },
               hint: Container(
                 decoration: BoxDecoration(
                   border: Border(
@@ -217,10 +277,10 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                   ),
                 ),
                 child: Text(
-                  '$_selectedItem!/$_selectedItem!',
+                  '$_selectedItem!',
                   style: TextStyle(
                     color: bam,
-                    fontSize: 8.h,
+                    fontSize: 18.h,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -232,9 +292,13 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                 );
               }).toList(),
               onChanged: (String? newValue) {
-                setState(() {
-                  _selectedItem = newValue; // 선택된 값을 업데이트
-                });
+                if (newValue != null) {
+                  setState(() {
+                    totalCard = int.parse(newValue);
+                  });
+                  _saveTotalCard(
+                      int.parse(newValue)); // 선택된 값을 secure storage에 저장
+                }
               },
             ),
           ],

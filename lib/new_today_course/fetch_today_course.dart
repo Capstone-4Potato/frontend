@@ -9,8 +9,11 @@ Future<List<int>> postTodayCourse() async {
   List<int> cardIdList = [];
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
+  // SharedPreferences에서 저장된 totalCard 값을 가져옴 (기본값 10)
+  int totalCard = prefs.getInt('totalCard') ?? 10;
+
   // 학습할 카드 갯수 초기화 (기본값 10) 및 학습한 카드 갯수 초기화 (기본값 0)
-  await prefs.setInt('courseSize', 10);
+  await prefs.setInt('courseSize', totalCard); // totalCard를 courseSize로 설정
   await prefs.setInt('learnedCardCount', 0);
 
   try {

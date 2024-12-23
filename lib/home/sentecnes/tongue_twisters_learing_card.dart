@@ -195,9 +195,6 @@ class _TongueTwistersLearningCardState
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.74;
-    double cardHeight = widget.currentIndex != 0
-        ? MediaQuery.of(context).size.height * 0.38
-        : MediaQuery.of(context).size.height * 0.58;
 
     String currentContent = widget.texts[widget.currentIndex];
     String currentPronunciation = widget.pronunciations[widget.currentIndex];
@@ -294,7 +291,6 @@ class _TongueTwistersLearningCardState
                       ),
                       Container(
                         width: cardWidth,
-                        height: cardHeight,
                         padding: const EdgeInsets.all(12.0),
                         decoration: BoxDecoration(
                           color: Colors.white,

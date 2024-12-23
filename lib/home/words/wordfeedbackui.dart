@@ -299,6 +299,23 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                         ),
                                       ],
                                     ),
+                                    // SizedBox(
+                                    //   child: RichText(
+                                    //     textAlign: TextAlign.center,
+                                    //     text: TextSpan(
+                                    //       children: recommendText(
+                                    //         widget.feedbackData.recommendCardId,
+                                    //         widget
+                                    //             .feedbackData.recommendCardText,
+                                    //         widget.feedbackData
+                                    //             .recommendCardCategory,
+                                    //         widget.feedbackData
+                                    //             .recommendCardSubcategory,
+                                    //         context,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     AudioGraphWidget(
                                       feedbackData: widget.feedbackData,
                                     ),
