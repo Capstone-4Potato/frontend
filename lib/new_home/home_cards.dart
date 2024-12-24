@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -216,6 +217,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
           height: 5.h,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               width: 246.w,
@@ -223,7 +225,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 235, 235, 235),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: Container(
                 height: 13.h,
@@ -237,69 +239,73 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                 ),
               ),
             ),
-            DropdownButton<String>(
-              value: totalCard.toString(), // 선택된 값
-              selectedItemBuilder: (BuildContext context) {
-                return <Widget>[
-                  Text(
-                    '$learnedCardCount / $totalCard', // 선택된 값과 학습한 카드 갯수 표시
-                    style: TextStyle(
-                      color: bam,
-                      fontSize: 10.h,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    '$learnedCardCount / $totalCard', // 선택된 값과 학습한 카드 갯수 표시
-                    style: TextStyle(
-                      color: bam,
-                      fontSize: 10.h,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    '$learnedCardCount / $totalCard', // 선택된 값과 학습한 카드 갯수 표시
-                    style: TextStyle(
-                      color: bam,
-                      fontSize: 10.h,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ];
-              },
-              hint: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: const Color.fromARGB(255, 213, 213, 213),
-                      width: 1.0.w, // 밑줄 두께
-                    ),
-                  ),
-                ),
-                child: Text(
-                  '$_selectedItem!',
-                  style: TextStyle(
-                    color: bam,
-                    fontSize: 18.h,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ), // 아무것도 선택되지 않았을 때 표시할 텍스트
-              items: _items.map((String item) {
-                return DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(item), // 각 항목의 텍스트
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                if (newValue != null) {
+            DropdownButton2<String>(
+              isExpanded: true,
+              items: _items
+                  .map((String item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item, // 선택된 값과 학습한 카드 갯수 표시
+                          style: TextStyle(
+                            color: bam,
+                            fontSize: 14.w,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ))
+                  .toList(),
+              onChanged: (String? value) {
+                if (value != null) {
                   setState(() {
-                    totalCard = int.parse(newValue);
+                    totalCard = int.parse(value);
+                    _saveTotalCard(
+                        int.parse(value)); // 선택된 값을 secure storage에 저장
                   });
-                  _saveTotalCard(
-                      int.parse(newValue)); // 선택된 값을 secure storage에 저장
                 }
               },
+              buttonStyleData: ButtonStyleData(
+                padding: const EdgeInsets.symmetric(horizontal: 0),
+                height: 40.h,
+                width: 58.w,
+              ),
+              menuItemStyleData: MenuItemStyleData(
+                height: 40.h,
+              ),
+              iconStyleData: IconStyleData(
+                icon: Row(
+                  children: [
+                    Text(
+                      "$learnedCardCount/$totalCard",
+                      style: TextStyle(
+                        color: bam,
+                        fontSize: 14.w,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.arrow_drop_down_rounded,
+                    ),
+                  ],
+                ),
+              ),
+              dropdownStyleData: DropdownStyleData(
+                width: 54.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: Colors.white,
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: const Color.fromARGB(255, 157, 169, 204)
+                          .withOpacity(0.1),
+                      blurRadius: 10.0,
+                      spreadRadius: 5.0,
+                      offset: const Offset(0.0, 2.0),
+                      blurStyle: BlurStyle.inner,
+                    ),
+                  ],
+                ),
+                elevation: 4,
+              ),
             ),
           ],
         ),
