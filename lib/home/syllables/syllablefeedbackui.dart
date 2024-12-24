@@ -47,7 +47,7 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
     // recommendCard의 key값 가져오기
     String recommendCardKey = widget.feedbackData.getRecommendCardKey();
 
-    return widget.feedbackData.userScore == 100
+    return widget.feedbackData.userScore == 100 // 100 점일 때 피드백
         ? DraggableScrollableSheet(
             // 드래그 시트
             initialChildSize: (734 / 853).h,
@@ -150,37 +150,49 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          Text(
-                                            widget.text,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 32.h,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Pretendard',
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 42.w,
-                                            height: 42.h,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFFF1BEA7),
-                                              shape: BoxShape.circle, // 원형 테두리
-                                              border: Border.all(
-                                                color: const Color(
-                                                    0xFFE87A49), // 테두리 색상
-                                                width: 4.0.w, // 테두리 두께
+                                          Row(
+                                            children: [
+                                              Text(
+                                                widget.text,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 32.h,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: 'Pretendard',
+                                                ),
                                               ),
-                                            ),
-                                            child: IconButton(
-                                              icon: const Icon(Icons.volume_up),
-                                              color: Colors.black,
-                                              iconSize: 20.0.w,
-                                              onPressed: () {
-                                                TtsService.instance
-                                                    .playCachedAudio(widget
-                                                        .feedbackData.cardId);
-                                              },
-                                            ),
+                                              SizedBox(
+                                                width: 80.w,
+                                              ),
+                                              Container(
+                                                width: 42.w,
+                                                height: 42.h,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      const Color(0xFFF1BEA7),
+                                                  shape:
+                                                      BoxShape.circle, // 원형 테두리
+                                                  border: Border.all(
+                                                    color: const Color(
+                                                        0xFFE87A49), // 테두리 색상
+                                                    width: 4.0.w, // 테두리 두께
+                                                  ),
+                                                ),
+                                                child: IconButton(
+                                                  icon: const Icon(
+                                                      Icons.volume_up),
+                                                  color: Colors.black,
+                                                  iconSize: 20.0.w,
+                                                  onPressed: () {
+                                                    TtsService.instance
+                                                        .playCachedAudio(widget
+                                                            .feedbackData
+                                                            .cardId);
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -211,35 +223,46 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          Text(
-                                            widget.feedbackData.userText,
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 32.h,
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Pretendard',
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 42.w,
-                                            height: 42.h,
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFFEBEBEB),
-                                              shape: BoxShape.circle, // 원형 테두리
-                                              border: Border.all(
-                                                color: const Color(
-                                                    0xFFBEBDB8), // 테두리 색상
-                                                width: 4.0.w, // 테두리 두께
+                                          Row(
+                                            children: [
+                                              Text(
+                                                widget.text,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 32.h,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: 'Pretendard',
+                                                ),
                                               ),
-                                            ),
-                                            child: IconButton(
-                                              icon: const Icon(Icons.volume_up),
-                                              color: Colors.black,
-                                              iconSize: 20.0.w,
-                                              onPressed: () {
-                                                _playUserRecording();
-                                              },
-                                            ),
+                                              SizedBox(
+                                                width: 80.w,
+                                              ),
+                                              Container(
+                                                width: 42.w,
+                                                height: 42.h,
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      const Color(0xFFEBEBEB),
+                                                  shape:
+                                                      BoxShape.circle, // 원형 테두리
+                                                  border: Border.all(
+                                                    color: const Color(
+                                                        0xFFBEBDB8), // 테두리 색상
+                                                    width: 4.0.w, // 테두리 두께
+                                                  ),
+                                                ),
+                                                child: IconButton(
+                                                  icon: const Icon(
+                                                      Icons.volume_up),
+                                                  color: Colors.black,
+                                                  iconSize: 20.0.w,
+                                                  onPressed: () {
+                                                    _playUserRecording();
+                                                  },
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -252,7 +275,6 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Container(
-                                          //height: 28.h,
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 12.w, vertical: 3.h),
                                           decoration: BoxDecoration(
@@ -291,6 +313,7 @@ class _SyllableFeedbackUIState extends State<SyllableFeedbackUI> {
             },
           )
         : DraggableScrollableSheet(
+            // 100점 아닐 때 피드백
             // 드래그 시트
             initialChildSize: (652 / 853).h,
             minChildSize: (400 / 665).h,

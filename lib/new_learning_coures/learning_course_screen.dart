@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+/// 러닝 코스 단계 선택 리스트 스크린
 class LearningCourseScreen extends StatefulWidget {
   const LearningCourseScreen({super.key});
 

@@ -15,6 +15,7 @@ import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -247,6 +248,18 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: bam,
+              onPressed: () {
+                Navigator.pop(context, widget.bookmarked[widget.currentIndex]);
+              },
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: Icon(
@@ -322,7 +335,11 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                       onPressed: widget.currentIndex > 0
                           ? () {
                               int nextIndex = widget.currentIndex - 1;
-                              navigateToCard(nextIndex);
+                              pageController.animateToPage(
+                                nextIndex,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
                               _loadImage();
                               TtsService.fetchCorrectAudio(
                                       widget.cardIds[nextIndex])
@@ -396,7 +413,11 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                       onPressed: widget.currentIndex < widget.texts.length - 1
                           ? () {
                               int nextIndex = widget.currentIndex + 1;
-                              navigateToCard(nextIndex); // 다음 카드로 이동
+                              pageController.animateToPage(
+                                nextIndex,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
                               _loadImage(); // 이미지 로드
                               // 다음 카드에 해당하는 올바른 음성 데이터 불러오기
                               TtsService.fetchCorrectAudio(
@@ -422,11 +443,13 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                       child: Column(
                         children: <Widget>[
                           _isImageLoading // 이미지 로딩 중 표시
-                              ? const SizedBox(
-                                  width: 300,
-                                  height: 250,
+                              ? SizedBox(
+                                  width: 300.w,
+                                  height: 250.h,
                                   child: Center(
-                                      child: CircularProgressIndicator()))
+                                      child: CircularProgressIndicator(
+                                    color: primary,
+                                  )))
                               : Image.memory(
                                   _imageData!,
                                   fit: BoxFit.contain,

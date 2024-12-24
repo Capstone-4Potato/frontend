@@ -13,7 +13,7 @@ import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 
-/// 레벨 별로 카드 리스트 불러옴
+/// 레벨 별로 학습 카드 목록 띄워주는 스크린
 class LearningCourseCardList extends StatefulWidget {
   LearningCourseCardList({
     super.key,
@@ -152,6 +152,7 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                     TtsService.fetchCorrectAudio(idList[index]).then((_) {
                       print('Audio fetched and saved successfully.');
                     });
+                    // level 1 : 음절 학습 카드로 이동
                     if (widget.level == 1) {
                       Navigator.push(
                         context,
@@ -167,7 +168,13 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                             bookmarked: bookmarkList,
                           ),
                         ),
-                      );
+                      ).then((updatedBookmark) {
+                        if (updatedBookmark != null) {
+                          setState(() {
+                            bookmarkList[index] = updatedBookmark;
+                          });
+                        }
+                      });
                     } else if (widget.level < 16) {
                       Navigator.push(
                         context,

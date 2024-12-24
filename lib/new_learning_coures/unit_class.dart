@@ -1,5 +1,6 @@
 import 'package:flutter_application_1/new_learning_coures/unit_subtitle_class.dart';
 
+/// Unit 정의
 class Unit {
   final int id;
   final int totalNumber;
