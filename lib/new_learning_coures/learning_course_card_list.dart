@@ -141,9 +141,7 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                 crossAxisCount: widget.level < 16 ? 2 : 1,
                 crossAxisSpacing: widget.level < 16 ? 15.w : 12.w,
                 mainAxisSpacing: widget.level < 16 ? 15.h : 4.h,
-                childAspectRatio: widget.level < 16 || widget.level == 25
-                    ? 6 / 4.3
-                    : 10 / 3.4,
+                childAspectRatio: widget.level < 16 ? 6 / 4.3 : 10 / 3.4,
               ),
               itemCount: idList.length,
               itemBuilder: (BuildContext context, int index) {
@@ -222,7 +220,9 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                           });
                         }
                       });
-                    } else {
+                    }
+                    // level 23 이상 : 잰말놀이 학습 카드로 이동
+                    else {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -235,7 +235,13 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                             bookmarked: bookmarkList,
                           ),
                         ),
-                      );
+                      ).then((updatedBookmark) {
+                        if (updatedBookmark != null) {
+                          setState(() {
+                            bookmarkList[index] = updatedBookmark;
+                          });
+                        }
+                      });
                     }
                   },
                   child: Opacity(
@@ -321,7 +327,8 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                                 ),
                               ],
                             )
-                          : Stack(
+                          : // level이 16보다 크면
+                          Stack(
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(8.0.w),
