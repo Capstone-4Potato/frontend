@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/home/syllables/syllablelist/syllable_consonants.dart';
@@ -75,7 +76,6 @@ Future<FeedbackData?> getFeedback(
   String url = '$main_url/cards/$cardId';
 
   String? token = await getAccessToken();
-  // Function to make the POST request
   Future<http.Response> makePostRequest(String token) {
     return http.post(
       Uri.parse(url),
@@ -90,42 +90,58 @@ Future<FeedbackData?> getFeedback(
     if (response.statusCode == 200) {
       print('Successful feedback submission');
       var responseData = json.decode(response.body);
-      print("feedback : $responseData");
-      //print('${responseData['correctAudio']}');
       return FeedbackData.fromJson(responseData);
     } else if (response.statusCode == 401) {
-      // Token expired, attempt to refresh the token
+      // Handle token expiration
       print('Access token expired. Refreshing token...');
-
-      // Refresh the access token
       bool isRefreshed = await refreshAccessToken();
       if (isRefreshed) {
-        // Retry the feedback request with the new token
         token = await getAccessToken();
         response = await makePostRequest(token!);
-
         if (response.statusCode == 200) {
           print('Successful feedback submission after token refresh');
           var responseData = json.decode(response.body);
           return FeedbackData.fromJson(responseData);
         } else {
-          print(
-              'Failed to submit feedback after token refresh: ${response.statusCode}');
+          print('Failed after token refresh: ${response.statusCode}');
           return null;
         }
       } else {
         print('Failed to refresh access token');
         return null;
       }
-    } else {
-      // Handle all other HTTP status codes
-      print('Unhandled server response: ${response.statusCode}');
-      print(json.decode(response.body));
-      return null;
+    } else if (response.statusCode == 500) {
+      var responseData = json.decode(response.body);
+      var message = responseData['message'];
+      if (message is String) {
+        var messageDetail = json.decode(message)['detail'];
+        if (messageDetail ==
+                "failed to extract user text (STT), please request re-recording" ||
+            messageDetail == "no non-silent samples to save" ||
+            messageDetail ==
+                "User text is too short, please request re-recording") {
+          throw Exception('ReRecordNeeded');
+        }
+      } else if (message is Map) {
+        if (message['detail'] ==
+                "failed to extract user text (STT), please request re-recording" ||
+            message['detail'] == "no non-silent samples to save" ||
+            message['detail' ==
+                "User text is too short, please request re-recording"]) {
+          throw Exception('ReRecordNeeded');
+        }
+      }
     }
+
+    print('Unhandled server response: ${response.statusCode}');
+    print(json.decode(response.body));
+    return null;
   } catch (e) {
-    // Handle exceptions that occur during the network request
     print("Error during the request: $e");
+    if (e.toString() == 'Exception: ReRecordNeeded') {
+      // If ReRecordNeeded exception occurs, signal to the calling function
+      throw Exception('ReRecordNeeded');
+    }
     return null;
   }
 }
@@ -263,7 +279,7 @@ Future<FeedbackData?> getCustomFeedback(
 }
 
 // 단어, 문장, 사용자문장 피드백 화면에서 잘못발음한 텍스트 표현하기 위함
-List<TextSpan> buildTextSpans(String text, List<int>? mistakenIndexes) {
+Widget buildTextSpans(String text, List<int>? mistakenIndexes) {
   List<TextSpan> spans = [];
   print(text);
   if (mistakenIndexes != null)
@@ -285,11 +301,13 @@ List<TextSpan> buildTextSpans(String text, List<int>? mistakenIndexes) {
             );
       spans.add(TextSpan(text: text[i], style: textStyle));
     }
-  return spans;
+  return AutoSizeText.rich(
+    TextSpan(children: spans),
+  );
 }
 
 // 사용자가 발음하지 못한 음절은 회색으로 표시
-List<TextSpan> buildTextSpansOmit(String correctText, String userText) {
+Widget buildTextSpansOmit(String correctText, String userText) {
   List<TextSpan> spans = [];
 
   for (int i = 0; i < correctText.length; i++) {
@@ -318,7 +336,9 @@ List<TextSpan> buildTextSpansOmit(String correctText, String userText) {
     ));
   }
 
-  return spans;
+  return AutoSizeText.rich(
+    TextSpan(children: spans),
+  );
 }
 
 // 추천 학습 링크 UI : 단어 / 문장 / 사용자 맞춤 문장

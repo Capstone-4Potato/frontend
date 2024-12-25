@@ -483,14 +483,14 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            RichText(
-                                              // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
-                                              text: TextSpan(
-                                                children: buildTextSpans(
-                                                  widget.feedbackData.userText,
-                                                  widget.feedbackData
-                                                      .mistakenIndexes,
-                                                ),
+                                            SizedBox(
+                                              width: 150.w,
+                                              child:
+                                                  // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
+                                                  buildTextSpans(
+                                                widget.feedbackData.userText,
+                                                widget.feedbackData
+                                                    .mistakenIndexes,
                                               ),
                                             ),
                                             SizedBox(
@@ -729,26 +729,22 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            RichText(
-                                              // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
-                                              text: TextSpan(
-                                                children: widget.feedbackData
-                                                            .userText.length ==
-                                                        widget.text.length
-                                                    ? buildTextSpans(
-                                                        // 틀린 글자가 있을 때
-                                                        widget.feedbackData
-                                                            .userText,
-                                                        widget.feedbackData
-                                                            .mistakenIndexes,
-                                                      )
-                                                    : buildTextSpansOmit(
-                                                        // 발음 안된 글자가 있을 때
-                                                        widget.text,
-                                                        widget.feedbackData
-                                                            .userText),
-                                              ),
-                                            ),
+                                            widget.feedbackData.userText
+                                                        .length ==
+                                                    widget.text.length
+                                                ?
+                                                // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
+                                                buildTextSpans(
+                                                    widget
+                                                        .feedbackData.userText,
+                                                    widget.feedbackData
+                                                        .mistakenIndexes,
+                                                  )
+                                                : buildTextSpansOmit(
+                                                    // 발음 안된 글자가 있을 때
+                                                    widget.text,
+                                                    widget
+                                                        .feedbackData.userText),
                                             Container(
                                               width: 42.w,
                                               height: 42.h,

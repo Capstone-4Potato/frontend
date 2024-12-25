@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/home/sentecnes/sentencefeedbackui.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
@@ -67,9 +69,8 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
       if (path != null) {
         setState(() {
           _isRecording = false;
-          //_canRecord = false;
           _recordedFilePath = path;
-          _isLoading = true; // 로딩 시작
+          _isLoading = true; // Start loading
         });
         final audioFile = File(path);
         final fileBytes = await audioFile.readAsBytes();
@@ -78,23 +79,46 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
         final base64correctAudio = TtsService.instance.base64CorrectAudio;
 
         if (base64correctAudio != null) {
-          final feedbackData = await getFeedback(
-              currentCardId, base64userAudio, base64correctAudio);
+          try {
+            // Set a timeout for the getFeedback call
+            final feedbackData = await getFeedback(
+              currentCardId,
+              base64userAudio,
+              base64correctAudio,
+            ).timeout(
+              const Duration(seconds: 6),
+              onTimeout: () {
+                throw TimeoutException('Feedback request timed out');
+              },
+            );
 
-          if (mounted && feedbackData != null) {
-            setState(() {
-              _isLoading = false; // 로딩 종료
-            });
-            showFeedbackDialog(context, feedbackData);
-          } else {
-            setState(() {
-              _isLoading = false; // 로딩 종료
+            if (mounted && feedbackData != null) {
+              setState(() {
+                _isLoading = false; // Stop loading
+              });
+              showFeedbackDialog(context, feedbackData);
+            } else {
+              setState(() {
+                _isLoading = false; // Stop loading
+              });
               showErrorDialog();
+            }
+          } catch (e) {
+            setState(() {
+              _isLoading = false; // Stop loading
             });
+            if (e.toString() == 'Exception: ReRecordNeeded') {
+              // Show the ReRecordNeeded dialog if the exception occurs
+              showRecordLongerDialog(context);
+            } else if (e is TimeoutException) {
+              showTimeoutDialog(); // Show error dialog on timeout
+            } else {
+              showErrorDialog();
+            }
           }
         } else {
           setState(() {
-            _isLoading = false; // 로딩 종료
+            _isLoading = false; // Stop loading
           });
         }
       }
@@ -110,7 +134,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
   }
 
   void _onListenPressed() async {
-    //await TtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex]);
+    await TtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex]);
     await TtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
     setState(() {
@@ -146,19 +170,26 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
     );
   }
 
-  void navigateToCard(int newIndex) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SentenceLearningCard(
-          currentIndex: newIndex,
-          cardIds: widget.cardIds,
-          texts: widget.texts,
-          pronunciations: widget.pronunciations,
-          engpronunciations: widget.engpronunciations,
-          bookmarked: widget.bookmarked,
-        ),
-      ),
+  void showTimeoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "The server response timed out. Please try again.",
+        );
+      },
+    );
+  }
+
+  // "좀 더 길게 녹음해주세요" 다이얼로그 표시 함수
+  void showRecordLongerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "Please press the stop recording button a bit later.",
+        );
+      },
     );
   }
 
@@ -192,14 +223,21 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
     double cardWidth = MediaQuery.of(context).size.width * 0.74;
     double cardHeight = MediaQuery.of(context).size.height * 0.35;
 
-    String currentContent = widget.texts[widget.currentIndex];
-    String currentPronunciation = widget.pronunciations[widget.currentIndex];
-    String currentEngPronunciation =
-        widget.engpronunciations[widget.currentIndex];
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: bam,
+              onPressed: () {
+                Navigator.pop(context, widget.bookmarked[widget.currentIndex]);
+              },
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: Icon(
@@ -273,7 +311,6 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
                         onPressed: widget.currentIndex > 0
                             ? () {
                                 int nextIndex = widget.currentIndex - 1;
-                                navigateToCard(nextIndex);
                                 TtsService.fetchCorrectAudio(
                                         widget.cardIds[nextIndex])
                                     .then((_) {
@@ -353,7 +390,11 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
                         onPressed: widget.currentIndex < widget.texts.length - 1
                             ? () {
                                 int nextIndex = widget.currentIndex + 1;
-                                navigateToCard(nextIndex);
+                                pageController.animateToPage(
+                                  nextIndex,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
                                 TtsService.fetchCorrectAudio(
                                         widget.cardIds[nextIndex])
                                     .then((_) {

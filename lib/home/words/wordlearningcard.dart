@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -64,7 +65,6 @@ class _WordLearningCardState extends State<WordLearningCard> {
     super.initState();
     _initialize();
     fetchData();
-    //_loadImage(); // 이미지 로드
     pageController =
         PageController(initialPage: widget.currentIndex); // PageController 초기화
   }
@@ -101,7 +101,6 @@ class _WordLearningCardState extends State<WordLearningCard> {
           _loadImage();
           _isLoading = false;
         });
-        print("테스트 입니다: ${response.body}");
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh the token
         print('Access token expired. Refreshing token...');
@@ -174,33 +173,55 @@ class _WordLearningCardState extends State<WordLearningCard> {
         setState(() {
           _isRecording = false;
           _recordedFilePath = path;
-          _isLoading = true; // 로딩 시작
+          _isLoading = true; // Start loading
         });
         final audioFile = File(path);
-        print(path);
         final fileBytes = await audioFile.readAsBytes();
         final base64userAudio = base64Encode(fileBytes);
         final currentCardId = widget.cardIds[widget.currentIndex];
         final base64correctAudio = TtsService.instance.base64CorrectAudio;
 
         if (base64correctAudio != null) {
-          final feedbackData = await getFeedback(
-              currentCardId, base64userAudio, base64correctAudio);
+          try {
+            // Set a timeout for the getFeedback call
+            final feedbackData = await getFeedback(
+              currentCardId,
+              base64userAudio,
+              base64correctAudio,
+            ).timeout(
+              const Duration(seconds: 6),
+              onTimeout: () {
+                throw TimeoutException('Feedback request timed out');
+              },
+            );
 
-          if (mounted && feedbackData != null) {
-            setState(() {
-              _isLoading = false; // 로딩 종료
-            });
-            showFeedbackDialog(context, feedbackData);
-          } else {
-            setState(() {
-              _isLoading = false; // 로딩 종료
+            if (mounted && feedbackData != null) {
+              setState(() {
+                _isLoading = false; // Stop loading
+              });
+              showFeedbackDialog(context, feedbackData);
+            } else {
+              setState(() {
+                _isLoading = false; // Stop loading
+              });
               showErrorDialog();
+            }
+          } catch (e) {
+            setState(() {
+              _isLoading = false; // Stop loading
             });
+            if (e.toString() == 'Exception: ReRecordNeeded') {
+              // Show the ReRecordNeeded dialog if the exception occurs
+              showRecordLongerDialog(context);
+            } else if (e is TimeoutException) {
+              showTimeoutDialog(); // Show error dialog on timeout
+            } else {
+              showErrorDialog();
+            }
           }
         } else {
           setState(() {
-            _isLoading = false; // 로딩 종료
+            _isLoading = false; // Stop loading
           });
         }
       }
@@ -216,6 +237,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
   }
 
   void _onListenPressed() async {
+    await TtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex]);
     await TtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
     setState(() {
@@ -247,6 +269,29 @@ class _WordLearningCardState extends State<WordLearningCard> {
       context: context,
       builder: (BuildContext context) {
         return RecordingErrorDialog();
+      },
+    );
+  }
+
+  void showTimeoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "The server response timed out. Please try again.",
+        );
+      },
+    );
+  }
+
+  // "좀 더 길게 녹음해주세요" 다이얼로그 표시 함수
+  void showRecordLongerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "Please press the stop recording button a bit later.",
+        );
       },
     );
   }
@@ -309,7 +354,10 @@ class _WordLearningCardState extends State<WordLearningCard> {
               icon: const Icon(Icons.arrow_back),
               color: bam,
               onPressed: () {
-                Navigator.pop(context, widget.bookmarked[widget.currentIndex]);
+                Navigator.pop(
+                  context,
+                  widget.bookmarked[widget.currentIndex],
+                );
               },
             ),
           ],

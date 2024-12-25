@@ -200,7 +200,9 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                           });
                         }
                       });
-                    } else if (widget.level < 23) {
+                    }
+                    // level 16~ 22 : 문장 학습 카드로 이동
+                    else if (widget.level < 23) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -213,7 +215,13 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                             bookmarked: bookmarkList,
                           ),
                         ),
-                      );
+                      ).then((updatedBookmark) {
+                        if (updatedBookmark != null) {
+                          setState(() {
+                            bookmarkList[index] = updatedBookmark;
+                          });
+                        }
+                      });
                     } else {
                       Navigator.push(
                         context,

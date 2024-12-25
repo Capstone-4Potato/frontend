@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -106,38 +107,60 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   // 오디오 녹음 및 처리
   Future<void> _recordAudio() async {
     if (_isRecording) {
-      final path = await _audioRecorder.stopRecorder(); // 녹음 중단
+      final path = await _audioRecorder.stopRecorder();
       if (path != null) {
         setState(() {
-          _isRecording = false; // 녹음 상태 해체
-          _recordedFilePath = path; // 녹음된 파일 경로 저장
-          _isLoading = true; // 로딩 시작
+          _isRecording = false;
+          _recordedFilePath = path;
+          _isLoading = true; // Start loading
         });
-
-        final audioFile = File(path); // 녹음된 파일 불러오기
-        final fileBytes = await audioFile.readAsBytes(); // 파일을 바이트로 읽기
-        final base64userAudio = base64Encode(fileBytes); // Base64 인코딩
+        final audioFile = File(path);
+        final fileBytes = await audioFile.readAsBytes();
+        final base64userAudio = base64Encode(fileBytes);
         final currentCardId = widget.cardIds[widget.currentIndex];
         final base64correctAudio = TtsService.instance.base64CorrectAudio;
 
         if (base64correctAudio != null) {
-          final feedbackData = await getFeedback(currentCardId, base64userAudio,
-              base64correctAudio); // 피드백 데이터 가져오기
+          try {
+            // Set a timeout for the getFeedback call
+            final feedbackData = await getFeedback(
+              currentCardId,
+              base64userAudio,
+              base64correctAudio,
+            ).timeout(
+              const Duration(seconds: 6),
+              onTimeout: () {
+                throw TimeoutException('Feedback request timed out');
+              },
+            );
 
-          if (mounted && feedbackData != null) {
+            if (mounted && feedbackData != null) {
+              setState(() {
+                _isLoading = false; // Stop loading
+              });
+              showFeedbackDialog(context, feedbackData);
+            } else {
+              setState(() {
+                _isLoading = false; // Stop loading
+              });
+              showErrorDialog();
+            }
+          } catch (e) {
             setState(() {
-              _isLoading = false; // 로딩 종료
+              _isLoading = false; // Stop loading
             });
-            showFeedbackDialog(context, feedbackData); // 피드백 다이얼로그 표시
-          } else {
-            setState(() {
-              _isLoading = false; // 로딩 종료
-              showErrorDialog(); // 오류 다이얼로그 표시
-            });
+            if (e.toString() == 'Exception: ReRecordNeeded') {
+              // Show the ReRecordNeeded dialog if the exception occurs
+              showRecordLongerDialog(context);
+            } else if (e is TimeoutException) {
+              showTimeoutDialog(); // Show error dialog on timeout
+            } else {
+              showErrorDialog();
+            }
           }
         } else {
           setState(() {
-            _isLoading = false; // 로딩 종료
+            _isLoading = false; // Stop loading
           });
         }
       }
@@ -147,7 +170,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         codec: Codec.pcm16WAV,
       );
       setState(() {
-        _isRecording = true; // 녹음 상태 활성화
+        _isRecording = true;
       });
     }
   }
@@ -195,22 +218,26 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
     );
   }
 
-  // 다른 카드로 이동
-  void navigateToCard(int newIndex) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SyllableLearningCard(
-          currentIndex: newIndex,
-          cardIds: widget.cardIds,
-          texts: widget.texts,
-          translations: widget.translations,
-          engpronunciations: widget.engpronunciations,
-          explanations: widget.explanations,
-          pictures: widget.pictures,
-          bookmarked: widget.bookmarked,
-        ),
-      ),
+  void showTimeoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "The server response timed out. Please try again.",
+        );
+      },
+    );
+  }
+
+  // "좀 더 길게 녹음해주세요" 다이얼로그 표시 함수
+  void showRecordLongerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "Please press the stop recording button a bit later.",
+        );
+      },
     );
   }
 

@@ -36,11 +36,12 @@ class RecordingErrorDialog extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
               child: Text(
-                'Please try recording again.',
-                style: TextStyle(
+                text,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Color.fromARGB(255, 150, 150, 150),
