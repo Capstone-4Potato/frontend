@@ -296,24 +296,6 @@ class _WordLearningCardState extends State<WordLearningCard> {
     );
   }
 
-  void navigateToCard(int newIndex) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => WordLearningCard(
-          currentIndex: newIndex,
-          cardIds: widget.cardIds,
-          texts: widget.texts,
-          translations: widget.translations,
-          engpronunciations: widget.engpronunciations,
-          explanations: widget.explanations,
-          pictures: widget.pictures,
-          bookmarked: widget.bookmarked,
-        ),
-      ),
-    );
-  }
-
   void _showExitDialog() {
     showDialog(
       context: context,

@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,6 +11,7 @@ import 'package:flutter_application_1/home/syllables/syllabelearningcard.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/widgets/audio_graph.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// 단어 피드백 UI
 class WordFeedbackUI extends StatefulWidget {
@@ -39,6 +44,25 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
     print('Recorded File Path: ${widget.recordedFilePath}');
 
     await _audioPlayer.play(DeviceFileSource(widget.recordedFilePath));
+  }
+
+  void _onListenPressed(String cardCorrectAudio) async {
+    // 여기서 cardCorrectAudio 재생
+    try {
+      // 1. base64 문자열을 디코딩
+      Uint8List audioBytes = base64Decode(cardCorrectAudio);
+
+      // 2. 임시 디렉터리에 파일로 저장
+      final tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/correct_audio.wav';
+      final audioFile = File(filePath);
+      await audioFile.writeAsBytes(audioBytes);
+
+      // 3. 파일 재생
+      await _audioPlayer.play(DeviceFileSource(filePath));
+    } catch (e) {
+      print("오디오 재생 중 오류 발생: $e");
+    }
   }
 
   @override
@@ -185,11 +209,9 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                                     color: Colors.black,
                                                     iconSize: 20.0.w,
                                                     onPressed: () {
-                                                      TtsService.instance
-                                                          .playCachedAudio(
-                                                              widget
-                                                                  .feedbackData
-                                                                  .cardId);
+                                                      _onListenPressed(widget
+                                                          .feedbackData
+                                                          .correctAudioText);
                                                     },
                                                   ),
                                                 ),
@@ -440,9 +462,9 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                                 color: Colors.black,
                                                 iconSize: 20.0.w,
                                                 onPressed: () {
-                                                  TtsService.instance
-                                                      .playCachedAudio(widget
-                                                          .feedbackData.cardId);
+                                                  _onListenPressed(widget
+                                                      .feedbackData
+                                                      .correctAudioText);
                                                 },
                                               ),
                                             ),
@@ -686,9 +708,9 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                                 color: Colors.black,
                                                 iconSize: 20.0.w,
                                                 onPressed: () {
-                                                  TtsService.instance
-                                                      .playCachedAudio(widget
-                                                          .feedbackData.cardId);
+                                                  _onListenPressed(widget
+                                                      .feedbackData
+                                                      .correctAudioText);
                                                 },
                                               ),
                                             ),

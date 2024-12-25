@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -37,7 +38,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
-
+  bool _canRecord = true;
   late String _recordedFilePath;
 
   bool _isLoading = false;
@@ -89,7 +90,6 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
           cardCorrectAudio = data['correctAudio'];
           _isLoading = false;
         });
-        print("테스트 입니다: ${response.body}");
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh the token
         print('Access token expired. Refreshing token...');
@@ -125,37 +125,54 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
   Future<void> _recordAudio() async {
     if (_isRecording) {
       final path = await _audioRecorder.stopRecorder();
+
       if (path != null) {
         setState(() {
           _isRecording = false;
           _recordedFilePath = path;
-          _isLoading = true; // 로딩 시작
+          _isLoading = true; // Start loading
         });
         final audioFile = File(path);
-        print(path);
         final fileBytes = await audioFile.readAsBytes();
         final base64userAudio = base64Encode(fileBytes);
-        final base64correctAudio = TtsService.instance.base64CorrectAudio;
+        final currentCardId = widget.cardId;
 
-        if (base64correctAudio != null) {
+        try {
+          // Set a timeout for the getFeedback call
           final feedbackData = await getTodayFeedback(
-              widget.cardId, base64userAudio, base64correctAudio);
+            currentCardId,
+            base64userAudio,
+            cardCorrectAudio,
+          ).timeout(
+            const Duration(seconds: 6),
+            onTimeout: () {
+              throw TimeoutException('Feedback request timed out');
+            },
+          );
 
           if (mounted && feedbackData != null) {
             setState(() {
-              _isLoading = false; // 로딩 종료
+              _isLoading = false; // Stop loading
             });
             showFeedbackDialog(context, feedbackData);
           } else {
             setState(() {
-              _isLoading = false; // 로딩 종료
-              showErrorDialog();
+              _isLoading = false; // Stop loading
             });
+            showErrorDialog();
           }
-        } else {
+        } catch (e) {
           setState(() {
-            _isLoading = false; // 로딩 종료
+            _isLoading = false; // Stop loading
           });
+          if (e.toString() == 'Exception: ReRecordNeeded') {
+            // Show the ReRecordNeeded dialog if the exception occurs
+            showRecordLongerDialog(context);
+          } else if (e is TimeoutException) {
+            showTimeoutDialog(); // Show error dialog on timeout
+          } else {
+            showErrorDialog();
+          }
         }
       }
     } else {
@@ -183,6 +200,9 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
 
       // 3. 파일 재생
       await _audioPlayer.play(DeviceFileSource(filePath));
+      setState(() {
+        _canRecord = true;
+      });
     } catch (e) {
       print("오디오 재생 중 오류 발생: $e");
     }
@@ -216,6 +236,29 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
     );
   }
 
+  void showTimeoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "The server response timed out. Please try again.",
+        );
+      },
+    );
+  }
+
+  // "좀 더 길게 녹음해주세요" 다이얼로그 표시 함수
+  void showRecordLongerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "Please press the stop recording button a bit later.",
+        );
+      },
+    );
+  }
+
   void _showExitDialog() {
     showDialog(
       context: context,
@@ -237,7 +280,6 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
   void dispose() {
     _audioPlayer.dispose();
     _audioRecorder.closeAudioSession();
-
     super.dispose();
   }
 
@@ -249,6 +291,20 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: bam,
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                );
+              },
+            ),
+          ],
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
@@ -263,31 +319,27 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
           ),
         ],
       ),
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: Padding(
-        padding: const EdgeInsets.only(top: 12),
-        child: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                  color: primary,
-                ),
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
+        padding: EdgeInsets.only(top: 12.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _isLoading
+                        ? Container()
+                        : Container(
                             width: cardWidth,
                             height: cardHeight,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               border: Border.all(
-                                  color: const Color(0xFFF26647), width: 3),
-                              borderRadius: BorderRadius.circular(12),
+                                  color: const Color(0xFFF26647), width: 3.w),
+                              borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -328,71 +380,74 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                               ],
                             ),
                           ),
-                        ],
+                  ],
+                ),
+                if (_isLoading)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 160),
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
+                    ),
+                  ),
+              ],
+            ),
+            SizedBox(
+              height: 50.h,
+            ),
+            if (!_isLoading)
+              Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24.r),
+                      color: Colors.white,
+                    ),
+                    padding: EdgeInsets.all(10.w),
+                    child: Text(
+                      "Meaning of the word",
+                      style: TextStyle(
+                        fontSize: 18.w,
+                        fontWeight: FontWeight.w700,
                       ),
-                      if (_isLoading)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 160),
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFFF26647)),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
                   SizedBox(
-                    height: 50.h,
+                    height: 25.h,
                   ),
-                  Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.r),
-                          color: Colors.white,
-                        ),
-                        padding: EdgeInsets.all(10.w),
-                        child: Text(
-                          "Meaning of the word",
-                          style: TextStyle(
-                            fontSize: 18.w,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+                  Container(
+                    width: 280.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24.r),
+                      color: Colors.white,
+                    ),
+                    padding: EdgeInsets.all(10.w),
+                    child: Text(
+                      cardSummary,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 28.w,
+                        fontWeight: FontWeight.w400,
                       ),
-                      SizedBox(
-                        height: 25.h,
-                      ),
-                      Container(
-                        width: 280.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.r),
-                          color: Colors.white,
-                        ),
-                        padding: EdgeInsets.all(10.w),
-                        child: Text(
-                          cardSummary,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 28.w,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
+          ],
+        ),
       ),
       floatingActionButton: SizedBox(
         width: 70,
         height: 70,
         child: FloatingActionButton(
-          onPressed: !_isLoading ? _recordAudio : null,
+          onPressed: _canRecord && !_isLoading ? _recordAudio : null,
           backgroundColor: _isLoading
               ? const Color.fromARGB(37, 206, 204, 204) // 로딩 중 색상
-              : (_isRecording
-                  ? const Color(0xFF976841)
-                  : const Color(0xFFF26647)),
+              : _canRecord
+                  ? (_isRecording
+                      ? const Color(0xFF976841)
+                      : const Color(0xFFF26647))
+                  : const Color.fromARGB(37, 206, 204, 204),
           elevation: 0.0,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(35))), // 조건 업데이트
