@@ -249,217 +249,222 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            key: _headerKey,
-            padding: EdgeInsets.only(top: 18.0.h, bottom: 15.0.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Wrap(
-                  direction: Axis.horizontal,
-                  spacing: 8.w,
-                  children: List<Widget>.generate(levels.length, (index) {
-                    return ChoiceChip(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 15.w, vertical: 2.h),
-                      label: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          levels[index],
-                          style: TextStyle(
-                            color: value == index
-                                ? Colors.white
-                                : const Color(0xFF92918C),
-                            fontSize: 12.h,
-                            fontWeight: FontWeight.w600,
+      body: Padding(
+        padding: EdgeInsets.only(bottom: 32.0.h),
+        child: Column(
+          children: [
+            Padding(
+              key: _headerKey,
+              padding: EdgeInsets.only(top: 18.0.h, bottom: 15.0.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Wrap(
+                    direction: Axis.horizontal,
+                    spacing: 8.w,
+                    children: List<Widget>.generate(levels.length, (index) {
+                      return ChoiceChip(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 15.w, vertical: 2.h),
+                        label: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            levels[index],
+                            style: TextStyle(
+                              color: value == index
+                                  ? Colors.white
+                                  : const Color(0xFF92918C),
+                              fontSize: 12.h,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                      ),
-                      side: BorderSide.none,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.r),
-                      ),
-                      labelStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12.h,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      selected: value == index,
-                      selectedColor: value == index
-                          ? const Color(0xFFF26647)
-                          : Colors.white,
-                      showCheckmark: false,
-                      autofocus: true,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          // value = selected ? index : value; // 선택된 상태 업데이트
-                          value = index; // 선택된 상태 업데이트
-                          _scrollToLevel(index);
-                        });
-                      },
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 21.0.h),
-                    child: Center(
-                      child: Text(
-                        'Each unit is organized by pronunciation difficulty.\nStart with Unit 1 and move up as you improve!',
-                        style: TextStyle(
-                          color: const Color(0xFf92918C),
-                          fontSize: 12.h,
-                          fontWeight: FontWeight.w400,
+                        side: BorderSide.none,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.r),
                         ),
-                      ),
-                    ),
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.h,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        selected: value == index,
+                        selectedColor: value == index
+                            ? const Color(0xFFF26647)
+                            : Colors.white,
+                        showCheckmark: false,
+                        autofocus: true,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            // value = selected ? index : value; // 선택된 상태 업데이트
+                            value = index; // 선택된 상태 업데이트
+                            _scrollToLevel(index);
+                          });
+                        },
+                      );
+                    }).toList(),
                   ),
-                  isLoading
-                      ? SizedBox(
-                          height: 500.h,
-                          child: const Center(
-                              child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFFF26647)),
-                          )),
-                        )
-                      : _units.isEmpty
-                          ? const Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Center(child: Text('Server Error!')),
-                              ],
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                LevelDivider(level: levels[0]),
-                                SizedBox(
-                                  height: 21.h,
-                                ),
-                                Wrap(
-                                  direction: Axis.vertical,
-                                  spacing: 16,
-                                  children: List<Widget>.generate(
-                                    4,
-                                    (index) {
-                                      return UnitItem(
-                                        key: index == 0 ? _beginnerKey : null,
-                                        id: _units[index].id,
-                                        title: _units[index].title,
-                                        subtitle: _units[index].subtitle,
-                                        totalNumber: _units[index].totalNumber,
-                                        completedNumber:
-                                            _units[index].completedNumber,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 30.0),
-                                  child: LevelDivider(level: levels[1]),
-                                ),
-                                Wrap(
-                                  direction: Axis.vertical,
-                                  spacing: 16,
-                                  children: List<Widget>.generate(
-                                    _units.sublist(4, 15).length,
-                                    (index) {
-                                      final unit = _units.sublist(4, 15)[index];
-                                      return UnitItem(
-                                        key: index == 0
-                                            ? _intermediateKey
-                                            : null,
-                                        id: unit.id,
-                                        title: unit.title,
-                                        subtitle: unit.subtitle,
-                                        totalNumber: unit.totalNumber,
-                                        completedNumber: unit.completedNumber,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 30.0, bottom: 24.0),
-                                  child: LevelDivider(level: levels[2]),
-                                ),
-                                const Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 18.0, bottom: 17.0),
-                                  child: Text(
-                                    'Conversation Practice',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                                Wrap(
-                                  direction: Axis.vertical,
-                                  spacing: 16,
-                                  children: List<Widget>.generate(
-                                    _units.sublist(15, 22).length,
-                                    (index) {
-                                      final unit =
-                                          _units.sublist(15, 22)[index];
-                                      return UnitItem(
-                                        key: index == 0 ? _advancedKey : null,
-                                        id: unit.id,
-                                        title: unit.title,
-                                        subtitle: unit.subtitle,
-                                        totalNumber: unit.totalNumber,
-                                        completedNumber: unit.completedNumber,
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 18.0, top: 24.0, bottom: 17.0),
-                                  child: Text(
-                                    'Tongue Twisters',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                                Wrap(
-                                  direction: Axis.vertical,
-                                  spacing: 16,
-                                  children: List<Widget>.generate(
-                                    _units.sublist(22, 25).length,
-                                    (index) {
-                                      final unit =
-                                          _units.sublist(22, 25)[index];
-                                      return UnitItem(
-                                        id: unit.id,
-                                        title: unit.title,
-                                        subtitle: unit.subtitle,
-                                        totalNumber: unit.totalNumber,
-                                        completedNumber: unit.completedNumber,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
                 ],
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 21.0.h),
+                      child: Center(
+                        child: Text(
+                          'Each unit is organized by pronunciation difficulty.\nStart with Unit 1 and move up as you improve!',
+                          style: TextStyle(
+                            color: const Color(0xFf92918C),
+                            fontSize: 12.h,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                    isLoading
+                        ? SizedBox(
+                            height: 500.h,
+                            child: const Center(
+                                child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFFF26647)),
+                            )),
+                          )
+                        : _units.isEmpty
+                            ? const Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Center(child: Text('Server Error!')),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  LevelDivider(level: levels[0]),
+                                  SizedBox(
+                                    height: 21.h,
+                                  ),
+                                  Wrap(
+                                    direction: Axis.vertical,
+                                    spacing: 16,
+                                    children: List<Widget>.generate(
+                                      4,
+                                      (index) {
+                                        return UnitItem(
+                                          key: index == 0 ? _beginnerKey : null,
+                                          id: _units[index].id,
+                                          title: _units[index].title,
+                                          subtitle: _units[index].subtitle,
+                                          totalNumber:
+                                              _units[index].totalNumber,
+                                          completedNumber:
+                                              _units[index].completedNumber,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 30.0),
+                                    child: LevelDivider(level: levels[1]),
+                                  ),
+                                  Wrap(
+                                    direction: Axis.vertical,
+                                    spacing: 16,
+                                    children: List<Widget>.generate(
+                                      _units.sublist(4, 15).length,
+                                      (index) {
+                                        final unit =
+                                            _units.sublist(4, 15)[index];
+                                        return UnitItem(
+                                          key: index == 0
+                                              ? _intermediateKey
+                                              : null,
+                                          id: unit.id,
+                                          title: unit.title,
+                                          subtitle: unit.subtitle,
+                                          totalNumber: unit.totalNumber,
+                                          completedNumber: unit.completedNumber,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 30.0, bottom: 24.0),
+                                    child: LevelDivider(level: levels[2]),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 18.0, bottom: 17.0),
+                                    child: Text(
+                                      'Conversation Practice',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Wrap(
+                                    direction: Axis.vertical,
+                                    spacing: 16,
+                                    children: List<Widget>.generate(
+                                      _units.sublist(15, 22).length,
+                                      (index) {
+                                        final unit =
+                                            _units.sublist(15, 22)[index];
+                                        return UnitItem(
+                                          key: index == 0 ? _advancedKey : null,
+                                          id: unit.id,
+                                          title: unit.title,
+                                          subtitle: unit.subtitle,
+                                          totalNumber: unit.totalNumber,
+                                          completedNumber: unit.completedNumber,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 18.0, top: 24.0, bottom: 17.0),
+                                    child: Text(
+                                      'Tongue Twisters',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  Wrap(
+                                    direction: Axis.vertical,
+                                    spacing: 16,
+                                    children: List<Widget>.generate(
+                                      _units.sublist(22, 25).length,
+                                      (index) {
+                                        final unit =
+                                            _units.sublist(22, 25)[index];
+                                        return UnitItem(
+                                          id: unit.id,
+                                          title: unit.title,
+                                          subtitle: unit.subtitle,
+                                          totalNumber: unit.totalNumber,
+                                          completedNumber: unit.completedNumber,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
