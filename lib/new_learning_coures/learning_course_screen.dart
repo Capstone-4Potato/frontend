@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -664,6 +665,11 @@ class UnitItem extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(24.0.r),
+                      border: Border.all(
+                          color: title == "Conversation Practice" ||
+                                  title == "Tongue Twisters"
+                              ? const Color(0xFFF26647)
+                              : Colors.white),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.17),
@@ -685,34 +691,43 @@ class UnitItem extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
-                                title,
-                                style: TextStyle(
-                                  fontSize: 24.h,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
                               SizedBox(
                                 width: 256.w,
-                                child: Text(
-                                  subtitle,
+                                child: AutoSizeText(
+                                  title == "Conversation Practice" ||
+                                          title == "Tongue Twisters"
+                                      ? subtitle
+                                      : title,
                                   style: TextStyle(
-                                    fontSize: 14.h,
-                                    fontWeight: FontWeight.w400,
-                                    overflow: TextOverflow.ellipsis,
-                                    // letterSpacing: -0.2,
+                                    fontSize: 24.h,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  //maxLines: 2,
-                                  overflow:
-                                      TextOverflow.ellipsis, // 넘칠 경우 말줄임표 추가
+                                  maxLines: 1,
                                 ),
                               ),
+                              if (title != "Conversation Practice" &&
+                                  title != "Tongue Twisters")
+                                SizedBox(
+                                  width: 256.w,
+                                  child: Text(
+                                    subtitle,
+                                    style: TextStyle(
+                                      fontSize: 14.h,
+                                      fontWeight: FontWeight.w400,
+                                      overflow: TextOverflow.ellipsis,
+                                      // letterSpacing: -0.2,
+                                    ),
+                                    //maxLines: 2,
+                                    overflow:
+                                        TextOverflow.ellipsis, // 넘칠 경우 말줄임표 추가
+                                  ),
+                                ),
                               Container(
                                 height: 16.h,
                                 width: 245.w,
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFBEBDB8),
-                                  borderRadius: BorderRadius.circular(16.r),
+                                  borderRadius: BorderRadius.circular(24.r),
                                 ),
                                 //alignment: Alignment.center,
                                 child: Stack(
@@ -739,9 +754,9 @@ class UnitItem extends StatelessWidget {
                                           decoration: BoxDecoration(
                                             color: const Color(0xFFFB8A71),
                                             borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(16.0.r),
+                                              topLeft: Radius.circular(24.0.r),
                                               bottomLeft:
-                                                  Radius.circular(16.0.r),
+                                                  Radius.circular(24.0.r),
                                             ),
                                           ),
                                         ),
@@ -769,8 +784,8 @@ class UnitItem extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: const Color(0xFFF26647),
                             borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(24.r),
-                              bottomRight: Radius.circular(24.r),
+                              topRight: Radius.circular(23.r),
+                              bottomRight: Radius.circular(23.r),
                             ),
                           ),
                           child: Icon(
