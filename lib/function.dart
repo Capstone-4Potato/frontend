@@ -274,17 +274,50 @@ List<TextSpan> buildTextSpans(String text, List<int>? mistakenIndexes) {
       TextStyle textStyle = isMistaken
           ? TextStyle(
               color: const Color(0xFFDE0000),
-              fontSize: 16.h,
+              fontSize: 32.h,
               fontWeight: FontWeight.w600,
             )
           : TextStyle(
               color: Colors.black,
-              fontSize: 16.h,
+              fontSize: 32.h,
               fontWeight: FontWeight.w600,
               fontFamily: 'Pretendard',
             );
       spans.add(TextSpan(text: text[i], style: textStyle));
     }
+  return spans;
+}
+
+// 사용자가 발음하지 못한 음절은 회색으로 표시
+List<TextSpan> buildTextSpansOmit(String correctText, String userText) {
+  List<TextSpan> spans = [];
+
+  for (int i = 0; i < correctText.length; i++) {
+    // 사용자 발음이 올바른 문자와 일치하는지 확인
+    final bool isCorrect = i < userText.length && correctText[i] == userText[i];
+
+    // 텍스트 스타일: 올바른 발음은 black, 틀린 발음은 gray
+    TextStyle textStyle = isCorrect
+        ? TextStyle(
+            color: Colors.black,
+            fontSize: 32.h,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Pretendard',
+          )
+        : TextStyle(
+            color: const Color.fromARGB(255, 206, 203, 203),
+            fontSize: 32.h,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Pretendard',
+          );
+
+    // 현재 문자 추가
+    spans.add(TextSpan(
+      text: correctText[i],
+      style: textStyle,
+    ));
+  }
+
   return spans;
 }
 
@@ -294,66 +327,35 @@ List<TextSpan> recommendText(List<String> ids, List<String> texts,
   // 색상 리스트 정의
   List<Color> colors = [Colors.green, Colors.blue, Colors.purple];
   List<TextSpan> spans = [];
-  if (texts.contains('perfect')) {
-    spans.add(const TextSpan(
-      text: '👍🏼 Excellent 👍🏼',
+
+  spans.add(const TextSpan(
+      text: 'Practice ',
       style: TextStyle(
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: FontWeight.w500,
-        color: Colors.black, // 기본 텍스트 색상
-      ),
-    ));
-    return spans;
-  } else if (texts.contains('not word') || texts.contains('try again')) {
-    spans.add(const TextSpan(
-      text: '🥺 Try Again 🥺',
-      style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w500,
-        color: Colors.black, // 기본 텍스트 색상
-      ),
-    ));
-    return spans;
-  } else if (texts.contains('drop the extra sound')) {
-    spans.add(const TextSpan(
-      text: 'Drop the extra sound',
-      style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w500,
-        color: Colors.black, // 기본 텍스트 색상
-      ),
-    ));
-    return spans;
-  } else {
-    spans.add(const TextSpan(
-        text: 'Practice ',
+        color: Colors.black,
+      )));
+  for (var i = 0; i < texts.length; i++) {
+    spans.add(
+      TextSpan(
+        text: texts[i],
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
-          color: Colors.black,
-        )));
-    for (var i = 0; i < texts.length; i++) {
-      spans.add(
-        TextSpan(
-          text: texts[i],
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: colors[i % colors.length], // 색상 선택
-          ),
-          recognizer: TapGestureRecognizer()
-            ..onTap = () {
-              _handleTap(context, categories[i], subcategories[i], texts[i]);
-            },
+          color: colors[i % colors.length], // 색상 선택
         ),
-      );
-      if (i < texts.length - 1) {
-        spans.add(const TextSpan(text: "\n")); // Add commas between items
-      }
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            _handleTap(context, categories[i], subcategories[i], texts[i]);
+          },
+      ),
+    );
+    if (i < texts.length - 1) {
+      spans.add(const TextSpan(text: "\n")); // Add commas between items
     }
-
-    return spans;
   }
+
+  return spans;
 }
 
 // 단어 학습 피드백에서 추천 학습 링크 페이지 전환

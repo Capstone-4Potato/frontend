@@ -1,11 +1,14 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
+import 'package:flutter_application_1/home/syllables/syllabelearningcard.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/widgets/audio_graph.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+/// 단어 피드백 UI
 class WordFeedbackUI extends StatefulWidget {
   final FeedbackData feedbackData;
   final String recordedFilePath;
@@ -299,23 +302,6 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                         ),
                                       ],
                                     ),
-                                    // SizedBox(
-                                    //   child: RichText(
-                                    //     textAlign: TextAlign.center,
-                                    //     text: TextSpan(
-                                    //       children: recommendText(
-                                    //         widget.feedbackData.recommendCardId,
-                                    //         widget
-                                    //             .feedbackData.recommendCardText,
-                                    //         widget.feedbackData
-                                    //             .recommendCardCategory,
-                                    //         widget.feedbackData
-                                    //             .recommendCardSubcategory,
-                                    //         context,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
                                     AudioGraphWidget(
                                       feedbackData: widget.feedbackData,
                                     ),
@@ -331,7 +317,7 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                 ),
               );
             })
-        : recommendCardKey == "Try Again"
+        : recommendCardKey == "Try Again" // 4글자 이상 틀린 경우
             ? DraggableScrollableSheet(
                 // 드래그 시트
                 initialChildSize: (652 / 853).h,
@@ -418,7 +404,7 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 155.w,
+                                        width: 185.w,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -431,6 +417,9 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                                 fontWeight: FontWeight.w600,
                                                 fontFamily: 'Pretendard',
                                               ),
+                                            ),
+                                            SizedBox(
+                                              width: 20.w,
                                             ),
                                             Container(
                                               width: 42.w,
@@ -489,7 +478,7 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 155.w,
+                                        width: 185.w,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -503,6 +492,9 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                                       .mistakenIndexes,
                                                 ),
                                               ),
+                                            ),
+                                            SizedBox(
+                                              width: 20.w,
                                             ),
                                             Container(
                                               width: 42.w,
@@ -559,6 +551,9 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                     ),
                                   ],
                                 ),
+                                SizedBox(
+                                  height: 16.h,
+                                ),
                                 AudioGraphWidget(
                                   feedbackData: widget.feedbackData,
                                 ),
@@ -572,6 +567,7 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                 },
               )
             : DraggableScrollableSheet(
+                // 100점이 아닌 경우
                 // 드래그 시트
                 initialChildSize: (652 / 853).h,
                 minChildSize: (400 / 665).h,
@@ -736,11 +732,21 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                             RichText(
                                               // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
                                               text: TextSpan(
-                                                children: buildTextSpans(
-                                                  widget.feedbackData.userText,
-                                                  widget.feedbackData
-                                                      .mistakenIndexes,
-                                                ),
+                                                children: widget.feedbackData
+                                                            .userText.length ==
+                                                        widget.text.length
+                                                    ? buildTextSpans(
+                                                        // 틀린 글자가 있을 때
+                                                        widget.feedbackData
+                                                            .userText,
+                                                        widget.feedbackData
+                                                            .mistakenIndexes,
+                                                      )
+                                                    : buildTextSpansOmit(
+                                                        // 발음 안된 글자가 있을 때
+                                                        widget.text,
+                                                        widget.feedbackData
+                                                            .userText),
                                               ),
                                             ),
                                             Container(
@@ -773,7 +779,7 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 32.h,
+                                  height: 28.h,
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -788,25 +794,135 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                     SizedBox(
                                       width: 28.w,
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 12.w, vertical: 3.h),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(10.r),
-                                      ),
-                                      child: Text(
-                                        recommendCardKey == "Perfect"
-                                            ? recommendCardKey
-                                            : recommendCardKey,
-                                        style: TextStyle(
-                                          color: const Color(0xFF15B931),
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Pretendard',
-                                          fontSize: 15.h,
-                                        ),
-                                      ),
+                                    Column(
+                                      children: [
+                                        for (int i = 0;
+                                            i <
+                                                widget
+                                                    .feedbackData
+                                                    .recommendCard
+                                                    .entries
+                                                    .length;
+                                            i += 2)
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              for (int j = i; j < i + 2; j++)
+                                                if (j <
+                                                    widget
+                                                        .feedbackData
+                                                        .recommendCard
+                                                        .entries
+                                                        .length)
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      final recommendCardKey =
+                                                          widget
+                                                              .feedbackData
+                                                              .recommendCard
+                                                              .entries
+                                                              .elementAt(j)
+                                                              .key;
+                                                      final recommendCardData =
+                                                          widget
+                                                              .feedbackData
+                                                              .recommendCard
+                                                              .entries
+                                                              .elementAt(j)
+                                                              .value;
+
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              SyllableLearningCard(
+                                                            currentIndex: 0,
+                                                            cardIds: [
+                                                              recommendCardData[
+                                                                      'id'] ??
+                                                                  0
+                                                            ],
+                                                            texts: [
+                                                              recommendCardData[
+                                                                      'text'] ??
+                                                                  ''
+                                                            ],
+                                                            translations: [
+                                                              recommendCardData[
+                                                                      'cardTranslation'] ??
+                                                                  ''
+                                                            ],
+                                                            engpronunciations: [
+                                                              recommendCardData[
+                                                                      'cardPronunciation'] ??
+                                                                  ''
+                                                            ],
+                                                            explanations: [
+                                                              recommendCardData[
+                                                                      'explanation'] ??
+                                                                  ''
+                                                            ],
+                                                            pictures: [
+                                                              recommendCardData[
+                                                                      'pictureUrl'] ??
+                                                                  ''
+                                                            ],
+                                                            bookmarked: [
+                                                              recommendCardData[
+                                                                      'bookmark'] ??
+                                                                  false
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ).then((updatedBookmark) {
+                                                        if (updatedBookmark !=
+                                                            null) {
+                                                          setState(() {
+                                                            recommendCardData[
+                                                                    'bookmark'] =
+                                                                updatedBookmark;
+                                                          });
+                                                        }
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 3.h,
+                                                              horizontal: 4.w),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 12.w,
+                                                              vertical: 3.h),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.r),
+                                                      ),
+                                                      child: Text(
+                                                        widget
+                                                            .feedbackData
+                                                            .recommendCard
+                                                            .entries
+                                                            .elementAt(j)
+                                                            .key,
+                                                        style: TextStyle(
+                                                          color: const Color(
+                                                              0xFF15B931),
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontFamily:
+                                                              'Pretendard',
+                                                          fontSize: 15.h,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                            ],
+                                          ),
+                                      ],
                                     ),
                                   ],
                                 ),

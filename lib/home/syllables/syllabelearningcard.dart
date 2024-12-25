@@ -453,8 +453,8 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                               : Image.memory(
                                   _imageData!,
                                   fit: BoxFit.contain,
-                                  width: 300,
-                                  height: 250,
+                                  width: 300.w,
+                                  height: 250.h,
                                 ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),

@@ -21,7 +21,7 @@ class AudioGraphWidget extends StatelessWidget {
     double maxX = _getMaxDuration(correctAudioData, userAudioData);
 
     return SizedBox(
-      height: 250.h, // 그래프의 높이
+      height: 230.h, // 그래프의 높이
       width: 280.h, // 그래프의 너비
       child: LineChart(
         LineChartData(

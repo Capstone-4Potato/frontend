@@ -1,8 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/home/syllables/fetchimage.dart';
+import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/home/words/wordfeedbackui.dart';
@@ -10,7 +15,9 @@ import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:http/http.dart' as http;
 
 class WordLearningCard extends StatefulWidget {
   int currentIndex;
@@ -18,6 +25,8 @@ class WordLearningCard extends StatefulWidget {
   final List<String> texts;
   final List<String> translations;
   final List<String> engpronunciations;
+  final List<String> explanations;
+  final List<String> pictures;
   final List<bool> bookmarked;
 
   WordLearningCard({
@@ -27,6 +36,8 @@ class WordLearningCard extends StatefulWidget {
     required this.texts,
     required this.translations,
     required this.engpronunciations,
+    required this.explanations,
+    required this.pictures,
     required this.bookmarked,
   }) : super(key: key);
 
@@ -42,7 +53,9 @@ class _WordLearningCardState extends State<WordLearningCard> {
   bool _canRecord = false;
   late String _recordedFilePath;
 
-  bool _isLoading = false;
+  bool _isLoading = false; // 피드백 로딩 중인지 여부
+  Uint8List? _imageData; // 이미지를 저장할 변수
+  bool _isImageLoading = true; // 이미지 로딩 중인지 여부
 
   late PageController pageController; // 페이지 컨트롤러 생성
 
@@ -50,6 +63,8 @@ class _WordLearningCardState extends State<WordLearningCard> {
   void initState() {
     super.initState();
     _initialize();
+    fetchData();
+    //_loadImage(); // 이미지 로드
     pageController =
         PageController(initialPage: widget.currentIndex); // PageController 초기화
   }
@@ -57,6 +72,99 @@ class _WordLearningCardState extends State<WordLearningCard> {
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
     await _audioRecorder.openAudioSession();
+  }
+
+  // 학습카드 리스트 API (음절, 단어, 문장)
+  Future<void> fetchData() async {
+    try {
+      String? token = await getAccessToken();
+      // Backend server URL
+      var url =
+          Uri.parse('$main_url/cards/${widget.cardIds[widget.currentIndex]}');
+
+      // Function to make the request
+      Future<http.Response> makeRequest(String token) {
+        var headers = <String, String>{
+          'access': token,
+          'Content-Type': 'application/json',
+        };
+        return http.get(url, headers: headers);
+      }
+
+      var response = await makeRequest(token!);
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        setState(() {
+          widget.pictures[widget.currentIndex] = data['pictureUrl'] ?? '';
+          widget.explanations[widget.currentIndex] = data['explanation'] ?? '';
+          _loadImage();
+          _isLoading = false;
+        });
+        print("테스트 입니다: ${response.body}");
+      } else if (response.statusCode == 401) {
+        // Token expired, attempt to refresh the token
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the access token
+        bool isRefreshed = await refreshAccessToken();
+        if (isRefreshed) {
+          // Retry the request with the new token
+          token = await getAccessToken();
+          response = await makeRequest(token!);
+
+          if (response.statusCode == 200) {
+            var data = json.decode(response.body);
+            setState(() {
+              widget.pictures[widget.currentIndex] = data['pictureUrl'] ?? '';
+              widget.explanations[widget.currentIndex] =
+                  data['explanation'] ?? '';
+              _loadImage();
+              _isLoading = false;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return; // Return null if there's an error or unsuccessful fetch
+  }
+
+  // 이미지 로드
+  Future<void> _loadImage() async {
+    try {
+      // currentIndex에 해당하는 이미지 URL이 비어있는 경우 처리
+      if (widget.pictures[widget.currentIndex].isEmpty) {
+        setState(() {
+          _isImageLoading = false;
+          _imageData = null; // 이미지 데이터를 null로 초기화
+        });
+        return; // 이미지를 불러오지 않음
+      }
+
+      setState(() {
+        _isImageLoading = true;
+      });
+
+      // 이미지 데이터 가져오기
+      final imageData = await fetchImage(widget.pictures[widget.currentIndex]);
+
+      if (mounted) {
+        // dispose() 이후 setState 방지
+        setState(() {
+          _isImageLoading = false;
+          _imageData = imageData; // 이미지 데이터 갱신
+        });
+      }
+    } catch (e) {
+      print('Error loading image: $e');
+      if (mounted) {
+        setState(() {
+          _isImageLoading = false;
+        });
+      }
+    }
   }
 
   Future<void> _recordAudio() async {
@@ -153,6 +261,8 @@ class _WordLearningCardState extends State<WordLearningCard> {
           texts: widget.texts,
           translations: widget.translations,
           engpronunciations: widget.engpronunciations,
+          explanations: widget.explanations,
+          pictures: widget.pictures,
           bookmarked: widget.bookmarked,
         ),
       ),
@@ -189,14 +299,21 @@ class _WordLearningCardState extends State<WordLearningCard> {
     double cardWidth = MediaQuery.of(context).size.width * 0.70;
     double cardHeight = MediaQuery.of(context).size.height * 0.27;
 
-    String currentContent = widget.texts[widget.currentIndex];
-    String currentTranslation = widget.translations[widget.currentIndex];
-    String currentEngPronunciation =
-        widget.engpronunciations[widget.currentIndex];
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              color: bam,
+              onPressed: () {
+                Navigator.pop(context, widget.bookmarked[widget.currentIndex]);
+              },
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: Icon(
@@ -240,6 +357,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
               // currentIndex를 새로 갱신하여 카드 내용을 바꾸도록 설정
               widget.currentIndex = value;
               _canRecord = false;
+              _isImageLoading = true;
             });
             // 새로 로드된 카드의 발음 오디오 파일 불러오기
             TtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
@@ -247,14 +365,17 @@ class _WordLearningCardState extends State<WordLearningCard> {
             }).catchError((error) {
               print('Error fetching audio: $error');
             });
+            fetchData();
           },
           itemCount: widget.texts.length,
           itemBuilder: (context, index) {
-            String currentContent = widget.texts[widget.currentIndex];
+            String currentText = widget.texts[widget.currentIndex];
             String currentPronunciation =
                 widget.translations[widget.currentIndex];
             String currentEngPronunciation =
                 widget.engpronunciations[widget.currentIndex];
+            String currentExplanation =
+                widget.explanations[widget.currentIndex];
 
             return Padding(
               padding: const EdgeInsets.only(top: 12),
@@ -269,15 +390,11 @@ class _WordLearningCardState extends State<WordLearningCard> {
                         onPressed: widget.currentIndex > 0
                             ? () {
                                 int nextIndex = widget.currentIndex - 1;
-                                navigateToCard(nextIndex);
-                                TtsService.fetchCorrectAudio(
-                                        widget.cardIds[nextIndex])
-                                    .then((_) {
-                                  print(
-                                      'Audio fetched and saved successfully.');
-                                }).catchError((error) {
-                                  print('Error fetching audio: $error');
-                                });
+                                pageController.animateToPage(
+                                  nextIndex,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
                               }
                             : null,
                       ),
@@ -294,7 +411,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              currentContent,
+                              currentText,
                               style: const TextStyle(
                                   fontSize: 36, fontWeight: FontWeight.bold),
                             ),
@@ -341,21 +458,56 @@ class _WordLearningCardState extends State<WordLearningCard> {
                         onPressed: widget.currentIndex < widget.texts.length - 1
                             ? () {
                                 int nextIndex = widget.currentIndex + 1;
-                                navigateToCard(nextIndex);
-                                TtsService.fetchCorrectAudio(
-                                        widget.cardIds[nextIndex])
-                                    .then((_) {
-                                  print(
-                                      'Audio fetched and saved successfully.');
-                                }).catchError((error) {
-                                  print('Error fetching audio: $error');
-                                });
+                                pageController.animateToPage(
+                                  nextIndex,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
                               }
                             : null,
                       ),
                     ],
                   ),
-                  if (_isLoading)
+                  if (!_isLoading)
+                    Expanded(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.82,
+                        height: MediaQuery.of(context).size.height * 0.54,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFF5F5F5),
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            _isImageLoading // 이미지 로딩 중 표시
+                                ? SizedBox(
+                                    width: 300.w,
+                                    height: 250.h,
+                                    child: Center(
+                                        child: CircularProgressIndicator(
+                                      color: primary,
+                                    )))
+                                : _imageData != null
+                                    ? Image.memory(
+                                        _imageData!,
+                                        fit: BoxFit.contain,
+                                        width: 300,
+                                        height: 250,
+                                      )
+                                    : Container(),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                              child: Text(
+                                currentExplanation,
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey[700]),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  if (_isLoading) // 피드백 로딩 중이면 Indicator 표시
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 160),
                       child: CircularProgressIndicator(

@@ -164,19 +164,19 @@ class _WordConsonantsState extends State<WordConsonants> {
               TtsService.fetchCorrectAudio(cardIds[index]).then((_) {
                 print('Audio fetched and saved successfully.');
               });
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WordLearningCard(
-                    currentIndex: index,
-                    cardIds: displayCardIds,
-                    texts: displayContents,
-                    translations: displayPronunciations,
-                    engpronunciations: displayEngPronunciations,
-                    bookmarked: displayBookmarked,
-                  ),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => WordLearningCard(
+              //       currentIndex: index,
+              //       cardIds: displayCardIds,
+              //       texts: displayContents,
+              //       translations: displayPronunciations,
+              //       engpronunciations: displayEngPronunciations,
+              //       bookmarked: displayBookmarked,
+              //     ),
+              //   ),
+              // );
             },
             child: Opacity(
               opacity: displayCardScores[index] >= 1.0

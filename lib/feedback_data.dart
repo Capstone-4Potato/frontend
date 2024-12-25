@@ -47,6 +47,13 @@ class FeedbackData {
   final List<String> recommendCardText;
   final List<int> recommendCardId;
   final List<String> recommendCardCorrectAudio;
+  final List<String> recommendCardTranslation;
+  final List<String> recommendCardPronunciation;
+  final List<String> recommendCardPictureUrl;
+  final List<String> recommendCardExplanation;
+  final List<bool> recommendCardBookmark;
+  final List<bool> recommendCardWeakCard;
+
   final List<AmplitudeData>? correctAudio;
   final List<AmplitudeData>? userAudio;
 
@@ -61,6 +68,12 @@ class FeedbackData {
     required this.recommendCardText,
     required this.recommendCardId,
     required this.recommendCardCorrectAudio,
+    required this.recommendCardTranslation,
+    required this.recommendCardPronunciation,
+    required this.recommendCardPictureUrl,
+    required this.recommendCardExplanation,
+    required this.recommendCardBookmark,
+    required this.recommendCardWeakCard,
     required this.correctAudio,
     required this.userAudio,
     required this.correctAudioText,
@@ -70,10 +83,15 @@ class FeedbackData {
     // recommendCard 처리
     Map<String, Map<String, dynamic>> recommendCard = {};
     List<String> recommendCardKey = [];
-    List<String> recommendCardText = [];
     List<int> recommendCardId = [];
+    List<String> recommendCardText = [];
     List<String> recommendCardCorrectAudio = [];
-    List<AmplitudeData>? correctAudio = [];
+    List<String> recommendCardTranslation = [];
+    List<String> recommendCardPronunciation = [];
+    List<String> recommendCardPictureUrl = [];
+    List<String> recommendCardExplanation = [];
+    List<bool> recommendCardBookmark = [];
+    List<bool> recommendCardWeakCard = [];
 
     if (json['recommendCard'] != null && json['recommendCard'] is Map) {
       recommendCard =
@@ -84,6 +102,12 @@ class FeedbackData {
         recommendCardId.add(value['id'] ?? 0);
         recommendCardText.add(value['text'] ?? '');
         recommendCardCorrectAudio.add(value['correctAudio'] ?? '');
+        recommendCardTranslation.add(value['cardTranslation'] ?? '');
+        recommendCardPronunciation.add(value['cardPronunciation'] ?? '');
+        recommendCardPictureUrl.add(value['pictureUrl'] ?? '');
+        recommendCardExplanation.add(value['explanation'] ?? '');
+        recommendCardBookmark.add(value['bookmark'] ?? '');
+        recommendCardWeakCard.add(value['weakCard'] ?? '');
       });
     }
 
@@ -102,9 +126,15 @@ class FeedbackData {
       userScore: json['userScore'] ?? 0,
       recommendCard: recommendCard,
       recommendCardKey: recommendCardKey,
-      recommendCardText: recommendCardText,
       recommendCardId: recommendCardId,
+      recommendCardText: recommendCardText,
       recommendCardCorrectAudio: recommendCardCorrectAudio,
+      recommendCardTranslation: recommendCardTranslation,
+      recommendCardPronunciation: recommendCardPronunciation,
+      recommendCardPictureUrl: recommendCardPictureUrl,
+      recommendCardExplanation: recommendCardExplanation,
+      recommendCardBookmark: recommendCardBookmark,
+      recommendCardWeakCard: recommendCardWeakCard,
       correctAudio: correctAudioList,
       userAudio: userAudioList,
       userAudioText: json['userAudio']['text'],

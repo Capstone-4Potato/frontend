@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
@@ -81,11 +82,11 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
             engTranslationList.add(card['engTranslation']);
             engPronunciationList.add(card['engPronunciation']);
             cardScoreList.add(card['cardScore']);
-            if (widget.level == 1) {
-              // Level 1아니면 picktureUrl 이랑 explanation이 없음
-              pictureUrlList.add(card['pictureUrl']);
-              explanationList.add(card['explanation']);
-            }
+
+            // Level 15 이하면 picktureUrl 이랑 explanation이 없음
+            pictureUrlList.add(card['pictureUrl'] ?? '');
+            explanationList.add(card['explanation'] ?? '');
+
             weakCardList.add(card['weakCard']);
             bookmarkList.add(card['bookmark']);
           }
@@ -175,7 +176,9 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                           });
                         }
                       });
-                    } else if (widget.level < 16) {
+                    }
+                    //  level 2~ 15 : 단어 학습 카드로 이동
+                    else if (widget.level < 16) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -185,10 +188,18 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                             texts: textList,
                             translations: engTranslationList,
                             engpronunciations: engPronunciationList,
+                            explanations: explanationList,
+                            pictures: pictureUrlList,
                             bookmarked: bookmarkList,
                           ),
                         ),
-                      );
+                      ).then((updatedBookmark) {
+                        if (updatedBookmark != null) {
+                          setState(() {
+                            bookmarkList[index] = updatedBookmark;
+                          });
+                        }
+                      });
                     } else if (widget.level < 23) {
                       Navigator.push(
                         context,
