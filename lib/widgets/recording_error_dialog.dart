@@ -6,9 +6,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class RecordingErrorDialog extends StatelessWidget {
   RecordingErrorDialog({
     super.key,
+    this.title = "Recording Error",
     this.text = "Please try recording again.",
   });
 
+  String title;
   String text;
 
   @override
@@ -25,11 +27,11 @@ class RecordingErrorDialog extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 24.0),
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0),
               child: Text(
-                'Recording Error',
-                style: TextStyle(
+                title,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
                   color: Colors.black,

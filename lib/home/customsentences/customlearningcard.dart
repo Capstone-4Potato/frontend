@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
@@ -5,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/customsentences/bookmark.dart';
-import 'package:flutter_application_1/home/customsentences/customfeedback.dart';
+import 'package:flutter_application_1/home/customsentences/customfeedbackui.dart';
 import 'package:flutter_application_1/home/customsentences/customtts.dart';
-import 'package:flutter_application_1/home/customsentences/feedback.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
 class CustomSentenceLearningCard extends StatefulWidget {
@@ -43,7 +44,7 @@ class _CustomSentenceLearningCardState
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
-  bool _canRecord = false;
+  bool _canRecord = true;
   late String _recordedFilePath;
 
   bool _isLoading = false;
@@ -66,38 +67,55 @@ class _CustomSentenceLearningCardState
   Future<void> _recordAudio() async {
     if (_isRecording) {
       final path = await _audioRecorder.stopRecorder();
+
       if (path != null) {
         setState(() {
           _isRecording = false;
           _recordedFilePath = path;
-          _isLoading = true; // 로딩 시작
+          _isLoading = true; // Start loading
         });
         final audioFile = File(path);
         final fileBytes = await audioFile.readAsBytes();
         final base64userAudio = base64Encode(fileBytes);
         final currentCardId = widget.cardIds[widget.currentIndex];
         final base64correctAudio = CustomTtsService.instance.base64CorrectAudio;
-        print("user : $base64userAudio");
-        print("correct : $base64correctAudio");
-        if (base64correctAudio != null) {
+
+        try {
+          // Set a timeout for the getFeedback call
           final feedbackData = await getCustomFeedback(
-              currentCardId, base64userAudio, base64correctAudio);
+            currentCardId,
+            base64userAudio,
+            base64correctAudio!,
+          ).timeout(
+            const Duration(seconds: 8),
+            onTimeout: () {
+              throw TimeoutException('Feedback request timed out');
+            },
+          );
 
           if (mounted && feedbackData != null) {
             setState(() {
-              _isLoading = false; // 로딩 종료
+              _isLoading = false; // Stop loading
             });
             showFeedbackDialog(context, feedbackData);
           } else {
             setState(() {
-              _isLoading = false; // 로딩 종료
-              showErrorDialog();
+              _isLoading = false; // Stop loading
             });
+            showErrorDialog();
           }
-        } else {
+        } catch (e) {
           setState(() {
-            _isLoading = false; // 로딩 종료
+            _isLoading = false; // Stop loading
           });
+          if (e.toString() == 'Exception: ReRecordNeeded') {
+            // Show the ReRecordNeeded dialog if the exception occurs
+            showRecordLongerDialog(context);
+          } else if (e is TimeoutException) {
+            showTimeoutDialog(); // Show error dialog on timeout
+          } else {
+            showErrorDialog();
+          }
         }
       }
     } else {
@@ -112,13 +130,15 @@ class _CustomSentenceLearningCardState
   }
 
   void _onListenPressed() async {
-    print('${widget.cardIds[widget.currentIndex]}');
-    CustomTtsService.fetchCorrectAudio(widget.cardIds[widget.currentIndex])
+    await CustomTtsService.fetchCorrectAudio(
+            widget.cardIds[widget.currentIndex])
         .then((_) {
       print('Audio fetched and saved successfully.');
     }).catchError((error) {
       print('Error fetching audio: $error');
     });
+    await CustomTtsService.instance
+        .playCachedAudio(widget.cardIds[widget.currentIndex]);
     setState(() {
       _canRecord = true;
     });
@@ -138,9 +158,10 @@ class _CustomSentenceLearningCardState
           transform: Matrix4.translationValues(0.0, 112, 0.0),
           child: Opacity(
             opacity: animation.value,
-            child: CustomFeedback(
+            child: CustomFeedbackUI(
               feedbackData: feedbackData,
               recordedFilePath: _recordedFilePath,
+              text: widget.texts[widget.currentIndex],
             ),
           ),
         );
@@ -153,6 +174,29 @@ class _CustomSentenceLearningCardState
       context: context,
       builder: (BuildContext context) {
         return RecordingErrorDialog();
+      },
+    );
+  }
+
+  void showTimeoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "The server response timed out. Please try again.",
+        );
+      },
+    );
+  }
+
+  // "좀 더 길게 녹음해주세요" 다이얼로그 표시 함수
+  void showRecordLongerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "Please press the stop recording button a bit later.",
+        );
       },
     );
   }
@@ -253,7 +297,11 @@ class _CustomSentenceLearningCardState
             setState(() {
               // currentIndex를 새로 갱신하여 카드 내용을 바꾸도록 설정
               widget.currentIndex = value;
-              _canRecord = false;
+            });
+            CustomTtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
+              print('Audio fetched and saved successfully.');
+            }).catchError((error) {
+              print('Error fetching audio: $error');
             });
           },
           itemCount: widget.texts.length,
@@ -272,54 +320,53 @@ class _CustomSentenceLearningCardState
                         onPressed: widget.currentIndex > 0
                             ? () {
                                 int nextIndex = widget.currentIndex - 1;
-                                navigateToCard(nextIndex);
-                                CustomTtsService.fetchCorrectAudio(
-                                        widget.cardIds[nextIndex])
-                                    .then((_) {
-                                  print(
-                                      'Audio fetched and saved successfully.');
-                                }).catchError((error) {
-                                  print('Error fetching audio: $error');
-                                });
+                                pageController.animateToPage(
+                                  nextIndex,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
                               }
                             : null,
                       ),
                       Container(
                         width: cardWidth,
-                        height: cardHeight,
                         padding: const EdgeInsets.all(12.0),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
-                              color: const Color(0xFFF26647), width: 3),
-                          borderRadius: BorderRadius.circular(12),
+                              color: const Color(0xFFF26647), width: 3.w),
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
                               currentContent,
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontSize: 24.h,
+                                fontWeight: FontWeight.bold,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                             Text(
                               currentEngPronunciation,
                               style: TextStyle(
-                                  fontSize: 16, color: Colors.grey[700]),
+                                fontSize: 18.h,
+                                color: Colors.grey[700],
+                              ),
                               textAlign: TextAlign.center,
                             ),
                             Text(
                               currentPronunciation,
-                              style: const TextStyle(
-                                fontSize: 16,
+                              style: TextStyle(
+                                fontSize: 18.h,
                                 fontWeight: FontWeight.w500,
-                                color: Color.fromARGB(255, 231, 156, 135),
+                                color: const Color.fromARGB(255, 231, 156, 135),
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(
-                              height: 10,
+                            SizedBox(
+                              height: 18.h,
                             ),
                             // 발음 듣기 버튼 - correctAudio 들려주기
                             ElevatedButton.icon(
@@ -351,15 +398,11 @@ class _CustomSentenceLearningCardState
                         onPressed: widget.currentIndex < widget.texts.length - 1
                             ? () {
                                 int nextIndex = widget.currentIndex + 1;
-                                navigateToCard(nextIndex);
-                                CustomTtsService.fetchCorrectAudio(
-                                        widget.cardIds[nextIndex])
-                                    .then((_) {
-                                  print(
-                                      'Audio fetched and saved successfully.');
-                                }).catchError((error) {
-                                  print('Error fetching audio: $error');
-                                });
+                                pageController.animateToPage(
+                                  nextIndex,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
                               }
                             : null,
                       ),

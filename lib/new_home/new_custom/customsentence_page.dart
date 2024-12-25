@@ -8,6 +8,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -144,6 +145,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
             }
             isLoading = false;
             print(idList);
+            print(createdAtList);
           });
         }
       } else if (response.statusCode == 401) {
@@ -284,8 +286,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         _showErrorDialog('Failed to add sentence. Please try again.');
       }
     } else {
-      _showErrorDialog(
-          'Please enter a sentence in Korean with 25 characters or less.');
+      _showErrorDialog('Please enter a sentence with 25 characters or less.');
     }
   }
 
@@ -367,10 +368,14 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         context: context,
         builder: (BuildContext context) {
           return RecordingErrorDialog(
+            title: "Input Error",
             text: message,
           );
         },
       );
+      setState(() {
+        isAddLoading = false;
+      });
     }
   }
 
@@ -391,24 +396,18 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
     );
   }
 
-  void _navigateToLearning() {
-    if (_sentences.isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const CustomSentences()),
-      );
-    }
-  }
-
   bool isToday(String createdAt) {
     // 현재 날짜 가져오기
     DateTime now = DateTime.now();
-    DateTime dateTime = DateTime.parse(createdAt);
+
+    // 서버 시간에 대한 보정 (예: 서버가 UTC+0이고 로컬이 UTC+9라면 +9 추가)
+    DateTime serverTime =
+        DateTime.parse(createdAt).add(const Duration(hours: 9));
 
     // 년, 월, 일이 동일한지 비교
-    return dateTime.year == now.year &&
-        dateTime.month == now.month &&
-        dateTime.day == now.day;
+    return serverTime.year == now.year &&
+        serverTime.month == now.month &&
+        serverTime.day == now.day;
   }
 
   @override
@@ -437,242 +436,229 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
           backgroundColor: const Color(0xFFF5F5F5),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: _controller,
-                style: const TextStyle(
-                  color: Color(0xFFF26647),
-                ),
-                cursorColor: const Color(0xFFF26647),
-                decoration: InputDecoration(
-                  labelText: 'Please enter a sentence',
-                  labelStyle: const TextStyle(
-                    color: Color(0xFF71706b),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus(); // 화면을 탭했을 때 키보드 내리기
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _controller,
+                  style: const TextStyle(
+                    color: Color(0xFFF26647),
                   ),
-                  floatingLabelStyle: const TextStyle(
-                    color: Color.fromARGB(255, 181, 181, 181),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6.0),
-                    borderSide: const BorderSide(
-                      color: Color(0xFFBEBDB8),
-                      width: 1.5,
+                  cursorColor: const Color(0xFFF26647),
+                  decoration: InputDecoration(
+                    labelText: 'Please enter a sentence',
+                    labelStyle: const TextStyle(
+                      color: Color(0xFF71706b),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: const BorderSide(
-                      color: Color(0xFFF26647),
-                      width: 1.5,
+                    floatingLabelStyle: const TextStyle(
+                      color: Color.fromARGB(255, 181, 181, 181),
                     ),
-                  ),
-                  suffix: Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: addButtonColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6.0.r),
                     ),
-                    child: IconButton(
-                      padding: const EdgeInsets.all(0),
-                      color: addButtonIconColor,
-                      icon: const Icon(
-                        Icons.add,
-                        size: 19,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6.0.r),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFBEBDB8),
+                        width: 1.5,
                       ),
-                      onPressed: _sentences.length < _maxSentences
-                          ? _addSentence
-                          : null,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0.r),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFF26647),
+                        width: 1.5,
+                      ),
+                    ),
+                    suffix: Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.r),
+                        color: addButtonColor,
+                      ),
+                      child: IconButton(
+                        padding: const EdgeInsets.all(0),
+                        color: addButtonIconColor,
+                        icon: const Icon(
+                          Icons.add,
+                          size: 19,
+                        ),
+                        onPressed: _sentences.length < _maxSentences
+                            ? _addSentence
+                            : null,
+                      ),
                     ),
                   ),
+                  onSubmitted: (text) => _addSentence(),
+                  enabled: _sentences.length < _maxSentences,
                 ),
-                onSubmitted: (text) => _addSentence(),
-                enabled: _sentences.length < _maxSentences,
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
-                      ))
-                    : _sentences.isEmpty
-                        ? Center(
-                            child: isAddLoading
-                                ? const Center(
-                                    child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Color(0xFFF26647)),
-                                  ))
-                                : Container(
-                                    width: 356,
-                                    height: 197,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      border: Border.all(
-                                          color: const Color(0xFFEBEBEB)),
-                                    ),
-                                    child: const Text(
-                                      'Got a sentence you'
-                                      'd like to practice pronouncing? Just write it in English, we’ll translate it into Korean and save it as a card!',
-                                      style: TextStyle(
-                                        color: Color(0xFF7F7E79),
+                SizedBox(height: 20.h),
+                Expanded(
+                  child: isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
+                        ))
+                      : _sentences.isEmpty
+                          ? Center(
+                              child: isAddLoading
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Color(0xFFF26647)),
+                                    ))
+                                  : Container(
+                                      width: 356,
+                                      height: 197,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        border: Border.all(
+                                            color: const Color(0xFFEBEBEB)),
+                                      ),
+                                      child: const Text(
+                                        'Got a sentence you'
+                                        'd like to practice pronouncing? Just write it in English, we’ll translate it into Korean and save it as a card!',
+                                        style: TextStyle(
+                                          color: Color(0xFF7F7E79),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                          )
-                        : Stack(
-                            children: [
-                              ListView.builder(
-                                reverse: false,
-                                itemCount: _sentences.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                CustomSentenceLearningCard(
-                                              currentIndex: index,
-                                              cardIds: idList,
-                                              texts: textList,
-                                              pronunciations:
-                                                  engTranslationList,
-                                              engpronunciations:
-                                                  engPronunciationList,
-                                              bookmarked: bookmarkList,
+                            )
+                          : Stack(
+                              children: [
+                                ListView.builder(
+                                  reverse: true,
+                                  itemCount: _sentences.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CustomSentenceLearningCard(
+                                                currentIndex: index,
+                                                cardIds: idList,
+                                                texts: textList,
+                                                pronunciations:
+                                                    engTranslationList,
+                                                engpronunciations:
+                                                    engPronunciationList,
+                                                bookmarked: bookmarkList,
+                                              ),
                                             ),
+                                          );
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFEBEBEB),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.17),
+                                                blurRadius: 5,
+                                                offset: const Offset(2, 2),
+                                              ),
+                                            ],
                                           ),
-                                        );
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFEBEBEB),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black
-                                                  .withOpacity(0.17),
-                                              blurRadius: 5,
-                                              offset: const Offset(2, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: ListTile(
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal: 10.0),
-                                          title: Row(
-                                            children: [
-                                              if (isToday(
-                                                  _sentences[index].createdAt!))
+                                          child: ListTile(
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 10.0,
+                                                    horizontal: 10.0),
+                                            title: Row(
+                                              children: [
                                                 Container(
                                                   margin: const EdgeInsets.only(
                                                       right: 10),
                                                   width: 8,
                                                   height: 8,
                                                   decoration: BoxDecoration(
-                                                    color: primary,
+                                                    color: (isToday(
+                                                            _sentences[index]
+                                                                .createdAt!))
+                                                        ? primary
+                                                        : Colors.transparent,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10),
                                                   ),
                                                 ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    _sentences[index]
-                                                        .engTranslation,
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      _sentences[index]
+                                                          .engTranslation,
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    _sentences[index].text,
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                    Text(
+                                                      _sentences[index].text,
+                                                      style: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          trailing: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              IconButton(
-                                                icon: const Icon(
-                                                  Icons.delete,
-                                                  color: Colors.black38,
+                                                  ],
                                                 ),
-                                                onPressed: () =>
-                                                    _deleteSentence(index),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
+                                            trailing: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                IconButton(
+                                                  icon: const Icon(
+                                                    Icons.delete,
+                                                    color: Colors.black38,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _deleteSentence(index),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              if (isAddLoading)
-                                const Center(
-                                    child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Color(0xFFF26647)),
-                                )),
-                            ],
-                          ),
-              ),
-              const SizedBox(height: 16),
-              // ElevatedButton(
-              //   onPressed: _sentences.isNotEmpty
-              //       ? () {
-              //           // _sentences[]
-              //         }
-              //       : null,
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: const Color(0xfff26647),
-              //     padding:
-              //         const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              //     textStyle: const TextStyle(
-              //       fontSize: 16,
-              //       fontWeight: FontWeight.w500,
-              //     ),
-              //   ),
-              //   child: const Text(
-              //     'Go to Learning',
-              //     style: TextStyle(color: Colors.white),
-              //   ),
-              // ),
-              //const SizedBox(height: 30),
-            ],
+                                    );
+                                  },
+                                ),
+                                if (isAddLoading)
+                                  const Center(
+                                      child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Color(0xFFF26647)),
+                                  )),
+                              ],
+                            ),
+                ),
+                SizedBox(height: 16.h),
+              ],
+            ),
           ),
         ),
       ),

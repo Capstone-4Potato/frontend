@@ -238,7 +238,6 @@ Future<FeedbackData?> getCustomFeedback(
   String url = '$main_url/cards/custom/$cardId';
 
   String? token = await getAccessToken();
-  // Function to make the POST request
   Future<http.Response> makePostRequest(String token) {
     return http.post(
       Uri.parse(url),
@@ -253,42 +252,58 @@ Future<FeedbackData?> getCustomFeedback(
     if (response.statusCode == 200) {
       print('Successful feedback submission');
       var responseData = json.decode(response.body);
-      print("feedback : $responseData");
-      //print('${responseData['correctAudio']}');
       return FeedbackData.fromJson(responseData);
     } else if (response.statusCode == 401) {
-      // Token expired, attempt to refresh the token
+      // Handle token expiration
       print('Access token expired. Refreshing token...');
-
-      // Refresh the access token
       bool isRefreshed = await refreshAccessToken();
       if (isRefreshed) {
-        // Retry the feedback request with the new token
         token = await getAccessToken();
         response = await makePostRequest(token!);
-
         if (response.statusCode == 200) {
           print('Successful feedback submission after token refresh');
           var responseData = json.decode(response.body);
           return FeedbackData.fromJson(responseData);
         } else {
-          print(
-              'Failed to submit feedback after token refresh: ${response.statusCode}');
+          print('Failed after token refresh: ${response.statusCode}');
           return null;
         }
       } else {
         print('Failed to refresh access token');
         return null;
       }
-    } else {
-      // Handle all other HTTP status codes
-      print('Unhandled server response: ${response.statusCode}');
-      print(json.decode(response.body));
-      return null;
+    } else if (response.statusCode == 500) {
+      var responseData = json.decode(response.body);
+      var message = responseData['message'];
+      if (message is String) {
+        var messageDetail = json.decode(message)['detail'];
+        if (messageDetail ==
+                "failed to extract user text (STT), please request re-recording" ||
+            messageDetail == "no non-silent samples to save" ||
+            messageDetail ==
+                "User text is too short, please request re-recording") {
+          throw Exception('ReRecordNeeded');
+        }
+      } else if (message is Map) {
+        if (message['detail'] ==
+                "failed to extract user text (STT), please request re-recording" ||
+            message['detail'] == "no non-silent samples to save" ||
+            message['detail' ==
+                "User text is too short, please request re-recording"]) {
+          throw Exception('ReRecordNeeded');
+        }
+      }
     }
+
+    print('Unhandled server response: ${response.statusCode}');
+    print(json.decode(response.body));
+    return null;
   } catch (e) {
-    // Handle exceptions that occur during the network request
     print("Error during the request: $e");
+    if (e.toString() == 'Exception: ReRecordNeeded') {
+      // If ReRecordNeeded exception occurs, signal to the calling function
+      throw Exception('ReRecordNeeded');
+    }
     return null;
   }
 }

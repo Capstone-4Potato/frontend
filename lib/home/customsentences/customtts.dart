@@ -40,7 +40,6 @@ class CustomTtsService {
         if (base64correctAudio != null) {
           _instance.base64CorrectAudio = base64correctAudio;
           await _instance.saveAudioToFile(cardId, base64correctAudio);
-          await _instance.playCachedAudio(cardId); // 바로 재생 시도
         } else {
           print('No audio data found in response.');
         }
