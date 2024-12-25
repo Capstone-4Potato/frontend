@@ -28,47 +28,89 @@ class _SavedCardScreenState extends State<SavedCardScreen> {
   bool isLoading = true;
 
   Future<void> fetchSavedCardList() async {
-    String? token = await getAccessToken();
-    var url = Uri.parse('$main_url/home/bookmark');
+    try {
+      String? token = await getAccessToken();
+      var url = Uri.parse('$main_url/home/bookmark');
 
-    // Function to make the request
-    Future<http.Response> makeRequest(String token) {
-      var headers = <String, String>{
-        'access': token,
-        'Content-Type': 'application/json',
-      };
-      return http.get(url, headers: headers);
-    }
-
-    var response = await makeRequest(token!);
-
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-
-      List<dynamic> cardList = data['cardList'];
-      if (mounted) {
-        setState(() {
-          // 리스트 초기화
-          idList.clear();
-          textList.clear();
-          cardScoreList.clear();
-          weakCardList.clear();
-          bookmarkList.clear();
-
-          // 변수 리스트에 데이터 저장
-          for (var card in cardList) {
-            idList.add(card['id']);
-            textList.add(card['text']);
-            cardPronunciationList.add(card['cardPronunciation']);
-            cardScoreList.add(card['cardScore']);
-            weakCardList.add(card['weakCard']);
-            bookmarkList.add(card['bookmarked']);
-          }
-          isLoading = false;
-        });
+      // Function to make the request
+      Future<http.Response> makeRequest(String token) {
+        var headers = <String, String>{
+          'access': token,
+          'Content-Type': 'application/json',
+        };
+        return http.get(url, headers: headers);
       }
-    } else {
-      throw Exception('Failed to load card list');
+
+      var response = await makeRequest(token!);
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+
+        List<dynamic> cardList = data['cardList'];
+        if (mounted) {
+          setState(() {
+            // 리스트 초기화
+            idList.clear();
+            textList.clear();
+            cardScoreList.clear();
+            weakCardList.clear();
+            bookmarkList.clear();
+
+            // 변수 리스트에 데이터 저장
+            for (var card in cardList) {
+              idList.add(card['id']);
+              textList.add(card['text']);
+              cardPronunciationList.add(card['cardPronunciation']);
+              cardScoreList.add(card['cardScore']);
+              weakCardList.add(card['weakCard']);
+              bookmarkList.add(card['bookmarked']);
+            }
+            isLoading = false;
+          });
+        }
+      } else if (response.statusCode == 401) {
+        // Token expired, attempt to refresh the token
+        print('Access token expired. Refreshing token...');
+
+        // Refresh the access token
+        bool isRefreshed = await refreshAccessToken();
+        if (isRefreshed) {
+          // Retry the request with the new token
+          token = await getAccessToken();
+          response = await makeRequest(token!);
+
+          if (response.statusCode == 200) {
+            var data = json.decode(response.body);
+
+            List<dynamic> cardList = data['cardList'];
+            if (mounted) {
+              setState(() {
+                // 리스트 초기화
+                idList.clear();
+                textList.clear();
+                cardScoreList.clear();
+                weakCardList.clear();
+                bookmarkList.clear();
+
+                // 변수 리스트에 데이터 저장
+                for (var card in cardList) {
+                  idList.add(card['id']);
+                  textList.add(card['text']);
+                  cardPronunciationList.add(card['cardPronunciation']);
+                  cardScoreList.add(card['cardScore']);
+                  weakCardList.add(card['weakCard']);
+                  bookmarkList.add(card['bookmarked']);
+                }
+                isLoading = false;
+              });
+            }
+          }
+        }
+      } else if (response.statusCode == 500) {
+        print(response.body);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

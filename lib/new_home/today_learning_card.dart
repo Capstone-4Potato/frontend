@@ -19,6 +19,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
+/// 하루 한 개씩 추천 카드
 class TodayLearningCard extends StatefulWidget {
   int cardId;
 
@@ -36,7 +37,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
-  bool _canRecord = false;
+
   late String _recordedFilePath;
 
   bool _isLoading = false;
@@ -182,15 +183,9 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
 
       // 3. 파일 재생
       await _audioPlayer.play(DeviceFileSource(filePath));
-      setState(() {
-        _canRecord = true; // 재생 후 녹음 활성화
-      });
     } catch (e) {
       print("오디오 재생 중 오류 발생: $e");
     }
-    setState(() {
-      _canRecord = true;
-    });
   }
 
   void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
@@ -345,16 +340,45 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                         ),
                     ],
                   ),
-                  Center(
-                    child: SizedBox(
-                      width: 250.w,
-                      child: Text(
-                        cardSummary,
-                        style: TextStyle(
-                          fontSize: 28.w,
+                  SizedBox(
+                    height: 50.h,
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24.r),
+                          color: Colors.white,
+                        ),
+                        padding: EdgeInsets.all(10.w),
+                        child: Text(
+                          "Meaning of the word",
+                          style: TextStyle(
+                            fontSize: 18.w,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 25.h,
+                      ),
+                      Container(
+                        width: 280.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24.r),
+                          color: Colors.white,
+                        ),
+                        padding: EdgeInsets.all(10.w),
+                        child: Text(
+                          cardSummary,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 28.w,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -363,14 +387,12 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
         width: 70,
         height: 70,
         child: FloatingActionButton(
-          onPressed: _canRecord && !_isLoading ? _recordAudio : null,
+          onPressed: !_isLoading ? _recordAudio : null,
           backgroundColor: _isLoading
               ? const Color.fromARGB(37, 206, 204, 204) // 로딩 중 색상
-              : _canRecord
-                  ? (_isRecording
-                      ? const Color(0xFF976841)
-                      : const Color(0xFFF26647))
-                  : const Color.fromARGB(37, 206, 204, 204),
+              : (_isRecording
+                  ? const Color(0xFF976841)
+                  : const Color(0xFFF26647)),
           elevation: 0.0,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(35))), // 조건 업데이트
