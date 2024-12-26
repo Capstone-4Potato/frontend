@@ -4,14 +4,16 @@ import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/new_home/home_nav.dart';
 
 class SuccessDialog extends StatelessWidget {
-  const SuccessDialog({
+  SuccessDialog({
     super.key,
     required this.width,
     required this.height,
+    required this.page,
   });
 
   final double width;
   final double height;
+  Widget page;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class SuccessDialog extends StatelessWidget {
               onTap: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeNav()),
+                  MaterialPageRoute(builder: (context) => page),
                   (route) => false,
                 );
               },

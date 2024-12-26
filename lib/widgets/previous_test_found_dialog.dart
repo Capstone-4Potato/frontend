@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/new_home/home_nav.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ExitDialog extends StatelessWidget {
-  ExitDialog({
+class PreviousTestDialog extends StatelessWidget {
+  PreviousTestDialog({
     super.key,
-    required this.width,
-    required this.height,
-    required this.page,
+    required this.leftTap,
+    required this.rightTap,
   });
 
-  final double width;
-  final double height;
-  Widget page;
+  VoidCallback leftTap;
+  VoidCallback rightTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,33 +25,32 @@ class ExitDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         width: 381.w,
-        height: 179.h,
+        height: 230.h,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'End Learning',
+            Text(
+              'Previous Test Found',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 24.h,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
             ),
-            const Text(
-              'Do you want to end learning?',
+            Text(
+              'There is a previous test in progress. Would you like to continue or start over?',
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.h,
                 fontWeight: FontWeight.w500,
-                color: Color.fromARGB(255, 150, 150, 150),
+                color: const Color.fromARGB(255, 150, 150, 150),
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
+                  onTap: leftTap,
                   child: Container(
                     width: 148.w,
                     height: 44.h,
@@ -60,17 +58,11 @@ class ExitDialog extends StatelessWidget {
                       color: const Color.fromARGB(255, 206, 201, 214),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Center(child: Text('Continue')),
+                    child: const Center(child: Text('CONTINUE')),
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => page),
-                      (route) => false,
-                    );
-                  },
+                  onTap: rightTap,
                   child: Container(
                     width: 148.w,
                     height: 44.h,
@@ -80,7 +72,7 @@ class ExitDialog extends StatelessWidget {
                     ),
                     child: const Center(
                         child: Text(
-                      'End',
+                      'NEW START',
                       style: TextStyle(
                         color: Colors.white,
                       ),

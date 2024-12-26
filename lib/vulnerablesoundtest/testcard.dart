@@ -3,7 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
+import 'package:flutter_application_1/new_report/report_screen.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/home/home_page.dart';
 import 'package:flutter_application_1/learninginfo/progress.dart';
@@ -13,6 +16,7 @@ import 'package:flutter_application_1/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -21,7 +25,7 @@ import 'package:http/http.dart' as http;
 class TestCard extends StatefulWidget {
   final List<int> testIds;
   final List<String> testContents;
-  final List<String> testPronunciations;
+  final List<String> testTranslations;
   final List<String> testEngPronunciations;
   final bool isRetest;
 
@@ -29,7 +33,7 @@ class TestCard extends StatefulWidget {
     super.key,
     required this.testIds,
     required this.testContents,
-    required this.testPronunciations,
+    required this.testTranslations,
     required this.testEngPronunciations,
     required this.isRetest,
   });
@@ -43,6 +47,8 @@ class _TestCardState extends State<TestCard> {
   bool _isRecording = false;
   bool _isRecorded = false;
   int _currentIndex = 0;
+
+  bool _isLoading = false; // 로딩 중인지
 
   @override
   void initState() {
@@ -89,6 +95,9 @@ class _TestCardState extends State<TestCard> {
 
   // 서버로 사용자가 녹음한 오디오 전송
   Future<void> _uploadRecording(String? path) async {
+    setState(() {
+      _isLoading = true;
+    });
     if (path != null && File(path).existsSync()) {
       print('Uploading file: $path');
 
@@ -117,17 +126,29 @@ class _TestCardState extends State<TestCard> {
         if (response.statusCode == 200) {
           print('Upload successful: $responseBody');
           _nextCard();
+          setState(() {
+            _isLoading = false;
+          });
         } else {
           print('Upload failed with status: ${response.statusCode}');
           print('Response: $responseBody');
           _showUploadErrorDialog();
+          setState(() {
+            _isLoading = false;
+          });
         }
       } catch (e) {
         print('Error uploading file: $e');
         _showUploadErrorDialog();
+        setState(() {
+          _isLoading = false;
+        });
       }
     } else {
       print('Error: File does not exist at path $path');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -144,7 +165,7 @@ class _TestCardState extends State<TestCard> {
       }
     } else {
       // 녹음이 완료되지 않았을 때 처리
-      // _showErrorDialog();
+      _showUploadErrorDialog();
     }
   }
 
@@ -186,6 +207,9 @@ class _TestCardState extends State<TestCard> {
         return SuccessDialog(
           width: width,
           height: height,
+          page: HomeNav(
+            bottomNavIndex: 1,
+          ),
         );
       },
     );
@@ -202,7 +226,9 @@ class _TestCardState extends State<TestCard> {
         return ExitDialog(
           width: width,
           height: height,
-          page: const MainPage(initialIndex: 2),
+          page: HomeNav(
+            bottomNavIndex: 1,
+          ),
         );
       },
     );
@@ -262,26 +288,30 @@ class _TestCardState extends State<TestCard> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(widget.testContents[_currentIndex],
-                          style: const TextStyle(
-                              fontSize: 40, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 7),
-                      Text('[${widget.testEngPronunciations[_currentIndex]}]',
-                          style:
-                              TextStyle(fontSize: 24, color: Colors.grey[700])),
-                      const SizedBox(height: 4),
                       Text(
-                        widget.testPronunciations[_currentIndex],
-                        style: const TextStyle(
-                          fontSize: 24,
-                          color: Color.fromARGB(255, 231, 156, 135),
+                        widget.testContents[_currentIndex],
+                        style: TextStyle(
+                            fontSize: 40.h, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 7.h),
+                      Text(
+                        '[${widget.testEngPronunciations[_currentIndex]}]',
+                        style:
+                            TextStyle(fontSize: 24.h, color: Colors.grey[700]),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        widget.testTranslations[_currentIndex],
+                        style: TextStyle(
+                          fontSize: 24.h,
+                          color: const Color.fromARGB(255, 231, 156, 135),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: Column(
@@ -302,8 +332,11 @@ class _TestCardState extends State<TestCard> {
                                   const BorderRadius.all(Radius.circular(10)),
                               child: FractionallySizedBox(
                                 alignment: Alignment.centerLeft,
-                                widthFactor:
-                                    (_currentIndex + 1) / widget.testIds.length,
+                                widthFactor: (30 -
+                                        widget.testIds.length +
+                                        _currentIndex +
+                                        1) /
+                                    30,
                                 child: Container(
                                   decoration: const BoxDecoration(
                                     gradient: LinearGradient(
@@ -323,13 +356,21 @@ class _TestCardState extends State<TestCard> {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        '${_currentIndex + 1}/${widget.testIds.length}',
+                        '${30 - widget.testIds.length + _currentIndex + 1}/30',
                         style: const TextStyle(
                           color: Color.fromARGB(129, 0, 0, 0),
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      SizedBox(
+                        height: 80.h,
+                      ),
+                      if (_isLoading)
+                        Center(
+                            child: CircularProgressIndicator(
+                          color: primary,
+                        )),
                     ],
                   ),
                 ),
@@ -338,6 +379,7 @@ class _TestCardState extends State<TestCard> {
           ],
         ),
       ),
+
       // 녹음하기 버튼
       floatingActionButton: SizedBox(
         width: 70,

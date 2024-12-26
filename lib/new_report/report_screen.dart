@@ -15,6 +15,7 @@ import 'package:flutter_application_1/new_home/home_cards.dart';
 import 'package:flutter_application_1/new_report/phonemes_class.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/gettestlist.dart';
+import 'package:flutter_application_1/widgets/previous_test_found_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -876,24 +877,24 @@ class _ReportScreenState extends State<ReportScreen> {
                                     ),
                                   )
                                 : Padding(
-                                    padding: const EdgeInsets.only(top: 12.0),
+                                    padding: EdgeInsets.only(top: 12.0.h),
                                     child: Column(
                                       children: List.generate(
                                           weakPhonemes!.length, (index) {
                                         return VulnerableCardItem(
-                                          index: index + 1,
+                                          index: index,
                                           phonemes: weakPhonemes![index]
                                                   ['phonemeText']
-                                              .split(' ')
+                                              .split(" ")
                                               .last,
                                           title: weakPhonemes![index]
                                                   ['phonemeText']
-                                              .split(' ')
+                                              .split(" ")
                                               .sublist(
                                                   0,
                                                   weakPhonemes![index]
                                                               ['phonemeText']
-                                                          .split(' ')
+                                                          .split(" ")
                                                           .length -
                                                       1)
                                               .join(' '),
@@ -920,53 +921,37 @@ class _ReportScreenState extends State<ReportScreen> {
                                     check
                                         ? showDialog(
                                             context: context,
-                                            builder:
-                                                (BuildContext buidContext) {
-                                              return AlertDialog(
-                                                title: const Text(
-                                                    "Previous Test Found"),
-                                                content: Text(
-                                                  'There is a previous test in progress. Would you like to continue or start over?',
-                                                  style:
-                                                      TextStyle(fontSize: 16.h),
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      // 이전 테스트 계속하기 로직 추가 가능
-                                                      Navigator.push<void>(
-                                                        context,
-                                                        MaterialPageRoute<void>(
-                                                          builder: (BuildContext
-                                                                  builder) =>
-                                                              RestartTestScreen(
-                                                            check: check,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child:
-                                                        const Text('CONTINUE'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.push<void>(
-                                                        context,
-                                                        MaterialPageRoute<void>(
-                                                          builder: (BuildContext
-                                                                  builder) =>
-                                                              RestartTestScreen(
-                                                            check: false,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child:
-                                                        const Text('NEW START'),
-                                                  ),
-                                                ],
+                                            barrierDismissible: true,
+                                            builder: (BuildContext context) {
+                                              return PreviousTestDialog(
+                                                leftTap: () {
+                                                  // 이전 테스트 계속하기 로직 추가 가능
+                                                  Navigator.push<void>(
+                                                    context,
+                                                    MaterialPageRoute<void>(
+                                                      builder: (BuildContext
+                                                              builder) =>
+                                                          RestartTestScreen(
+                                                        check: true,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                rightTap: () {
+                                                  Navigator.push<void>(
+                                                    context,
+                                                    MaterialPageRoute<void>(
+                                                      builder: (BuildContext
+                                                              builder) =>
+                                                          RestartTestScreen(
+                                                        check: false,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                               );
-                                            })
+                                            },
+                                          )
                                         : Navigator.push<void>(
                                             context,
                                             MaterialPageRoute<void>(
@@ -1303,7 +1288,7 @@ class VulnerableCardItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '$index',
+                '${index + 1}',
                 style: const TextStyle(
                   color: Color(0xFFEDCAA8),
                   fontWeight: FontWeight.bold,

@@ -67,6 +67,7 @@ Future<List<dynamic>?> getTestContinueData() async {
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       print("import 기존 test data");
+      print(data);
       return data;
     } else if (response.statusCode == 401) {
       // Token expired, attempt to refresh the token

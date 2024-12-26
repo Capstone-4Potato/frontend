@@ -387,6 +387,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         return SuccessDialog(
           width: width,
           height: height,
+          page: HomeNav(),
         );
       },
     );
@@ -410,7 +411,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         return ExitDialog(
           width: width,
           height: height,
-          page: const HomeNav(),
+          page: HomeNav(),
         );
       },
     );

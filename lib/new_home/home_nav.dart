@@ -9,17 +9,18 @@ import 'package:flutter_application_1/new_report/report_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeNav extends StatefulWidget {
-  const HomeNav({
+  HomeNav({
     super.key,
+    this.bottomNavIndex = 0,
   });
+
+  int bottomNavIndex; // 네비게이션 바 인덱스
 
   @override
   State<HomeNav> createState() => _HomeNavState();
 }
 
 class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
-  var _bottomNavIndex = 0; // 네비게이션 바 인덱스
-
   final List<Widget> _screens = [
     const HomeScreen(),
     const ReportScreen(),
@@ -38,7 +39,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
-      body: _screens[_bottomNavIndex], // 현재 선택된 화면을 표시
+      body: _screens[widget.bottomNavIndex], // 현재 선택된 화면을 표시
       floatingActionButton: Container(
         width: 98,
         height: 98,
@@ -90,12 +91,12 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
             ],
           );
         },
-        activeIndex: _bottomNavIndex,
+        activeIndex: widget.bottomNavIndex,
         gapLocation: GapLocation.center,
         notchSmoothness: NotchSmoothness.sharpEdge,
         leftCornerRadius: 10,
         rightCornerRadius: 10,
-        onTap: (index) => setState(() => _bottomNavIndex = index),
+        onTap: (index) => setState(() => widget.bottomNavIndex = index),
         backgroundColor: const Color.fromARGB(255, 242, 235, 227),
       ),
     );

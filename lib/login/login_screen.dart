@@ -284,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (statusCode == 200) {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomeNav()),
+                    MaterialPageRoute(builder: (context) => HomeNav()),
                     (route) => false,
                   );
                 }
@@ -312,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (statusCode == 200) {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomeNav()),
+                    MaterialPageRoute(builder: (context) => HomeNav()),
                     (route) => false,
                   );
                 }
@@ -340,7 +340,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else if (statusCode == 200) {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomeNav()),
+                    MaterialPageRoute(builder: (context) => HomeNav()),
                     (route) => false,
                   );
                 }

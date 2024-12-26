@@ -102,7 +102,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
                       builder: (context) => TestCard(
                         testIds: testIds,
                         testContents: testContents,
-                        testPronunciations: testPronunciations,
+                        testTranslations: testPronunciations,
                         testEngPronunciations: testEngPronunciations,
                         isRetest: false,
                       ),
@@ -129,7 +129,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
                 // skip 하면 메인으로 이동
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeNav()),
+                  MaterialPageRoute(builder: (context) => HomeNav()),
                   (route) => false,
                 );
               },

@@ -52,6 +52,7 @@ class _RestartTestScreenState extends State<RestartTestScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: const Color(0xFFF5F5F5),
       body: Center(
@@ -101,7 +102,7 @@ class _RestartTestScreenState extends State<RestartTestScreen> {
                         builder: (context) => TestCard(
                               testIds: testIds,
                               testContents: testContents,
-                              testPronunciations: testPronunciations,
+                              testTranslations: testEngTranslation,
                               testEngPronunciations: testEngPronunciations,
                               isRetest: true,
                             )),
