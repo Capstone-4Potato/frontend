@@ -57,7 +57,9 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
 
         for (var entry in cardList.values) {
           for (var card in entry) {
-            futures.add(fetchData(card['id']).then((cardData) {
+            futures.add(fetchData(card['id']).then((cardData) async {
+              await Future.delayed(const Duration(seconds: 1)); // 1초 대기
+
               tempDataList.add({
                 'id': card['id'],
                 'text': card['text'],
@@ -274,7 +276,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
                 tab1Ids.isEmpty
                     ? const Center(child: Text('There is no Missed Cards!'))
                     : GridView.builder(
-                        padding: const EdgeInsets.all(15),
+                        padding: EdgeInsets.all(15.w),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 15.w,
@@ -333,7 +335,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
       List<String> texts,
       List<String> pronunciations,
       List<String> translations,
-      List<String> explanatinos,
+      List<String> explanations,
       List<String> pictures,
       List<int> scores,
       List<bool> weakCards,
@@ -374,7 +376,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
                 cardIds: ids,
                 texts: texts,
                 translations: translations,
-                explanations: explanatinos,
+                explanations: explanations,
                 pictures: pictures,
                 engpronunciations: pronunciations,
                 bookmarked: bookmarks,
@@ -393,10 +395,10 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
         opacity: scores[index] >= 1.0 ? 0.5 : 1.0,
         child: Card(
           elevation: 0.0,
-          shape: const RoundedRectangleBorder(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
+              topLeft: Radius.circular(12.r),
+              topRight: Radius.circular(12.r),
             ),
           ),
           child: (ids[index] >= 1684)
