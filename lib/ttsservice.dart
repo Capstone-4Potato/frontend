@@ -99,6 +99,8 @@ class TtsService {
     final String fileName = 'correct_audio_$cardId.wav';
     final File file = File('$dir/$fileName');
 
+    await Future.delayed(const Duration(seconds: 2)); // 혹시 몰라서 딜레이 2초
+
     await _audioPlayer.play(audioplayers.DeviceFileSource(file.path));
   }
 }

@@ -72,7 +72,6 @@ class _StartTestScreenState extends State<StartTestScreen> {
                 "View the pronunciation guide on the card,\nand record yourself mimicking it slowly.",
                 style: TextStyle(
                   fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 74, 74, 74),
                   fontFamily: 'Marine',
                 ),
