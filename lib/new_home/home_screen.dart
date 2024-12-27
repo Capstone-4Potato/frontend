@@ -180,8 +180,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   radius: 101.r,
                                   backgroundColor:
                                       const Color.fromARGB(255, 242, 235, 227),
-                                  child: Image.asset(
-                                      'assets/image/bam_character.png'),
+                                  child: SvgPicture.asset(
+                                    'assets/image/bam_character.svg',
+                                    width: 130.w,
+                                  ),
                                 ),
                               ),
                               Center(
