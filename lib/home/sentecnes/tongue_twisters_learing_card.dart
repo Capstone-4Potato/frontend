@@ -68,6 +68,7 @@ class _TongueTwistersLearningCardState
   Future<void> _recordAudio() async {
     if (_isRecording) {
       final path = await _audioRecorder.stopRecorder();
+
       if (path != null) {
         setState(() {
           _isRecording = false;

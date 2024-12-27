@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -23,6 +24,7 @@ import 'package:flutter_application_1/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
@@ -67,7 +69,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
   bool _isRecording = false;
   bool _isRecorded = false;
-  bool _canRecord = false;
+  bool _canRecord = true;
   int _currentIndex = 0;
 
   bool _isLoading = false; // 피드백 로딩 중인지 여부
@@ -157,45 +159,63 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   // 오디오 녹음 및 처리
   Future<void> _recordAudio() async {
     if (_isRecording) {
-      final path = await _recorder.stopRecorder(); // 녹음 중단
-      print('녹음 중단!');
+      final path = await _recorder.stopRecorder();
+      setState(() {
+        _isLoading = true;
+      });
       if (path != null) {
         setState(() {
-          _isRecording = false; // 녹음 상태 해체
-          _recordedFilePath = path; // 녹음된 파일 경로 저장
-          _isLoading = true; // 로딩 시작
+          _isRecording = false;
+          _recordedFilePath = path;
         });
-
-        final audioFile = File(path); // 녹음된 파일 불러오기
-        final fileBytes = await audioFile.readAsBytes(); // 파일을 바이트로 읽기
-        final base64userAudio = base64Encode(fileBytes); // Base64 인코딩
-        debugPrint("유저 : $base64userAudio");
+        final audioFile = File(path);
+        final fileBytes = await audioFile.readAsBytes();
+        final base64userAudio = base64Encode(fileBytes);
         final currentCardId = widget.ids[_currentIndex];
-        final base64correctAudio = widget.correctAudios[_currentIndex];
-        print("정답 : $base64correctAudio");
+        final base64correctAudio = TtsService.instance.base64CorrectAudio;
 
-        final feedbackData = await getFeedback(
-            currentCardId, base64userAudio, base64correctAudio); // 피드백 데이터 가져오기
-        if (feedbackData == null) {
-          showErrorDialog();
-          return;
-        }
-        if (mounted) {
-          setState(() {
-            _isLoading = false; // 로딩 종료
-          });
-          // 다이얼로그를 보여주고 닫힌 후 처리하기
-          showFeedbackDialog(context, feedbackData);
+        if (base64correctAudio != null) {
+          try {
+            // Set a timeout for the getFeedback call
+            final feedbackData = await getFeedback(
+              currentCardId,
+              base64userAudio,
+              base64correctAudio,
+            ).timeout(
+              const Duration(seconds: 6),
+              onTimeout: () {
+                throw TimeoutException('Feedback request timed out');
+              },
+            );
 
-          // 다이얼로그가 닫힌 후 실행할 코드
-          if (mounted) {
+            if (mounted && feedbackData != null) {
+              setState(() {
+                _isLoading = false; // Stop loading
+              });
+              showFeedbackDialog(context, feedbackData);
+            } else {
+              setState(() {
+                _isLoading = false; // Stop loading
+              });
+              showErrorDialog();
+            }
+          } catch (e) {
             setState(() {
-              if (feedbackData.userScore == 100) {
-                _isRecorded = true; // 녹음 완료 상태 설정
-              }
+              _isLoading = false; // Stop loading
             });
-            _nextCard(); // 다음 카드로 이동
+            if (e.toString() == 'Exception: ReRecordNeeded') {
+              // Show the ReRecordNeeded dialog if the exception occurs
+              showRecordLongerDialog(context);
+            } else if (e is TimeoutException) {
+              showTimeoutDialog(); // Show error dialog on timeout
+            } else {
+              showErrorDialog();
+            }
           }
+        } else {
+          setState(() {
+            _isLoading = false; // Stop loading
+          });
         }
       }
     } else {
@@ -204,8 +224,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         codec: Codec.pcm16WAV,
       );
       setState(() {
-        _isRecording = true; // 녹음 상태 활성화
-        // _isRecorded = true; // 녹음 함
+        _isRecording = true;
       });
     }
   }
@@ -318,11 +337,26 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
       } else {
         print('Last card reached');
         _showCompletionDialog();
+        setTodayCourseCompleted(); // 오늘 학습 완료 저장
       }
     } else {
       print('Recording not completed!');
       // showErrorDialog();
     }
+  }
+
+  Future<void> setTodayCourseCompleted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Set "checkTodayCourse" to true and save today's date
+    await prefs.setBool('checkTodayCourse', true);
+
+    // Update "lastSavedDate" to today's date
+    DateTime now = DateTime.now();
+    String todayDate = "${now.year}-${now.month}-${now.day}";
+    await prefs.setString('lastSavedDate', todayDate);
+
+    print('checkTodayCourse set to true and lastSavedDate updated.');
   }
 
   // 피드백 다이얼로그 표시
@@ -340,6 +374,29 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
           feedbackData: feedbackData,
           recordedFilePath: _recordedFilePath,
           text: widget.texts[_currentIndex], // 카드 한글 발음
+        );
+      },
+    );
+  }
+
+  void showTimeoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "The server response timed out. Please try again.",
+        );
+      },
+    );
+  }
+
+  // "좀 더 길게 녹음해주세요" 다이얼로그 표시 함수
+  void showRecordLongerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          text: "Please press the stop recording button a bit later.",
         );
       },
     );
@@ -461,46 +518,55 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
               children: [
                 Container(
                   width: cardWidth,
-                  height: cardHeight,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border:
-                        Border.all(color: const Color(0xFFF26647), width: 3),
+                        Border.all(color: const Color(0xFFF26647), width: 3.w),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(widget.texts[_currentIndex],
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0.h),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(widget.texts[_currentIndex],
+                            style: const TextStyle(
+                                fontSize: 40, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 7.h),
+                        Text('[${widget.cardPronunciations[_currentIndex]}]',
+                            style: TextStyle(
+                                fontSize: 24.h, color: Colors.grey[700])),
+                        SizedBox(height: 4.h),
+                        Text(
+                          widget.cardTranslations[_currentIndex],
                           style: const TextStyle(
-                              fontSize: 40, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 7),
-                      Text('[${widget.cardPronunciations[_currentIndex]}]',
-                          style:
-                              TextStyle(fontSize: 24, color: Colors.grey[700])),
-                      const SizedBox(height: 4),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF26647),
-                          minimumSize: const Size(220, 40),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                              color: Color.fromARGB(255, 231, 156, 135)),
                         ),
-                        onPressed: () {
-                          _onListenPressed(_currentIndex);
-                        },
-                        icon: const Icon(
-                          Icons.volume_up,
-                          color: Colors.white,
-                        ),
-                        label: const Text(
-                          'Listen',
-                          style: TextStyle(
-                            fontSize: 20,
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFF26647),
+                            minimumSize: const Size(220, 40),
+                          ),
+                          onPressed: () {
+                            _onListenPressed(_currentIndex);
+                          },
+                          icon: const Icon(
+                            Icons.volume_up,
                             color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                          ),
+                          label: const Text(
+                            'Listen',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -555,6 +621,14 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 80.h,
+                ),
+                if (_isLoading)
+                  Center(
+                      child: CircularProgressIndicator(
+                    color: primary,
+                  )),
               ],
             ),
           ],
@@ -565,7 +639,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         width: 70,
         height: 70,
         child: FloatingActionButton(
-          onPressed: _recordAudio,
+          onPressed: _isRecording ? _stopRecording : _startRecording,
           backgroundColor:
               _isRecording ? const Color(0xFF976841) : const Color(0xFFF26647),
           elevation: 0.0,

@@ -89,7 +89,10 @@ Future<FeedbackData?> getFeedback(
 
     if (response.statusCode == 200) {
       print('Successful feedback submission');
-      var responseData = json.decode(response.body);
+      String responseString = response.body.toString(); // Response를 문자열로 저장
+      print('Response as string: $responseString');
+
+      var responseData = json.decode(responseString); // JSON으로 디코딩
       return FeedbackData.fromJson(responseData);
     } else if (response.statusCode == 401) {
       // Handle token expiration
@@ -100,7 +103,10 @@ Future<FeedbackData?> getFeedback(
         response = await makePostRequest(token!);
         if (response.statusCode == 200) {
           print('Successful feedback submission after token refresh');
-          var responseData = json.decode(response.body);
+          String responseString = response.body.toString(); // Response를 문자열로 저장
+          print('Response as string after refresh: $responseString');
+
+          var responseData = json.decode(responseString); // JSON으로 디코딩
           return FeedbackData.fromJson(responseData);
         } else {
           print('Failed after token refresh: ${response.statusCode}');
@@ -111,7 +117,10 @@ Future<FeedbackData?> getFeedback(
         return null;
       }
     } else if (response.statusCode == 500) {
-      var responseData = json.decode(response.body);
+      String responseString = response.body.toString(); // Response를 문자열로 저장
+      print('Response as string: $responseString');
+
+      var responseData = json.decode(responseString); // JSON으로 디코딩
       var message = responseData['message'];
       if (message is String) {
         var messageDetail = json.decode(message)['detail'];
@@ -134,7 +143,8 @@ Future<FeedbackData?> getFeedback(
     }
 
     print('Unhandled server response: ${response.statusCode}');
-    print(json.decode(response.body));
+    String responseString = response.body.toString(); // Response를 문자열로 저장
+    print('Response as string: $responseString');
     return null;
   } catch (e) {
     print("Error during the request: $e");

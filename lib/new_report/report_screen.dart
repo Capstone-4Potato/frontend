@@ -801,9 +801,24 @@ class _ReportScreenState extends State<ReportScreen> {
                                                   top: 12.0),
                                               child: TextButton(
                                                 onPressed: () async {
-                                                  await postAddPhonemes(); // POST 요청 보내기
-
-                                                  Navigator.pop(context);
+                                                  setState(() {
+                                                    isLoading = true; // 로딩 시작
+                                                  });
+                                                  try {
+                                                    await postAddPhonemes(); // POST 요청 보내기
+                                                    await fetchReportData();
+                                                  } catch (e) {
+                                                    print(
+                                                        'Error while adding phonemes: $e');
+                                                  } finally {
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+                                                  }
+                                                  if (!isLoading) {
+                                                    print(weakPhonemes);
+                                                    Navigator.pop(context);
+                                                  }
                                                 },
                                                 style: TextButton.styleFrom(
                                                   backgroundColor:

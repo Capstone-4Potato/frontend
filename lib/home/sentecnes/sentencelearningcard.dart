@@ -86,7 +86,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
               base64userAudio,
               base64correctAudio,
             ).timeout(
-              const Duration(seconds: 6),
+              const Duration(seconds: 8),
               onTimeout: () {
                 throw TimeoutException('Feedback request timed out');
               },

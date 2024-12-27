@@ -14,6 +14,7 @@ Future<List<int>> postTodayCourse() async {
 
   // 학습할 카드 갯수 초기화 (기본값 10) 및 학습한 카드 갯수 초기화 (기본값 0)
   await prefs.setInt('courseSize', totalCard); // totalCard를 courseSize로 설정
+  print("요청한 카드 갯수입니다. : $totalCard");
   await prefs.setInt('learnedCardCount', 0);
 
   try {

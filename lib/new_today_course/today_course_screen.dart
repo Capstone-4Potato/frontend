@@ -66,8 +66,8 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
             correctAudios.add(data['correctAudio']);
             cardTranslations.add(data['cardTranslation']);
             cardPronunciations.add(data['cardPronunciation']);
-            pictureUrls.add(data['pictureUrl']);
-            explanations.add(data['explanation']);
+            pictureUrls.add(data['pictureUrl'] ?? '');
+            explanations.add(data['explanation'] ?? '');
             weakCards.add(data['weakCard']);
             bookmarks.add(data['bookmark']);
 
@@ -161,6 +161,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
       // 카드가 모두 끝난 경우 새 카드 요청
       print("All cards finished. Fetching new cards...");
       await postTodayCourse();
+      await Future.delayed(const Duration(seconds: 2)); // 1초 대기
     } else {
       //fetchAllCards();
     }

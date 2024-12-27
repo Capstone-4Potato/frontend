@@ -76,16 +76,17 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
   // 현재 선택된 값
   String? _selectedItem;
 
-  final FlutterSecureStorage _storage =
-      const FlutterSecureStorage(); // Secure storage 인스턴스
   int totalCard = 10; // 선택된 카드 수를 저장할 변수  // 학습한 카드 갯수 변수
   int learnedCardCount = 0;
+
+  bool checkTodayCourse = false;
 
   @override
   void initState() {
     super.initState();
     _loadTotalCard();
     loadLearnedCardCount();
+    _loadcheckTodayCourse();
   }
 
   // 학습한 카드 갯수 불러오기
@@ -98,17 +99,23 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
 
   // 앱 시작 시 secure storage에서 totalCard 값을 불러오는 함수
   Future<void> _loadTotalCard() async {
-    String? savedCard = await _storage.read(key: 'totalCard');
-    if (savedCard != null) {
-      setState(() {
-        totalCard = int.parse(savedCard); // 저장된 값을 불러와 totalCard 변수에 할당
-      });
-    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      totalCard = prefs.getInt('totalCard') ?? 10;
+    });
+  }
+
+  Future<void> _loadcheckTodayCourse() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      checkTodayCourse = prefs.getBool('checkTodayCourse') ?? false;
+    });
   }
 
   // 선택된 카드 수를 secure storage에 저장하는 함수
   Future<void> _saveTotalCard(int value) async {
-    await _storage.write(key: 'totalCard', value: value.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
   }
 
   Future<void> fetchAttendanceData() async {
@@ -240,7 +247,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
               ),
             ),
             DropdownButton2<String>(
-              isExpanded: true,
+              isExpanded: !checkTodayCourse,
               items: _items
                   .map((String item) => DropdownMenuItem<String>(
                         value: item,
