@@ -57,6 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
+      print("응답 : ${response.body}");
 
       if (response.statusCode == 200) {
         // Assuming 'access' is the key for the access token in headers
@@ -275,6 +276,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 var result = await signInWithApple();
                 int statusCode = result['statusCode'];
                 String socialId = result['socialId'];
+                print(result);
                 if (statusCode == 404) {
                   Navigator.push(
                       context,
@@ -331,6 +333,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 var result = await signInWithGoogle();
                 int statusCode = result['statusCode'];
                 String socialId = result['socialId'];
+                print(result);
                 if (statusCode == 404) {
                   Navigator.push(
                       context,

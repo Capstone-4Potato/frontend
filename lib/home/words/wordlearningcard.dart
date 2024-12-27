@@ -8,6 +8,7 @@ import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/home/syllables/fetchimage.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
@@ -307,7 +308,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
         return ExitDialog(
           width: width,
           height: height,
-          page: const MainPage(initialIndex: 0),
+          page: HomeNav(),
         );
       },
     );
