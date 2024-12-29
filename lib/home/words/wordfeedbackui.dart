@@ -505,15 +505,10 @@ class _WordFeedbackUIState extends State<WordFeedbackUI> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            SizedBox(
-                                              width: 150.w,
-                                              child:
-                                                  // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
-                                                  buildTextSpans(
-                                                widget.feedbackData.userText,
-                                                widget.feedbackData
-                                                    .mistakenIndexes,
-                                              ),
+                                            buildTextSpans(
+                                              widget.feedbackData.userText,
+                                              widget
+                                                  .feedbackData.mistakenIndexes,
                                             ),
                                             SizedBox(
                                               width: 20.w,
