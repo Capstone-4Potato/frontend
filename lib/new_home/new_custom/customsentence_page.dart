@@ -58,7 +58,7 @@ class Sentence {
 }
 
 class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
-  final List<Sentence> _sentences = [];
+  List<Sentence> _sentences = [];
   List<int> idList = [];
   List<String> textList = [];
   List<String> engTranslationList = [];
@@ -143,9 +143,18 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
               createdAtList.add(card['createdAt'] ??
                   DateTime(2024, 10, 10).toIso8601String()); // 기본값 추가
             }
+            // 리스트 뒤집기
+            _sentences = _sentences.reversed.toList();
+            idList = idList.reversed.toList();
+            textList = textList.reversed.toList();
+            engTranslationList = engTranslationList.reversed.toList();
+            engPronunciationList = engPronunciationList.reversed.toList();
+            cardScoreList = cardScoreList.reversed.toList();
+            weakCardList = weakCardList.reversed.toList();
+            bookmarkList = bookmarkList.reversed.toList();
+            createdAtList = createdAtList.reversed.toList();
+
             isLoading = false;
-            print(idList);
-            print(createdAtList);
           });
         }
       } else if (response.statusCode == 401) {
@@ -167,15 +176,51 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
             },
           );
 
-          if (retryResponse.statusCode == 200) {
+          if (response.statusCode == 200) {
             final List<dynamic> responseData =
-                json.decode(retryResponse.body)['cardList'];
-            setState(() {
-              _sentences.addAll(
-                responseData.map((data) => Sentence.fromJson(data)).toList(),
-              );
-              isLoading = false;
-            });
+                json.decode(response.body)['cardList'];
+
+            if (mounted) {
+              setState(() {
+                _sentences.addAll(
+                  responseData.map((data) => Sentence.fromJson(data)).toList(),
+                );
+
+                // 리스트 초기화
+                idList.clear();
+                textList.clear();
+                engTranslationList.clear();
+                engPronunciationList.clear();
+                cardScoreList.clear();
+                weakCardList.clear();
+                bookmarkList.clear();
+                createdAtList.clear();
+                // 변수 리스트에 데이터 저장
+                for (var card in responseData) {
+                  idList.add(card['id']);
+                  textList.add(card['text']);
+                  engTranslationList.add(card['engTranslation']);
+                  engPronunciationList.add(card['engPronunciation']);
+                  cardScoreList.add(card['cardScore']);
+                  weakCardList.add(card['weakCard']);
+                  bookmarkList.add(card['bookmark']);
+                  createdAtList.add(card['createdAt'] ??
+                      DateTime(2024, 10, 10).toIso8601String()); // 기본값 추가
+                }
+                // 리스트 뒤집기
+                _sentences = _sentences.reversed.toList();
+                idList = idList.reversed.toList();
+                textList = textList.reversed.toList();
+                engTranslationList = engTranslationList.reversed.toList();
+                engPronunciationList = engPronunciationList.reversed.toList();
+                cardScoreList = cardScoreList.reversed.toList();
+                weakCardList = weakCardList.reversed.toList();
+                bookmarkList = bookmarkList.reversed.toList();
+                createdAtList = createdAtList.reversed.toList();
+
+                isLoading = false;
+              });
+            }
           } else {
             _showErrorDialog(
                 'Failed to load sentences after retry. Please try again.');
@@ -220,14 +265,15 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
           print(responseData);
           final newSentence = Sentence.fromJson(responseData);
           setState(() {
-            _sentences.add(newSentence);
-            idList.add(newSentence.id);
-            textList.add(newSentence.text);
-            print(textList);
-            engPronunciationList.add(newSentence.engPronunciation);
-            engTranslationList.add(newSentence.engTranslation);
-            createdAtList.add(newSentence.createdAt!);
-            bookmarkList.add(false);
+            // 리스트에 맨 앞에 추가
+            _sentences.insert(0, newSentence);
+            idList.insert(0, newSentence.id);
+            textList.insert(0, newSentence.text);
+            engPronunciationList.insert(0, newSentence.engPronunciation);
+            engTranslationList.insert(0, newSentence.engTranslation);
+            createdAtList.insert(0, newSentence.createdAt!);
+            bookmarkList.insert(0, false);
+
             _controller.clear();
             isAddLoading = false;
           });
@@ -257,14 +303,15 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
               final newSentence = Sentence.fromJson(responseData);
               if (mounted) {
                 setState(() {
-                  _sentences.add(newSentence);
-                  idList.add(newSentence.id);
-                  textList.add(newSentence.text);
-                  print(textList);
-                  engPronunciationList.add(newSentence.engPronunciation);
-                  engTranslationList.add(newSentence.engTranslation);
-                  createdAtList.add(newSentence.createdAt!);
-                  bookmarkList.add(false);
+                  // 리스트에 맨 앞에 추가
+                  _sentences.insert(0, newSentence);
+                  idList.insert(0, newSentence.id);
+                  textList.insert(0, newSentence.text);
+                  engPronunciationList.insert(0, newSentence.engPronunciation);
+                  engTranslationList.insert(0, newSentence.engTranslation);
+                  createdAtList.insert(0, newSentence.createdAt!);
+                  bookmarkList.insert(0, false);
+
                   _controller.clear();
                   isAddLoading = false;
                 });
@@ -538,9 +585,10 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                           : Stack(
                               children: [
                                 ListView.builder(
-                                  reverse: true,
+                                  reverse: false,
                                   itemCount: _sentences.length,
                                   itemBuilder: (context, index) {
+                                    isToday(_sentences[index].createdAt!);
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 10.0),
@@ -567,7 +615,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                           decoration: BoxDecoration(
                                             color: const Color(0xFFEBEBEB),
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                                BorderRadius.circular(8.r),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.black
@@ -579,16 +627,16 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                           ),
                                           child: ListTile(
                                             contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 10.0,
-                                                    horizontal: 10.0),
+                                                EdgeInsets.symmetric(
+                                                    vertical: 10.0.h,
+                                                    horizontal: 10.0.w),
                                             title: Row(
                                               children: [
                                                 Container(
                                                   margin: const EdgeInsets.only(
                                                       right: 10),
-                                                  width: 8,
-                                                  height: 8,
+                                                  width: 8.w,
+                                                  height: 8.h,
                                                   decoration: BoxDecoration(
                                                     color: (isToday(
                                                             _sentences[index]
@@ -597,7 +645,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                                         : Colors.transparent,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10),
+                                                            10.r),
                                                   ),
                                                 ),
                                                 Column(
@@ -607,18 +655,18 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                                     Text(
                                                       _sentences[index]
                                                           .engTranslation,
-                                                      style: const TextStyle(
+                                                      style: TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 15,
+                                                        fontSize: 15.h,
                                                         fontWeight:
                                                             FontWeight.w600,
                                                       ),
                                                     ),
                                                     Text(
                                                       _sentences[index].text,
-                                                      style: const TextStyle(
+                                                      style: TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 15,
+                                                        fontSize: 15.h,
                                                         fontWeight:
                                                             FontWeight.w600,
                                                       ),
