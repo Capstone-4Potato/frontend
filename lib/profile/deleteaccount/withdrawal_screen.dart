@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/profile/deleteaccount/deleteaccount.dart';
 import 'package:flutter_application_1/login/login_screen.dart';
+import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_application_1/widgets/success_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // 회원탈퇴 페이지
 class WithdrawalScreen extends StatefulWidget {
   final String nickname;
   final Function() onProfileReset;
 
-  WithdrawalScreen(
+  const WithdrawalScreen(
       {Key? key, required this.nickname, required this.onProfileReset})
       : super(key: key);
   @override
@@ -32,30 +36,20 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
   void _showSuccessDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text("Success"),
-        content: Text(
-          "Account deletion is complete.",
-          style: TextStyle(fontSize: 16),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              deleteaccount(_nicknameController.text);
-              widget.onProfileReset();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
-            },
-            child: Text(
-              "OK",
-              style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
-            ),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return SuccessDialog(
+          subtitle: "Account deletion is complete.",
+          onTap: () {
+            deleteaccount(_nicknameController.text);
+            widget.onProfileReset();
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              (route) => false,
+            );
+          },
+        );
+      },
     );
   }
 
@@ -63,25 +57,12 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
   void _showErrorDialog() {
     showDialog(
       context: context,
-      // barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text("Error"),
-        content: Text(
-          "Nickname does not match.",
-          style: TextStyle(fontSize: 16),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              "OK",
-              style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
-            ),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          title: "Error",
+          text: "Nickname does not match.",
+        );
+      },
     );
   }
 
@@ -89,25 +70,12 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
   void _showEmptyFieldDialog() {
     showDialog(
       context: context,
-      // barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text("Input Required"),
-        content: Text(
-          "Please enter your nickname.",
-          style: TextStyle(fontSize: 16),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              "OK",
-              style: TextStyle(color: Color(0xFFF26647), fontSize: 16),
-            ),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return RecordingErrorDialog(
+          title: "Input Required",
+          text: "Please enter your nickname.",
+        );
+      },
     );
   }
 
@@ -117,7 +85,7 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Delete Account',
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -130,13 +98,13 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
-              SizedBox(height: 140),
-              Text(
+              const SizedBox(height: 140),
+              const Text(
                 'Are you sure you want to \ndelete your account?',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: TextField(
@@ -147,33 +115,39 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
                     filled: true, // 배경색 채우기 활성화
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16.0), // 둥근 모서리
-                      borderSide: BorderSide(
-                        color: const Color(0xfff26647), // 테두리 색상 설정
+                      borderSide: const BorderSide(
+                        color: Color(0xfff26647), // 테두리 색상 설정
                         width: 2.0, // 테두리 두께 설정
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16.0), // 포커스 시 둥근 모서리
-                      borderSide: BorderSide(
-                        color: const Color(0xfff26647), // 포커스 시 테두리 색상 설정
+                      borderSide: const BorderSide(
+                        color: Color(0xfff26647), // 포커스 시 테두리 색상 설정
                         width: 2.0, // 포커스 시 테두리 두께 설정
                       ),
                     ),
+
+                    labelStyle: TextStyle(
+                      color: bam,
+                    ),
                   ),
+                  cursorColor: bam,
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: _attemptWithdrawal,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xfff26647),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  textStyle: TextStyle(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  textStyle: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   ' Delete Account ',
                   style: TextStyle(color: Colors.white),
                 ),

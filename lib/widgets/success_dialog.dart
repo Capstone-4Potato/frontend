@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/new_home/home_nav.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SuccessDialog extends StatelessWidget {
   SuccessDialog({
     super.key,
-    required this.width,
-    required this.height,
-    required this.page,
+    required this.subtitle,
+    required this.onTap,
   });
 
-  final double width;
-  final double height;
-  Widget page;
+  String subtitle;
+  VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +23,8 @@ class SuccessDialog extends StatelessWidget {
       ),
       child: Container(
         padding: const EdgeInsets.all(24),
-        width: 333 * width,
-        height: 230 * height,
+        width: 333.w,
+        height: 230.h,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -52,16 +51,10 @@ class SuccessDialog extends StatelessWidget {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => page),
-                  (route) => false,
-                );
-              },
+              onTap: onTap,
               child: Container(
-                width: 148 * width,
-                height: 44 * height,
+                width: 148.w,
+                height: 44.h,
                 decoration: BoxDecoration(
                   color: accent,
                   borderRadius: BorderRadius.circular(20),

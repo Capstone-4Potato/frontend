@@ -442,9 +442,14 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         final double width = MediaQuery.of(context).size.width / 393;
 
         return SuccessDialog(
-          width: width,
-          height: height,
-          page: HomeNav(),
+          subtitle: "You did a great job in the test!",
+          onTap: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomeNav()),
+              (route) => false,
+            );
+          },
         );
       },
     );

@@ -205,11 +205,17 @@ class _TestCardState extends State<TestCard> {
         final double width = MediaQuery.of(context).size.width / 393;
 
         return SuccessDialog(
-          width: width,
-          height: height,
-          page: HomeNav(
-            bottomNavIndex: 1,
-          ),
+          subtitle: "You did a great job in the test!",
+          onTap: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomeNav(
+                        bottomNavIndex: 1,
+                      )),
+              (route) => false,
+            );
+          },
         );
       },
     );
