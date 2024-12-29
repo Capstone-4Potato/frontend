@@ -37,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int? savedCardNumber; // Saved Card 수
   int? missedCardNumber; // Missed Card 수
   int? customCardNumber; // Custom Card 수
+  bool? hasUnreadNotifications; // 알림 읽음 여부
 
   double progressValue = 0;
 
@@ -76,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
           savedCardNumber = data['savedCardNumber'];
           missedCardNumber = data['missedCardNumber'];
           customCardNumber = data['customCardNumber'];
+          hasUnreadNotifications = data['hasUnreadNotifications'];
         });
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh and retry the request
@@ -106,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
               savedCardNumber = data['savedCardNumber'];
               missedCardNumber = data['missedCardNumber'];
               customCardNumber = data['customCardNumber'];
+              hasUnreadNotifications = data['hasUnreadNotifications'];
             });
           } else {
             // Handle other response codes after retry if needed
@@ -230,21 +233,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       // 상단 메뉴 아이콘들
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push<void>(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                    const NotificationScreen(),
+                        Stack(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.push<void>(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (BuildContext context) =>
+                                        const NotificationScreen(),
+                                  ),
+                                );
+                              },
+                              icon: Icon(
+                                Icons.notifications,
+                                color: bam,
+                                size: 24.sp,
                               ),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.notifications,
-                            color: bam,
-                            size: 24.sp,
-                          ),
+                            ),
+                            if (hasUnreadNotifications!)
+                              Positioned(
+                                right: 10.w,
+                                top: 12.h,
+                                child: Container(
+                                  width: 5.w,
+                                  height: 5.h,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFFF2EBE3),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                         IconButton(
                           onPressed: () {
