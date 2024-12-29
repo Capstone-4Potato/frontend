@@ -17,6 +17,7 @@ import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/gettestlist.dart';
 import 'package:flutter_application_1/widgets/previous_test_found_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -437,10 +438,10 @@ class _ReportScreenState extends State<ReportScreen> {
                             radius: 35,
                             backgroundColor:
                                 const Color.fromARGB(255, 242, 235, 227),
-                            child: Image.asset(
-                              'assets/image/bam_character.png',
-                              width: 65 * width,
-                              height: 65 * height,
+                            child: SvgPicture.asset(
+                              'assets/image/bam_character.svg',
+                              width: 50.w,
+                              height: 50.h,
                             ),
                           ),
                         ),
