@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +19,7 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   List<Map<String, dynamic>> notifications = [];
+  List<int> expandedIndexes = []; // 확장된 아이템의 인덱스를 저장
 
   @override
   void initState() {
@@ -183,92 +185,139 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   final notification = notifications[index];
                   final formattedTime =
                       formatTimestamp(notification['createdAt']);
+                  final isExpanded = expandedIndexes.contains(index);
+
                   return Padding(
                     padding: EdgeInsets.only(bottom: 12.0.h),
-                    child: GestureDetector(
-                      onTap: () async {
-                        // POST 알림 읽음 처리
-                        await postNotificationRead(notification['id']);
-                        setState(() {
-                          notification['unread'] = false; // 읽음 처리
-                        });
-                      },
-                      child: ListTile(
-                        contentPadding: EdgeInsets.all(8.w),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 120.w,
-                              color: Colors.pink[100],
-                              child: Text(
-                                '${notification["title"]}',
-                                style: TextStyle(
-                                  fontSize: 16.h,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: AnimatedSize(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      child: Bounce(
+                        duration: const Duration(milliseconds: 100),
+                        onPressed: () async {
+                          if (notification['unread'] == true) {
+                            // POST 알림 읽음 처리
+                            await postNotificationRead(notification['id']);
+                            setState(() {
+                              notification['unread'] = false; // 읽음 처리
+                            });
+                          }
+                          setState(() {
+                            // 확장 축소 상태 변경
+                            if (isExpanded) {
+                              expandedIndexes.remove(index);
+                              print(expandedIndexes);
+                            } else {
+                              expandedIndexes.add(index);
+                              print(expandedIndexes);
+                            }
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16.r),
+                            color: Colors.white,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 15.0.h, horizontal: 12.w),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
+                                Padding(
+                                  padding: EdgeInsets.only(right: 12.w),
+                                  child: CircleAvatar(
+                                    radius: 21.r,
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 255, 160, 105),
+                                    child: Image.asset(
+                                        'assets/image/noti_character.png'),
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      width: 4.w,
-                                      height: 4.h,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Color(0xFF5E5D58),
-                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: 120.w,
+                                          child: Text(
+                                            '${notification["title"]}',
+                                            style: TextStyle(
+                                              fontSize: 16.h,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                            maxLines: isExpanded ? null : 1,
+                                            softWrap: true,
+                                            overflow: isExpanded
+                                                ? TextOverflow.visible
+                                                : TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 165.w,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Container(
+                                                width: 4.w,
+                                                height: 4.h,
+                                                decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: Color(0xFF5E5D58),
+                                                ),
+                                              ),
+                                              SizedBox(width: 5.w),
+                                              Text(
+                                                formattedTime,
+                                                style: TextStyle(
+                                                  fontSize: 16.h,
+                                                  fontWeight: FontWeight.w400,
+                                                  color:
+                                                      const Color(0xFF5E5D58),
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 10.w,
+                                                height: 10.h,
+                                                margin: EdgeInsets.all(8.w),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: notification['unread']
+                                                      ? primary
+                                                      : Colors.transparent,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(width: 5.w),
-                                    Text(
-                                      formattedTime,
-                                      style: TextStyle(
-                                        fontSize: 16.h,
-                                        fontWeight: FontWeight.w400,
-                                        color: const Color(0xFF5E5D58),
+                                    SizedBox(
+                                      width: 285.w,
+                                      child: Text(
+                                        '${notification["content"]}',
+                                        style: TextStyle(
+                                          color: const Color(0xFF5B5A56),
+                                          fontSize: 16.h,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        maxLines: isExpanded ? null : 3,
+                                        softWrap: true,
+                                        overflow: isExpanded
+                                            ? TextOverflow.visible
+                                            : TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
                                 ),
-                                Container(
-                                  width: 10.w,
-                                  height: 10.h,
-                                  margin: EdgeInsets.all(8.w),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: notification['unread']
-                                        ? primary
-                                        : Colors.transparent,
-                                  ),
-                                ),
                               ],
                             ),
-                          ],
-                        ),
-                        subtitle: Text(
-                          '${notification["content"]}',
-                          style: TextStyle(
-                            color: const Color(0xFF5B5A56),
-                            fontSize: 16.h,
-                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                        leading: CircleAvatar(
-                          radius: 21.r,
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 160, 105),
-                          child: Image.asset('assets/image/noti_character.png'),
-                        ),
-                        tileColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16.r) //모서리,
-                            ),
                       ),
                     ),
                   );
