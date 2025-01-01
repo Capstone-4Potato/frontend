@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  app_tutorial:
+    dependency: "direct main"
+    description:
+      name: app_tutorial
+      sha256: "11a44ff06527661f3e9201e2230cc9f7b96f469df9418f0c6b98de247c4e4c36"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   archive:
     dependency: "direct main"
     description:
@@ -241,6 +249,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.3+1"
+  dotted_decoration:
+    dependency: "direct main"
+    description:
+      name: dotted_decoration
+      sha256: a5c5771367690b4f64ebfa7911954ab472b9675f025c373f514e32ac4bb81d5e
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   dropdown_button2:
     dependency: "direct main"
     description:

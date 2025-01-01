@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter_application_1/test_screen.dart';
-
 /// 그래프 그리기 위한 엠플리튜드 데어터
 class AmplitudeData {
   final double time;

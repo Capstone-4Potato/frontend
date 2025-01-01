@@ -43,6 +43,8 @@ dependencies:
   timeago: ^3.7.0
   dropdown_button2: ^2.3.9
   flutter_bounce: ^1.1.0
+  app_tutorial: ^1.0.6
+  dotted_decoration: ^2.0.0
   #flutter_launcher_icons: ^0.12.0
   fl_chart: ^0.69.0
   google_sign_in: ^6.2.1

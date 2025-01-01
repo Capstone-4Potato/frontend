@@ -34,11 +34,10 @@ class CustomHomeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height / 852;
     return Container(
       decoration: BoxDecoration(
         color: boxColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.17),
@@ -49,7 +48,7 @@ class CustomHomeCard extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15.0),
+        padding: EdgeInsets.symmetric(horizontal: 18.0.w, vertical: 15.0.h),
         child: contents,
       ),
     );
@@ -850,12 +849,12 @@ class ContentLearningCourseCard extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: primary,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20.r),
                     ),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-                      child: Text(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 14.0.w, vertical: 8.0.h),
+                      child: const Text(
                         'Try it →',
                         style: TextStyle(
                           color: Colors.white,

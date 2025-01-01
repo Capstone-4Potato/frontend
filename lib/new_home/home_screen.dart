@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_tutorial/app_tutorial.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/home_cards.dart';
 import 'package:flutter_application_1/new_notification/notification_screen.dart';
 import 'package:flutter_application_1/profile/profile_page.dart';
+import 'package:flutter_application_1/profile/tutorial/home_tutorial_screen1.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,7 +22,10 @@ import 'package:http/http.dart' as http;
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
+    required this.keys,
   });
+
+  final Map<String, GlobalKey> keys;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -133,8 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height / 852;
-
     // Swiper에 들어갈 위젯 리스트
     List<Widget> widgetList = [
       CustomHomeCard(
@@ -180,6 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Center(
                                 child: CircleAvatar(
+                                  key: widget.keys['avatarKey'],
                                   radius: 101.r,
                                   backgroundColor:
                                       const Color.fromARGB(255, 242, 235, 227),
@@ -191,6 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Center(
                                 child: SimpleCircularProgressBar(
+                                  key: widget.keys['progressbarKey'],
                                   size: 220.w,
                                   maxValue: levelExperience!.toDouble(),
                                   progressStrokeWidth: 6.w,
@@ -209,14 +214,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Container(
+                                      key: widget.keys['levelTagKey'],
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 25.0.w, vertical: 7.0.h),
+                                          horizontal: 24.0.w, vertical: 6.0.h),
                                       decoration: BoxDecoration(
                                         color: progress_color,
                                         borderRadius:
                                             BorderRadius.circular(25.r),
                                       ),
-                                      child: Text('Level $userLevel'),
+                                      child: Text(
+                                        'Level $userLevel',
+                                      ),
                                     ),
                                     Container(
                                       height: 10.h,
@@ -311,6 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 25.0.w, vertical: 21.0.h),
                                     child: CustomHomeCard(
+                                      key: widget.keys['todayGoalKey'],
                                       boxColor: Colors.white,
                                       contents: ContentTodayGoal(
                                         weeklyAttendance:
@@ -319,6 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   SizedBox(
+                                    key: widget.keys['todayCardKey'],
                                     height: 140.h,
                                     width: 360.w,
                                     child: Swiper(
