@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 /// 홈화면
 class HomeTutorialScreen2 extends StatelessWidget {

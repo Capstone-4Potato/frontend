@@ -22,7 +22,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ReportScreen extends StatefulWidget {
-  const ReportScreen({super.key});
+  const ReportScreen({
+    super.key,
+    required this.keys,
+  });
+
+  final Map<String, GlobalKey> keys;
+
   @override
   State<ReportScreen> createState() => _ReportScreenState();
 }
@@ -448,9 +454,10 @@ class _ReportScreenState extends State<ReportScreen> {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
+                      key: widget.keys['reportAnalysisItemKey'],
+                      padding: EdgeInsets.only(top: 24.0.h),
                       child: Wrap(
-                        spacing: 40,
+                        spacing: 40.w,
                         children: [
                           AnalysisItem(
                             icon: '🕰️',
@@ -520,6 +527,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                     ),
                     Column(
+                      key: widget.keys['vulnerablePhonemesKey'],
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
@@ -849,7 +857,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   });
                             },
                             style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFf5E5D58),
+                              foregroundColor: const Color(0xFF5E5D58),
                               backgroundColor: const Color(0xFFF2EBE3),
                               padding: EdgeInsets.symmetric(
                                   horizontal: 12 * width, vertical: 5 * height),

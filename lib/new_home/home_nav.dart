@@ -9,6 +9,8 @@ import 'package:flutter_application_1/new_report/report_screen.dart';
 import 'package:flutter_application_1/profile/tutorial/home_tutorial_screen1.dart';
 import 'package:flutter_application_1/profile/tutorial/home_tutorial_screen2.dart';
 import 'package:flutter_application_1/profile/tutorial/home_tutorial_screen3.dart';
+import 'package:flutter_application_1/profile/tutorial/report_tutorial_screen1.dart';
+import 'package:flutter_application_1/profile/tutorial/report_tutorial_screen2.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,9 +36,12 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
     'homeNavFabKey': GlobalKey(),
     'homeNavContainerKey': GlobalKey(),
     'todayCardKey': GlobalKey(),
+    'reportAnalysisItemKey': GlobalKey(),
+    'vulnerablePhonemesKey': GlobalKey(),
   };
   late List<Widget> _screens; // 화면 리스트를 초기화
-  int tutorialStep = 1; // 튜토리얼 단계 상태
+  int homeTutorialStep = 1; // 홈 화면 튜토리얼 단계 상태
+  int reportTutorialStep = 1; // 튜토리얼 단계 상태
 
   @override
   void initState() {
@@ -46,7 +51,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
     // 초기 화면 세팅
     _screens = ([
       HomeScreen(keys: keys), // GlobalKey 전달
-      const ReportScreen(),
+      ReportScreen(keys: keys),
     ]);
   }
 
@@ -54,14 +59,23 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
   _loadTutorialStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      tutorialStep = prefs.getInt('tutorialStep') ?? 1; // 기본값은 1 (첫 번째 단계)
+      homeTutorialStep =
+          prefs.getInt('homeTutorialStep') ?? 1; // 기본값은 1 (첫 번째 단계)
+
+      reportTutorialStep =
+          prefs.getInt('reportTutorialStep') ?? 1; // 기본값은 1 (첫 번째 단계)
     });
   }
 
   // SharedPreferences에 튜토리얼 완료 상태 저장
   _completeTutorial() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('tutorialStep', 4); // 4로 설정하여 튜토리얼 완료 표시
+    if (widget.bottomNavIndex == 0) {
+      await prefs.setInt('homeTutorialStep', 4); // 4로 설정하여 홈 화면 튜토리얼 완료 표시
+    }
+    if (widget.bottomNavIndex == 1) {
+      await prefs.setInt('reportTutorialStep', 3); // 4로 설정하여 레포트 화면 튜토리얼 완료 표시
+    }
   }
 
   @override
@@ -143,29 +157,51 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
         ),
 
         // 튜토리얼 화면을 표시하는 조건
-        if (widget.bottomNavIndex == 0 && tutorialStep == 1)
+        if (widget.bottomNavIndex == 0 && homeTutorialStep == 1)
           HomeTutorialScreen1(
             keys: keys,
             onTap: () {
               setState(() {
-                tutorialStep = 2; // 1단계 끝나면 2단계로
+                homeTutorialStep = 2; // 1단계 끝나면 2단계로
               });
             },
           ),
-        if (widget.bottomNavIndex == 0 && tutorialStep == 2)
+        if (widget.bottomNavIndex == 0 && homeTutorialStep == 2)
           HomeTutorialScreen2(
             keys: keys,
             onTap: () {
               setState(() {
-                tutorialStep = 3; // 2단계 끝나면 3단계로
+                homeTutorialStep = 3; // 2단계 끝나면 3단계로
               });
             },
           ),
-        if (widget.bottomNavIndex == 0 && tutorialStep == 3)
+        if (widget.bottomNavIndex == 0 && homeTutorialStep == 3)
           HomeTutorialScreen3(
             keys: keys,
             onTap: () {
+              setState(() {
+                homeTutorialStep = 4; // 3단계 끝나면 4단계로
+              });
               _completeTutorial(); // 튜토리얼 완료 시 호출
+            },
+          ),
+        if (widget.bottomNavIndex == 1 && reportTutorialStep == 1)
+          ReportTutorialScreen1(
+            keys: keys,
+            onTap: () {
+              setState(() {
+                reportTutorialStep = 2; // 2단계 끝나면 3단계로
+              });
+            },
+          ),
+        if (widget.bottomNavIndex == 1 && reportTutorialStep == 2)
+          ReportTutorialScreen1(
+            keys: keys,
+            onTap: () {
+              setState(() {
+                reportTutorialStep = 3; // 2단계 끝나면 3단계로
+                _completeTutorial(); // 튜토리얼 완료 시 호출
+              });
             },
           ),
       ],
