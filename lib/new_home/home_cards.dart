@@ -278,7 +278,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                               });
                             }
                           },
-                // 방법 2: buttonStyleData에서 커스텀 밑줄 스타일 적용
+
                 buttonStyleData: ButtonStyleData(
                   decoration: BoxDecoration(
                     border: Border(

@@ -155,6 +155,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
       _isRecording = false;
       _isRecorded = true;
     });
+    print(path);
     await _uploadRecording(path);
   }
 
@@ -162,62 +163,60 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   Future<void> _recordAudio() async {
     if (_isRecording) {
       final path = await _recorder.stopRecorder();
+
       setState(() {
         _isLoading = true;
+        _isRecorded = true;
       });
+      print(path);
       if (path != null) {
         setState(() {
           _isRecording = false;
           _recordedFilePath = path;
         });
+
         final audioFile = File(path);
         final fileBytes = await audioFile.readAsBytes();
         final base64userAudio = base64Encode(fileBytes);
         final currentCardId = widget.ids[_currentIndex];
-        final base64correctAudio = TtsService.instance.base64CorrectAudio;
+        final base64correctAudio = widget.correctAudios[_currentIndex];
+        //await audioPlayer.play(audioplayers.DeviceFileSource(audioFile.path));
+        try {
+          // Set a timeout for the getFeedback call
+          final feedbackData = await getFeedback(
+            currentCardId,
+            base64userAudio,
+            base64correctAudio,
+          ).timeout(
+            const Duration(seconds: 6),
+            onTimeout: () {
+              throw TimeoutException('Feedback request timed out');
+            },
+          );
 
-        if (base64correctAudio != null) {
-          try {
-            // Set a timeout for the getFeedback call
-            final feedbackData = await getFeedback(
-              currentCardId,
-              base64userAudio,
-              base64correctAudio,
-            ).timeout(
-              const Duration(seconds: 6),
-              onTimeout: () {
-                throw TimeoutException('Feedback request timed out');
-              },
-            );
-
-            if (mounted && feedbackData != null) {
-              setState(() {
-                _isLoading = false; // Stop loading
-              });
-              showFeedbackDialog(context, feedbackData);
-            } else {
-              setState(() {
-                _isLoading = false; // Stop loading
-              });
-              showErrorDialog();
-            }
-          } catch (e) {
+          if (mounted && feedbackData != null) {
             setState(() {
               _isLoading = false; // Stop loading
             });
-            if (e.toString() == 'Exception: ReRecordNeeded') {
-              // Show the ReRecordNeeded dialog if the exception occurs
-              showRecordLongerDialog(context);
-            } else if (e is TimeoutException) {
-              showTimeoutDialog(); // Show error dialog on timeout
-            } else {
-              showErrorDialog();
-            }
+            showFeedbackDialog(context, feedbackData);
+          } else {
+            setState(() {
+              _isLoading = false; // Stop loading
+            });
+            showErrorDialog();
           }
-        } else {
+        } catch (e) {
           setState(() {
             _isLoading = false; // Stop loading
           });
+          if (e.toString() == 'Exception: ReRecordNeeded') {
+            // Show the ReRecordNeeded dialog if the exception occurs
+            showRecordLongerDialog(context);
+          } else if (e is TimeoutException) {
+            showTimeoutDialog(); // Show error dialog on timeout
+          } else {
+            showErrorDialog();
+          }
         }
       }
     } else {
@@ -261,7 +260,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
         if (response.statusCode == 200) {
           print('File uploaded successfully');
-          print('Response body: $response.body');
+          print('Response body: ${response.body}');
           _nextCard();
         } else if (response.statusCode == 401) {
           // Token expired, attempt to refresh the token
@@ -379,7 +378,10 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
           text: widget.texts[_currentIndex], // 카드 한글 발음
         );
       },
-    );
+    ).then((_) {
+      // 다이얼로그가 닫히면 nextCard 호출
+      _nextCard();
+    });
   }
 
   void showTimeoutDialog() {
@@ -650,7 +652,8 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         width: 70,
         height: 70,
         child: FloatingActionButton(
-          onPressed: _isRecording ? _stopRecording : _startRecording,
+          //onPressed: _isRecording ? _stopRecording : _startRecording,
+          onPressed: _canRecord && !_isLoading ? _recordAudio : null,
           backgroundColor:
               _isRecording ? const Color(0xFF976841) : const Color(0xFFF26647),
           elevation: 0.0,
