@@ -1,12 +1,10 @@
-import 'package:convert/convert.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/signup/tutorial.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/vulnerablesoundtest/starting_test_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -407,7 +405,7 @@ class _UserInputFormState extends State<UserInputForm> {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const TutorialScreen()),
+                                builder: (context) => const StartTestScreen()),
                             (route) => false,
                           );
                         }
