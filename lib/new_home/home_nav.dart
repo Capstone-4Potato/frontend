@@ -41,7 +41,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
   };
   late List<Widget> _screens; // 화면 리스트를 초기화
   int homeTutorialStep = 1; // 홈 화면 튜토리얼 단계 상태
-  int reportTutorialStep = 1; // 튜토리얼 단계 상태
+  int reportTutorialStep = 1; // report 튜토리얼 단계 상태
 
   @override
   void initState() {
