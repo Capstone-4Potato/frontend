@@ -246,7 +246,7 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                   },
                   child: Opacity(
                     // 카드의 학습 완료 정도에 따라 투명도 조절
-                    opacity: cardScoreList[index] >= 1.0 ? 0.5 : 1.0,
+                    opacity: cardScoreList[index] / 100 >= 1.0 ? 0.5 : 1.0,
                     child: Card(
                       elevation: 0.0,
                       shape: RoundedRectangleBorder(
@@ -314,8 +314,8 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                                   child: Align(
                                     alignment: Alignment.bottomCenter,
                                     child: LinearProgressIndicator(
-                                      value: cardScoreList[index]
-                                          .toDouble(), // 현재 값 / 최대 값
+                                      value: cardScoreList[index].toDouble() /
+                                          100, // 현재 값 / 최대 값
                                       backgroundColor: Colors.grey[200],
                                       valueColor:
                                           const AlwaysStoppedAnimation<Color>(
@@ -391,8 +391,8 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                                   child: Align(
                                     alignment: Alignment.bottomCenter,
                                     child: LinearProgressIndicator(
-                                      value: cardScoreList[index]
-                                          .toDouble(), // 현재 값 / 최대 값
+                                      value: cardScoreList[index].toDouble() /
+                                          100, // 현재 값 / 최대 값
                                       backgroundColor: Colors.grey[200],
                                       valueColor:
                                           const AlwaysStoppedAnimation<Color>(
