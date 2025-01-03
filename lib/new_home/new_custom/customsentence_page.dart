@@ -8,6 +8,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -449,7 +450,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
     // 서버 시간에 대한 보정 (예: 서버가 UTC+0이고 로컬이 UTC+9라면 +9 추가)
     DateTime serverTime =
-        DateTime.parse(createdAt).add(const Duration(hours: 9));
+        DateTime.parse(createdAt).add(const Duration(hours: 0));
 
     // 년, 월, 일이 동일한지 비교
     return serverTime.year == now.year &&
@@ -589,10 +590,12 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                   itemBuilder: (context, index) {
                                     isToday(_sentences[index].createdAt!);
                                     return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0),
-                                      child: GestureDetector(
-                                        onTap: () {
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 10.0.h),
+                                      child: Bounce(
+                                        duration:
+                                            const Duration(milliseconds: 100),
+                                        onPressed: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -632,8 +635,8 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                             title: Row(
                                               children: [
                                                 Container(
-                                                  margin: const EdgeInsets.only(
-                                                      right: 10),
+                                                  margin: EdgeInsets.only(
+                                                      right: 10.w),
                                                   width: 8.w,
                                                   height: 8.h,
                                                   decoration: BoxDecoration(
