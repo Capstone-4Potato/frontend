@@ -284,12 +284,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           builder: (context) =>
                               UserInputForm(socialId: socialId)));
                 } else if (statusCode == 200) {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  prefs.setInt('homeTutorialStep', 1); // 기본값은 1 (첫 번째 단계)
-                  prefs.setInt('reportTutorialStep', 1); // 기본값은 1 (첫 번째 단계)
-                  prefs.setInt(
-                      'learningCourseTutorialStep', 1); // 기본값은 1 (첫 번째 단계)
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => HomeNav()),

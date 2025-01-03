@@ -8,6 +8,8 @@ import 'package:flutter_application_1/vulnerablesoundtest/starting_test_page.dar
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 // 회원가입 페이지
 class UserInputForm extends StatefulWidget {
   final String socialId;
@@ -50,7 +52,6 @@ class _UserInputFormState extends State<UserInputForm> {
           'name': nickname,
         }),
       );
-      //print(1234567);
       switch (response.statusCode) {
         case 200:
           print(response.body);
@@ -397,10 +398,18 @@ class _UserInputFormState extends State<UserInputForm> {
                   left: 40,
                   child: Center(
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           signup(); // 서버로 데이터 제출
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setInt(
+                              'homeTutorialStep', 1); // 기본값은 1 (첫 번째 단계)
+                          prefs.setInt(
+                              'reportTutorialStep', 1); // 기본값은 1 (첫 번째 단계)
+                          prefs.setInt('learningCourseTutorialStep',
+                              1); // 기본값은 1 (첫 번째 단계)
                           //튜토리얼로 이동
                           Navigator.pushAndRemoveUntil(
                             context,
