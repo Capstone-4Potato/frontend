@@ -574,8 +574,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                             color: const Color(0xFFEBEBEB)),
                                       ),
                                       child: const Text(
-                                        'Got a sentence you'
-                                        'd like to practice pronouncing? Just write it in English, we’ll translate it into Korean and save it as a card!',
+                                        'Got a sentence you\'d like to practice pronouncing? Just write it in English, we’ll translate it into Korean and save it as a card!',
                                         style: TextStyle(
                                           color: Color(0xFF7F7E79),
                                         ),
