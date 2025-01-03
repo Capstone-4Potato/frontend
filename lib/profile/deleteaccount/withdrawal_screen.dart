@@ -6,15 +6,18 @@ import 'package:flutter_application_1/login/login_screen.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // 회원탈퇴 페이지
 class WithdrawalScreen extends StatefulWidget {
   final String nickname;
   final Function() onProfileReset;
 
-  const WithdrawalScreen(
-      {Key? key, required this.nickname, required this.onProfileReset})
-      : super(key: key);
+  const WithdrawalScreen({
+    Key? key,
+    required this.nickname,
+    required this.onProfileReset,
+  }) : super(key: key);
   @override
   _WithdrawalScreenState createState() => _WithdrawalScreenState();
 }
@@ -32,8 +35,22 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
     }
   }
 
+  // 학습한 카드 갯수 불러오기
+  Future<void> loadLearnedCardCount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // 정보 초기화
+    await prefs.setInt('learnedCardCount', 0);
+    await prefs.setInt('totalCard', 10);
+    await prefs.setBool('checkTodayCourse', false);
+    await prefs.setInt('homeTutorialStep', 1);
+    await prefs.setInt('reportTutorialStep', 1);
+    await prefs.setInt('learningCourseTutorialStep', 1);
+    await prefs.remove('cardIdList');
+  }
+
   // 회원탈퇴 성공
   void _showSuccessDialog() {
+    loadLearnedCardCount();
     showDialog(
       context: context,
       builder: (BuildContext context) {

@@ -7,10 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SuccessDialog extends StatelessWidget {
   SuccessDialog({
     super.key,
+    this.title = 'Success!',
     required this.subtitle,
     required this.onTap,
   });
 
+  String title;
   String subtitle;
   VoidCallback onTap;
 
@@ -28,22 +30,23 @@ class SuccessDialog extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 24.0),
+            Padding(
+              padding: EdgeInsets.only(top: 24.0.h),
               child: Text(
-                'Success!',
-                style: TextStyle(
+                title,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
+            Padding(
+              padding: EdgeInsets.only(bottom: 10.0.h),
               child: Text(
-                'You did a great job in the test!',
-                style: TextStyle(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Color.fromARGB(255, 150, 150, 150),

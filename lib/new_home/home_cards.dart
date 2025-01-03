@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/new_home/new_custom/customsentence_page.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_application_1/new_home/missed_cards_screen.dart';
 import 'package:flutter_application_1/new_home/saved_cards_screen.dart';
 import 'package:flutter_application_1/new_learning_coures/learning_course_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,8 +75,6 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
   bool isLoading = true;
   // 드롭다운 목록에 사용할 데이터 리스트
   final List<String> _items = ['10', '15', '30'];
-  // 현재 선택된 값
-  String? _selectedItem;
 
   int totalCard = 10; // 선택된 카드 수를 저장할 변수  // 학습한 카드 갯수 변수
   int learnedCardCount = 0;
@@ -109,12 +110,14 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       checkTodayCourse = prefs.getBool('checkTodayCourse') ?? false;
+      print('checkTodayCourse : $checkTodayCourse');
     });
   }
 
   // 선택된 카드 수를 secure storage에 저장하는 함수
   Future<void> _saveTotalCard(int value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('totalCard', value); // totalCard 저장
   }
 
   Future<void> fetchAttendanceData() async {
@@ -245,72 +248,92 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                 ),
               ),
             ),
-            DropdownButton2<String>(
-              isExpanded: !checkTodayCourse,
-              items: _items
-                  .map((String item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item, // 선택된 값과 학습한 카드 갯수 표시
-                          style: TextStyle(
-                            color: bam,
-                            fontSize: 14.w,
-                            fontWeight: FontWeight.w400,
+            Container(
+              constraints: BoxConstraints(maxWidth: 55.w),
+              child: DropdownButton2<String>(
+                isExpanded: true,
+                items: _items
+                    .map((String item) => DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item, // 메뉴 아이템은 숫자만 표시
+                            style: TextStyle(
+                              color: bam,
+                              fontSize: 14.w,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                      ))
-                  .toList(),
-              onChanged: (String? value) {
-                if (value != null) {
-                  setState(() {
-                    totalCard = int.parse(value);
-                    _saveTotalCard(
-                        int.parse(value)); // 선택된 값을 secure storage에 저장
-                  });
-                }
-              },
-              buttonStyleData: ButtonStyleData(
-                padding: const EdgeInsets.symmetric(horizontal: 0),
-                height: 40.h,
-                width: 58.w,
-              ),
-              menuItemStyleData: MenuItemStyleData(
-                height: 40.h,
-              ),
-              iconStyleData: IconStyleData(
-                icon: Row(
-                  children: [
-                    Text(
-                      "$learnedCardCount/$totalCard",
-                      style: TextStyle(
-                        color: bam,
-                        fontSize: 14.w,
-                        fontWeight: FontWeight.w500,
+                        ))
+                    .toList(),
+                value: totalCard.toString(),
+                onChanged:
+                    !checkTodayCourse // checkTodayCourse가 false면 null을 전달하여 비활성화
+                        ? null
+                        : (String? value) {
+                            if (value != null) {
+                              setState(() {
+                                totalCard = int.parse(value);
+                                _saveTotalCard(int.parse(value));
+                                print("새로 설정된 totalCard 입니다 : $totalCard");
+                              });
+                            }
+                          },
+                // 방법 2: buttonStyleData에서 커스텀 밑줄 스타일 적용
+                buttonStyleData: ButtonStyleData(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey,
+                        width: 1.0.h,
                       ),
                     ),
-                    const Icon(
-                      Icons.arrow_drop_down_rounded,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              dropdownStyleData: DropdownStyleData(
-                width: 54.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.r),
-                  color: Colors.white,
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: const Color.fromARGB(255, 157, 169, 204)
-                          .withOpacity(0.1),
-                      blurRadius: 10.0,
-                      spreadRadius: 5.0,
-                      offset: const Offset(0.0, 2.0),
-                      blurStyle: BlurStyle.inner,
-                    ),
-                  ],
+                // 방법 1: 기본 밑줄 제거
+                underline: const SizedBox.shrink(),
+                dropdownStyleData: DropdownStyleData(
+                  width: 54.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.r),
+                    color: Colors.white,
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: const Color.fromARGB(255, 157, 169, 204)
+                            .withOpacity(0.1),
+                        blurRadius: 10.0,
+                        spreadRadius: 5.0,
+                        offset: const Offset(0.0, 2.0),
+                        blurStyle: BlurStyle.inner,
+                      ),
+                    ],
+                  ),
+                  elevation: 4,
                 ),
-                elevation: 4,
+
+                // 선택된 아이템은 카운트 형식으로 표시
+                customButton: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AutoSizeText(
+                        "$learnedCardCount/$totalCard",
+                        style: TextStyle(
+                          color: bam,
+                          fontSize: 11.w,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      if (checkTodayCourse)
+                        Icon(
+                          Icons.arrow_drop_down_rounded,
+                          color: bam,
+                          size: 24.w,
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],

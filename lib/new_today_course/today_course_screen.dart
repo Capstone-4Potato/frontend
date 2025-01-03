@@ -39,6 +39,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   int lastFinishedCardId = 0; // 마지막 학습 완료 카드 ID
+  int courseSize = 10; // couse Size
 
   /// 카드 번호별 정보 요청해서 저장
   Future<void> fetchTodayCourseCardList(int cardId) async {
@@ -149,12 +150,12 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
 
   Future<void> filterCardsAfterLastFinished() async {
     lastFinishedCardId = await loadLastFinishedCard();
-    print(lastFinishedCardId);
+    print("마지막 카드 아이디 입니다 : $lastFinishedCardId");
     setState(() {
       // 마지막 학습한 카드 이후의 카드만 남기기
       cardList =
           cardList.where((cardId) => cardId > lastFinishedCardId).toList();
-      print("hihi : $cardList");
+      print("필터링 이후 카드 리스트입니다 : $cardList");
     });
 
     if (cardList.isEmpty) {
@@ -186,25 +187,27 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     });
     try {
       // 새로운 카드 리스트 요청
-
+      await postTodayCourse(); // 이 작업이 완료될 때까지 기다림
       if (cardList.isNotEmpty) {
+        // cardList가 제대로 업데이트되었는지 확인
         await fetchAllCards();
-        // lastFinishedCard 초기화
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.remove(
-            'lastFinishedCard'); // SharedPreferences에서 lastFinishedCard 값 제거
       } else {
         print("No cards available from server.");
       }
     } catch (e) {
       print("Error fetching new cards: $e");
-    } finally {}
+    } finally {
+      setState(() {
+        isLoading = false; // 로딩 상태 종료
+      });
+    }
   }
 
   // 학습 카드 리스트 불러오기
   Future<void> loadCardList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? savedCardIdList = prefs.getStringList('cardIdList');
+    print("저장됐던 카드 리스트 입니다 : $savedCardIdList");
     setState(() {
       isLoading = true;
     });
@@ -216,6 +219,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
 
       // 마지막 학습한 카드 이후 카드 필터링
       await filterCardsAfterLastFinished();
+      print("새로 저장한 카드 리스트 입니다 : $savedCardIdList");
 
       // 카드 정보를 한 번만 요청
       if (cardList.isNotEmpty) {
@@ -232,10 +236,19 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     });
   }
 
+  // CourseSize 불러오기
+  Future<void> loadCourseSize() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      courseSize = prefs.getInt('courseSize') ?? 10;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     loadCardList();
+    loadCourseSize();
   }
 
   @override
@@ -248,6 +261,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
               ),
             )
           : TodayCourseLearningCard(
+              courseSize: courseSize,
               ids: ids,
               texts: texts,
               correctAudios: correctAudios,

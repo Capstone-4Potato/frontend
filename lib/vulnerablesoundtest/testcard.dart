@@ -360,7 +360,7 @@ class _TestCardState extends State<TestCard> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       Text(
                         '${30 - widget.testIds.length + _currentIndex + 1}/30',
                         style: const TextStyle(

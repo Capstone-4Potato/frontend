@@ -33,6 +33,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodayCourseLearningCard extends StatefulWidget {
+  int courseSize;
   List<int> ids = [];
   List<String> texts = [];
   List<String> correctAudios = [];
@@ -47,6 +48,7 @@ class TodayCourseLearningCard extends StatefulWidget {
 
   TodayCourseLearningCard({
     super.key,
+    required this.courseSize,
     required this.ids,
     required this.texts,
     required this.correctAudios,
@@ -327,11 +329,11 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
     if (_isRecorded) {
       if (_currentIndex < widget.ids.length - 1) {
+        incrementLearnedCardCount();
         setState(() {
-          incrementLearnedCardCount();
           _currentIndex++;
           _isRecorded = false;
-          saveLastFinishedCard(widget.ids[_currentIndex]);
+          saveLastFinishedCard(widget.ids[_currentIndex - 1]); // 이전 카드 인덱스 저장
           print('After: currentIndex = $_currentIndex'); // 디버깅용
         });
       } else {
@@ -345,6 +347,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     }
   }
 
+  // 완료하면 true로 바꾸게 설정
   Future<void> setTodayCourseCompleted() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -407,9 +410,6 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
-
         return RecordingErrorDialog();
       },
     );
@@ -417,6 +417,13 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
   void _showCompletionDialog() async {
     int responseCode = await testfinalize();
+    // 현재까지 학습한 마지막 카드 ID 저장
+    if (widget.ids.isNotEmpty) {
+      int lastCardId = widget.ids.last; // 현재까지 학습한 마지막 카드 ID
+      await saveLastFinishedCard(lastCardId);
+      print("Saved last finished card ID: $lastCardId");
+    }
+
     String title;
     String content;
     // 테스트했고 틀린 발음 바탕으로 학습 카드에 취약음소 표시
@@ -438,11 +445,9 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
-
         return SuccessDialog(
-          subtitle: "You did a great job in the test!",
+          title: title,
+          subtitle: content,
           onTap: () {
             Navigator.pushAndRemoveUntil(
               context,
@@ -489,6 +494,8 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.70;
     double cardHeight = MediaQuery.of(context).size.height * 0.22;
+
+    int cardCount = (widget.courseSize - widget.ids.length) + _currentIndex + 1;
 
     return Scaffold(
       appBar: AppBar(
@@ -574,7 +581,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: Column(
@@ -595,8 +602,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                                   const BorderRadius.all(Radius.circular(10)),
                               child: FractionallySizedBox(
                                 alignment: Alignment.centerLeft,
-                                widthFactor:
-                                    (_currentIndex + 1) / widget.ids.length,
+                                widthFactor: cardCount / widget.courseSize,
                                 child: Container(
                                   decoration: const BoxDecoration(
                                     gradient: LinearGradient(
@@ -614,9 +620,9 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
                       Text(
-                        '${_currentIndex + 1}/${widget.ids.length}',
+                        '$cardCount/${widget.courseSize}',
                         style: const TextStyle(
                           color: Color.fromARGB(129, 0, 0, 0),
                           fontSize: 24,

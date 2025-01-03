@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<List<int>> postTodayCourse() async {
   List<int> cardIdList = [];
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  const FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
   // SharedPreferences에서 저장된 totalCard 값을 가져옴 (기본값 10)
   int totalCard = prefs.getInt('totalCard') ?? 10;
@@ -16,6 +18,8 @@ Future<List<int>> postTodayCourse() async {
   await prefs.setInt('courseSize', totalCard); // totalCard를 courseSize로 설정
   print("요청한 카드 갯수입니다. : $totalCard");
   await prefs.setInt('learnedCardCount', 0);
+  await secureStorage.delete(key: 'lastFinishedCardId');
+  print("Initilized last finished card ID: 0");
 
   try {
     var url = Uri.parse('$main_url/cards/today-course');

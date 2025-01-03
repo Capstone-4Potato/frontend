@@ -11,6 +11,7 @@ import 'package:flutter_application_1/profile/tutorial/home_tutorial_screen2.dar
 import 'package:flutter_application_1/profile/tutorial/home_tutorial_screen3.dart';
 import 'package:flutter_application_1/profile/tutorial/report_tutorial_screen1.dart';
 import 'package:flutter_application_1/profile/tutorial/report_tutorial_screen2.dart';
+import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,10 +44,13 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
   int homeTutorialStep = 1; // 홈 화면 튜토리얼 단계 상태
   int reportTutorialStep = 1; // report 튜토리얼 단계 상태
 
+  late bool checkTodayCourse; // todayCourse 했는지 체크 여부
+
   @override
   void initState() {
     super.initState();
     _loadTutorialStatus(); // 튜토리얼 완료 상태를 불러오기
+    _loadCheckTodayCourse();
 
     // 초기 화면 세팅
     _screens = ([
@@ -64,6 +68,14 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
 
       reportTutorialStep =
           prefs.getInt('reportTutorialStep') ?? 1; // 기본값은 1 (첫 번째 단계)
+    });
+  }
+
+  // SharedPreferences에서 todayCourse 했는지 여부
+  _loadCheckTodayCourse() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      checkTodayCourse = prefs.getBool('checkTodayCourse') ?? true;
     });
   }
 
@@ -114,13 +126,28 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
               ),
               color: Colors.white,
               onPressed: () {
-                Navigator.push<void>(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        const TodayCourseScreen(),
-                  ),
-                );
+                checkTodayCourse
+                    ? showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) {
+                          return SuccessDialog(
+                            title: "Great!",
+                            subtitle:
+                                'You have already completed TodayCourse! Try again tomorrow.',
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      )
+                    : Navigator.push<void>(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const TodayCourseScreen(),
+                        ),
+                      );
               },
             ),
           ),
