@@ -680,13 +680,25 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                                   MainAxisAlignment.start,
                                               children: [
                                                 IconButton(
-                                                  icon: const Icon(
-                                                    Icons.delete,
-                                                    color: Colors.black38,
-                                                  ),
-                                                  onPressed: () =>
-                                                      _deleteSentence(index),
-                                                ),
+                                                    icon: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.black38,
+                                                    ),
+                                                    onPressed: () {
+                                                      _deleteSentence(index);
+                                                      setState(() {
+                                                        idList.removeAt(index);
+                                                        textList
+                                                            .removeAt(index);
+                                                        engTranslationList
+                                                            .removeAt(index);
+                                                        engPronunciationList
+                                                            .removeAt(index);
+                                                        bookmarkList
+                                                            .removeAt(index);
+                                                      });
+                                                      print(textList);
+                                                    }),
                                               ],
                                             ),
                                           ),
