@@ -46,7 +46,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _loadTutorialStatus(); // 튜토리얼 완료 상태를 불러오기
+    //_loadTutorialStatus(); // 튜토리얼 완료 상태를 불러오기
 
     // 초기 화면 세팅
     _screens = ([
@@ -158,12 +158,21 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
 
         // 튜토리얼 화면을 표시하는 조건
         if (widget.bottomNavIndex == 0 && homeTutorialStep == 1)
-          HomeTutorialScreen1(
-            keys: keys,
-            onTap: () {
-              setState(() {
-                homeTutorialStep = 2; // 1단계 끝나면 2단계로
+          // PostFrameCallback을 사용하여 레이아웃 완료 후 튜토리얼 표시
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // 한 프레임 지연 후 튜토리얼 표시
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {}); // 강제 리빌드
               });
+              return HomeTutorialScreen1(
+                keys: keys,
+                onTap: () {
+                  setState(() {
+                    homeTutorialStep = 2;
+                  });
+                },
+              );
             },
           ),
         if (widget.bottomNavIndex == 0 && homeTutorialStep == 2)
@@ -186,16 +195,25 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
             },
           ),
         if (widget.bottomNavIndex == 1 && reportTutorialStep == 1)
-          ReportTutorialScreen1(
-            keys: keys,
-            onTap: () {
-              setState(() {
-                reportTutorialStep = 2; // 2단계 끝나면 3단계로
+          // PostFrameCallback을 사용하여 레이아웃 완료 후 튜토리얼 표시
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // 한 프레임 지연 후 튜토리얼 표시
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                setState(() {}); // 강제 리빌드
               });
+              return ReportTutorialScreen1(
+                keys: keys,
+                onTap: () {
+                  setState(() {
+                    reportTutorialStep = 2;
+                  });
+                },
+              );
             },
           ),
         if (widget.bottomNavIndex == 1 && reportTutorialStep == 2)
-          ReportTutorialScreen1(
+          ReportTutorialScreen2(
             keys: keys,
             onTap: () {
               setState(() {

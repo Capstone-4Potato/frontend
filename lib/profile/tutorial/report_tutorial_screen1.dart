@@ -9,7 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 /// 리포트 화면 튜토리얼 1
-class ReportTutorialScreen1 extends StatelessWidget {
+class ReportTutorialScreen1 extends StatefulWidget {
   const ReportTutorialScreen1({
     super.key,
     required this.keys,
@@ -17,58 +17,76 @@ class ReportTutorialScreen1 extends StatelessWidget {
   });
 
   final Map<String, GlobalKey> keys;
-  final VoidCallback onTap; // onTap 콜백 추가
+  final VoidCallback onTap;
+  @override
+  State<ReportTutorialScreen1> createState() => _ReportTutorialScreen1State();
+}
 
+class _ReportTutorialScreen1State extends State<ReportTutorialScreen1> {
+  Offset? reportAnalysisItemPosition;
+  Size? reportAnalysisItemSize;
+  Offset? homeNavContainerPosition;
+  Size? homeNavContainerSize;
+  Offset? homeNavFabPosition;
+  Size? homeNavFabSize;
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기 측정 시도
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _updateMeasurements();
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(ReportTutorialScreen1 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 위젯이 업데이트될 때마다 측정 시도
+    if (mounted) {
+      _updateMeasurements();
+    }
+  }
+
+  void _updateMeasurements() {
+    // 모든 RenderBox 측정 시도
+    final RenderBox? reportAnalysisItemRenderBox =
+        widget.keys['reportAnalysisItemKey']?.currentContext?.findRenderObject()
+            as RenderBox?;
+    final RenderBox? homeNavContainerRenderBox =
+        widget.keys['homeNavContainerKey']?.currentContext?.findRenderObject()
+            as RenderBox?;
+    final RenderBox? homeNavFabRenderBox =
+        widget.keys['homeNavFabKey']?.currentContext?.findRenderObject()
+            as RenderBox?;
+
+    // 모든 RenderBox가 있을 때만 상태 업데이트
+    if (reportAnalysisItemRenderBox != null &&
+        homeNavContainerRenderBox != null &&
+        homeNavFabRenderBox != null) {
+      setState(() {
+        reportAnalysisItemSize = reportAnalysisItemRenderBox.size;
+        reportAnalysisItemPosition =
+            reportAnalysisItemRenderBox.localToGlobal(Offset.zero);
+        homeNavContainerSize = homeNavContainerRenderBox.size;
+        homeNavContainerPosition =
+            homeNavContainerRenderBox.localToGlobal(Offset.zero);
+        homeNavFabSize = homeNavFabRenderBox.size;
+        homeNavFabPosition = homeNavFabRenderBox.localToGlobal(Offset.zero);
+      });
+    }
+  }
+
+  // onTap 콜백 추가
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    // 렌더링된 후 위치와 크기를 가져오기
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // report 분석 아이템 카드 위치와 크기
-      final RenderBox? reportAnalysisItemRenderBox =
-          keys['reportAnalysisItemKey']?.currentContext?.findRenderObject()
-              as RenderBox?;
-      if (reportAnalysisItemRenderBox != null) {
-        final reportAnalysisItemSize = reportAnalysisItemRenderBox.size;
-        final reportAnalysisItemPosition =
-            reportAnalysisItemRenderBox.localToGlobal(Offset.zero);
-      }
-
-      // 취약 음소 상자 위치와 크기
-      final RenderBox? vulnerablePhonemesRenderBox =
-          keys['vulnerablePhonemesKey']?.currentContext?.findRenderObject()
-              as RenderBox?;
-      if (vulnerablePhonemesRenderBox != null) {
-        final vulnerablePhonemesSize = vulnerablePhonemesRenderBox.size;
-        final vulnerablePhonemesPosition =
-            vulnerablePhonemesRenderBox.localToGlobal(Offset.zero);
-      }
-
-      // homeNavigation bar 상자 위치와 크기
-      final RenderBox? homeNavContainerRenderBox = keys['homeNavContainerKey']
-          ?.currentContext
-          ?.findRenderObject() as RenderBox?;
-      if (homeNavContainerRenderBox != null) {
-        final vulnerablePhonemesSize = homeNavContainerRenderBox.size;
-        final vulnerablePhonemesPosition =
-            homeNavContainerRenderBox.localToGlobal(Offset.zero);
-      }
-
-      // homeNavigation bar FAB 위치와 크기
-      final RenderBox? homeNavFabRenderBox = keys['homeNavFabKey']
-          ?.currentContext
-          ?.findRenderObject() as RenderBox?;
-      if (homeNavFabRenderBox != null) {
-        final homeNavFabSize = homeNavFabRenderBox.size;
-        final homeNavFabPosition =
-            homeNavFabRenderBox.localToGlobal(Offset.zero);
-      }
-    });
-
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Stack(
         children: [
           // 반투명 배경
@@ -77,274 +95,228 @@ class ReportTutorialScreen1 extends StatelessWidget {
             width: width,
             height: height,
           ),
-          Builder(
-            builder: (context) {
-              // report 분석 아이템 위치와 크기
-              final RenderBox? reportAnalysisItemRenderBox =
-                  keys['reportAnalysisItemKey']
-                      ?.currentContext
-                      ?.findRenderObject() as RenderBox?;
-              // 취약음소 위치와 크기
-              final RenderBox? vulnerablePhonemesRenderBox =
-                  keys['vulnerablePhonemesKey']
-                      ?.currentContext
-                      ?.findRenderObject() as RenderBox?;
-              // homeNav 상자 위치와 크기
-              final RenderBox? homeNavContainerRenderBox =
-                  keys['homeNavContainerKey']
-                      ?.currentContext
-                      ?.findRenderObject() as RenderBox?;
-              // homeNav FAB 위치와 크기
-              final RenderBox? homeNavFabRenderBox = keys['homeNavFabKey']
-                  ?.currentContext
-                  ?.findRenderObject() as RenderBox?;
-
-              if (reportAnalysisItemRenderBox != null &&
-                  vulnerablePhonemesRenderBox != null &&
-                  homeNavContainerRenderBox != null &&
-                  homeNavFabRenderBox != null) {
-                // report 분석 아이템 위치와 크기
-                final reportAnalysisItemSize = reportAnalysisItemRenderBox.size;
-                final reportAnalysisItemPostion =
-                    reportAnalysisItemRenderBox.localToGlobal(Offset.zero);
-                // 취약음소 위치와 크기
-                final vulnerablePhonemesSize = vulnerablePhonemesRenderBox.size;
-                final vulnerablePhonemesPosition =
-                    vulnerablePhonemesRenderBox.localToGlobal(Offset.zero);
-                // homeNav 상자 위치와 크기
-                final homeNavContainerSize = homeNavContainerRenderBox.size;
-                final homeNavContainerPosition =
-                    homeNavContainerRenderBox.localToGlobal(Offset.zero);
-                // homeNav FAB 위치와 크기
-                final homeNavFabSize = homeNavFabRenderBox.size;
-                final homeNavFabPosition =
-                    homeNavFabRenderBox.localToGlobal(Offset.zero);
-
-                return Stack(
-                  children: [
-                    Positioned(
-                      top: reportAnalysisItemPostion.dy + 10.h,
-                      left: vulnerablePhonemesPosition.dx,
-                      right: vulnerablePhonemesPosition.dx,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
+          if (reportAnalysisItemPosition != null &&
+              homeNavContainerPosition != null &&
+              homeNavFabPosition != null)
+            Stack(
+              children: [
+                Positioned(
+                  top: reportAnalysisItemPosition!.dy + 10.h,
+                  left: 11.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: width - 22.w,
+                        height: 460.h,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 18.0.w, vertical: 15.0.h),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        child: Material(
+                          child: SizedBox(
+                            width: 368.w,
                             height: 460.h,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 18.0.w, vertical: 15.0.h),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16.r),
-                            ),
-                            child: Material(
-                              child: SizedBox(
-                                width: 368.w,
-                                height: 460.h,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Wrap(
+                                  spacing: 40.w,
                                   children: [
-                                    Wrap(
-                                      spacing: 40.w,
-                                      children: [
-                                        AnalysisItem(
-                                          icon: '🕰️',
-                                          title: 'Study Days',
-                                          value: 15,
-                                          unit: 'days',
-                                        ),
-                                        AnalysisItem(
-                                          icon: '📖',
-                                          title: 'Learned',
-                                          value: 21,
-                                          unit: '',
-                                        ),
-                                        AnalysisItem(
-                                          icon: '👍',
-                                          title: 'Accuracy',
-                                          value: 95,
-                                          unit: '%',
-                                        ),
-                                      ],
+                                    AnalysisItem(
+                                      icon: '🕰️',
+                                      title: 'Study Days',
+                                      value: 15,
+                                      unit: 'days',
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 26.0.h),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text(
-                                            "Weekly Average",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Color(0xFFBEBDB8),
-                                            ),
-                                          ),
-                                          const Text.rich(
-                                            TextSpan(
-                                              text: '18 ',
-                                              style: TextStyle(
-                                                fontSize: 24,
-                                                color: Color(0xFF5E5D58),
-                                              ),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                  text: 'cards',
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Color(0xFFBEBDB8),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                EdgeInsets.only(top: 12.0.h),
-                                            child: AspectRatio(
-                                              aspectRatio: 382 / 265,
-                                              child: BarChart(
-                                                weeklyData(60),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                    AnalysisItem(
+                                      icon: '📖',
+                                      title: 'Learned',
+                                      value: 21,
+                                      unit: '',
+                                    ),
+                                    AnalysisItem(
+                                      icon: '👍',
+                                      title: 'Accuracy',
+                                      value: 95,
+                                      unit: '%',
                                     ),
                                   ],
                                 ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 8.0.h),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Weekly Average",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
+                                          color: Color(0xFFBEBDB8),
+                                        ),
+                                      ),
+                                      const Text.rich(
+                                        TextSpan(
+                                          text: '18 ',
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            color: Color(0xFF5E5D58),
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: 'cards',
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: Color(0xFFBEBDB8),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 12.0.h),
+                                        child: AspectRatio(
+                                          aspectRatio: 382 / 265,
+                                          child: BarChart(
+                                            weeklyData(60),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 0.11.w,
+                        height: 40.h,
+                        decoration: DottedDecoration(
+                          color: Colors.white,
+                          shape: Shape.line,
+                          linePosition: LinePosition.left,
+                          strokeWidth: 2.w,
+                        ),
+                      ),
+                      Container(
+                        width: 10.w,
+                        height: 10.h,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: const Alignment(0, 0.88),
+                  child: SizedBox(
+                    width: 300.w,
+                    height: 150.h,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        DefaultTextStyle(
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.h,
+                              fontWeight: FontWeight.w500),
+                          child: const Text(
+                            'We show you useful insights\nfor your progress in this page.',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: homeNavContainerPosition!.dy,
+                  left: homeNavContainerPosition!.dx,
+                  child: Container(
+                    width: homeNavContainerSize!.width.w,
+                    height: homeNavContainerSize!.height.h,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 242, 235, 227),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 45.0.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.home,
+                                size: 24,
+                                color: bam,
                               ),
-                            ),
+                              DefaultTextStyle(
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: bam,
+                                    fontSize: 18.h,
+                                    fontWeight: FontWeight.w500),
+                                child: const Text(
+                                  'home',
+                                ),
+                              ),
+                            ],
                           ),
-                          Container(
-                            width: 0.11.w,
-                            height: 40.h,
-                            decoration: DottedDecoration(
-                              color: Colors.white,
-                              shape: Shape.line,
-                              linePosition: LinePosition.left,
-                              strokeWidth: 2.w,
-                            ),
-                          ),
-                          Container(
-                            width: 10.w,
-                            height: 10.h,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.person_2,
+                                size: 24,
+                                color: primary,
+                              ),
+                              DefaultTextStyle(
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: primary,
+                                    fontSize: 18.h,
+                                    fontWeight: FontWeight.w500),
+                                child: const Text(
+                                  'Report',
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                    Align(
-                      alignment: const Alignment(0, 0.88),
-                      child: SizedBox(
-                        width: 300.w,
-                        height: 150.h,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            DefaultTextStyle(
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.h,
-                                  fontWeight: FontWeight.w500),
-                              child: const Text(
-                                'We show you useful insights\nfor your progress in this page.',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  ),
+                ),
+                Positioned(
+                  top: homeNavFabPosition!.dy,
+                  left: homeNavFabPosition!.dx,
+                  child: Container(
+                    width: 98.w,
+                    height: 98.h,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF26647),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          color: Colors.black.withOpacity(0.4), width: 4.0.w),
                     ),
-                    Positioned(
-                      top: homeNavContainerPosition.dy,
-                      left: homeNavContainerPosition.dx,
-                      child: Container(
-                        width: homeNavContainerSize.width.w,
-                        height: homeNavContainerSize.height.h,
-                        decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 242, 235, 227),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 45.0.w),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.home,
-                                    size: 24,
-                                    color: bam,
-                                  ),
-                                  DefaultTextStyle(
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: bam,
-                                        fontSize: 18.h,
-                                        fontWeight: FontWeight.w500),
-                                    child: const Text(
-                                      'home',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.person_2,
-                                    size: 24,
-                                    color: primary,
-                                  ),
-                                  DefaultTextStyle(
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: primary,
-                                        fontSize: 18.h,
-                                        fontWeight: FontWeight.w500),
-                                    child: const Text(
-                                      'Report',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                    child: const Icon(
+                      Icons.menu_book_outlined,
+                      size: 44,
+                      color: Colors.white,
                     ),
-                    Positioned(
-                      top: homeNavFabPosition.dy,
-                      left: homeNavFabPosition.dx,
-                      child: Container(
-                        width: 98.w,
-                        height: 98.h,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF26647),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: Colors.black.withOpacity(0.4),
-                              width: 4.0.w),
-                        ),
-                        child: const Icon(
-                          Icons.menu_book_outlined,
-                          size: 44,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }
-              return const SizedBox.shrink(); // 키가 없을 때 빈 위젯 반환
-            },
-          ),
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
     );
