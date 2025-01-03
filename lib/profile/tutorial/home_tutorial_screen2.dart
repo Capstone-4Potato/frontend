@@ -104,9 +104,9 @@ class HomeTutorialScreen2 extends StatelessWidget {
                         children: [
                           Container(
                             width: todayGoalSize.width,
-                            height: todayGoalSize.height / 2.05,
+                            height: todayGoalSize.height / 2.0,
                             padding: EdgeInsets.symmetric(
-                                horizontal: 18.0.w, vertical: 15.0.h),
+                                horizontal: 18.0.w, vertical: 10.0.h),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16.r),
