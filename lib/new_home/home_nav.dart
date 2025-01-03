@@ -46,7 +46,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    //_loadTutorialStatus(); // 튜토리얼 완료 상태를 불러오기
+    _loadTutorialStatus(); // 튜토리얼 완료 상태를 불러오기
 
     // 초기 화면 세팅
     _screens = ([

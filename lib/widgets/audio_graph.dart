@@ -39,7 +39,8 @@ class AudioGraphWidget extends StatelessWidget {
           lineBarsData: [
             // Correct Audio Data 차트
             LineChartBarData(
-              spots: _getDataSpots(correctAudioData, maxX), // 올바른 오디오 데이터의 점들
+              spots: _normalizeDataSpots(
+                  correctAudioData, maxX), // 올바른 오디오 데이터의 점들
               isCurved: true,
               dotData: const FlDotData(show: false),
               color: primary.withOpacity(0.8),
@@ -59,7 +60,8 @@ class AudioGraphWidget extends StatelessWidget {
             ),
             // User Audio Data 차트
             LineChartBarData(
-              spots: _getDataSpots(userAudioData, maxX), // 사용자 오디오 데이터의 점들
+              spots:
+                  _normalizeDataSpots(userAudioData, maxX), // 사용자 오디오 데이터의 점들
               isCurved: true,
               dotData: const FlDotData(show: false),
               color: bam.withOpacity(0.7),
@@ -104,28 +106,44 @@ class AudioGraphWidget extends StatelessWidget {
     );
   }
 
-  // 데이터 포인트를 FlSpot 리스트로 변환하는 메서드
-  List<FlSpot> _getDataSpots(List<AmplitudeData> data, double duration) {
-    if (data.isEmpty) return []; // 데이터가 없으면 빈 리스트 반환
+  // 데이터를 정규화하고 시간축을 조정하는 메서드
+  List<FlSpot> _normalizeDataSpots(
+      List<AmplitudeData> data, double targetDuration) {
+    if (data.isEmpty) {
+      // 데이터가 없는 경우 빈 배열 대신 시작점과 끝점을 포함하는 플랫 라인 반환
+      return [
+        const FlSpot(0, 0), // 시작점
+        FlSpot(targetDuration, 0), // 끝점
+      ];
+    }
 
-    // 데이터를 maxX에 맞게 리스케일링
-    double scaleFactor =
-        duration / (data.last.time); // duration에 맞게 scale factor 계산
+    // 첫 번째 시간값을 0으로 맞추기 위해 오프셋 계산
+    double timeOffset = data.first.time;
 
-    return data
-        .map((point) =>
-            FlSpot(point.time * scaleFactor, point.amplitude)) // 시간 값을 리스케일링
-        .toList(); // AmplitudeData를 FlSpot으로 변환
+    // 데이터의 실제 지속 시간 계산
+    double originalDuration = data.last.time - timeOffset;
+
+    // 시간축 스케일 팩터 계산
+    double scaleFactor = targetDuration / originalDuration;
+
+    // 데이터 포인트 정규화 및 변환
+    return data.map((point) {
+      // 시간값에서 오프셋을 빼고 스케일 팩터를 적용
+      double normalizedTime = (point.time - timeOffset) * scaleFactor;
+      return FlSpot(normalizedTime, point.amplitude);
+    }).toList();
   }
 
   // 두 데이터 세트 중 최대 지속시간을 반환하는 메서드
   double _getMaxDuration(
       List<AmplitudeData> correctData, List<AmplitudeData> userData) {
-    double correctMax = correctData.isNotEmpty
-        ? correctData.last.time
-        : 0.0; // Correct Audio의 마지막 시간
-    double userMax =
-        userData.isNotEmpty ? userData.last.time : 0.0; // User Audio의 마지막 시간
-    return max(correctMax, userMax); // 두 데이터의 최대 시간 값 반환
+    // 각 데이터 세트의 실제 지속 시간 계산
+    double correctDuration = correctData.isNotEmpty
+        ? correctData.last.time - correctData.first.time
+        : 0.0;
+    double userDuration =
+        userData.isNotEmpty ? userData.last.time - userData.first.time : 0.0;
+
+    return max(correctDuration, userDuration);
   }
 }
