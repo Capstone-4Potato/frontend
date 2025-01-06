@@ -157,7 +157,6 @@ class _CustomSentencesState extends State<CustomSentences> {
                     texts: displayContents,
                     pronunciations: displayPronunciations,
                     engpronunciations: displayEngPronunciations,
-                    bookmarked: displayBookmarked,
                   ),
                 ),
               );

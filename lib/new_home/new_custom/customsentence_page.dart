@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/home/customsentences/cardlistscreen.dart';
@@ -71,7 +72,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
   final TextEditingController _controller = TextEditingController();
   final int _maxSentences = 10;
-  final int _maxChars = 25;
+  final int _maxChars = 50;
 
   late Color addButtonIconColor = const Color(0xFF71706B); // + 버튼 아이콘 색
   late Color addButtonColor = Colors.transparent; // + 버튼 배경 색
@@ -325,7 +326,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
             _showErrorDialog('Failed to refresh token. Please log in again.');
           }
         } else {
-          print("${response.statusCode}");
+          print(response.body);
           _showErrorDialog('Failed to add sentence. Please try again.');
         }
       } catch (e) {
@@ -334,7 +335,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         _showErrorDialog('Failed to add sentence. Please try again.');
       }
     } else {
-      _showErrorDialog('Please enter a sentence with 25 characters or less.');
+      _showErrorDialog('Please enter a sentence with 50 characters or less.');
     }
   }
 
@@ -526,8 +527,8 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                       ),
                     ),
                     suffix: Container(
-                      height: 30,
-                      width: 30,
+                      height: 30.h,
+                      width: 30.w,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100.r),
                         color: addButtonColor,
@@ -608,7 +609,6 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                                     engTranslationList,
                                                 engpronunciations:
                                                     engPronunciationList,
-                                                bookmarked: bookmarkList,
                                               ),
                                             ),
                                           );
@@ -650,30 +650,41 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                                             10.r),
                                                   ),
                                                 ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      _sentences[index]
-                                                          .engTranslation,
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 15.h,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        _sentences[index]
+                                                            .engTranslation,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 15.h,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 1,
                                                       ),
-                                                    ),
-                                                    Text(
-                                                      _sentences[index].text,
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 15.h,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                      Text(
+                                                        _sentences[index].text,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 15.h,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                        softWrap: true,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 1,
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),

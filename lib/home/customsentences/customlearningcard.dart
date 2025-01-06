@@ -21,7 +21,6 @@ class CustomSentenceLearningCard extends StatefulWidget {
   final List<String> texts;
   final List<String> pronunciations;
   final List<String> engpronunciations;
-  final List<bool> bookmarked;
 
   CustomSentenceLearningCard({
     Key? key,
@@ -30,7 +29,6 @@ class CustomSentenceLearningCard extends StatefulWidget {
     required this.texts,
     required this.pronunciations,
     required this.engpronunciations,
-    required this.bookmarked,
   }) : super(key: key);
 
   @override
@@ -211,7 +209,6 @@ class _CustomSentenceLearningCardState
           texts: widget.texts,
           pronunciations: widget.pronunciations,
           engpronunciations: widget.engpronunciations,
-          bookmarked: widget.bookmarked,
         ),
       ),
     );
@@ -256,27 +253,6 @@ class _CustomSentenceLearningCardState
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
         actions: [
-          IconButton(
-            icon: Icon(
-              widget.bookmarked[widget.currentIndex]
-                  ? Icons.bookmark
-                  : Icons.bookmark_outline_sharp,
-              color: widget.bookmarked[widget.currentIndex]
-                  ? const Color(0xFFF26647)
-                  : Colors.grey[400],
-              size: 30,
-            ),
-            onPressed: () {
-              setState(() {
-                // 북마크 상태를 토글
-                widget.bookmarked[widget.currentIndex] =
-                    !widget.bookmarked[widget.currentIndex];
-              });
-              // 북마크 상태를 서버에 업데이트
-              updateCustomBookmark(widget.cardIds[widget.currentIndex],
-                  widget.bookmarked[widget.currentIndex]);
-            },
-          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
@@ -348,6 +324,9 @@ class _CustomSentenceLearningCardState
                               ),
                               textAlign: TextAlign.center,
                             ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
                             Text(
                               currentEngPronunciation,
                               style: TextStyle(
@@ -355,6 +334,9 @@ class _CustomSentenceLearningCardState
                                 color: Colors.grey[700],
                               ),
                               textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 5.h,
                             ),
                             Text(
                               currentPronunciation,
