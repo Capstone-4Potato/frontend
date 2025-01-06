@@ -6,6 +6,7 @@ import 'package:flutter_application_1/home/customsentences/cardlistscreen.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/home/customsentences/customlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
@@ -439,7 +440,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         return ExitDialog(
           width: width,
           height: height,
-          page: const MainPage(initialIndex: 0),
+          page: HomeNav(),
         );
       },
     );

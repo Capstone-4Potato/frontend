@@ -9,6 +9,7 @@ import 'package:flutter_application_1/home/customsentences/bookmark.dart';
 import 'package:flutter_application_1/home/customsentences/customfeedbackui.dart';
 import 'package:flutter_application_1/home/customsentences/customtts.dart';
 import 'package:flutter_application_1/feedback_data.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
@@ -225,7 +226,7 @@ class _CustomSentenceLearningCardState
         return ExitDialog(
           width: width,
           height: height,
-          page: const MainPage(initialIndex: 0),
+          page: HomeNav(),
         );
       },
     );
