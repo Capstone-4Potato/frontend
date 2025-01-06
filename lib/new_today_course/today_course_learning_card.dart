@@ -380,7 +380,11 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
       },
     ).then((_) {
       // 다이얼로그가 닫히면 nextCard 호출
-      _nextCard();
+
+      Future.delayed(const Duration(milliseconds: 300), () {
+        print("Dialog animation finished, calling nextCard...");
+        _nextCard();
+      });
     });
   }
 
@@ -465,7 +469,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   void _showExitDialog() async {
     // 현재까지 학습한 마지막 카드 ID 저장
     if (widget.ids.isNotEmpty) {
-      int lastCardId = widget.ids.last; // 현재까지 학습한 마지막 카드 ID
+      int lastCardId = widget.ids[_currentIndex]; // 현재까지 학습한 마지막 카드 ID
       await saveLastFinishedCard(lastCardId);
       print("Saved last finished card ID: $lastCardId");
     }

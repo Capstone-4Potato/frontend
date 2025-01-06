@@ -19,7 +19,7 @@ Future<List<int>> postTodayCourse() async {
   print("요청한 카드 갯수입니다. : $totalCard");
   await prefs.setInt('learnedCardCount', 0);
   await secureStorage.delete(key: 'lastFinishedCardId');
-  print("Initilized last finished card ID: 0");
+  print("Initilized last finished card ID");
 
   try {
     var url = Uri.parse('$main_url/cards/today-course');
@@ -38,6 +38,7 @@ Future<List<int>> postTodayCourse() async {
     }
 
     var response = await makeRequest(token!);
+    print("요청 직후 응답 : ${response.body}");
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);

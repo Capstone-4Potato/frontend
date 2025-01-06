@@ -154,7 +154,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     setState(() {
       // 마지막 학습한 카드 이후의 카드만 남기기
       cardList =
-          cardList.where((cardId) => cardId > lastFinishedCardId).toList();
+          cardList.where((cardId) => cardId >= lastFinishedCardId).toList();
       print("필터링 이후 카드 리스트입니다 : $cardList");
     });
 
@@ -247,8 +247,8 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
   @override
   void initState() {
     super.initState();
-    loadCardList();
     loadCourseSize();
+    loadCardList();
   }
 
   @override

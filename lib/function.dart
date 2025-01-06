@@ -90,7 +90,6 @@ Future<FeedbackData?> getFeedback(
     if (response.statusCode == 200) {
       print('Successful feedback submission');
       String responseString = response.body.toString(); // Response를 문자열로 저장
-      print('Response as string: $responseString');
 
       var responseData = json.decode(responseString); // JSON으로 디코딩
       return FeedbackData.fromJson(responseData);
@@ -104,7 +103,6 @@ Future<FeedbackData?> getFeedback(
         if (response.statusCode == 200) {
           print('Successful feedback submission after token refresh');
           String responseString = response.body.toString(); // Response를 문자열로 저장
-          print('Response as string after refresh: $responseString');
 
           var responseData = json.decode(responseString); // JSON으로 디코딩
           return FeedbackData.fromJson(responseData);
@@ -118,7 +116,6 @@ Future<FeedbackData?> getFeedback(
       }
     } else if (response.statusCode == 500) {
       String responseString = response.body.toString(); // Response를 문자열로 저장
-      print('Response as string: $responseString');
 
       var responseData = json.decode(responseString); // JSON으로 디코딩
       var message = responseData['message'];
