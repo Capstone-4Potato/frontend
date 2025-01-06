@@ -187,7 +187,8 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     });
     try {
       // 새로운 카드 리스트 요청
-      await postTodayCourse(); // 이 작업이 완료될 때까지 기다림
+      cardList = await postTodayCourse(); // 이 작업이 완료될 때까지 기다림
+
       if (cardList.isNotEmpty) {
         // cardList가 제대로 업데이트되었는지 확인
         await fetchAllCards();
@@ -240,7 +241,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
   Future<void> loadCourseSize() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      courseSize = prefs.getInt('courseSize') ?? 10;
+      courseSize = prefs.getInt('totalCard') ?? 10;
     });
   }
 

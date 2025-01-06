@@ -78,8 +78,10 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
   _loadCheckTodayCourse() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      checkTodayCourse = prefs.getBool('checkTodayCourse') ?? true;
+      checkTodayCourse = prefs.getBool('checkTodayCourse') ?? false;
+      print("check today course : $checkTodayCourse");
     });
+    return checkTodayCourse;
   }
 
   // SharedPreferences에 튜토리얼 완료 상태 저장
@@ -128,8 +130,8 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
                 size: 44.sp,
               ),
               color: Colors.white,
-              onPressed: () {
-                checkTodayCourse
+              onPressed: () async {
+                await _loadCheckTodayCourse()
                     ? showDialog(
                         context: context,
                         barrierDismissible: true,

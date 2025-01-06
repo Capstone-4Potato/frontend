@@ -338,6 +338,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
       } else {
         print('Last card reached');
         _showCompletionDialog();
+        incrementLearnedCardCount(); // 카드 갯수 + 1
         setTodayCourseCompleted(); // 오늘 학습 완료 저장
       }
     } else {
@@ -349,14 +350,16 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   // 완료하면 true로 바꾸게 설정
   Future<void> setTodayCourseCompleted() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    await prefs.remove('cardIdList'); // cardList 초기화
     // Set "checkTodayCourse" to true and save today's date
     await prefs.setBool('checkTodayCourse', true);
 
     // Update "lastSavedDate" to today's date
     DateTime now = DateTime.now();
-    String todayDate = "${now.year}-${now.month}-${now.day}";
+    // String todayDate = "${now.year}-${now.month}-${now.day}";
+    String todayDate = "${now.month}-${now.day}-${now.minute}"; // 임시 분 단위
     await prefs.setString('lastSavedDate', todayDate);
+    print(todayDate);
 
     print('checkTodayCourse set to true and lastSavedDate updated.');
   }

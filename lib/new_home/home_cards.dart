@@ -111,7 +111,6 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       checkTodayCourse = prefs.getBool('checkTodayCourse') ?? false;
-      print('checkTodayCourse : $checkTodayCourse');
     });
   }
 
