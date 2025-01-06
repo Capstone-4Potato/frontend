@@ -48,10 +48,11 @@ class _CustomFeedbackUIState extends State<CustomFeedbackUI> {
     return widget.feedbackData.userScore == 100 // 100점 일 때
         ? DraggableScrollableSheet(
             // 드래그 시트
-            initialChildSize: (834 / 853).h,
+            initialChildSize: (734 / 853).h,
             minChildSize: (700 / 853).h,
-            maxChildSize: (834 / 853).h,
+            maxChildSize: (734 / 853).h,
             shouldCloseOnMinExtent: true,
+            snap: true,
             expand: true,
             builder: (BuildContext context, ScrollController scrollController) {
               return Material(
