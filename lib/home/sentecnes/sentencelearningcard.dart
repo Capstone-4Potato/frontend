@@ -125,7 +125,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
       }
     } else {
       await _audioRecorder.startRecorder(
-        toFile: 'audio_record.wav',
+        toFile: 'audio_record_${widget.cardIds[widget.currentIndex]}.wav',
         codec: Codec.pcm16WAV,
       );
       setState(() {

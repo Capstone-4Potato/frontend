@@ -31,6 +31,7 @@ class TtsService {
           'Content-Type': 'application/json',
         },
       );
+      // print("tts : ${response.body}");
       if (response.statusCode == 200) {
         // 응답이 성공적인 경우
         final jsonData = jsonDecode(response.body); // 응답 데이터를 디코딩
@@ -61,6 +62,7 @@ class TtsService {
 
           if (retryResponse.statusCode == 200) {
             final jsonData = jsonDecode(retryResponse.body);
+
             final String base64correctAudio = jsonData['correctAudio'];
             _instance.base64CorrectAudio = base64correctAudio;
             await _instance.saveAudioToFile(cardId, base64correctAudio);
