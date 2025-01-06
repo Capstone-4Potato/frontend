@@ -46,7 +46,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
   void initState() {
     super.initState();
     _getLearningCourseList();
-    _loadTutorialStatus(); // 튜토리얼 완료 상태를 불러오기
+    //_loadTutorialStatus(); // 튜토리얼 완료 상태를 불러오기
     _scrollController.addListener(() {
       _updateChoiceChipByScroll();
     });

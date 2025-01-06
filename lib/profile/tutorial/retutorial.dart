@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new_home/home_nav.dart';
 import 'package:flutter_application_1/profile/profile_page.dart';
 import 'package:flutter_application_1/vulnerablesoundtest/starting_test_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // 프로필에서 튜토리얼 다시 보는 페이지
 class RetutorialScreen extends StatefulWidget {
@@ -26,7 +28,8 @@ class _RetutorialScreenState extends State<RetutorialScreen>
     'assets/tutorial/tutorial6.png',
     'assets/tutorial/tutorial7.png',
     'assets/tutorial/tutorial8.png',
-    'assets/tutorial/tutorial9.png', // 마지막 이미지
+    'assets/tutorial/tutorial9.png',
+    'assets/tutorial/tutorial10.png', // 마지막 이미지
   ];
 
   @override
@@ -50,32 +53,40 @@ class _RetutorialScreenState extends State<RetutorialScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 242, 235, 227),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 242, 235, 227),
-        title: TabPageSelector(
-          controller: _tabController,
-          color: const Color.fromARGB(255, 188, 188, 188),
-          selectedColor: primary,
-          borderStyle: BorderStyle.none,
-        ),
-      ),
-      body: GestureDetector(
-        onTap: () => escapeTutorial(context),
-        child: PageView.builder(
-          controller: _pageController,
-          itemCount: _images.length,
-          onPageChanged: (index) {
-            _tabController.animateTo(index);
-          },
-          itemBuilder: (context, index) {
-            // 마지막 페이지일 경우 특별한 뷰를 생성
-            if (index == _images.length - 1) {
-              return buildLastPage(context, _images[index]);
-            }
-            return buildImagePage(_images[index]);
-          },
-        ),
+      backgroundColor: const Color(0xFF7A7A7A),
+      body: Stack(
+        children: [
+          GestureDetector(
+            onTap: () => escapeTutorial(context),
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: _images.length,
+              onPageChanged: (index) {
+                _tabController.animateTo(index);
+              },
+              itemBuilder: (context, index) {
+                // 마지막 페이지일 경우 특별한 뷰를 생성
+                if (index == _images.length - 1) {
+                  return buildLastPage(context, _images[index]);
+                }
+                return buildImagePage(_images[index]);
+              },
+            ),
+          ),
+          Positioned(
+            top: 55.h,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: TabPageSelector(
+                controller: _tabController,
+                color: const Color.fromARGB(255, 188, 188, 188),
+                selectedColor: primary,
+                borderStyle: BorderStyle.none,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -110,7 +121,7 @@ class _RetutorialScreenState extends State<RetutorialScreen>
               // 메인화면으로 이동
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => MainPage()),
+                MaterialPageRoute(builder: (context) => HomeNav()),
                 (route) => false,
               );
             },
