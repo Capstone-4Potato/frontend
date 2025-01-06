@@ -246,13 +246,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                Navigator.push<void>(
+                                Navigator.push(
                                   context,
-                                  MaterialPageRoute<void>(
+                                  MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         const NotificationScreen(),
                                   ),
-                                );
+                                ).then((updateHasUnreadNotification) {
+                                  if (updateHasUnreadNotification != null) {
+                                    setState(() {
+                                      hasUnreadNotifications =
+                                          !updateHasUnreadNotification;
+                                    });
+                                  }
+                                });
                               },
                               icon: Icon(
                                 CustomIcons.notification_icon,

@@ -156,7 +156,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
               icon: const Icon(Icons.arrow_back),
               color: Colors.white,
               onPressed: () {
-                Navigator.pop(context);
+                final allRead = notifications
+                    .every((notification) => !notification['unread']);
+                print(allRead);
+                Navigator.pop(context, allRead);
               },
             ),
           ],
