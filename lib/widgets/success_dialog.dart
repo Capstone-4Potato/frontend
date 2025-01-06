@@ -9,11 +9,13 @@ class SuccessDialog extends StatelessWidget {
     super.key,
     this.title = 'Success!',
     required this.subtitle,
+    this.buttonText = "Continue",
     required this.onTap,
   });
 
   String title;
   String subtitle;
+  String buttonText;
   VoidCallback onTap;
 
   @override
@@ -60,12 +62,13 @@ class SuccessDialog extends StatelessWidget {
                 height: 44.h,
                 decoration: BoxDecoration(
                   color: accent,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.r),
                 ),
-                child: const Center(
+                child: Center(
                     child: Text(
-                  'Continue',
-                  style: TextStyle(
+                  buttonText,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
                 )),

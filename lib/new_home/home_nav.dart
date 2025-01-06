@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/learninginfo/study_info_page.dart';
+import 'package:flutter_application_1/new_learning_coures/learning_course_card_list.dart';
+import 'package:flutter_application_1/new_learning_coures/learning_course_screen.dart';
 import 'package:flutter_application_1/new_today_course/fetch_today_course.dart';
 import 'package:flutter_application_1/new_home/home_screen.dart';
 import 'package:flutter_application_1/new_today_course/today_course_screen.dart';
@@ -138,7 +140,15 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
                                 'You have already completed TodayCourse! Try again tomorrow.',
                             onTap: () {
                               Navigator.pop(context);
+                              Navigator.push<void>(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const LearningCourseScreen(),
+                                ),
+                              );
                             },
+                            buttonText: "Go to\nLearning Course",
                           );
                         },
                       )
