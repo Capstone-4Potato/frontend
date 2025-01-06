@@ -392,7 +392,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
         }
       },
       child: Opacity(
-        opacity: scores[index] >= 1.0 ? 0.5 : 1.0,
+        opacity: scores[index] >= 100.0 ? 0.5 : 1.0,
         child: Card(
           elevation: 0.0,
           shape: RoundedRectangleBorder(

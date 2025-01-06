@@ -460,7 +460,7 @@ class _SavedCardScreenState extends State<SavedCardScreen>
       },
       child: Opacity(
         // 카드의 학습 완료 정도에 따라 투명도 조절
-        opacity: scores[index] >= 1.0 ? 0.5 : 1.0,
+        opacity: scores[index] >= 100.0 ? 0.5 : 1.0,
         child: Card(
           elevation: 0.0,
           shape: RoundedRectangleBorder(
