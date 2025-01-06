@@ -59,34 +59,31 @@ class HomeTutorialScreen3 extends StatelessWidget {
 
                 return Stack(
                   children: [
-                    // todayGoal Card
-                    Align(
-                      alignment: const Alignment(0, 0.1),
-                      child: SizedBox(
-                        width: 350.w,
-                        height: 70.h,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            DefaultTextStyle(
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.h,
-                                  fontWeight: FontWeight.w500),
-                              child: const Text(
-                                'If you want to study beyond\ndaily goals, check out Learning Course!',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // LearningCourseCard
                     Positioned(
-                      top: todayCardPosition.dy - 50.h,
+                      top: todayCardPosition.dy - 120.h,
                       left: todayCardPosition.dx + 4,
                       child: Column(
                         children: [
+                          SizedBox(
+                            width: 350.w,
+                            height: 70.h,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                DefaultTextStyle(
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.h,
+                                      fontWeight: FontWeight.w500),
+                                  child: const Text(
+                                    'If you want to study beyond\ndaily goals, check out Learning Course!',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           Container(
                             width: 10.w,
                             height: 10.h,

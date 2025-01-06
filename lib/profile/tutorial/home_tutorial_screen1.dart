@@ -126,8 +126,12 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
                 // Level Tag
                 Positioned(
                   top: levelTagPosition!.dy,
-                  left: levelTagPosition!.dx,
+                  left: 0, // 왼쪽부터 시작
+                  right: 0, // 오른쪽까지 확장
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center, // 수직 방향 정렬 유지
+                    crossAxisAlignment:
+                        CrossAxisAlignment.center, // 가로 방향 중앙 정렬
                     children: [
                       Container(
                         width: levelTagSize!.width,
@@ -149,6 +153,7 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
                       ),
                       Container(
                         height: 40.h,
+                        width: 0.1.w,
                         decoration: DottedDecoration(
                           color: Colors.white,
                           shape: Shape.line,
@@ -164,42 +169,33 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
                           shape: BoxShape.circle,
                         ),
                       ),
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                      DefaultTextStyle(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.h,
+                            fontWeight: FontWeight.w500),
+                        child: const Text(
+                          'This is your profile section.\n',
+                        ),
+                      ),
+                      DefaultTextStyle(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.h,
+                            fontWeight: FontWeight.w500),
+                        child: const Text(
+                          'Your level will go up\nas you practice more word cards!',
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 // Description Text
-                Align(
-                  alignment: const Alignment(0, 0),
-                  child: SizedBox(
-                    width: 300.w,
-                    height: 100.h,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        DefaultTextStyle(
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.h,
-                              fontWeight: FontWeight.w500),
-                          child: const Text(
-                            'This is your profile section.\n',
-                          ),
-                        ),
-                        DefaultTextStyle(
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.h,
-                              fontWeight: FontWeight.w500),
-                          child: const Text(
-                            'Your level will go up\nas you practice more word cards!',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               ],
             ),
         ],

@@ -67,34 +67,30 @@ class ReportTutorialScreen2 extends StatelessWidget {
 
                 return Stack(
                   children: [
-                    // todayGoal Card
-                    Align(
-                      alignment: const Alignment(0, 0.25),
-                      child: SizedBox(
-                        width: 350.w,
-                        height: 70.h,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            DefaultTextStyle(
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.h,
-                                  fontWeight: FontWeight.w500),
-                              child: const Text(
-                                'Try out pronuciation test to find out\nyour weak points & customize it freely!',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Vulnerable Phonemes Card
                     Positioned(
-                      top: vulnerablePhonemesPosition.dy - 70.h,
-                      left: vulnerablePhonemesPosition.dx,
+                      top: vulnerablePhonemesPosition.dy - 120.h,
+                      left: 0, // 왼쪽부터 시작
+                      right: 0, // 오른쪽까지 확장
                       child: Column(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center, // 수직 방향 정렬 유지
+                        crossAxisAlignment:
+                            CrossAxisAlignment.center, // 가로 방향 중앙 정렬
                         children: [
+                          DefaultTextStyle(
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.h,
+                                fontWeight: FontWeight.w500),
+                            child: const Text(
+                              'Try out pronuciation test to find out\nyour weak points & customize it freely!',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
                           Container(
                             width: 10.w,
                             height: 10.h,
@@ -105,6 +101,7 @@ class ReportTutorialScreen2 extends StatelessWidget {
                           ),
                           Container(
                             height: 40.h,
+                            width: 0.1.w,
                             decoration: DottedDecoration(
                               color: Colors.white,
                               shape: Shape.line,
@@ -113,7 +110,7 @@ class ReportTutorialScreen2 extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            width: vulnerablePhonemesSize.width - 8,
+                            width: vulnerablePhonemesSize.width,
                             height: 250.h,
                             padding: EdgeInsets.symmetric(
                                 horizontal: 12.0.w, vertical: 8.0.h),

@@ -212,29 +212,17 @@ class _ReportTutorialScreen1State extends State<ReportTutorialScreen1> {
                           shape: BoxShape.circle,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: const Alignment(0, 0.88),
-                  child: SizedBox(
-                    width: 300.w,
-                    height: 150.h,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        DefaultTextStyle(
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.h,
-                              fontWeight: FontWeight.w500),
-                          child: const Text(
-                            'We show you useful insights\nfor your progress in this page.',
-                          ),
+                      DefaultTextStyle(
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.h,
+                            fontWeight: FontWeight.w500),
+                        child: const Text(
+                          'We show you useful insights\nfor your progress in this page.',
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Positioned(

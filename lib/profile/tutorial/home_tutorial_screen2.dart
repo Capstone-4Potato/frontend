@@ -1,4 +1,5 @@
 import 'package:dotted_decoration/dotted_decoration.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
@@ -191,44 +192,36 @@ class HomeTutorialScreen2 extends StatelessWidget {
                               shape: BoxShape.circle,
                             ),
                           ),
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          DefaultTextStyle(
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.h,
+                                fontWeight: FontWeight.w500),
+                            child: const Text(
+                              'Set the number of cards\nyou’d like to study daily.',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 40.h,
+                          ),
+                          DefaultTextStyle(
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.h,
+                                fontWeight: FontWeight.w500),
+                            child: const Text(
+                              'Then start with this button!\nIt will give you the cards\nbased on your goal each day.',
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    Align(
-                      alignment: const Alignment(0, 0.4),
-                      child: SizedBox(
-                        width: 300.w,
-                        height: 150.h,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            DefaultTextStyle(
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.h,
-                                  fontWeight: FontWeight.w500),
-                              child: const Text(
-                                'Set the number of cards\nyou’d like to study daily.',
-                              ),
-                            ),
-                            Container(
-                              height: 40.h,
-                            ),
-                            DefaultTextStyle(
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.h,
-                                  fontWeight: FontWeight.w500),
-                              child: const Text(
-                                'Then start with this button!\nIt will give you the cards\nbased on your goal each day.',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // homeNavigationBar
                     Positioned(
                       top: homeNavContainerPosition.dy,
                       left: homeNavContainerPosition.dx,
