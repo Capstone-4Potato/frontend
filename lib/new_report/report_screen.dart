@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/function.dart';
+import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/learninginfo/deletephonemes.dart';
 import 'package:flutter_application_1/learninginfo/re_test_page.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
@@ -866,9 +867,13 @@ class _ReportScreenState extends State<ReportScreen> {
                               ),
                               surfaceTintColor: Colors.transparent,
                             ),
-                            icon: const Icon(
-                              Icons.add,
-                              size: 24,
+                            icon: Text(
+                              '+',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: const Color(0xFF5E5D58),
+                                fontSize: 24.h,
+                              ),
                             ),
                             label: const Text(
                               'Add phonemes',
@@ -1301,9 +1306,6 @@ class VulnerableCardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height / 852;
-    double width = MediaQuery.of(context).size.width / 392;
-
     return Column(
       children: [
         Padding(
@@ -1313,10 +1315,10 @@ class VulnerableCardItem extends StatelessWidget {
             children: [
               Text(
                 '${index + 1}',
-                style: const TextStyle(
-                  color: Color(0xFFEDCAA8),
+                style: TextStyle(
+                  color: const Color(0xFFEDCAA8),
                   fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                  fontSize: 15.h,
                 ),
               ),
               Text(
@@ -1324,17 +1326,17 @@ class VulnerableCardItem extends StatelessWidget {
                 style: TextStyle(
                   color: bam,
                   fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                  fontSize: 15.h,
                 ),
               ),
               Container(
-                width: 195 * width,
+                width: 195.w,
                 color: Colors.transparent,
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    color: Color(0xFF5E5D58),
-                    fontSize: 15,
+                  style: TextStyle(
+                    color: const Color(0xFF5E5D58),
+                    fontSize: 15.h,
                   ),
                 ),
               ),
@@ -1343,17 +1345,17 @@ class VulnerableCardItem extends StatelessWidget {
                   await deletePhonemes(phonemeId);
                 },
                 child: Container(
-                  height: 27 * height,
-                  width: 27 * width,
+                  height: 27.h,
+                  width: 27.w,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: const Color(0xFFEDEBE9),
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(100.r),
                   ),
-                  child: const Icon(
-                    Icons.cancel,
-                    color: Color(0xFF92918C),
-                    size: 27,
+                  child: Icon(
+                    CustomIcons.cancel_icon,
+                    color: const Color(0xFF92918C),
+                    size: 12.sp,
                   ),
                 ),
               ),
@@ -1361,10 +1363,10 @@ class VulnerableCardItem extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 11.0),
+          padding: EdgeInsets.symmetric(vertical: 11.0.h),
           child: SizedBox(
-            width: 343,
-            height: 1,
+            width: 343.w,
+            height: 1.h,
             child: CustomPaint(
               painter: DottedLineHorizontalPainter(),
             ),

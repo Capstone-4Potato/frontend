@@ -2,6 +2,7 @@ import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/profile/editprofile/editprofile_screen.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_application_1/profile/logout/signout.dart';
 import 'package:flutter_application_1/profile/deleteaccount/withdrawal_screen.dart';
 import 'package:flutter_application_1/login/login_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -129,9 +131,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width / 393;
-    double height = MediaQuery.of(context).size.height / 852;
-
     return Scaffold(
       appBar: AppBar(
         leading: Column(
@@ -150,7 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
         titleSpacing: 0,
         backgroundColor: const Color(0xFFF2EBE3),
         bottom: PreferredSize(
-          preferredSize: Size(392 * width, 84 * height),
+          preferredSize: Size(392.w, 84.h),
           child: Row(
             children: [
               Padding(
@@ -159,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   'Settings',
                   style: TextStyle(
                     color: bam,
-                    fontSize: 36 * width,
+                    fontSize: 36.w,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -178,11 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(
-                    left: 44.0 * width,
-                    right: 44.0 * width,
-                    top: 16 * height,
-                    bottom: 10 * height,
-                  ),
+                      left: 44.0.w, right: 44.0.w, top: 16.h, bottom: 10.h),
                   child: const Text(
                     'Account',
                     style: TextStyle(
@@ -195,7 +190,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Divider(
                   color: Color(0xFFBEBDB8),
                 ),
-                _buildSettingsItem('Edit profile', Icons.person, onTap: () {
+                _buildSettingsItem('Edit profile', CustomIcons.profile_icon,
+                    onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -208,18 +204,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   );
                 }),
-                _buildSettingsItem('Log out', Icons.logout, onTap: () {
+                _buildSettingsItem('Log out', CustomIcons.logout_icon,
+                    onTap: () {
                   _showLogoutDialog(context);
                 }),
-                _buildSettingsItem('Delete account', Icons.delete, onTap: () {
+                _buildSettingsItem('Delete account', CustomIcons.trashcan_icon,
+                    onTap: () {
                   _showDeleteAccountDialog(context);
                 }),
                 Padding(
                   padding: EdgeInsets.only(
-                    left: 44.0 * width,
-                    right: 44.0 * width,
-                    top: 16 * height,
-                    bottom: 10 * height,
+                    left: 44.0.w,
+                    right: 44.0.w,
+                    top: 16.h,
+                    bottom: 10.h,
                   ),
                   child: const Text(
                     'Tutorial',
@@ -233,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Divider(
                   color: Color(0xFFBEBDB8),
                 ),
-                _buildSettingsItem('Tutorial', Icons.collections_bookmark_sharp,
+                _buildSettingsItem('Tutorial', CustomIcons.tutorial_icon,
                     onTap: () {
                   Navigator.push(
                     context,
@@ -252,36 +250,33 @@ class _ProfilePageState extends State<ProfilePage> {
     IconData icon, {
     required Function onTap,
   }) {
-    double width = MediaQuery.of(context).size.width / 393;
-    double height = MediaQuery.of(context).size.height / 852;
-
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 24 * height, vertical: 0),
+      margin: EdgeInsets.symmetric(horizontal: 24.h, vertical: 0),
       decoration: const BoxDecoration(
         color: Color(0xFFF5F5F5),
       ),
       child: ListTile(
         leading: Padding(
-          padding: EdgeInsets.only(left: 17.0 * width),
+          padding: EdgeInsets.only(left: 17.0.w),
           child: Icon(
             icon,
             color: Colors.black,
-            size: 24,
+            size: 20.sp,
           ),
         ),
         title: Text(
           title,
           style: TextStyle(
             color: const Color(0xFF5B5A56),
-            fontSize: 20 * height,
+            fontSize: 20.h,
             fontWeight: FontWeight.w400,
           ),
         ),
         trailing: Padding(
-          padding: EdgeInsets.only(right: 3.0 * width),
+          padding: EdgeInsets.only(right: 3.0.w),
           child: Container(
-            height: 24 * height,
-            width: 24 * width,
+            height: 24.h,
+            width: 24.w,
             decoration: BoxDecoration(
               color: const Color(0xFFF2EBE3),
               borderRadius: BorderRadius.circular(3),
@@ -304,29 +299,26 @@ class _ProfilePageState extends State<ProfilePage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
-
         return Dialog(
           alignment: Alignment.center,
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 26,
+          insetPadding: EdgeInsets.symmetric(
+            horizontal: 26.w,
           ),
           child: Container(
             padding: const EdgeInsets.all(24),
-            width: 340 * width,
-            height: 230 * height,
+            width: 340.w,
+            height: 230.h,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 25.0),
+                Padding(
+                  padding: const EdgeInsets.only(top: 25.0),
                   child: Text(
                     'Are you sure you want to log out?',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.h,
                       fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(255, 106, 106, 106),
+                      color: const Color.fromARGB(255, 106, 106, 106),
                     ),
                   ),
                 ),
@@ -350,8 +342,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         await prefs.remove('loginPlatform');
                       },
                       child: Container(
-                        width: 263 * width,
-                        height: 46 * height,
+                        width: 263.w,
+                        height: 46.h,
                         decoration: BoxDecoration(
                           color: accent,
                           borderRadius: BorderRadius.circular(20),
@@ -370,12 +362,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.pop(context);
                       },
                       child: Container(
-                        margin: const EdgeInsets.only(top: 12.0),
-                        width: 263 * width,
-                        height: 46 * height,
+                        margin: EdgeInsets.only(top: 12.0.h),
+                        width: 263.w,
+                        height: 46.h,
                         decoration: BoxDecoration(
                           color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                           border: Border.all(
                               color: const Color.fromARGB(255, 190, 189, 184)),
                         ),

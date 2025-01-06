@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/learninginfo/progress.dart';
 import 'package:flutter_application_1/learninginfo/study_info_page.dart';
 import 'package:flutter_application_1/main.dart';
@@ -254,9 +255,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               },
                               icon: Icon(
-                                Icons.notifications,
+                                CustomIcons.notification_icon,
                                 color: bam,
-                                size: 24.sp,
+                                size: 20.sp,
                               ),
                             ),
                             if (hasUnreadNotifications!)
@@ -285,9 +286,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           icon: Icon(
-                            Icons.settings,
+                            CustomIcons.setting_icon,
                             color: bam,
-                            size: 24.sp,
+                            size: 20.sp,
                           ),
                         ),
                       ],

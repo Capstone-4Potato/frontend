@@ -1,6 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/learninginfo/study_info_page.dart';
 import 'package:flutter_application_1/new_today_course/fetch_today_course.dart';
 import 'package:flutter_application_1/new_home/home_screen.dart';
@@ -93,8 +94,8 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     List<IconData> iconList = [
-      Icons.home,
-      Icons.person_2,
+      CustomIcons.home_icon,
+      CustomIcons.report_icon,
     ];
     List<String> labelList = ['Home', 'Report'];
 
@@ -120,9 +121,9 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
               ],
             ),
             child: IconButton(
-              icon: const Icon(
-                Icons.menu_book_outlined,
-                size: 44,
+              icon: Icon(
+                CustomIcons.todaycourse_icon,
+                size: 44.sp,
               ),
               color: Colors.white,
               onPressed: () {
@@ -161,9 +162,12 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  SizedBox(
+                    height: 15.h,
+                  ),
                   Icon(
                     iconList[index],
-                    size: 24,
+                    size: 20.sp,
                     color: color,
                   ),
                   Text(
@@ -176,8 +180,8 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
             activeIndex: widget.bottomNavIndex,
             gapLocation: GapLocation.center,
             notchSmoothness: NotchSmoothness.sharpEdge,
-            leftCornerRadius: 10,
-            rightCornerRadius: 10,
+            leftCornerRadius: 10.r,
+            rightCornerRadius: 10.r,
             onTap: (index) => setState(() => widget.bottomNavIndex = index),
             backgroundColor: const Color.fromARGB(255, 242, 235, 227),
           ),

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/new_home/new_custom/customsentence_page.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/today_learning_card.dart';
@@ -930,7 +931,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
         ),
         MenuItem(
           title: 'Learning Course',
-          icon: Icons.menu,
+          icon: CustomIcons.learningcourse_icon,
           onTap: () {
             Navigator.push<void>(
               context,
@@ -946,7 +947,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
         ),
         MenuItem(
           title: 'Saved Cards',
-          icon: Icons.bookmark_outline,
+          icon: CustomIcons.bookmark_icon,
           onTap: () {
             Navigator.push<void>(
               context,
@@ -960,7 +961,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
         ),
         MenuItem(
           title: 'Missed Cards',
-          icon: Icons.sentiment_dissatisfied_outlined,
+          icon: CustomIcons.missed_icon,
           onTap: () {
             Navigator.push<void>(
               context,
@@ -974,7 +975,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
         ),
         MenuItem(
           title: 'Custom Sentence',
-          icon: Icons.type_specimen,
+          icon: CustomIcons.custom_icon,
           onTap: () async {
             Navigator.push<int>(
               context,
@@ -1038,6 +1039,7 @@ class MenuItem extends StatelessWidget {
                   Icon(
                     icon,
                     color: bam,
+                    size: 20.sp,
                   ),
                   Container(
                     width: 8.w,

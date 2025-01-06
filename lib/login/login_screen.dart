@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/colors.dart';
-import 'package:flutter_application_1/custom_icons.dart';
+import 'package:flutter_application_1/icons/login_icons.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_home/home_nav.dart';
 import 'package:flutter_application_1/profile/logout/sign_out_social.dart';
@@ -292,7 +292,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
               icon: const Icon(
-                CustomIcons.apple_logo,
+                LoginIcons.apple_logo,
                 size: 20,
                 color: Colors.white,
               ),
@@ -320,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
               icon: Icon(
-                CustomIcons.kakaotalk_icon,
+                LoginIcons.kakaotalk_icon,
                 size: 20,
                 color: bam,
               ),
@@ -349,7 +349,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }
               },
               icon: Icon(
-                CustomIcons.google_icon,
+                LoginIcons.google_icon,
                 size: 20,
                 color: bam,
               ),

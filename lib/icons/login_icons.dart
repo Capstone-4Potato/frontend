@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 
-class CustomIcons {
-  CustomIcons._();
+class LoginIcons {
+  LoginIcons._();
 
-  static const _kFontFam = 'CustomIcons';
+  static const _kFontFam = 'LoginIcons';
   static const String? _kFontPkg = null;
 
   static const IconData google_icon =
