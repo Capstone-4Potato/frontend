@@ -117,12 +117,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           subtitle: 'Your profile has been updated successfully.',
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const MainPage(initialIndex: 3)),
-              (route) => false,
-            );
+            Navigator.pop(context);
           },
         );
       },
