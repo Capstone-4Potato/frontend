@@ -357,7 +357,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                     backgroundColor: Colors.transparent,
                     insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Container(
-                      height: 404.h,
+                      height: 434.h,
                       width: 353.w,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -374,7 +374,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                             : TableCalendar(
                                 focusedDay: DateTime.now(),
                                 firstDay: DateTime(2024),
-                                lastDay: DateTime(2025),
+                                lastDay: DateTime(2028),
                                 headerVisible: true,
                                 daysOfWeekStyle: DaysOfWeekStyle(
                                   decoration: BoxDecoration(
