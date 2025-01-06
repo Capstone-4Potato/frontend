@@ -239,18 +239,23 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
               ),
               child: Container(
                 height: 13.h,
-                width: learnedCardCount / totalCard * 246.w,
+                width: checkTodayCourse
+                    ? 246.w
+                    : learnedCardCount / totalCard * 246.w,
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   color: primary,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.r),
-                      bottomLeft: Radius.circular(20.r)),
+                  borderRadius: checkTodayCourse
+                      ? BorderRadius.all(Radius.circular(20.r))
+                      : BorderRadius.only(
+                          topLeft: Radius.circular(20.r),
+                          bottomLeft: Radius.circular(20.r),
+                        ),
                 ),
               ),
             ),
             Container(
-              constraints: BoxConstraints(maxWidth: 55.w),
+              constraints: BoxConstraints(maxWidth: 60.w),
               child: DropdownButton2<String>(
                 isExpanded: true,
                 items: _items
