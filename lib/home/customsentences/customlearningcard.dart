@@ -146,23 +146,17 @@ class _CustomSentenceLearningCardState
   void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
     showGeneralDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       barrierLabel: "Feedback",
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (context, animation, secondaryAnimation) {
         return const SizedBox();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return Transform(
-          transform: Matrix4.translationValues(0.0, 112, 0.0),
-          child: Opacity(
-            opacity: animation.value,
-            child: CustomFeedbackUI(
-              feedbackData: feedbackData,
-              recordedFilePath: _recordedFilePath,
-              text: widget.texts[widget.currentIndex],
-            ),
-          ),
+        return CustomFeedbackUI(
+          feedbackData: feedbackData,
+          recordedFilePath: _recordedFilePath,
+          text: widget.texts[widget.currentIndex], // 카드 한글 발음
         );
       },
     );
