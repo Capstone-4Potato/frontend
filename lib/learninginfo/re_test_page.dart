@@ -105,6 +105,7 @@ class _RestartTestScreenState extends State<RestartTestScreen> {
                               testTranslations: testEngTranslation,
                               testEngPronunciations: testEngPronunciations,
                               isRetest: true,
+                              exitIndex: 1,
                             )),
                     (route) => false);
               },

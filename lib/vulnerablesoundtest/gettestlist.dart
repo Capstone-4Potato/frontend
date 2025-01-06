@@ -8,7 +8,7 @@ Future<List<dynamic>?> getTestNewData() async {
   try {
     var url = Uri.parse('$main_url/test/new');
     String? token = await getAccessToken();
-
+    print("get TestNew data : token : $token");
     // Function to make the request
     Future<http.Response> makeRequest(String token) {
       var headers = <String, String>{
@@ -42,7 +42,7 @@ Future<List<dynamic>?> getTestNewData() async {
       }
     }
   } catch (e) {
-    print(e);
+    print("get test new data : error : $e");
   }
   return null; // Return null if there's an error or unsuccessful fetch
 }

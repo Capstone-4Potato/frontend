@@ -204,7 +204,6 @@ class _UserInputFormState extends State<UserInputForm> {
                         },
                         validator: (value) {
                           int? year = int.tryParse(value!);
-                          print(year);
                           if (year == null) {
                             return 'Please enter a valid year.';
                           } else if (year < 1924 ||
@@ -401,7 +400,7 @@ class _UserInputFormState extends State<UserInputForm> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          signup(); // 서버로 데이터 제출
+                          await signup(); // 서버로 데이터 제출
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           prefs.setInt(

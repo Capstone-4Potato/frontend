@@ -28,6 +28,7 @@ class TestCard extends StatefulWidget {
   final List<String> testTranslations;
   final List<String> testEngPronunciations;
   final bool isRetest;
+  final int exitIndex;
 
   const TestCard({
     super.key,
@@ -36,6 +37,7 @@ class TestCard extends StatefulWidget {
     required this.testTranslations,
     required this.testEngPronunciations,
     required this.isRetest,
+    required this.exitIndex,
   });
 
   @override
@@ -233,7 +235,7 @@ class _TestCardState extends State<TestCard> {
           width: width,
           height: height,
           page: HomeNav(
-            bottomNavIndex: 1,
+            bottomNavIndex: widget.exitIndex,
           ),
         );
       },

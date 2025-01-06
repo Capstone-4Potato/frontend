@@ -27,7 +27,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
 
   Future<void> initTestData() async {
     var data = await getTestNewData();
-    //print(data);
+    print(data);
 
     if (data != null) {
       setState(() {
@@ -104,6 +104,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
                         testTranslations: testPronunciations,
                         testEngPronunciations: testEngPronunciations,
                         isRetest: false,
+                        exitIndex: 0,
                       ),
                     ),
                     (route) => false);
