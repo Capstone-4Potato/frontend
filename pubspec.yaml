@@ -56,6 +56,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   auto_size_text: ^3.0.0
   simple_ripple_animation: ^0.1.0
+  glowy_borders: ^1.0.2
 
 dev_dependencies:
   flutter_test:

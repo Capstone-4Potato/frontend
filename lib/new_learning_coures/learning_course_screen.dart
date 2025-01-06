@@ -6,7 +6,8 @@ import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new_learning_coures/learning_course_card_list.dart';
 import 'package:flutter_application_1/new_learning_coures/unit_class.dart';
-import 'package:flutter_application_1/profile/tutorial/learning_course_tutorial_screen.dart';
+import 'package:flutter_application_1/profile/tutorial/learning_course_tutorial_screen1.dart';
+import 'package:flutter_application_1/profile/tutorial/learning_course_tutorial_screen2.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
@@ -66,7 +67,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setInt(
-        'learningCourseTutorialStep', 2); // 2로 설정하여 러닝코슨 화면 튜토리얼 완료 표시
+        'learningCourseTutorialStep', 3); // 2로 설정하여 러닝코슨 화면 튜토리얼 완료 표시
   }
 
   @override
@@ -503,13 +504,31 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
           ),
         ),
         if (learningCourseTutorialStep == 1)
-          LearningCourseTutorialScreen(
+          LearningCourseTutorialScreen1(
             headerKey: _headerKey,
             onTap: () {
               setState(() {
                 learningCourseTutorialStep = 2; // 1단계 끝나면 2단계로
+              });
+            },
+          ),
+        if (learningCourseTutorialStep == 2)
+          LearningCourseTutorialScreen2(
+            beginnerKey: _beginnerKey,
+            onTap: () {
+              setState(() {
+                learningCourseTutorialStep = 3; // 2단계 끝나면 3단계로
                 _completeTutorial(); // 튜토리얼 완료 시 호출
               });
+              Navigator.push<void>(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => LearningCourseCardList(
+                    level: 1,
+                    subTitle: "Basic consonants/vowels",
+                  ),
+                ),
+              );
             },
           ),
       ],
@@ -836,8 +855,8 @@ class UnitItem extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: const Color(0xFFF26647),
                             borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(23.r),
-                              bottomRight: Radius.circular(23.r),
+                              topRight: Radius.circular(24.r),
+                              bottomRight: Radius.circular(24.r),
                             ),
                           ),
                           child: Icon(

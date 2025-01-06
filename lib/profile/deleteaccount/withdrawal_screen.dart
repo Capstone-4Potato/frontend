@@ -45,6 +45,7 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
     await prefs.setInt('homeTutorialStep', 1);
     await prefs.setInt('reportTutorialStep', 1);
     await prefs.setInt('learningCourseTutorialStep', 1);
+    await prefs.setInt('feedbackTutorialStep', 1);
     await prefs.remove('cardIdList');
   }
 

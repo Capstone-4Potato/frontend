@@ -235,6 +235,13 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
                 homeTutorialStep = 4; // 3단계 끝나면 4단계로
               });
               _completeTutorial(); // 튜토리얼 완료 시 호출
+              Navigator.push<void>(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) =>
+                      const LearningCourseScreen(),
+                ),
+              );
             },
           ),
         if (widget.bottomNavIndex == 1 && reportTutorialStep == 1)
