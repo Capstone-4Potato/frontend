@@ -4,6 +4,7 @@ import 'package:flutter_application_1/bottomnavigationbartest.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:http/http.dart' as http;
 
 // 회원정보 수정 페이지
@@ -110,31 +111,19 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   void _showSuccessDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Success'),
-          content: const Text(
-            'Your profile has been updated successfully.',
-            style: TextStyle(fontSize: 16),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Color(0xFFF26647), fontSize: 20),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const MainPage(initialIndex: 3)),
-                  (route) => false,
-                );
-              },
-            ),
-          ],
+        return SuccessDialog(
+          subtitle: 'Your profile has been updated successfully.',
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const MainPage(initialIndex: 3)),
+              (route) => false,
+            );
+          },
         );
       },
     );
