@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "3559781644",
+    "project_id": "balbambalbam-fab1c",
+    "storage_bucket": "balbambalbam-fab1c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3559781644:android:b3047095e31d74d7a70529",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBg269eMr4q8rgzmpcCB6SxDSR9Mkv6w0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

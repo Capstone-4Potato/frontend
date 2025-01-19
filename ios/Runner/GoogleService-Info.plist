@@ -2,13 +2,29 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>1081903661036-ke7n3ugkrc1qdno016pd8giibh0pti92.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1081903661036-ke7n3ugkrc1qdno016pd8giibh0pti92</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDB9S8XKi5CQnzvMDtg2ixzWamOTSWVxu4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>3559781644</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.potato.balbambalbam</string>
+	<key>PROJECT_ID</key>
+	<string>balbambalbam-fab1c</string>
+	<key>STORAGE_BUCKET</key>
+	<string>balbambalbam-fab1c.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:3559781644:ios:67bd956ffc76f187a70529</string>
 </dict>
 </plist>
