@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:audio_session/audio_session.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:http/http.dart' as http;

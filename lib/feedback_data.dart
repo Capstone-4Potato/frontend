@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 /// 그래프 그리기 위한 엠플리튜드 데어터
 class AmplitudeData {
   final double time;
