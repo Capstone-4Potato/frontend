@@ -35,6 +35,8 @@ PODS:
     - flutter_sound_core (= 8.5.0)
     - mobile-ffmpeg-audio (= 4.4.LTS)
   - flutter_sound_core (8.5.0)
+  - flutter_tts (0.0.1):
+    - Flutter
   - google_sign_in_ios (0.0.1):
     - AppAuth (>= 1.7.4)
     - Flutter
@@ -93,6 +95,7 @@ DEPENDENCIES:
   - flutter_naver_login (from `.symlinks/plugins/flutter_naver_login/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
+  - flutter_tts (from `.symlinks/plugins/flutter_tts/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - kakao_flutter_sdk_common (from `.symlinks/plugins/kakao_flutter_sdk_common/ios`)
@@ -136,6 +139,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_sound:
     :path: ".symlinks/plugins/flutter_sound/ios"
+  flutter_tts:
+    :path: ".symlinks/plugins/flutter_tts/ios"
   google_sign_in_ios:
     :path: ".symlinks/plugins/google_sign_in_ios/darwin"
   just_audio:
@@ -170,6 +175,7 @@ SPEC CHECKSUMS:
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   flutter_sound: ba7daf658dea78e9f18b79657338bfc222489f4f
   flutter_sound_core: d9396f10752a0df9aa3197f4c431d62d934918cc
+  flutter_tts: 0f492aab6accf87059b72354fcb4ba934304771d
   google_sign_in_ios: 07375bfbf2620bc93a602c0e27160d6afc6ead38
   GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d

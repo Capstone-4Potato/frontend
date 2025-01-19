@@ -13,6 +13,7 @@ import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class CustomSentenceLearningCard extends StatefulWidget {
   int currentIndex;
@@ -40,6 +41,7 @@ class _CustomSentenceLearningCardState
   final AudioPlayer _audioPlayer = AudioPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
+  final FlutterTts _flutterTts = FlutterTts();
   bool _isRecording = false;
   bool _canRecord = true;
   late String _recordedFilePath;
@@ -47,6 +49,9 @@ class _CustomSentenceLearningCardState
   bool _isLoading = false;
 
   late PageController pageController; // 페이지 컨트롤러 생성
+
+  final List<dynamic> _voices = [];
+  final String _selectedVoice = '';
 
   @override
   void initState() {
@@ -59,6 +64,9 @@ class _CustomSentenceLearningCardState
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
     await _audioRecorder.openAudioSession();
+    await _flutterTts.setLanguage("ko-KR"); // 한국어 설정
+    await _flutterTts.setPitch(1.0); // 피치 설정
+    await _flutterTts.setSpeechRate(0.3); // 속도 설정 (기본값 0.5)
   }
 
   Future<void> _recordAudio() async {
@@ -139,6 +147,52 @@ class _CustomSentenceLearningCardState
     setState(() {
       _canRecord = true;
     });
+  }
+
+  void _speak(String text) async {
+    await _flutterTts.setSharedInstance(true);
+    // await _flutterTts.speak(text); // 텍스트 읽기
+
+    List<Map<String, String>> segments = _splitTextByLanguage(text);
+
+    for (var segment in segments) {
+      await _flutterTts.setLanguage(segment['language']!);
+      await _flutterTts.speak(segment['text']!);
+    }
+  }
+
+  List<Map<String, String>> _splitTextByLanguage(String text) {
+    RegExp koreanRegex = RegExp(r'[가-힣]+');
+    RegExp englishRegex = RegExp(r'[a-zA-Z]+');
+
+    List<Map<String, String>> segments = [];
+    StringBuffer buffer = StringBuffer();
+    String? currentLanguage;
+
+    for (int i = 0; i < text.length; i++) {
+      String char = text[i];
+      String? lang = koreanRegex.hasMatch(char)
+          ? 'ko-KR'
+          : englishRegex.hasMatch(char)
+              ? 'en-US'
+              : null;
+
+      if (lang != null && lang != currentLanguage) {
+        if (buffer.isNotEmpty) {
+          segments
+              .add({'text': buffer.toString(), 'language': currentLanguage!});
+          buffer.clear();
+        }
+        currentLanguage = lang;
+      }
+      buffer.write(char);
+    }
+
+    if (buffer.isNotEmpty) {
+      segments.add({'text': buffer.toString(), 'language': currentLanguage!});
+    }
+
+    return segments;
   }
 
   void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
@@ -349,7 +403,10 @@ class _CustomSentenceLearningCardState
                                 backgroundColor: const Color(0xFFF26647),
                                 minimumSize: const Size(240, 40),
                               ),
-                              onPressed: _onListenPressed,
+                              // onPressed: _onListenPressed,
+                              onPressed: () {
+                                _speak(widget.texts[widget.currentIndex]);
+                              },
                               icon: const Icon(
                                 Icons.volume_up,
                                 color: Colors.white,

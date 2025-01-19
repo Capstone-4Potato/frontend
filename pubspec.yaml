@@ -47,6 +47,7 @@ dependencies:
   fl_chart: ^0.69.0
   google_sign_in: ^6.2.1
   # audio 관련 package
+  flutter_tts: ^4.0.2
   just_audio: ^0.9.40
   audioplayers: ^6.1.0
   audio_session: ^0.1.21

@@ -9,7 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
-import 'package:flutter_application_1/home/custom/customsentence_page.dart';
+import 'package:flutter_application_1/home/custom/customsentence_screen.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/today_learning_card.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_card_list.dart';
