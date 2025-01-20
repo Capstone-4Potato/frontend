@@ -1,9 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/signup/textfield_decoration.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 
 // 회원정보 수정 페이지
@@ -27,10 +31,15 @@ class ProfileUpdatePage extends StatefulWidget {
 
 class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final _formKey = GlobalKey<FormState>();
+  final _fieldKey_1 = GlobalKey<FormFieldState>();
+  final _fieldKey_2 = GlobalKey<FormFieldState>();
+  final _fieldKey_3 = GlobalKey<FormFieldState>();
   late TextEditingController _nicknameController;
   late TextEditingController _birthYearController;
   late int? _selectedGender;
   late int currentbirthyear;
+  var isButtonEnabled = List<bool>.filled(3, false);
+  var isTapped = List<bool>.filled(3, false);
 
   @override
   void initState() {
@@ -129,133 +138,147 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: const Text(
+          title: Text(
             'Edit Profile',
             style: TextStyle(
-              fontWeight: FontWeight.w600,
+              color: bam,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          backgroundColor: const Color(0xFFF5F5F5),
+          backgroundColor: background,
         ),
-        backgroundColor: const Color(0xFFF5F5F5),
-        body: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
+        backgroundColor: primary,
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Stack(
               children: [
-                const SizedBox(height: 80),
-                TextFormField(
-                  controller: _birthYearController,
-                  decoration: InputDecoration(
-                    labelText: 'Birth Year',
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+                Container(
+                  height: 597.h,
+                  decoration: BoxDecoration(
+                    color: background,
+                    borderRadius: const BorderRadiusDirectional.only(
+                      bottomStart: Radius.circular(40),
+                      bottomEnd: Radius.circular(40),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(
-                        color: Color(0xFFF26647),
-                        width: 1.5,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(30.0.h),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 80.h),
+                      TextFormField(
+                        controller: _birthYearController,
+                        key: _fieldKey_1,
+                        decoration: textfieldDecoration(
+                            isTapped[0], isButtonEnabled[0], 'Birth Year'),
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          isTapped[0] = true;
+                          setState(() {
+                            if (_fieldKey_1.currentState != null) {
+                              _fieldKey_1.currentState!.validate()
+                                  ? isButtonEnabled[0] = true
+                                  : isButtonEnabled[0] = false;
+                            }
+                          });
+                        },
+                        validator: (value) {
+                          int? year = int.tryParse(value!);
+                          print(year);
+                          if (year == null) {
+                            return 'Please enter a valid year.';
+                          } else if (year < 1924 ||
+                              year > DateTime.now().year) {
+                            return 'Please enter your birth year.';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 25.h),
+                      DropdownButtonFormField<int>(
+                        value: _selectedGender,
+                        key: _fieldKey_2,
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          color: Color.fromARGB(255, 195, 185, 182),
+                        ),
+                        dropdownColor: const Color.fromARGB(255, 223, 234, 251),
+                        style: TextStyle(
+                          color: bam,
+                          fontSize: 20.sp,
+                        ),
+                        elevation: 16,
+                        items: <int>[0, 1].map((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(value == 0 ? 'Male' : 'Female'),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedGender = value;
+                          });
+                        },
+                        decoration: textfieldDecoration(
+                            isTapped[1], isButtonEnabled[1], 'Gender'),
+                      ),
+                      SizedBox(height: 25.h),
+                      TextFormField(
+                        controller: _nicknameController,
+                        key: _fieldKey_3,
+                        decoration: textfieldDecoration(
+                            isTapped[2], isButtonEnabled[2], 'Nickname'),
+                        onChanged: (value) {
+                          isTapped[2] = true;
+                          setState(() {
+                            if (_fieldKey_3.currentState != null) {
+                              _fieldKey_3.currentState!.validate()
+                                  ? isButtonEnabled[2] = true
+                                  : isButtonEnabled[2] = false;
+                            }
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your nickname.';
+                          } else if (value.length < 3) {
+                            return 'Nickname must be at least 3 characters.';
+                          } else if (value.length > 8) {
+                            return 'Nickname must be at most 8 characters.';
+                          } else if (value.contains(' ')) {
+                            return 'Nickname cannot contain spaces.';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 110.h),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 40,
+                  left: 40,
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: _updateProfile,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 232, 120, 71),
+                        elevation: 4,
+                      ),
+                      child: Text(
+                        'Edit Profile',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 25.sp,
+                          color: Colors.white,
+                          height: 2.6.h,
+                        ),
                       ),
                     ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    int? year = int.tryParse(value!);
-                    print(year);
-                    if (year == null) {
-                      return 'Please enter a valid year.';
-                    } else if (year < 1924 || year > DateTime.now().year) {
-                      return 'Please enter your birth year.';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 25),
-                DropdownButtonFormField<int>(
-                  value: _selectedGender,
-                  items: const [
-                    DropdownMenuItem(
-                      value: 0,
-                      child: Text('Male'),
-                    ),
-                    DropdownMenuItem(
-                      value: 1,
-                      child: Text('Female'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedGender = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Gender',
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(
-                        color: Color(0xFFF26647),
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
-                  style: const TextStyle(color: Colors.black, fontSize: 16),
-                  dropdownColor: Colors.white,
-                ),
-                const SizedBox(height: 25),
-                TextFormField(
-                  controller: _nicknameController,
-                  decoration: InputDecoration(
-                    labelText: 'Nickname',
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(
-                        color: Color(0xFFF26647),
-                        width: 1.5,
-                      ),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your nickname.';
-                    } else if (value.length < 3) {
-                      return 'Nickname must be at least 3 characters.';
-                    } else if (value.length > 8) {
-                      return 'Nickname must be at most 8 characters.';
-                    } else if (value.contains(' ')) {
-                      return 'Nickname cannot contain spaces.';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 60),
-                ElevatedButton(
-                  onPressed: _updateProfile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xfff26647),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 15),
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  child: const Text(
-                    'Edit Profile',
-                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],

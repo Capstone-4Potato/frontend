@@ -3,8 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/signup/textfield_decoration.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/starting_test_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -96,7 +98,7 @@ class _UserInputFormState extends State<UserInputForm> {
             child: Stack(
               children: [
                 Container(
-                  height: 597 * height,
+                  height: 597.h,
                   decoration: BoxDecoration(
                     color: background,
                     borderRadius: const BorderRadiusDirectional.only(
@@ -106,86 +108,38 @@ class _UserInputFormState extends State<UserInputForm> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(30.0 * height),
+                  padding: EdgeInsets.all(30.0.h),
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 20 * height,
+                        height: 20.h,
                       ),
                       Text(
                         'Almost Done!',
                         style: TextStyle(
                           color: bam,
-                          fontFamily: 'BM_Jua',
-                          fontSize: 30.0 * height,
+                          fontSize: 30.0.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 15 * height),
+                      SizedBox(height: 15.h),
                       Text(
                         'For effective Korean pronunciation correction,\nwe provide voices tailored to your age and gender.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: primary,
-                          fontFamily: 'BM_Jua',
-                          fontSize: 14.0 * height,
+                          fontSize: 14.0.sp,
                         ),
                       ),
-                      SizedBox(height: 75 * height),
+                      SizedBox(height: 75.h),
                       TextFormField(
                         key: _fieldKey_1,
                         style: TextStyle(
                           color: bam,
-                          fontSize: 20 * height,
+                          fontSize: 20.sp,
                         ),
-                        decoration: InputDecoration(
-                          fillColor: isTapped[0]
-                              ? isButtonEnabled[0]
-                                  ? const Color.fromARGB(255, 248, 241, 227)
-                                  : const Color.fromARGB(255, 247, 222, 217)
-                              : const Color.fromARGB(255, 248, 241, 227),
-                          filled: true, // 배경색 채우기 활성화
-                          hintText: 'Birth Year', // 힌트 텍스트 설정
-                          hintStyle: TextStyle(
-                            color: bam.withOpacity(0.5),
-                            fontFamily: 'BM_Jua',
-                            fontSize: 20 * height,
-                          ),
-                          helperText: ' ',
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 195, 185, 182),
-                              width: 0.5 * width,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            // 포커스 상태일 때의 테두리 스타일
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: BorderSide(
-                              color: primary,
-                              width: 1.0 * width, // 테두리 너비
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 232, 57, 26),
-                              width: 1.5,
-                            ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 232, 57, 26),
-                              width: 1.5,
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 15.0 * height,
-                            horizontal: 15.0 * width,
-                          ), // 내부 여백 설정
-                        ),
+                        decoration: textfieldDecoration(
+                            isTapped[0], isButtonEnabled[0], 'Birth Year'),
                         cursorColor: bam,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
@@ -214,7 +168,7 @@ class _UserInputFormState extends State<UserInputForm> {
                           }
                         },
                       ),
-                      SizedBox(height: 10 * height),
+                      SizedBox(height: 10.h),
                       DropdownButtonFormField<int>(
                         key: _fieldKey_2,
                         icon: const Icon(
@@ -224,58 +178,11 @@ class _UserInputFormState extends State<UserInputForm> {
                         dropdownColor: const Color.fromARGB(255, 223, 234, 251),
                         style: TextStyle(
                           color: bam,
-                          fontFamily: 'BM_Jua',
-                          fontSize: 20 * height,
+                          fontSize: 20.sp,
                         ),
                         elevation: 16,
-                        decoration: InputDecoration(
-                          fillColor: isTapped[1]
-                              ? isButtonEnabled[1]
-                                  ? const Color.fromARGB(255, 248, 241, 227)
-                                  : const Color.fromARGB(255, 247, 222, 217)
-                              : const Color.fromARGB(255, 248, 241, 227),
-                          filled: true, // 배경색 채우기 활성화
-                          hintText: 'Gender', // 힌트 텍스트 설정
-                          hintStyle: TextStyle(
-                            color: bam.withOpacity(0.5),
-                            fontFamily: 'BM_Jua',
-                            fontSize: 20 * height,
-                          ),
-                          helperText: ' ',
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 195, 185, 182),
-                              width: 0.5 * width,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            // 포커스 상태일 때의 테두리 스타일
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: BorderSide(
-                              color: primary,
-                              width: 1.0, // 테두리 너비
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 232, 57, 26),
-                              width: 1.5,
-                            ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 232, 57, 26),
-                              width: 1.5,
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 15.0 * height,
-                            horizontal: 15.0 * width,
-                          ),
-                        ),
+                        decoration: textfieldDecoration(
+                            isTapped[1], isButtonEnabled[1], 'Gender'),
                         items: <int>[0, 1].map((int value) {
                           return DropdownMenuItem<int>(
                             value: value,
@@ -311,54 +218,8 @@ class _UserInputFormState extends State<UserInputForm> {
                           color: bam,
                           fontSize: 20 * height,
                         ),
-                        decoration: InputDecoration(
-                          hintText: 'Nickname',
-                          hintStyle: TextStyle(
-                            color: bam.withOpacity(0.5),
-                            fontFamily: 'BM_Jua',
-                            fontSize: 20 * height,
-                          ),
-                          helperText: ' ',
-                          fillColor: isTapped[2]
-                              ? isButtonEnabled[2]
-                                  ? const Color.fromARGB(255, 248, 241, 227)
-                                  : const Color.fromARGB(255, 247, 222, 217)
-                              : const Color.fromARGB(255, 248, 241, 227),
-                          filled: true, // 배경색 채우기 활성화
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: BorderSide(
-                              color: const Color.fromARGB(255, 195, 185, 182),
-                              width: 0.5 * width,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            // 포커스 상태일 때의 테두리 스타일
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: BorderSide(
-                              color: primary,
-                              width: 1.0, // 테두리 너비
-                            ),
-                          ),
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 15.0 * height,
-                            horizontal: 15.0 * width,
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 232, 57, 26),
-                              width: 1.5,
-                            ),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 232, 57, 26),
-                              width: 1.5,
-                            ),
-                          ),
-                        ),
+                        decoration: textfieldDecoration(
+                            isTapped[2], isButtonEnabled[2], 'Nickname'),
                         cursorColor: bam,
                         onChanged: (value) {
                           isTapped[2] = true;
@@ -387,7 +248,7 @@ class _UserInputFormState extends State<UserInputForm> {
                           }
                         },
                       ),
-                      SizedBox(height: 110 * height),
+                      SizedBox(height: 110.h),
                     ],
                   ),
                 ),

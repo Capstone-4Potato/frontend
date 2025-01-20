@@ -1,4 +1,3 @@
-import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
@@ -6,7 +5,7 @@ import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/settings/editprofile/editprofile_screen.dart';
-import 'package:flutter_application_1/settings/tutorial/retutorial.dart';
+import 'package:flutter_application_1/tutorial/retutorial.dart';
 import 'package:flutter_application_1/settings/logout/sign_out_social.dart';
 import 'package:flutter_application_1/settings/logout/signout.dart';
 import 'package:flutter_application_1/settings/deleteaccount/withdrawal_screen.dart';

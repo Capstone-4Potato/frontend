@@ -7,8 +7,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
-import 'package:flutter_application_1/settings/tutorial/feedback_tutorial_screen1.dart';
-import 'package:flutter_application_1/settings/tutorial/feedback_tutorial_screen2.dart';
+import 'package:flutter_application_1/tutorial/feedback_tutorial_screen1.dart';
+import 'package:flutter_application_1/tutorial/feedback_tutorial_screen2.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/learning_coures/syllables/fetchimage.dart';
@@ -19,7 +19,6 @@ import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SyllableLearningCard extends StatefulWidget {

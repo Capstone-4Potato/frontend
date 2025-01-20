@@ -11,7 +11,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_cards.dart';
 import 'package:flutter_application_1/notification/notification_screen.dart';
 import 'package:flutter_application_1/settings/profile_page.dart';
-import 'package:flutter_application_1/settings/tutorial/home_tutorial_screen1.dart';
+import 'package:flutter_application_1/tutorial/home_tutorial_screen1.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
