@@ -96,7 +96,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   // 초기 설정 : 권한 요청 및 오디오 세션 열기
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
-    await _audioRecorder.openAudioSession();
+    await _audioRecorder.openRecorder();
   }
 
   // 오디오 세션 설정
@@ -288,7 +288,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   @override
   void dispose() {
     _audioPlayer.dispose(); // 오디오 플레이어 정리
-    _audioRecorder.closeAudioSession(); // 오디오 세션 닫기
+    _audioRecorder.closeRecorder(); // 오디오 세션 닫기
     pageController.dispose();
     super.dispose();
   }

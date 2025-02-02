@@ -89,7 +89,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
   Future<void> _initializeRecorder() async {
     await Permission.microphone.request();
-    await _recorder.openAudioSession();
+    await _recorder.openRecorder();
   }
 
   // 카드 학습 후 학습한 카드 갯수 업데이트
@@ -489,7 +489,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
   @override
   void dispose() {
-    _recorder.closeAudioSession();
+    _recorder.closeRecorder();
     super.dispose();
   }
 

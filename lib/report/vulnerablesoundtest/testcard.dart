@@ -55,7 +55,7 @@ class _TestCardState extends State<TestCard> {
 
   Future<void> _initializeRecorder() async {
     await Permission.microphone.request();
-    await _recorder.openAudioSession();
+    await _recorder.openRecorder();
   }
 
   Future<void> _startRecording() async {
@@ -238,7 +238,7 @@ class _TestCardState extends State<TestCard> {
 
   @override
   void dispose() {
-    _recorder.closeAudioSession();
+    _recorder.closeRecorder();
     super.dispose();
   }
 

@@ -13,7 +13,6 @@ import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 class CustomSentenceLearningCard extends StatefulWidget {
   int currentIndex;
@@ -41,7 +40,6 @@ class _CustomSentenceLearningCardState
   final AudioPlayer _audioPlayer = AudioPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
-  final FlutterTts _flutterTts = FlutterTts();
   bool _isRecording = false;
   bool _canRecord = true;
   late String _recordedFilePath;
@@ -63,10 +61,7 @@ class _CustomSentenceLearningCardState
 
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
-    await _audioRecorder.openAudioSession();
-    await _flutterTts.setLanguage("ko-KR"); // 한국어 설정
-    await _flutterTts.setPitch(1.0); // 피치 설정
-    await _flutterTts.setSpeechRate(0.3); // 속도 설정 (기본값 0.5)
+    await _audioRecorder.openRecorder();
   }
 
   Future<void> _recordAudio() async {
@@ -147,18 +142,6 @@ class _CustomSentenceLearningCardState
     setState(() {
       _canRecord = true;
     });
-  }
-
-  void _speak(String text) async {
-    await _flutterTts.setSharedInstance(true);
-    // await _flutterTts.speak(text); // 텍스트 읽기
-
-    List<Map<String, String>> segments = _splitTextByLanguage(text);
-
-    for (var segment in segments) {
-      await _flutterTts.setLanguage(segment['language']!);
-      await _flutterTts.speak(segment['text']!);
-    }
   }
 
   List<Map<String, String>> _splitTextByLanguage(String text) {
@@ -281,7 +264,7 @@ class _CustomSentenceLearningCardState
   @override
   void dispose() {
     _audioPlayer.dispose();
-    _audioRecorder.closeAudioSession();
+    _audioRecorder.closeRecorder();
     pageController.dispose();
     super.dispose();
   }
@@ -403,10 +386,7 @@ class _CustomSentenceLearningCardState
                                 backgroundColor: const Color(0xFFF26647),
                                 minimumSize: const Size(240, 40),
                               ),
-                              // onPressed: _onListenPressed,
-                              onPressed: () {
-                                _speak(widget.texts[widget.currentIndex]);
-                              },
+                              onPressed: _onListenPressed,
                               icon: const Icon(
                                 Icons.volume_up,
                                 color: Colors.white,

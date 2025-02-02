@@ -8,7 +8,6 @@ import 'package:flutter_application_1/learning_coures/sentecnes/sentencefeedback
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/learning_coures/words/wordfeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
@@ -60,7 +59,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
 
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
-    await _audioRecorder.openAudioSession();
+    await _audioRecorder.openRecorder();
   }
 
   Future<void> _recordAudio() async {
@@ -213,7 +212,7 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
   @override
   void dispose() {
     _audioPlayer.dispose();
-    _audioRecorder.closeAudioSession();
+    _audioRecorder.closeRecorder();
     pageController.dispose();
     super.dispose();
   }

@@ -71,7 +71,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
 
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
-    await _audioRecorder.openAudioSession();
+    await _audioRecorder.openRecorder();
   }
 
   // 학습카드 리스트 API (음절, 단어, 문장)
@@ -316,7 +316,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
   @override
   void dispose() {
     _audioPlayer.dispose();
-    _audioRecorder.closeAudioSession();
+    _audioRecorder.closeRecorder();
     pageController.dispose();
     super.dispose();
   }

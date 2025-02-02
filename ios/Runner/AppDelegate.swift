@@ -3,7 +3,7 @@ import Flutter
 import NaverThirdPartyLogin
 import flutter_naver_login
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,
