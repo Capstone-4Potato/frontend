@@ -374,8 +374,6 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
                 cardIds: ids,
                 texts: texts,
                 translations: translations,
-                explanations: explanations,
-                pictures: pictures,
                 engpronunciations: pronunciations,
                 bookmarked: bookmarks,
               ),

@@ -443,8 +443,6 @@ class _SavedCardScreenState extends State<SavedCardScreen>
                 cardIds: ids,
                 texts: texts,
                 translations: translations,
-                explanations: explanations,
-                pictures: pictures,
                 engpronunciations: pronunciations,
                 bookmarked: bookmarks,
               ),

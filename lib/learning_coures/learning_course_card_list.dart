@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/sentecnes/sentencelearningcard.dart';
 import 'package:flutter_application_1/learning_coures/tongue_twisters/tongue_twisters_learing_card.dart';
 import 'package:flutter_application_1/learning_coures/syllables/syllabelearningcard.dart';
+import 'package:flutter_application_1/learning_coures/words/one_letter_word_learning_card.dart';
 import 'package:flutter_application_1/learning_coures/words/wordlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/ttsservice.dart';
@@ -146,9 +146,9 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
               itemCount: idList.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     // 학습 카드 선택 시, 해당 카드의 올바른 발음 음성 불러오고 해당 카드 화면으로 이동
-                    TtsService.fetchCorrectAudio(idList[index]).then((_) {
+                    await TtsService.fetchCorrectAudio(idList[index]).then((_) {
                       print('Audio fetched and saved successfully.');
                     });
                     // level 1 : 음절 학습 카드로 이동
@@ -175,7 +175,31 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                         }
                       });
                     }
-                    //  level 2~ 15 : 단어 학습 카드로 이동
+                    // level 3 : 한글자 단어 학습 카드로 이동
+                    else if (widget.level == 3) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OneLetterWordLearningCard(
+                            currentIndex: index,
+                            cardIds: idList,
+                            texts: textList,
+                            translations: engTranslationList,
+                            engpronunciations: engPronunciationList,
+                            explanations: explanationList,
+                            pictures: pictureUrlList,
+                            bookmarked: bookmarkList,
+                          ),
+                        ),
+                      ).then((updatedBookmark) {
+                        if (updatedBookmark != null) {
+                          setState(() {
+                            bookmarkList[index] = updatedBookmark;
+                          });
+                        }
+                      });
+                    }
+                    //  level 2 ~ 15 : 단어 학습 카드로 이동
                     else if (widget.level < 16) {
                       Navigator.push(
                         context,
@@ -186,8 +210,6 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                             texts: textList,
                             translations: engTranslationList,
                             engpronunciations: engPronunciationList,
-                            explanations: explanationList,
-                            pictures: pictureUrlList,
                             bookmarked: bookmarkList,
                           ),
                         ),

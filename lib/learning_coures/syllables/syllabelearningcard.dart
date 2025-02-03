@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
@@ -54,7 +53,6 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   bool _isRecording = false; // 녹음 중인지 여부
   bool _canRecord = false; // 녹음 가능 여부
   late String _recordedFilePath; // 녹음된 파일 경로
-  final bool _isBluetoothConnected = false;
 
   bool _isLoading = false; // 피드백 로딩 중인지 여부
   Uint8List? _imageData; // 이미지를 저장할 변수
@@ -97,14 +95,6 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
     await _audioRecorder.openRecorder();
-  }
-
-  // 오디오 세션 설정
-  Future<void> _setupAudioSession() async {
-    final session = await AudioSession.instance;
-    await session.configure(const AudioSessionConfiguration.speech());
-
-    await session.setActive(true);
   }
 
   // 이미지 로드

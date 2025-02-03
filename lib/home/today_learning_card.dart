@@ -41,6 +41,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
   late String _recordedFilePath;
 
   bool _isLoading = false;
+  bool _isFeedbackLoading = false;
 
   String cardText = '';
   String cardPronunciation = '';
@@ -129,7 +130,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
         setState(() {
           _isRecording = false;
           _recordedFilePath = path;
-          _isLoading = true; // Start loading
+          _isFeedbackLoading = true; // Start loading
         });
         final audioFile = File(path);
         final fileBytes = await audioFile.readAsBytes();
@@ -151,18 +152,18 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
 
           if (mounted && feedbackData != null) {
             setState(() {
-              _isLoading = false; // Stop loading
+              _isFeedbackLoading = false; // Stop loading
             });
             showFeedbackDialog(context, feedbackData);
           } else {
             setState(() {
-              _isLoading = false; // Stop loading
+              _isFeedbackLoading = false; // Stop loading
             });
             showErrorDialog();
           }
         } catch (e) {
           setState(() {
-            _isLoading = false; // Stop loading
+            _isFeedbackLoading = false; // Stop loading
           });
           if (e.toString() == 'Exception: ReRecordNeeded') {
             // Show the ReRecordNeeded dialog if the exception occurs
@@ -321,17 +322,21 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: Padding(
         padding: EdgeInsets.only(top: 12.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _isLoading
-                        ? Container()
-                        : Container(
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: primary,
+                ),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
                             width: cardWidth,
                             height: cardHeight,
                             decoration: BoxDecoration(
@@ -379,61 +384,59 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                               ],
                             ),
                           ),
-                  ],
-                ),
-                if (_isLoading)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 160),
-                    child: CircularProgressIndicator(
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
-                    ),
-                  ),
-              ],
-            ),
-            SizedBox(
-              height: 50.h,
-            ),
-            if (!_isLoading)
-              Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24.r),
-                      color: Colors.white,
-                    ),
-                    padding: EdgeInsets.all(10.w),
-                    child: Text(
-                      "Meaning of the word",
-                      style: TextStyle(
-                        fontSize: 18.w,
-                        fontWeight: FontWeight.w700,
+                        ],
                       ),
-                    ),
+                    ],
                   ),
                   SizedBox(
-                    height: 25.h,
+                    height: 50.h,
                   ),
-                  Container(
-                    width: 280.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24.r),
-                      color: Colors.white,
-                    ),
-                    padding: EdgeInsets.all(10.w),
-                    child: Text(
-                      cardSummary,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 28.w,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
+                  !_isLoading && _isFeedbackLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFFF26647)),
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(24.r),
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.all(10.w),
+                              child: Text(
+                                "Meaning of the word",
+                                style: TextStyle(
+                                  fontSize: 18.w,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25.h,
+                            ),
+                            Container(
+                              width: 280.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(24.r),
+                                color: Colors.white,
+                              ),
+                              padding: EdgeInsets.all(10.w),
+                              child: Text(
+                                cardSummary,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 28.w,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                 ],
               ),
-          ],
-        ),
       ),
       floatingActionButton: SizedBox(
         width: 70,
