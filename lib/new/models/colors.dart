@@ -12,10 +12,12 @@ class AppColors {
   static const Color background = Color(0xFFFFFFFF);
   static const Color iconColor = Color(0xFF492B21);
 
-  static const Color brown = Color(0xFF492B21);
   static const Color black = Color(0xFF000000);
   static const Color yellow = Color(0xFFFEE500);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color lightBrown = Color.fromRGBO(73, 43, 33, 0.7); // 밝은 갈색
-  static const Color lightOrange = Color(0xFFF26647); // 밝은 주황
+
+  static const Color brown_000 = Color(0xFF492B21);
+  static const Color brown_001 = Color.fromRGBO(73, 43, 33, 0.7); // 밝은 갈색
+  static const Color orange_000 = Color(0xFFF26647); // 밝은 주황
+  static const Color orange_001 = Color(0xFFFFC49D); // 밝은 주황
 }

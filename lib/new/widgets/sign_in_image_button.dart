@@ -51,16 +51,16 @@ class SignInImageButton extends StatelessWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.all(10.0.h),
+      padding: EdgeInsets.symmetric(horizontal: 25.0.h, vertical: 10.0.h),
       child: InkWell(
         onTap: handleLogin,
         child: Ink(
           child: Container(
-            height: 50.h,
-            width: 343.w,
+            height: 52.h,
             decoration: BoxDecoration(
               color: loginPlatform.buttonColor,
               borderRadius: BorderRadius.circular(10.r),
+              border: Border.all(color: loginPlatform.borderColor),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

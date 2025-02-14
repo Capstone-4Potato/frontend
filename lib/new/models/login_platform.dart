@@ -8,14 +8,14 @@ enum LoginPlatform {
   google(
     platformName: 'Google',
     buttonColor: AppColors.white,
-    textColor: AppColors.brown,
+    textColor: AppColors.brown_000,
     borderColor: Color(0xFFE2E2E2),
     icon: LoginIcons.google_icon,
   ),
   kakao(
     platformName: 'Kakao',
     buttonColor: AppColors.yellow,
-    textColor: AppColors.brown,
+    textColor: AppColors.brown_000,
     borderColor: Color(0xFFF3E69E),
     icon: LoginIcons.kakaotalk_icon,
   ),
