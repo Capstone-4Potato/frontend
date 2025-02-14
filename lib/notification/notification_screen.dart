@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new/models/colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';

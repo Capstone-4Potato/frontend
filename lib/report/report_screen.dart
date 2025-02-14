@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new/models/colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/re_test_page.dart';
 import 'package:flutter_application_1/main.dart';

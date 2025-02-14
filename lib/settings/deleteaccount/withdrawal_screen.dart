@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new/models/colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/settings/deleteaccount/deleteaccount.dart';
-import 'package:flutter_application_1/login/login_screen.dart';
+import 'package:flutter_application_1/new/screens/login_screen.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';

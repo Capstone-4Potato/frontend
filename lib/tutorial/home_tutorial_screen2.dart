@@ -2,7 +2,7 @@ import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new/models/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 홈화면

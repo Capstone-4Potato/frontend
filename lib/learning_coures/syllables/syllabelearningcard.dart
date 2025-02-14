@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new/models/colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/tutorial/feedback_tutorial_screen1.dart';
 import 'package:flutter_application_1/tutorial/feedback_tutorial_screen2.dart';

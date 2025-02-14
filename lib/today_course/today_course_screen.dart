@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new/models/colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/today_course/fetch_today_course.dart';
 import 'package:flutter_application_1/today_course/today_course_learning_card.dart';
