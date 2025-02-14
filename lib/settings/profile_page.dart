@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/login/login_platform.dart';
@@ -26,6 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   static String? nickname;
   static int? age;
   static int? gender;
+  static int? level;
   bool isLoading = true;
   LoginPlatform _loginPlatform = LoginPlatform.none; // Add this line
 
@@ -76,6 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
           nickname = data['name'];
           age = data['age'];
           gender = data['gender'];
+          level = data['level'];
           isLoading = false;
         });
       } else if (response.statusCode == 401) {
@@ -96,6 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
               nickname = data['name'];
               age = data['age'];
               gender = data['gender'];
+              level = data['level'];
               isLoading = false;
             });
           } else {
@@ -112,19 +114,23 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _updateUserProfile(String newNickname, int newAge, int newGender) {
+  void _updateUserProfile(
+      String newNickname, int newAge, int newGender, int newLevel) {
     setState(() {
       nickname = newNickname;
       age = newAge;
       gender = newGender;
+      level = newLevel;
     });
   }
 
   void _resetUserProfile() {
+    initializeInfo(true);
     setState(() {
       nickname = null;
       age = null;
       gender = null;
+      level = null;
     });
   }
 
@@ -198,6 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         currentnickname: nickname ?? '',
                         currentage: age ?? -100,
                         currentgender: gender ?? -1,
+                        currentLevel: level ?? 1,
                         onProfileUpdate: _updateUserProfile,
                       ),
                     ),
@@ -325,7 +332,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        print(
+                        debugPrint(
                             'Current login platform: $_loginPlatform'); // Add this line
                         await SignOutService.signOut(
                             _loginPlatform); // 소셜로그인 로그아웃하기
@@ -392,7 +399,8 @@ class _ProfilePageState extends State<ProfilePage> {
   void _showDeleteAccountDialog(BuildContext context) {
     showDialog(
       context: context,
-      barrierColor: const Color.fromARGB(255, 21, 21, 21).withOpacity(0.6),
+      barrierColor:
+          const Color.fromARGB(255, 21, 21, 21).withValues(alpha: 0.6),
       builder: (BuildContext context) {
         final double height = MediaQuery.of(context).size.height / 852;
         final double width = MediaQuery.of(context).size.width / 393;
@@ -409,7 +417,8 @@ class _ProfilePageState extends State<ProfilePage> {
             width: 340 * width,
             height: 280 * height,
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 21, 21, 21).withOpacity(0.01),
+                color: const Color.fromARGB(255, 21, 21, 21)
+                    .withValues(alpha: 0.01),
                 borderRadius: BorderRadius.circular(20)),
             child: Stack(
               children: [

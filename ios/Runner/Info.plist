@@ -1,147 +1,152 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-	<dict>
-		<key>CADisableMinimumFrameDurationOnPhone</key>
-		<true/>
-		<key>CFBundleDevelopmentRegion</key>
-		<string>$(DEVELOPMENT_LANGUAGE)</string>
-		<key>CFBundleDisplayName</key>
-		<string>발밤발밤</string>
-		<key>CFBundleExecutable</key>
-		<string>$(EXECUTABLE_NAME)</string>
-		<key>CFBundleIdentifier</key>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-		<key>CFBundleInfoDictionaryVersion</key>
-		<string>6.0</string>
-		<key>CFBundleName</key>
-		<string>발밤발밤</string>
-		<key>CFBundlePackageType</key>
-		<string>APPL</string>
-		<key>CFBundleShortVersionString</key>
-		<string>$(FLUTTER_BUILD_NAME)</string>
-		<key>CFBundleSignature</key>
-		<string>????</string>
-		<key>CFBundleURLSchemes</key>
-		<array>
-			<string>kakao1dd4ee9a5ed2afb5fe8f7590fa690198</string>
-			<string>balbambalbamurlscheme</string>
-			<string>com.googleusercontent.apps.1081903661036-ke7n3ugkrc1qdno016pd8giibh0pti92</string>
-		</array>
-		<key>CFBundleURLTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLName</key>
-				<string>com.naver.sdk</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>balbambalbamurlscheme</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLName</key>
-				<string>kakaologin</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>kakao1dd4ee9a5ed2afb5fe8f7590fa690198</string>
-				</array>
-			</dict>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>com.googleusercontent.apps.1081903661036-ke7n3ugkrc1qdno016pd8giibh0pti92</string>
-				</array>
-			</dict>
-		</array>
-		<key>CFBundleVersion</key>
-		<string>$(FLUTTER_BUILD_NUMBER)</string>
-		<key>LSApplicationQueriesSchemes</key>
-		<array>
-			<string>naversearchapp</string>
-			<string>naversearchthirdlogin</string>
-		</array>
-		<key>LSRequiresIPhoneOS</key>
-		<true/>
-		<key>NSAppTransportSecurity</key>
+<dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>발밤발밤</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>발밤발밤</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleURLSchemes</key>
+	<array>
+		<string>kakao1dd4ee9a5ed2afb5fe8f7590fa690198</string>
+		<string>balbambalbamurlscheme</string>
+		<string>com.googleusercontent.apps.1081903661036-ke7n3ugkrc1qdno016pd8giibh0pti92</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
 		<dict>
-			<key>NSAllowsArbitraryLoads</key>
-			<true/>
-			<key>NSExceptionDomains</key>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.naver.sdk</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>balbambalbamurlscheme</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>kakaologin</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakao1dd4ee9a5ed2afb5fe8f7590fa690198</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1081903661036-ke7n3ugkrc1qdno016pd8giibh0pti92</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FLTEnableImpeller</key>
+	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>naversearchapp</string>
+		<string>naversearchthirdlogin</string>
+	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>naver.com</key>
 			<dict>
-				<key>naver.com</key>
-				<dict>
-					<key>NSExceptionRequiresForwardSecrecy</key>
-					<false/>
-					<key>NSIncludesSubdomains</key>
-					<true/>
-				</dict>
-				<key>naver.net</key>
-				<dict>
-					<key>NSExceptionRequiresForwardSecrecy</key>
-					<false/>
-					<key>NSIncludesSubdomains</key>
-					<true/>
-				</dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>naver.net</key>
+			<dict>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
 			</dict>
 		</dict>
-		<key>NSCalendarsUsageDescription</key>
-		<string>This app need to access your calendar events.</string>
-		<key>NSContactsUsageDescription</key>
-		<string>This app need to access your contacts.</string>
-		<key>NSBluetoothPeripheralUsageDescription</key>
-		<string>This app need to access your bluetooth.</string>
-		<key>NSAppleMusicUsageDescription</key>
-		<string>This app need to access your apple music.</string>
-		<key>NSMotionUsageDescription</key>
-		<string>This app need to access your motion.</string>
-		<key>NSSpeechRecognitionUsageDescription</key>
-		<string>This app need to access your speech recognition.</string>
-		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>This app need to access your location.</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>This app need to access your location.</string>
-		<key>NSBluetoothAlwaysUsageDescription</key>
-		<string>This app need to access your bluetooth.</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>This app needs access to microphone for recording audio.</string>
-		<key>UIApplicationSupportsIndirectInputEvents</key>
-		<true/>
-		<key>UILaunchStoryboardName</key>
-		<string>LaunchScreen</string>
-		<key>UIMainStoryboardFile</key>
-		<string>Main</string>
-		<key>UISupportedInterfaceOrientations</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-			<string>UIInterfaceOrientationLandscapeLeft</string>
-			<string>UIInterfaceOrientationLandscapeRight</string>
-		</array>
-		<key>UISupportedInterfaceOrientations~ipad</key>
-		<array>
-			<string>UIInterfaceOrientationPortrait</string>
-			<string>UIInterfaceOrientationPortraitUpsideDown</string>
-			<string>UIInterfaceOrientationLandscapeLeft</string>
-			<string>UIInterfaceOrientationLandscapeRight</string>
-		</array>
-		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false/>
-		<key>naverConsumerSecret</key>
-		<string>97vwp_eTD3</string>
-		<key>naverCosumerKey</key>
-		<string>2y417ad5dnf4y2nohKSp</string>
-		<key>naverServiceAppName</key>
-		<string>발밤발밤</string>
-		<key>naverServiceAppUrlScheme</key>
-		<string>balbambalbamurlscheme</string>
-		<key>UIStatusBarHidden</key>
-		<false/>
-		<key>FLTEnableImpeller</key>
-		<false/>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app need to access your apple music.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>This app need to access your bluetooth.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>This app need to access your bluetooth.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This app need to access your calendar events.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>This app need to access your contacts.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app need to access your location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app need to access your location.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs access to microphone for recording audio.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>This app need to access your motion.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app need to access your speech recognition.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>naverConsumerSecret</key>
+	<string>97vwp_eTD3</string>
+	<key>naverCosumerKey</key>
+	<string>2y417ad5dnf4y2nohKSp</string>
+	<key>naverServiceAppName</key>
+	<string>발밤발밤</string>
+	<key>naverServiceAppUrlScheme</key>
+	<string>balbambalbamurlscheme</string>
+</dict>
 </plist>

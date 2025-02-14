@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
-      print("응답 : ${response.body}");
+      debugPrint("응답 : ${response.body}");
 
       if (response.statusCode == 200) {
         // Assuming 'access' is the key for the access token in headers
@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       return response.statusCode; // Return the status code
     } catch (e) {
-      print('Network error occurred: $e');
+      debugPrint('Network error occurred: $e');
       return 500; // Assume server error on exception
     }
   }
@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
         'socialId': credential.userIdentifier,
       };
     } catch (error) {
-      print('error = $error');
+      debugPrint('error = $error');
       return {
         'statusCode': 500,
         'socialId': '',
@@ -106,9 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
     if (await isKakaoTalkInstalled()) {
       try {
         await UserApi.instance.loginWithKakaoTalk();
-        print('카카오톡으로 로그인 성공');
+        debugPrint('카카오톡으로 로그인 성공');
         User user = await UserApi.instance.me();
-        print('사용자 정보 요청 성공'
+        debugPrint('사용자 정보 요청 성공'
             '\n회원번호: ${user.id}');
 
         // 소셜 로그인 정보 전달
@@ -124,10 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
           'socialId': user.id.toString(),
         };
       } catch (error) {
-        print('카카오톡으로 로그인 실패 $error');
+        debugPrint('카카오톡으로 로그인 실패 $error');
 
         if (error is PlatformException && error.code == 'CANCELED') {
-          print('로그인 취소');
+          debugPrint('로그인 취소');
           return {
             'statusCode': 500,
             'socialId': '',
@@ -135,9 +135,9 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         try {
           await UserApi.instance.loginWithKakaoAccount();
-          print('카카오계정으로 로그인 성공');
+          debugPrint('카카오계정으로 로그인 성공');
           User user = await UserApi.instance.me();
-          print('사용자 정보 요청 성공'
+          debugPrint('사용자 정보 요청 성공'
               '\n회원번호: ${user.id}');
           int statusCode = await socialLogin(user.id.toString());
           if (statusCode == 200 || statusCode == 404) {
@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
             'socialId': user.id.toString(),
           };
         } catch (error) {
-          print('카카오계정으로 로그인 실패 $error');
+          debugPrint('카카오계정으로 로그인 실패 $error');
           return {
             'statusCode': 500,
             'socialId': '',
@@ -161,9 +161,9 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       try {
         await UserApi.instance.loginWithKakaoAccount();
-        print('카카오계정으로 로그인 성공');
+        debugPrint('카카오계정으로 로그인 성공');
         User user = await UserApi.instance.me();
-        print('사용자 정보 요청 성공'
+        debugPrint('사용자 정보 요청 성공'
             '\n회원번호: ${user.id}');
         int statusCode = await socialLogin(user.id.toString());
         if (statusCode == 200 || statusCode == 404) {
@@ -188,13 +188,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<Map<String, dynamic>> signInWithGoogle() async {
     try {
-      print('try');
+      debugPrint('try');
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      print('구글 계정으로 로그인!');
+      debugPrint('구글 계정으로 로그인!');
       if (googleUser != null) {
-        print('name = ${googleUser.displayName}\n');
-        print('name = ${googleUser.email}\n');
-        print('name = ${googleUser.id}\n');
+        debugPrint('name = ${googleUser.displayName}\n');
+        debugPrint('name = ${googleUser.email}\n');
+        debugPrint('name = ${googleUser.id}\n');
 
         int statusCode = await socialLogin(googleUser.id.toString());
         if (statusCode == 200 || statusCode == 404) {
@@ -214,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
         };
       }
     } catch (error) {
-      print('구글계정으로 로그인 실패 $error');
+      debugPrint('구글계정으로 로그인 실패 $error');
       return {
         'statusCode': 500,
         'socialId': '',
@@ -255,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
               'Log in or sign up to Get Started !',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: bam.withOpacity(0.7),
+                color: bam.withValues(alpha: 0.7),
                 fontFamily: 'BM_Jua',
                 fontSize: 18.0 * height,
                 fontWeight: FontWeight.w400,
@@ -271,7 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 var result = await signInWithApple();
                 int statusCode = result['statusCode'];
                 String socialId = result['socialId'];
-                print(result);
+                debugPrint("$result");
                 if (statusCode == 404) {
                   Navigator.push(
                       context,
@@ -328,7 +328,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 var result = await signInWithGoogle();
                 int statusCode = result['statusCode'];
                 String socialId = result['socialId'];
-                print(result);
+                debugPrint("$result");
                 if (statusCode == 404) {
                   Navigator.push(
                       context,

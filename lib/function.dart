@@ -118,6 +118,7 @@ Future<FeedbackData?> getFeedback(
       var message = responseData['message'];
       if (message is String) {
         var messageDetail = json.decode(message)['detail'];
+        print(messageDetail);
         if (messageDetail ==
                 "failed to extract user text (STT), please request re-recording" ||
             messageDetail == "no non-silent samples to save" ||

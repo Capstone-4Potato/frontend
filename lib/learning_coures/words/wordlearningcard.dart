@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/colors.dart';
@@ -64,61 +65,62 @@ class _WordLearningCardState extends State<WordLearningCard> {
   Future<void> _recordAudio() async {
     if (_isRecording) {
       final path = await _audioRecorder.stopRecorder();
-      if (path != null) {
-        setState(() {
-          _isRecording = false;
-          _recordedFilePath = path;
-          _isLoading = true; // Start loading
-        });
-        final audioFile = File(path);
-        final fileBytes = await audioFile.readAsBytes();
-        final base64userAudio = base64Encode(fileBytes);
-        final currentCardId = widget.cardIds[widget.currentIndex];
-        final base64correctAudio = TtsService.instance.base64CorrectAudio;
+      // print("경로 : $path");
+      // await _audioPlayer.setSourceDeviceFile((path!)); // 바이트 데이터를 재생
+      // _audioPlayer.play(path);
+      setState(() {
+        _isRecording = false;
+        _recordedFilePath = path!;
+        _isLoading = true; // Start loading
+      });
+      final audioFile = File(path!);
+      final fileBytes = await audioFile.readAsBytes();
+      final base64userAudio = base64Encode(fileBytes);
+      final currentCardId = widget.cardIds[widget.currentIndex];
+      final base64correctAudio = TtsService.instance.base64CorrectAudio;
 
-        if (base64correctAudio != null) {
-          try {
-            // Set a timeout for the getFeedback call
-            final feedbackData = await getFeedback(
-              currentCardId,
-              base64userAudio,
-              base64correctAudio,
-            ).timeout(
-              const Duration(seconds: 6),
-              onTimeout: () {
-                throw TimeoutException('Feedback request timed out');
-              },
-            );
+      if (base64correctAudio != null) {
+        try {
+          // Set a timeout for the getFeedback call
+          final feedbackData = await getFeedback(
+            currentCardId,
+            base64userAudio,
+            base64correctAudio,
+          ).timeout(
+            const Duration(seconds: 6),
+            onTimeout: () {
+              throw TimeoutException('Feedback request timed out');
+            },
+          );
 
-            if (mounted && feedbackData != null) {
-              setState(() {
-                _isLoading = false; // Stop loading
-              });
-              showFeedbackDialog(context, feedbackData);
-            } else {
-              setState(() {
-                _isLoading = false; // Stop loading
-              });
-              showErrorDialog();
-            }
-          } catch (e) {
+          if (mounted && feedbackData != null) {
             setState(() {
               _isLoading = false; // Stop loading
             });
-            if (e.toString() == 'Exception: ReRecordNeeded') {
-              // Show the ReRecordNeeded dialog if the exception occurs
-              showRecordLongerDialog(context);
-            } else if (e is TimeoutException) {
-              showTimeoutDialog(); // Show error dialog on timeout
-            } else {
-              showErrorDialog();
-            }
+            showFeedbackDialog(context, feedbackData);
+          } else {
+            setState(() {
+              _isLoading = false; // Stop loading
+            });
+            showErrorDialog();
           }
-        } else {
+        } catch (e) {
           setState(() {
             _isLoading = false; // Stop loading
           });
+          if (e.toString() == 'Exception: ReRecordNeeded') {
+            // Show the ReRecordNeeded dialog if the exception occurs
+            showRecordLongerDialog(context);
+          } else if (e is TimeoutException) {
+            showTimeoutDialog(); // Show error dialog on timeout
+          } else {
+            showErrorDialog();
+          }
         }
+      } else {
+        setState(() {
+          _isLoading = false; // Stop loading
+        });
       }
     } else {
       await _audioRecorder.startRecorder(

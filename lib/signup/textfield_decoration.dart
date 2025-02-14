@@ -13,7 +13,7 @@ InputDecoration textfieldDecoration(
     filled: true, // 배경색 채우기 활성화
     hintText: hintText, // 힌트 텍스트 설정
     hintStyle: TextStyle(
-      color: bam.withOpacity(0.5),
+      color: bam.withValues(alpha: 0.5),
       fontFamily: 'BM_Jua',
       fontSize: 20.sp,
     ),
