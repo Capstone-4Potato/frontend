@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new/models/colors.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/sentecnes/sentencelearningcard.dart';
 import 'package:flutter_application_1/learning_coures/words/wordlearningcard.dart';

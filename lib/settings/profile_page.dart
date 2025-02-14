@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new/models/colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
-import 'package:flutter_application_1/login/login_platform.dart';
+import 'package:flutter_application_1/new/models/login_platform.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/services/login_platform_manage.dart';
 import 'package:flutter_application_1/settings/editprofile/editprofile_screen.dart';
 import 'package:flutter_application_1/tutorial/retutorial.dart';
 import 'package:flutter_application_1/settings/logout/sign_out_social.dart';
 import 'package:flutter_application_1/settings/logout/signout.dart';
 import 'package:flutter_application_1/settings/deleteaccount/withdrawal_screen.dart';
-import 'package:flutter_application_1/login/login_screen.dart';
+import 'package:flutter_application_1/new/screens/login_screen.dart';
 import 'package:flutter_application_1/userauthmanager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
@@ -32,7 +33,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _loadLoginPlatform();
 
     if (nickname == null || age == null || gender == null) {
       userData();
@@ -41,13 +41,6 @@ class _ProfilePageState extends State<ProfilePage> {
         isLoading = false;
       });
     }
-  }
-
-  Future<void> _loadLoginPlatform() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _loginPlatform = LoginPlatform.values[prefs.getInt('loginPlatform') ?? 4];
-    });
   }
 
   // 회원정보 받기 API
@@ -332,6 +325,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     GestureDetector(
                       onTap: () async {
+                        _loginPlatform = await loadLoginPlatform();
                         debugPrint(
                             'Current login platform: $_loginPlatform'); // Add this line
                         await SignOutService.signOut(
@@ -344,8 +338,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               builder: (context) => const LoginScreen()),
                           (route) => false,
                         );
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.remove('loginPlatform');
+                        removeLoginPlatform();
                       },
                       child: Container(
                         width: 263.w,

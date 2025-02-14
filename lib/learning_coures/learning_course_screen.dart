@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/colors.dart';
+import 'package:flutter_application_1/new/models/colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_card_list.dart';
 import 'package:flutter_application_1/learning_coures/unit_class.dart';
