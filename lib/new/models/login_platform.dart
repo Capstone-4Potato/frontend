@@ -5,12 +5,12 @@ import 'package:flutter_application_1/new/models/colors.dart';
 
 /// 로그인 플랫폼
 enum LoginPlatform {
-  google(
-    platformName: 'Google',
-    buttonColor: AppColors.white,
-    textColor: AppColors.brown_000,
+  apple(
+    platformName: 'Apple',
+    buttonColor: AppColors.black,
+    textColor: AppColors.white,
     borderColor: Color(0xFFE2E2E2),
-    icon: LoginIcons.google_icon,
+    icon: LoginIcons.apple_logo,
   ),
   kakao(
     platformName: 'Kakao',
@@ -19,13 +19,14 @@ enum LoginPlatform {
     borderColor: Color(0xFFF3E69E),
     icon: LoginIcons.kakaotalk_icon,
   ),
-  apple(
-    platformName: 'Apple',
-    buttonColor: AppColors.black,
-    textColor: AppColors.white,
+  google(
+    platformName: 'Google',
+    buttonColor: AppColors.white,
+    textColor: AppColors.brown_000,
     borderColor: Color(0xFFE2E2E2),
-    icon: LoginIcons.apple_logo,
+    icon: LoginIcons.google_icon,
   ),
+
   none(
     platformName: '',
     buttonColor: Colors.transparent,
