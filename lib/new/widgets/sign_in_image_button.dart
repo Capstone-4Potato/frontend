@@ -51,7 +51,7 @@ class SignInImageButton extends StatelessWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 25.0.h, vertical: 10.0.h),
+      padding: EdgeInsets.only(left: 25.0.h, right: 25.0.h, top: 21.0.h),
       child: InkWell(
         onTap: handleLogin,
         child: Ink(
