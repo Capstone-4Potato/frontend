@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/today_course/fetch_today_course.dart';
 import 'package:flutter_application_1/today_course/today_course_learning_card.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';

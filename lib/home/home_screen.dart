@@ -5,14 +5,14 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_cards.dart';
 import 'package:flutter_application_1/notification/notification_screen.dart';
 import 'package:flutter_application_1/settings/profile_page.dart';
 import 'package:flutter_application_1/tutorial/home_tutorial_screen1.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
@@ -184,8 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: CircleAvatar(
                                   key: widget.keys['avatarKey'],
                                   radius: 101.r,
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 242, 235, 227),
+                                  backgroundColor: AppColors.orange_001,
                                   child: SvgPicture.asset(
                                     'assets/image/bam_character.svg',
                                     width: 130.w,

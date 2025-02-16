@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
 import 'package:flutter_application_1/main.dart';
@@ -7,14 +7,13 @@ import 'package:flutter_application_1/new/services/login_platform_manage.dart';
 import 'package:flutter_application_1/settings/editprofile/editprofile_screen.dart';
 import 'package:flutter_application_1/tutorial/retutorial.dart';
 import 'package:flutter_application_1/settings/logout/sign_out_social.dart';
-import 'package:flutter_application_1/settings/logout/signout.dart';
+import 'package:flutter_application_1/new/services/api/login_post_logout.dart';
 import 'package:flutter_application_1/settings/deleteaccount/withdrawal_screen.dart';
 import 'package:flutter_application_1/new/screens/login_screen.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -118,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _resetUserProfile() {
-    initializeInfo(true);
+    initiallizeTutoInfo(true);
     setState(() {
       nickname = null;
       age = null;
@@ -209,7 +208,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 }),
                 _buildSettingsItem('Delete account', CustomIcons.trashcan_icon,
                     onTap: () {
-                  _showDeleteAccountDialog(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WithdrawalScreen(),
+                    ),
+                  );
                 }),
                 Padding(
                   padding: EdgeInsets.only(
@@ -330,7 +334,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             'Current login platform: $_loginPlatform'); // Add this line
                         await SignOutService.signOut(
                             _loginPlatform); // 소셜로그인 로그아웃하기
-                        signout(); // 앱 로그아웃하기
+                        logoutRequest(); // 앱 로그아웃하기
                         _resetUserProfile();
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -338,7 +342,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               builder: (context) => const LoginScreen()),
                           (route) => false,
                         );
-                        removeLoginPlatform();
+                        removeLoginPlatform(); // 로그인 플랫폼 삭제
                       },
                       child: Container(
                         width: 263.w,
@@ -380,163 +384,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showDeleteAccountDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierColor:
-          const Color.fromARGB(255, 21, 21, 21).withValues(alpha: 0.6),
-      builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
-
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          alignment: Alignment.center,
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 26,
-            vertical: 250,
-          ),
-          child: Container(
-            width: 340 * width,
-            height: 280 * height,
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 21, 21, 21)
-                    .withValues(alpha: 0.01),
-                borderRadius: BorderRadius.circular(20)),
-            child: Stack(
-              children: [
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                        top: 40, bottom: 15, right: 24, left: 24),
-                    width: 340 * width,
-                    height: 220 * height,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 237, 232, 244),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Are you sure?',
-                          style: TextStyle(
-                            color: accent,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16.0),
-                          child: Text(
-                            'If you proceed, you will lose all your\npersonal data. Are you sure you want to\ndelete your account?',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 150, 150, 150),
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                width: 140 * width,
-                                height: 46 * height,
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 206, 201, 214),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Center(
-                                    child: Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => WithdrawalScreen(
-                                      nickname: nickname ?? '',
-                                      onProfileReset: _resetUserProfile,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 140 * width,
-                                height: 46 * height,
-                                decoration: BoxDecoration(
-                                  color: accent,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Center(
-                                    child: Text(
-                                  'Confirm',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 132,
-                  left: 132,
-                  child: Container(
-                    width: 76 * width,
-                    height: 76 * height,
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 237, 232, 244),
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(
-                        color: const Color.fromARGB(255, 111, 111, 111),
-                        width: 5,
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '!',
-                        style: TextStyle(
-                          color: accent,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

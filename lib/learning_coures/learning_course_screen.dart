@@ -1,12 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_card_list.dart';
 import 'package:flutter_application_1/learning_coures/unit_class.dart';
 import 'package:flutter_application_1/tutorial/learning_course_tutorial_screen1.dart';
 import 'package:flutter_application_1/tutorial/learning_course_tutorial_screen2.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

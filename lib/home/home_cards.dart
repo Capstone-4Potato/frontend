@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/home/custom/customsentence_screen.dart';
 import 'package:flutter_application_1/main.dart';
@@ -16,7 +16,7 @@ import 'package:flutter_application_1/learning_coures/learning_course_card_list.
 import 'package:flutter_application_1/home/missed_cards_screen.dart';
 import 'package:flutter_application_1/home/saved_cards_screen.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_screen.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

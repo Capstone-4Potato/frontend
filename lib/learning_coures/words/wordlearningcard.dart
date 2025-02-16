@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';

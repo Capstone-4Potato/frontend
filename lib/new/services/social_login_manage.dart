@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/new/widgets/ask_recover_dialog.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -9,10 +10,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
 import 'package:flutter_application_1/new/services/login_platform_manage.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 
 /// 소셜로그인 API 요청
-Future<int> sendSocialLoginRequest(String? socialId) async {
+Future<int> sendSocialLoginRequest(
+    BuildContext context, String? socialId) async {
   var url = Uri.parse('$main_url/login');
 
   try {
@@ -31,6 +33,8 @@ Future<int> sendSocialLoginRequest(String? socialId) async {
       if (accessToken != null && refreshToken != null) {
         await saveTokens(accessToken, refreshToken);
       }
+    } else if (response.statusCode == 403) {
+      askRecoverDialog(context, socialId);
     }
 
     return response.statusCode; // Return the status code
@@ -41,7 +45,7 @@ Future<int> sendSocialLoginRequest(String? socialId) async {
 }
 
 /// 애플 로그인
-Future<Map<String, dynamic>> signInWithApple() async {
+Future<Map<String, dynamic>> signInWithApple(BuildContext context) async {
   try {
     final AuthorizationCredentialAppleID credential =
         await SignInWithApple.getAppleIDCredential(
@@ -51,7 +55,8 @@ Future<Map<String, dynamic>> signInWithApple() async {
       ],
     );
 
-    int statusCode = await sendSocialLoginRequest(credential.userIdentifier);
+    int statusCode =
+        await sendSocialLoginRequest(context, credential.userIdentifier);
 
     if (statusCode == 200 || statusCode == 404) {
       await saveLoginPlatform(LoginPlatform.apple);
@@ -70,7 +75,7 @@ Future<Map<String, dynamic>> signInWithApple() async {
 }
 
 /// 카카오 로그인
-Future<Map<String, dynamic>> signInWithKakao() async {
+Future<Map<String, dynamic>> signInWithKakao(BuildContext context) async {
   if (await isKakaoTalkInstalled()) {
     try {
       await UserApi.instance.loginWithKakaoTalk();
@@ -80,7 +85,8 @@ Future<Map<String, dynamic>> signInWithKakao() async {
           '\n회원번호: ${user.id}');
 
       // 소셜 로그인 정보 전달
-      int statusCode = await sendSocialLoginRequest(user.id.toString());
+      int statusCode =
+          await sendSocialLoginRequest(context, user.id.toString());
       if (statusCode == 200 || statusCode == 404) {
         await saveLoginPlatform(LoginPlatform.kakao);
       }
@@ -104,7 +110,8 @@ Future<Map<String, dynamic>> signInWithKakao() async {
         User user = await UserApi.instance.me();
         debugPrint('사용자 정보 요청 성공'
             '\n회원번호: ${user.id}');
-        int statusCode = await sendSocialLoginRequest(user.id.toString());
+        int statusCode =
+            await sendSocialLoginRequest(context, user.id.toString());
         if (statusCode == 200 || statusCode == 404) {
           await saveLoginPlatform(LoginPlatform.kakao);
         }
@@ -127,7 +134,8 @@ Future<Map<String, dynamic>> signInWithKakao() async {
       User user = await UserApi.instance.me();
       debugPrint('사용자 정보 요청 성공'
           '\n회원번호: ${user.id}');
-      int statusCode = await sendSocialLoginRequest(user.id.toString());
+      int statusCode =
+          await sendSocialLoginRequest(context, user.id.toString());
       if (statusCode == 200 || statusCode == 404) {
         await saveLoginPlatform(LoginPlatform.kakao);
       }
@@ -146,7 +154,7 @@ Future<Map<String, dynamic>> signInWithKakao() async {
 }
 
 /// 구글 로그인
-Future<Map<String, dynamic>> signInWithGoogle() async {
+Future<Map<String, dynamic>> signInWithGoogle(BuildContext context) async {
   try {
     debugPrint('try');
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -156,7 +164,8 @@ Future<Map<String, dynamic>> signInWithGoogle() async {
       debugPrint('name = ${googleUser.email}\n');
       debugPrint('name = ${googleUser.id}\n');
 
-      int statusCode = await sendSocialLoginRequest(googleUser.id.toString());
+      int statusCode =
+          await sendSocialLoginRequest(context, googleUser.id.toString());
       if (statusCode == 200 || statusCode == 404) {
         await saveLoginPlatform(LoginPlatform.google);
       }
@@ -175,6 +184,6 @@ Future<Map<String, dynamic>> signInWithGoogle() async {
     return {
       'statusCode': 500,
       'socialId': '',
-    }; //
+    };
   }
 }

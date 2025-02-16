@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:http/http.dart' as http;
 
 // 취약음 테스트 리스트 받아오는 API (테스트 새로하기)
