@@ -184,8 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: CircleAvatar(
                                   key: widget.keys['avatarKey'],
                                   radius: 101.r,
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 242, 235, 227),
+                                  backgroundColor: AppColors.orange_001,
                                   child: SvgPicture.asset(
                                     'assets/image/bam_character.svg',
                                     width: 130.w,

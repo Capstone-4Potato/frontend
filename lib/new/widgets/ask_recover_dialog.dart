@@ -24,6 +24,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
     // 계정 삭제 API 요청
     // TODO : 계정 삭제 되는 지 확인
     deleteAccountRequest(socialId!);
+    Navigator.pop(context);
     // 홈으로 이동
     Navigator.push<void>(
       context,

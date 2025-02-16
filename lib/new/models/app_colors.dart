@@ -23,6 +23,7 @@ class AppColors {
 
   static const Color brown_000 = Color(0xFF492B21);
   static const Color brown_001 = Color.fromRGBO(73, 43, 33, 0.7); // 밝은 갈색
-  static const Color orange_000 = Color(0xFFF26647); // 밝은 주황
-  static const Color orange_001 = Color(0xFFFFC49D); // 밝은 주황
+  static const Color orange_000 = Color(0xFFF26647);
+  static const Color orange_001 = Color(0xFFF18B5E);
+  static const Color orange_002 = Color(0xFFFFC49D);
 }
