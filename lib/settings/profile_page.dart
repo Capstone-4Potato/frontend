@@ -3,12 +3,11 @@ import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
 import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/new/screens/delete_account_survey_screen.dart';
 import 'package:flutter_application_1/new/services/login_platform_manage.dart';
 import 'package:flutter_application_1/settings/editprofile/editprofile_screen.dart';
 import 'package:flutter_application_1/tutorial/retutorial.dart';
 import 'package:flutter_application_1/settings/logout/sign_out_social.dart';
-import 'package:flutter_application_1/new/services/api/logout.dart';
+import 'package:flutter_application_1/new/services/api/login_post_logout.dart';
 import 'package:flutter_application_1/settings/deleteaccount/withdrawal_screen.dart';
 import 'package:flutter_application_1/new/screens/login_screen.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
@@ -343,7 +342,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               builder: (context) => const LoginScreen()),
                           (route) => false,
                         );
-                        removeLoginPlatform();
+                        removeLoginPlatform(); // 로그인 플랫폼 삭제
                       },
                       child: Container(
                         width: 263.w,

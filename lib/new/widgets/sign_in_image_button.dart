@@ -18,17 +18,18 @@ class SignInImageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// 버튼 눌렀을 때 로그인 처리 함수
-    void handleLogin() async {
+    void handleLogin(BuildContext context) async {
       // 플랫폼 별 로그인 함수 지정
       final loginActions = {
-        LoginPlatform.kakao: signInWithKakao,
-        LoginPlatform.google: signInWithGoogle,
-        LoginPlatform.apple: signInWithApple,
+        LoginPlatform.kakao: (BuildContext ctx) => signInWithKakao(ctx),
+        LoginPlatform.google: (BuildContext ctx) => signInWithGoogle(ctx),
+        LoginPlatform.apple: (BuildContext ctx) => signInWithApple(ctx),
       };
 
       // 선택된 로그인 플랫폼 실행
-      var result = await (loginActions[loginPlatform] ??
-          () async => {})(); // 로그인 실패 시 종료
+      var loginFunction =
+          loginActions[loginPlatform] ?? (BuildContext ctx) async => {};
+      var result = await loginFunction(context); // context 전달
 
       debugPrint("$result");
 
@@ -53,7 +54,9 @@ class SignInImageButton extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 25.0.h, right: 25.0.h, top: 21.0.h),
       child: InkWell(
-        onTap: handleLogin,
+        onTap: () {
+          handleLogin(context);
+        },
         child: Ink(
           child: Container(
             height: 52.h,

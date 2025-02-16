@@ -4,7 +4,7 @@ import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/screens/login_screen.dart';
-import 'package:flutter_application_1/new/services/api/profile_users.dart';
+import 'package:flutter_application_1/new/services/api/profile_delete_users.dart';
 import 'package:flutter_application_1/new/widgets/custom_app_bar.dart';
 import 'package:flutter_application_1/new/widgets/delete_account_dialog.dart';
 import 'package:flutter_application_1/settings/deleteaccount/withdrawal_screen.dart';
