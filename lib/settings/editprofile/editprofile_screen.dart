@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/signup/textfield_decoration.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
@@ -118,6 +119,13 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           DateTime.now().year - int.parse(_birthYearController.text) + 1,
           _selectedGender!,
           _selectedLevel!,
+        );
+        // 유저 정보 저장
+        await UserInfo().saveUserInfo(
+          name: _nicknameController.text,
+          age: DateTime.now().year - int.parse(_birthYearController.text) + 1,
+          gender: _selectedGender!,
+          level: _selectedLevel!,
         );
         _showSuccessDialog();
       } else if (response.statusCode == 401) {

@@ -1,25 +1,29 @@
+import 'dart:convert';
 import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:http/http.dart' as http;
 
-// 앱 로그아웃 API
-Future<void> signout() async {
+/// 회원탈퇴 API 요청
+Future<void> deleteUsersAccountRequest(String nickname) async {
   String? token = await getAccessToken();
-  var url = Uri.parse('$main_url/logout');
+  var url = Uri.parse('$main_url/users');
 
-  // Function to make the signout request
-  Future<http.Response> makeSignoutRequest(String token) {
-    return http.post(
+  // Function to make the delete request
+  Future<http.Response> makeDeleteRequest(String token) {
+    return http.delete(
       url,
       headers: <String, String>{
         'access': token,
         'Content-Type': 'application/json',
       },
+      body: jsonEncode(<String, String>{
+        'name': nickname,
+      }),
     );
   }
 
   try {
-    var response = await makeSignoutRequest(token!);
+    var response = await makeDeleteRequest(token!);
 
     if (response.statusCode == 200) {
       deleteTokens();
@@ -31,24 +35,24 @@ Future<void> signout() async {
       // Refresh the access token
       bool isRefreshed = await refreshAccessToken();
       if (isRefreshed) {
-        // Retry the signout request with the new token
+        // Retry the delete request with the new token
         token = await getAccessToken();
-        response = await makeSignoutRequest(token!);
+        response = await makeDeleteRequest(token!);
 
         if (response.statusCode == 200) {
           deleteTokens();
           print(response.body);
         } else {
-          throw Exception('Failed to sign out after refreshing token');
+          throw Exception('Failed to delete account after refreshing token');
         }
       } else {
         throw Exception('Failed to refresh access token');
       }
     } else {
-      throw Exception('Failed to sign out');
+      throw Exception('Failed to delete account');
     }
   } catch (e) {
     // Handle errors that occur during the request
-    print("Error sign out: $e");
+    print("Error deleting account: $e");
   }
 }

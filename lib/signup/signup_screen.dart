@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/signup/textfield_decoration.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/starting_test_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +12,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-// 회원가입 페이지
+/// 회원가입 페이지
 class UserInputForm extends StatefulWidget {
   final String socialId;
 
@@ -79,14 +80,21 @@ class _UserInputFormState extends State<UserInputForm> {
       );
       switch (response.statusCode) {
         case 200:
-          debugPrint(response.body);
           String? accessToken = response.headers['access'];
           String? refreshToken = response.headers['refresh'];
-          debugPrint(accessToken);
-          debugPrint(refreshToken);
+          debugPrint("accessToken: $accessToken");
+          debugPrint("refreshToken: $refreshToken");
           if (accessToken != null && refreshToken != null) {
             // 토큰 저장
             await saveTokens(accessToken, refreshToken);
+
+            // 유저 정보 저장
+            await UserInfo().saveUserInfo(
+              name: nickname,
+              age: age,
+              gender: gender,
+              level: level,
+            );
           }
           break;
 
@@ -294,7 +302,7 @@ class _UserInputFormState extends State<UserInputForm> {
                       ),
                       elevation: 16,
                       decoration: textfieldDecoration(
-                          isTapped[3], isButtonEnabled[3], 'Level'),
+                          isTapped[3], isButtonEnabled[3], UserKey.level.name),
                       items: levelLabels.entries.map((entry) {
                         return DropdownMenuItem<int>(
                           value: entry.key,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
-import 'package:flutter_application_1/new/services/social_login.dart';
+import 'package:flutter_application_1/new/services/social_login_manage.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

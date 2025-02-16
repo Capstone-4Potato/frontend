@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/widgets/sign_in_image_button.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';

@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
-import 'package:flutter_application_1/settings/deleteaccount/deleteaccount.dart';
-import 'package:flutter_application_1/new/screens/login_screen.dart';
+import 'package:flutter_application_1/new/models/user_info.dart';
+import 'package:flutter_application_1/new/screens/delete_account_survey_screen.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
-import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // 회원탈퇴 페이지
 class WithdrawalScreen extends StatefulWidget {
-  final String nickname;
-  final Function() onProfileReset;
-
   const WithdrawalScreen({
     Key? key,
-    required this.nickname,
-    required this.onProfileReset,
   }) : super(key: key);
   @override
   _WithdrawalScreenState createState() => _WithdrawalScreenState();
@@ -23,37 +17,26 @@ class WithdrawalScreen extends StatefulWidget {
 
 class _WithdrawalScreenState extends State<WithdrawalScreen> {
   final TextEditingController _nicknameController = TextEditingController();
+  @override
+  void initState() {
+    UserInfo().loadUserInfo();
+    super.initState();
+  }
 
+  /// 닉네임 입력후 처리 함수
   void _attemptWithdrawal() {
     if (_nicknameController.text.isEmpty) {
       _showEmptyFieldDialog();
-    } else if (_nicknameController.text == widget.nickname) {
-      _showSuccessDialog();
+    } else if (_nicknameController.text == UserInfo().name) {
+      // 설문 페이지로 이동
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext buildContext) =>
+                  const DeleteAccountSurveyScreen()));
     } else {
       _showErrorDialog();
     }
-  }
-
-  // 회원탈퇴 성공
-  void _showSuccessDialog() {
-    initializeInfo(false);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SuccessDialog(
-          subtitle: "Account deletion is complete.",
-          onTap: () {
-            deleteaccount(_nicknameController.text);
-            widget.onProfileReset();
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-              (route) => false,
-            );
-          },
-        );
-      },
-    );
   }
 
   // 입력한 닉네임이 사용자 닉넥임과 일치하지 않는다
@@ -164,7 +147,7 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
 }
 
 // 학습 카드 갯수, 튜토 관련 정보 초기화
-Future<void> initializeInfo(bool isLogout) async {
+Future<void> initiallizeTutoInfo(bool isLogout) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // 정보 초기화
   await prefs.setInt('learnedCardCount', 0);

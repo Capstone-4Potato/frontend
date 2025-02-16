@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart' as audioplayers;
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/syllables/fetchimage.dart';
@@ -13,7 +13,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/today_course/today_feedback_ui.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';

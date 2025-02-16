@@ -9,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
 import 'package:flutter_application_1/new/services/login_platform_manage.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 
 /// 소셜로그인 API 요청
 Future<int> sendSocialLoginRequest(String? socialId) async {

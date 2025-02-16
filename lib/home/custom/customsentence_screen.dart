@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/home/custom/customlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';

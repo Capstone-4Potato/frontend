@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/colors.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/sentecnes/sentencelearningcard.dart';
 import 'package:flutter_application_1/learning_coures/words/wordlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/ttsservice.dart';
-import 'package:flutter_application_1/userauthmanager.dart';
+import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 
