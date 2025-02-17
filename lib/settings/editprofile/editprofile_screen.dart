@@ -42,7 +42,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _calculatePosition();
+      _calculatButtonPosition();
     });
 
     initUserData(); // 초기화
@@ -62,7 +62,8 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     });
   }
 
-  void _calculatePosition() {
+  /// 버튼 위치 계산
+  void _calculatButtonPosition() {
     final RenderBox renderBoxContainer =
         _containerKey.currentContext?.findRenderObject() as RenderBox;
     final RenderBox renderBoxButton =

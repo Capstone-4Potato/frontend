@@ -38,6 +38,7 @@ class _ReportScreenState extends State<ReportScreen> {
   int? thursdayCards;
   int? fridayCards;
   int? saturdayCards;
+  String? cardLevel;
 
   List<Map<String, dynamic>>? weakPhonemes = [];
   List<Map<String, dynamic>> initialConsonants = [];
@@ -127,6 +128,7 @@ class _ReportScreenState extends State<ReportScreen> {
             fridayCards = data['fridayCards'];
             saturdayCards = data['saturdayCards'];
             maxCardValue = (getMaxCardValue().toDouble() ~/ 5) * 5 + 5;
+            cardLevel = data['cardLevel'];
 
             // weakPhonemes 리스트 처리
             weakPhonemes = (data['weakPhonemes'] ?? [])
@@ -151,6 +153,7 @@ class _ReportScreenState extends State<ReportScreen> {
             print("Friday Cards: $fridayCards");
             print("Saturday Cards: $saturdayCards");
             print("Weak Phonemes: $weakPhonemes");
+            print("cardLevel: $cardLevel");
 
             isLoading = false; // 로딩 중 상태 변환
           });
@@ -187,6 +190,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 fridayCards = data['fridayCards'];
                 saturdayCards = data['saturdayCards'];
                 maxCardValue = (getMaxCardValue().toDouble() ~/ 5) * 5 + 5;
+                cardLevel = data['cardLevel'];
 
                 // weakPhonemes 리스트 처리
                 weakPhonemes = (data['weakPhonemes'] ?? [])
