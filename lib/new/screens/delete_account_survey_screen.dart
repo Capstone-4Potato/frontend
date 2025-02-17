@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter_application_1/new/services/api/withdrawal_api.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_application_1/new/models/app_colors.dart';
@@ -26,6 +27,8 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
 
   final TextEditingController _customInputController = TextEditingController();
   String? _selectedValue;
+  int _selectedReasonCode = 0; // 이유 코드
+  String _detail = ""; // 이유 저장
   bool _showTextField = false;
   bool _isButtonEnabled = false;
 
@@ -47,6 +50,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
     setState(() {
       _isButtonEnabled = _selectedValue != null &&
           (!_showTextField || _customInputController.text.trim().isNotEmpty);
+      _detail = _showTextField ? _customInputController.text : _selectedValue!;
     });
   }
 
@@ -109,7 +113,10 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
       onChanged: (value) {
         setState(() {
           _selectedValue = value;
+          _selectedReasonCode = surveyOptions.indexOf(value!) + 1;
+
           _showTextField = value == SurveyReason.other.label;
+
           _customInputController.clear();
         });
         _validateForm();
@@ -194,9 +201,13 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
   }
 
   /// 계정 탈퇴 시 처리 함수
-  void onConfirmTap() {
+  void onConfirmTap() async {
+    // 서버에 이유 전송
+    await sendWithdrawalReason(_selectedReasonCode, _detail);
+
     // 계정 탈퇴 api 요청
-    deleteUsersAccountRequest(UserInfo().name);
+    await deleteUsersAccountRequest(UserInfo().name);
+
     // 튜토 정보 삭제
     initiallizeTutoInfo(true);
     Navigator.pushAndRemoveUntil(
