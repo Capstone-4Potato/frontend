@@ -539,6 +539,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                     underline: const SizedBox(),
                                     dropdownColor: const Color.fromARGB(
                                         255, 223, 234, 251),
+                                    menuWidth: 160.w,
                                     borderRadius: BorderRadius.circular(10.r),
                                     style: TextStyle(
                                       color: bam,
