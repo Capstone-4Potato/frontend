@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
+import 'package:flutter_application_1/new/models/levels.dart';
+import 'package:flutter_application_1/new/services/api/report_api.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/re_test_page.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/report/phonemes_class.dart';
@@ -38,12 +40,15 @@ class _ReportScreenState extends State<ReportScreen> {
   int? thursdayCards;
   int? fridayCards;
   int? saturdayCards;
+  String? cardLevel;
 
   List<Map<String, dynamic>>? weakPhonemes = [];
   List<Map<String, dynamic>> initialConsonants = [];
   List<Map<String, dynamic>> vowels = [];
   List<Map<String, dynamic>> finalConsonants = [];
   List<int> addPhonemes = []; // 추가할 취약음소
+  List<String> levelOptions =
+      Levels.values.map((e) => e.levelName).toList(); // 레벨 리스트로 저장
 
   bool isLoading = true; // 로딩 중 표시
 
@@ -52,6 +57,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
   late PageController pageController; // 페이지 컨트롤러 생성
   int _currentPageIndex = 0;
+  String? _selectedLevel; // 선택 레벨 값
 
   Future<void>? _fetchPhonemeFuture;
 
@@ -127,6 +133,8 @@ class _ReportScreenState extends State<ReportScreen> {
             fridayCards = data['fridayCards'];
             saturdayCards = data['saturdayCards'];
             maxCardValue = (getMaxCardValue().toDouble() ~/ 5) * 5 + 5;
+            cardLevel = data['cardLevel'];
+            _selectedLevel = cardLevel;
 
             // weakPhonemes 리스트 처리
             weakPhonemes = (data['weakPhonemes'] ?? [])
@@ -151,6 +159,7 @@ class _ReportScreenState extends State<ReportScreen> {
             print("Friday Cards: $fridayCards");
             print("Saturday Cards: $saturdayCards");
             print("Weak Phonemes: $weakPhonemes");
+            print("cardLevel: $cardLevel");
 
             isLoading = false; // 로딩 중 상태 변환
           });
@@ -187,6 +196,8 @@ class _ReportScreenState extends State<ReportScreen> {
                 fridayCards = data['fridayCards'];
                 saturdayCards = data['saturdayCards'];
                 maxCardValue = (getMaxCardValue().toDouble() ~/ 5) * 5 + 5;
+                cardLevel = data['cardLevel'];
+                _selectedLevel = cardLevel;
 
                 // weakPhonemes 리스트 처리
                 weakPhonemes = (data['weakPhonemes'] ?? [])
@@ -397,244 +408,254 @@ class _ReportScreenState extends State<ReportScreen> {
     double height = MediaQuery.of(context).size.height / 852;
     double width = MediaQuery.of(context).size.width / 392;
 
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 10,
-        backgroundColor: background,
-        scrolledUnderElevation: 0,
-      ),
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
-            ))
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 25.0, right: 25.0, bottom: 50.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text.rich(
-                          TextSpan(
-                            text: 'Hello,\n',
-                            style: const TextStyle(fontSize: 16),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '$nickname 👋',
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Center(
-                          child: CircleAvatar(
-                            radius: 35,
-                            backgroundColor:
-                                const Color.fromARGB(255, 242, 235, 227),
-                            child: SvgPicture.asset(
-                              'assets/image/bam_character.svg',
-                              width: 50.w,
-                              height: 50.h,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      key: widget.keys['reportAnalysisItemKey'],
-                      padding: EdgeInsets.only(top: 24.0.h),
-                      child: Wrap(
-                        spacing: 40.w,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus(); // 모든 입력 필드 포커스 해제
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 10,
+          backgroundColor: background,
+          scrolledUnderElevation: 0,
+        ),
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
+              ))
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 25.0, right: 25.0, bottom: 50.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AnalysisItem(
-                            icon: '🕰️',
-                            title: 'Study Days',
-                            value: studyDays!,
-                            unit: 'days',
-                          ),
-                          AnalysisItem(
-                            icon: '📖',
-                            title: 'Learned',
-                            value: totalLearned!,
-                            unit: '',
-                          ),
-                          AnalysisItem(
-                            icon: '👍',
-                            title: 'Accuracy',
-                            value: accuracy!,
-                            unit: '%',
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 26.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Weekly Average",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFFBEBDB8),
-                            ),
-                          ),
                           Text.rich(
                             TextSpan(
-                              text: '$weeklyAverageCards ',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                color: Color(0xFF5E5D58),
-                              ),
-                              children: const <TextSpan>[
+                              text: 'Hello,\n',
+                              style: const TextStyle(fontSize: 16),
+                              children: <TextSpan>[
                                 TextSpan(
-                                  text: 'cards',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Color(0xFFBEBDB8),
+                                  text: '$nickname 👋',
+                                  style: const TextStyle(
+                                    fontSize: 24,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          Container(
-                            height: 12 * height,
-                          ),
-                          AspectRatio(
-                            aspectRatio: 382 / 265,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 30.0),
-                              child: BarChart(
-                                weeklyData(maxCardValue),
+                          Center(
+                            child: CircleAvatar(
+                              radius: 35,
+                              backgroundColor:
+                                  const Color.fromARGB(255, 242, 235, 227),
+                              child: SvgPicture.asset(
+                                'assets/image/bam_character.svg',
+                                width: 50.w,
+                                height: 50.h,
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Column(
-                      key: widget.keys['vulnerablePhonemesKey'],
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Vulnerable Phonemes',
-                          style: TextStyle(
-                            color: Color(0xFF282722),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                          ),
+                      Padding(
+                        key: widget.keys['reportAnalysisItemKey'],
+                        padding: EdgeInsets.only(top: 24.0.h),
+                        child: Wrap(
+                          spacing: 40.w,
+                          children: [
+                            AnalysisItem(
+                              icon: '🕰️',
+                              title: 'Study Days',
+                              value: studyDays!,
+                              unit: 'days',
+                            ),
+                            AnalysisItem(
+                              icon: '📖',
+                              title: 'Learned',
+                              value: totalLearned!,
+                              unit: '',
+                            ),
+                            AnalysisItem(
+                              icon: '👍',
+                              title: 'Accuracy',
+                              value: accuracy!,
+                              unit: '%',
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6.0 * height),
-                          child: TextButton.icon(
-                            onPressed: () async {
-                              await fetchPhoneme();
-
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (BuildContext context) {
-                                    return StatefulBuilder(
-                                        builder: (context, setDialogState) {
-                                      return Dialog(
-                                        backgroundColor: Colors.transparent,
-                                        surfaceTintColor: Colors.transparent,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16.0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 26.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Weekly Average",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFFBEBDB8),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text.rich(
+                                  TextSpan(
+                                    text: '$weeklyAverageCards ',
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      color: Color(0xFF5E5D58),
+                                    ),
+                                    children: const <TextSpan>[
+                                      TextSpan(
+                                        text: 'cards',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Color(0xFFBEBDB8),
                                         ),
-                                        insetPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 20.0,
-                                                vertical: 130.0),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              decoration: const BoxDecoration(
-                                                  color: Color(0xFFF5F5F5),
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    topRight:
-                                                        Radius.circular(16.0),
-                                                    topLeft:
-                                                        Radius.circular(16.0),
-                                                  )),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 32.0,
-                                                    right: 27.0,
-                                                    left: 27.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    // 왼쪽 화살표
-                                                    IconButton(
-                                                      icon: const Icon(
-                                                          Icons.arrow_back_ios),
-                                                      onPressed:
-                                                          _currentPageIndex > 0
-                                                              ? () {
-                                                                  if (_currentPageIndex >
-                                                                          0 &&
-                                                                      _currentPageIndex <
-                                                                          phonemes
-                                                                              .length) {
-                                                                    pageController
-                                                                        .animateToPage(
-                                                                      _currentPageIndex -
-                                                                          1,
-                                                                      duration: const Duration(
-                                                                          milliseconds:
-                                                                              300),
-                                                                      curve: Curves
-                                                                          .easeInOut,
-                                                                    );
-                                                                    setDialogState(
-                                                                        () {
-                                                                      _currentPageIndex -=
-                                                                          1;
-                                                                    });
-                                                                  }
-                                                                }
-                                                              : null, // 첫 번째 페이지일 경우 비활성화
-                                                    ),
-                                                    // 카테고리 이름
-                                                    Text(
-                                                      phonemes[
-                                                              _currentPageIndex]
-                                                          .name,
-                                                      style: const TextStyle(
-                                                        color:
-                                                            Color(0xFF282722),
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                      ),
-                                                    ),
-                                                    // 오른쪽 화살표
-                                                    IconButton(
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: 140.0.w,
+                                  height: 35.0.h,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.appBarColor,
+                                      borderRadius:
+                                          BorderRadius.circular(10.0.r),
+                                      border: Border.all(
+                                        color: AppColors.primary,
+                                        width: 1.0.w, // 테두리 너비
+                                      )),
+                                  child: DropdownButton<String>(
+                                    value: _selectedLevel!,
+                                    icon: const Icon(Icons.arrow_drop_down,
+                                        color: AppColors.gray_001),
+                                    underline: const SizedBox(),
+                                    dropdownColor: const Color.fromARGB(
+                                        255, 223, 234, 251),
+                                    menuWidth: 160.w,
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    style: TextStyle(
+                                      color: bam,
+                                      fontSize: 12.sp,
+                                    ),
+                                    elevation: 1,
+                                    items: levelOptions.map((entry) {
+                                      return DropdownMenuItem<String>(
+                                        value: entry,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 12.0.w, right: 25.w),
+                                          child: Text(entry),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) async {
+                                      setState(() {
+                                        _selectedLevel = value ?? 'Beginner';
+                                      });
+                                      await updateCardLevel(value!);
+                                    },
+                                    padding: const EdgeInsets.all(0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              height: 15 * height,
+                            ),
+                            AspectRatio(
+                              aspectRatio: 382 / 265,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 30.0),
+                                child: BarChart(
+                                  weeklyData(maxCardValue),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        key: widget.keys['vulnerablePhonemesKey'],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Vulnerable Phonemes',
+                            style: TextStyle(
+                              color: Color(0xFF282722),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsets.symmetric(vertical: 6.0 * height),
+                            child: TextButton.icon(
+                              onPressed: () async {
+                                await fetchPhoneme();
+
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) {
+                                      return StatefulBuilder(
+                                          builder: (context, setDialogState) {
+                                        return Dialog(
+                                          backgroundColor: Colors.transparent,
+                                          surfaceTintColor: Colors.transparent,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16.0),
+                                          ),
+                                          insetPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 20.0,
+                                                  vertical: 130.0),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                decoration: const BoxDecoration(
+                                                    color: Color(0xFFF5F5F5),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topRight:
+                                                          Radius.circular(16.0),
+                                                      topLeft:
+                                                          Radius.circular(16.0),
+                                                    )),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 32.0,
+                                                          right: 27.0,
+                                                          left: 27.0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      // 왼쪽 화살표
+                                                      IconButton(
                                                         icon: const Icon(Icons
-                                                            .arrow_forward_ios),
+                                                            .arrow_back_ios),
                                                         onPressed:
-                                                            _currentPageIndex <
-                                                                    phonemes.length -
-                                                                        1
+                                                            _currentPageIndex >
+                                                                    0
                                                                 ? () {
-                                                                    if (_currentPageIndex >=
+                                                                    if (_currentPageIndex >
                                                                             0 &&
                                                                         _currentPageIndex <
                                                                             phonemes.length) {
                                                                       pageController
                                                                           .animateToPage(
-                                                                        _currentPageIndex +
+                                                                        _currentPageIndex -
                                                                             1,
                                                                         duration:
                                                                             const Duration(milliseconds: 300),
@@ -643,377 +664,428 @@ class _ReportScreenState extends State<ReportScreen> {
                                                                       );
                                                                       setDialogState(
                                                                           () {
-                                                                        _currentPageIndex +=
+                                                                        _currentPageIndex -=
                                                                             1;
                                                                       });
                                                                     }
                                                                   }
-                                                                : null),
-                                                  ],
+                                                                : null, // 첫 번째 페이지일 경우 비활성화
+                                                      ),
+                                                      // 카테고리 이름
+                                                      Text(
+                                                        phonemes[
+                                                                _currentPageIndex]
+                                                            .name,
+                                                        style: const TextStyle(
+                                                          color:
+                                                              Color(0xFF282722),
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                      // 오른쪽 화살표
+                                                      IconButton(
+                                                          icon: const Icon(Icons
+                                                              .arrow_forward_ios),
+                                                          onPressed:
+                                                              _currentPageIndex <
+                                                                      phonemes.length -
+                                                                          1
+                                                                  ? () {
+                                                                      if (_currentPageIndex >=
+                                                                              0 &&
+                                                                          _currentPageIndex <
+                                                                              phonemes.length) {
+                                                                        pageController
+                                                                            .animateToPage(
+                                                                          _currentPageIndex +
+                                                                              1,
+                                                                          duration:
+                                                                              const Duration(milliseconds: 300),
+                                                                          curve:
+                                                                              Curves.easeInOut,
+                                                                        );
+                                                                        setDialogState(
+                                                                            () {
+                                                                          _currentPageIndex +=
+                                                                              1;
+                                                                        });
+                                                                      }
+                                                                    }
+                                                                  : null),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            FutureBuilder<void>(
-                                              future: _fetchPhonemeFuture,
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  // 로딩 상태
-                                                  return const Center(
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                  );
-                                                } else if (snapshot.hasError) {
-                                                  // 에러 상태
-                                                  return Center(
-                                                    child: Text(
-                                                        'Error: ${snapshot.error}'),
-                                                  );
-                                                } else {
-                                                  return Expanded(
-                                                    child: PageView.builder(
-                                                      controller:
-                                                          pageController,
-                                                      physics:
-                                                          const NeverScrollableScrollPhysics(), // 스와이프 방지
-                                                      onPageChanged: (index) {
-                                                        _onPageChanged(index);
-                                                      },
-                                                      itemCount:
-                                                          phonemes.length,
-                                                      itemBuilder:
-                                                          ((context, index) {
-                                                        var category =
-                                                            phonemes[index];
+                                              FutureBuilder<void>(
+                                                future: _fetchPhonemeFuture,
+                                                builder: (context, snapshot) {
+                                                  if (snapshot
+                                                          .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    // 로딩 상태
+                                                    return const Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  } else if (snapshot
+                                                      .hasError) {
+                                                    // 에러 상태
+                                                    return Center(
+                                                      child: Text(
+                                                          'Error: ${snapshot.error}'),
+                                                    );
+                                                  } else {
+                                                    return Expanded(
+                                                      child: PageView.builder(
+                                                        controller:
+                                                            pageController,
+                                                        physics:
+                                                            const NeverScrollableScrollPhysics(), // 스와이프 방지
+                                                        onPageChanged: (index) {
+                                                          _onPageChanged(index);
+                                                        },
+                                                        itemCount:
+                                                            phonemes.length,
+                                                        itemBuilder:
+                                                            ((context, index) {
+                                                          var category =
+                                                              phonemes[index];
 
-                                                        final currentList =
-                                                            _currentPageIndex ==
-                                                                    0
-                                                                ? initialConsonants
-                                                                : _currentPageIndex ==
-                                                                        1
-                                                                    ? vowels
-                                                                    : finalConsonants;
+                                                          final currentList =
+                                                              _currentPageIndex ==
+                                                                      0
+                                                                  ? initialConsonants
+                                                                  : _currentPageIndex ==
+                                                                          1
+                                                                      ? vowels
+                                                                      : finalConsonants;
 
-                                                        return Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: const Color(
-                                                                0xFFF5F5F5),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .only(
-                                                              bottomLeft: Radius
-                                                                  .circular(
-                                                                      16.0.r),
-                                                              bottomRight: Radius
-                                                                  .circular(
-                                                                      16.0.r),
+                                                          return Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: const Color(
+                                                                  0xFFF5F5F5),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .only(
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        16.0.r),
+                                                                bottomRight: Radius
+                                                                    .circular(
+                                                                        16.0.r),
+                                                              ),
                                                             ),
-                                                          ),
-                                                          child: Padding(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        27.0.w,
-                                                                    vertical:
-                                                                        22.0.h),
-                                                            child: Column(
-                                                              children: [
-                                                                Expanded(
-                                                                  child: GridView
-                                                                      .builder(
-                                                                          gridDelegate:
-                                                                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                                                            crossAxisCount:
-                                                                                2, // 행당 아이템 수
-                                                                            crossAxisSpacing:
-                                                                                20.0, // 열 간격
-                                                                            mainAxisSpacing:
-                                                                                20.0, // 행 간격
-                                                                            childAspectRatio:
-                                                                                138 / 88, // 가로:세로 비율
-                                                                          ),
-                                                                          itemCount: currentList
-                                                                              .length,
-                                                                          itemBuilder:
-                                                                              (context, index) {
-                                                                            Color
-                                                                                backgroundColor =
-                                                                                Colors.white;
+                                                            child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          27.0
+                                                                              .w,
+                                                                      vertical:
+                                                                          22.0.h),
+                                                              child: Column(
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: GridView.builder(
+                                                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                                          crossAxisCount:
+                                                                              2, // 행당 아이템 수
+                                                                          crossAxisSpacing:
+                                                                              20.0, // 열 간격
+                                                                          mainAxisSpacing:
+                                                                              20.0, // 행 간격
+                                                                          childAspectRatio:
+                                                                              138 / 88, // 가로:세로 비율
+                                                                        ),
+                                                                        itemCount: currentList.length,
+                                                                        itemBuilder: (context, index) {
+                                                                          Color
+                                                                              backgroundColor =
+                                                                              Colors.white;
 
-                                                                            // 리스트 길이 검증
-                                                                            if (index >=
-                                                                                currentList.length) {
-                                                                              return const SizedBox.shrink();
-                                                                            }
+                                                                          // 리스트 길이 검증
+                                                                          if (index >=
+                                                                              currentList.length) {
+                                                                            return const SizedBox.shrink();
+                                                                          }
 
-                                                                            return Material(
-                                                                              color: currentList[index]['weak'] || addPhonemes.contains(currentList[index]['id']) ? const Color(0xFFDADADA) : Colors.white,
+                                                                          return Material(
+                                                                            color: currentList[index]['weak'] || addPhonemes.contains(currentList[index]['id'])
+                                                                                ? const Color(0xFFDADADA)
+                                                                                : Colors.white,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12.0.r),
+                                                                            child:
+                                                                                InkWell(
+                                                                              onTap: () {
+                                                                                setDialogState(() {
+                                                                                  if (currentList[index]['weak']) {
+                                                                                    null;
+                                                                                  } else if (!addPhonemes.contains(currentList[index]['id'])) {
+                                                                                    addPhonemes.add(currentList[index]['id']); // 선택된 인덱스 추가
+                                                                                    weakPhonemes!.add(currentList[index]); // 취약음소 목록에 추가
+                                                                                  } else {
+                                                                                    addPhonemes.remove(currentList[index]['id']);
+                                                                                    weakPhonemes!.remove(currentList[index]); // 취약음소 목록에서 제거
+                                                                                  }
+                                                                                });
+                                                                                print('선택된 인덱스: $addPhonemes');
+                                                                              },
                                                                               borderRadius: BorderRadius.circular(12.0.r),
-                                                                              child: InkWell(
-                                                                                onTap: () {
-                                                                                  setDialogState(() {
-                                                                                    if (currentList[index]['weak']) {
-                                                                                      null;
-                                                                                    } else if (!addPhonemes.contains(currentList[index]['id'])) {
-                                                                                      addPhonemes.add(currentList[index]['id']); // 선택된 인덱스 추가
-                                                                                      weakPhonemes!.add(currentList[index]); // 취약음소 목록에 추가
-                                                                                    } else {
-                                                                                      addPhonemes.remove(currentList[index]['id']);
-                                                                                      weakPhonemes!.remove(currentList[index]); // 취약음소 목록에서 제거
-                                                                                    }
-                                                                                  });
-                                                                                  print('선택된 인덱스: $addPhonemes');
-                                                                                },
-                                                                                borderRadius: BorderRadius.circular(12.0.r),
-                                                                                child: Container(
-                                                                                  alignment: Alignment.center,
-                                                                                  decoration: BoxDecoration(
-                                                                                    borderRadius: BorderRadius.circular(12.0),
-                                                                                    border: Border.all(
-                                                                                      color: currentList[index]['weak'] || addPhonemes.contains(currentList[index]['id']) ? Colors.transparent : const Color(0xFFF26647),
-                                                                                    ),
+                                                                              child: Container(
+                                                                                alignment: Alignment.center,
+                                                                                decoration: BoxDecoration(
+                                                                                  borderRadius: BorderRadius.circular(12.0),
+                                                                                  border: Border.all(
+                                                                                    color: currentList[index]['weak'] || addPhonemes.contains(currentList[index]['id']) ? Colors.transparent : const Color(0xFFF26647),
                                                                                   ),
-                                                                                  child: Text(
-                                                                                    currentList[index]['text'] ?? 'N/A',
-                                                                                    style: const TextStyle(
-                                                                                      fontSize: 32,
-                                                                                      color: Color(0xFF282722),
-                                                                                    ),
+                                                                                ),
+                                                                                child: Text(
+                                                                                  currentList[index]['text'] ?? 'N/A',
+                                                                                  style: const TextStyle(
+                                                                                    fontSize: 32,
+                                                                                    color: Color(0xFF282722),
                                                                                   ),
                                                                                 ),
                                                                               ),
-                                                                            );
-                                                                          }),
-                                                                ),
-                                                              ],
+                                                                            ),
+                                                                          );
+                                                                        }),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        );
-                                                      }),
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 12.0),
-                                              child: TextButton(
-                                                onPressed: () async {
-                                                  setState(() {
-                                                    isLoading = true; // 로딩 시작
-                                                  });
-                                                  try {
-                                                    await postAddPhonemes(); // POST 요청 보내기
-                                                    await fetchReportData();
-                                                  } catch (e) {
-                                                    print(
-                                                        'Error while adding phonemes: $e');
-                                                  } finally {
-                                                    setState(() {
-                                                      isLoading = false;
-                                                    });
-                                                  }
-                                                  if (!isLoading) {
-                                                    print(weakPhonemes);
-                                                    Navigator.pop(context);
+                                                          );
+                                                        }),
+                                                      ),
+                                                    );
                                                   }
                                                 },
-                                                style: TextButton.styleFrom(
-                                                  backgroundColor:
-                                                      const Color(0xFFF26647),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 12.0),
+                                                child: TextButton(
+                                                  onPressed: () async {
+                                                    setState(() {
+                                                      isLoading = true; // 로딩 시작
+                                                    });
+                                                    try {
+                                                      await postAddPhonemes(); // POST 요청 보내기
+                                                      await fetchReportData();
+                                                    } catch (e) {
+                                                      print(
+                                                          'Error while adding phonemes: $e');
+                                                    } finally {
+                                                      setState(() {
+                                                        isLoading = false;
+                                                      });
+                                                    }
+                                                    if (!isLoading) {
+                                                      print(weakPhonemes);
+                                                      Navigator.pop(context);
+                                                    }
+                                                  },
+                                                  style: TextButton.styleFrom(
+                                                    backgroundColor:
+                                                        const Color(0xFFF26647),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    fixedSize:
+                                                        const Size.fromWidth(
+                                                            double.maxFinite),
                                                   ),
-                                                  fixedSize:
-                                                      const Size.fromWidth(
-                                                          double.maxFinite),
-                                                ),
-                                                child: const Text(
-                                                  'Add',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20,
+                                                  child: const Text(
+                                                    'Add',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
+                                            ],
+                                          ),
+                                        );
+                                      });
                                     });
-                                  });
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF5E5D58),
-                              backgroundColor: const Color(0xFFF2EBE3),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 12 * width, vertical: 5 * height),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.0),
+                              },
+                              style: TextButton.styleFrom(
+                                foregroundColor: const Color(0xFF5E5D58),
+                                backgroundColor: const Color(0xFFF2EBE3),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12 * width,
+                                    vertical: 5 * height),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                surfaceTintColor: Colors.transparent,
                               ),
-                              surfaceTintColor: Colors.transparent,
-                            ),
-                            icon: Text(
-                              '+',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: const Color(0xFF5E5D58),
-                                fontSize: 24.h,
+                              icon: Text(
+                                '+',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: const Color(0xFF5E5D58),
+                                  fontSize: 24.h,
+                                ),
                               ),
-                            ),
-                            label: const Text(
-                              'Add phonemes',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
+                              label: const Text(
+                                'Add phonemes',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            weakPhonemes!.isEmpty
-                                ? Container(
-                                    padding: const EdgeInsets.all(30.0),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFF2EBE3),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        'You got no data for your vulnerable phonemes.\nTry out pronunciation test below!',
-                                        style: TextStyle(
-                                          color: Color(0xFF5E5D58),
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              weakPhonemes!.isEmpty
+                                  ? Container(
+                                      padding: const EdgeInsets.all(30.0),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFF2EBE3),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'You got no data for your vulnerable phonemes.\nTry out pronunciation test below!',
+                                          style: TextStyle(
+                                            color: Color(0xFF5E5D58),
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  )
-                                : Padding(
-                                    padding: EdgeInsets.only(top: 12.0.h),
-                                    child: Column(
-                                      children: List.generate(
-                                          weakPhonemes!.length, (index) {
-                                        return VulnerableCardItem(
-                                          index: index,
-                                          phonemes: weakPhonemes![index]
-                                                  ['phonemeText']
-                                              .split(" ")
-                                              .last,
-                                          title: weakPhonemes![index]
-                                                  ['phonemeText']
-                                              .split(" ")
-                                              .sublist(
-                                                  0,
-                                                  weakPhonemes![index]
-                                                              ['phonemeText']
-                                                          .split(" ")
-                                                          .length -
-                                                      1)
-                                              .join(' '),
-                                          phonemeId: weakPhonemes![index]
-                                              ['phonemeId'],
-                                          onDelete: () {
-                                            setState(() {
-                                              weakPhonemes!.removeAt(
-                                                  index); // 리스트에서 항목 삭제
-                                            });
-                                          },
-                                        );
-                                      }),
-                                    ),
-                                  ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
-                              child: Center(
-                                child: TextButton(
-                                  onPressed: () async {
-                                    bool check =
-                                        await getTestCheck(); // 이전에 진행하던 테스트가 있는지 체크
-                                    print("취약음소 테스트 존재 여부 $check");
-                                    check
-                                        ? showDialog(
-                                            context: context,
-                                            barrierDismissible: true,
-                                            builder: (BuildContext context) {
-                                              return PreviousTestDialog(
-                                                leftTap: () {
-                                                  // 이전 테스트 계속하기 로직 추가 가능
-                                                  Navigator.push<void>(
-                                                    context,
-                                                    MaterialPageRoute<void>(
-                                                      builder: (BuildContext
-                                                              builder) =>
-                                                          RestartTestScreen(
-                                                        check: true,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                rightTap: () {
-                                                  Navigator.push<void>(
-                                                    context,
-                                                    MaterialPageRoute<void>(
-                                                      builder: (BuildContext
-                                                              builder) =>
-                                                          RestartTestScreen(
-                                                        check: false,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
+                                    )
+                                  : Padding(
+                                      padding: EdgeInsets.only(top: 12.0.h),
+                                      child: Column(
+                                        children: List.generate(
+                                            weakPhonemes!.length, (index) {
+                                          return VulnerableCardItem(
+                                            index: index,
+                                            phonemes: weakPhonemes![index]
+                                                    ['phonemeText']
+                                                .split(" ")
+                                                .last,
+                                            title: weakPhonemes![index]
+                                                    ['phonemeText']
+                                                .split(" ")
+                                                .sublist(
+                                                    0,
+                                                    weakPhonemes![index]
+                                                                ['phonemeText']
+                                                            .split(" ")
+                                                            .length -
+                                                        1)
+                                                .join(' '),
+                                            phonemeId: weakPhonemes![index]
+                                                ['phonemeId'],
+                                            onDelete: () {
+                                              setState(() {
+                                                weakPhonemes!.removeAt(
+                                                    index); // 리스트에서 항목 삭제
+                                              });
                                             },
-                                          )
-                                        : Navigator.push<void>(
-                                            context,
-                                            MaterialPageRoute<void>(
-                                              builder: (BuildContext builder) =>
-                                                  RestartTestScreen(
-                                                check: check,
-                                              ),
-                                            ),
                                           );
-                                  },
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: primary,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                        }),
+                                      ),
                                     ),
-                                    fixedSize:
-                                        const Size.fromWidth(double.maxFinite),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 3,
+                              Padding(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: Center(
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      bool check =
+                                          await getTestCheck(); // 이전에 진행하던 테스트가 있는지 체크
+                                      print("취약음소 테스트 존재 여부 $check");
+                                      check
+                                          ? showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return PreviousTestDialog(
+                                                  leftTap: () {
+                                                    // 이전 테스트 계속하기 로직 추가 가능
+                                                    Navigator.push<void>(
+                                                      context,
+                                                      MaterialPageRoute<void>(
+                                                        builder: (BuildContext
+                                                                builder) =>
+                                                            RestartTestScreen(
+                                                          check: true,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  rightTap: () {
+                                                    Navigator.push<void>(
+                                                      context,
+                                                      MaterialPageRoute<void>(
+                                                        builder: (BuildContext
+                                                                builder) =>
+                                                            RestartTestScreen(
+                                                          check: false,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            )
+                                          : Navigator.push<void>(
+                                              context,
+                                              MaterialPageRoute<void>(
+                                                builder:
+                                                    (BuildContext builder) =>
+                                                        RestartTestScreen(
+                                                  check: check,
+                                                ),
+                                              ),
+                                            );
+                                    },
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: primary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      fixedSize: const Size.fromWidth(
+                                          double.maxFinite),
                                     ),
-                                    child: Text(
-                                      'Pronunciation Test',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 3,
+                                      ),
+                                      child: Text(
+                                        'Pronunciation Test',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
+      ),
     );
   }
 

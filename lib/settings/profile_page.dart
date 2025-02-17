@@ -192,13 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ProfileUpdatePage(
-                        currentnickname: nickname ?? '',
-                        currentage: age ?? -100,
-                        currentgender: gender ?? -1,
-                        currentLevel: level ?? 1,
-                        onProfileUpdate: _updateUserProfile,
-                      ),
+                      builder: (context) => const ProfileUpdatePage(),
                     ),
                   );
                 }),
