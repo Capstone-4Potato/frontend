@@ -1,48 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/new/widgets/ask_recover_dialog.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_application_1/new/services/api/login_api.dart';
 
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
 import 'package:flutter_application_1/new/services/login_platform_manage.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
-
-/// 소셜로그인 API 요청
-Future<int> sendSocialLoginRequest(
-    BuildContext context, String? socialId) async {
-  var url = Uri.parse('$main_url/login');
-
-  try {
-    var request = http.MultipartRequest('POST', url);
-    request.fields['socialId'] = socialId!;
-
-    var streamedResponse = await request.send();
-    var response = await http.Response.fromStream(streamedResponse);
-    debugPrint("응답 : ${response.body}");
-
-    if (response.statusCode == 200) {
-      // Assuming 'access' is the key for the access token in headers
-      String? accessToken = response.headers['access'];
-      String? refreshToken = response.headers['refresh'];
-
-      if (accessToken != null && refreshToken != null) {
-        await saveTokens(accessToken, refreshToken);
-      }
-    } else if (response.statusCode == 403) {
-      askRecoverDialog(context, socialId);
-    }
-
-    return response.statusCode; // Return the status code
-  } catch (e) {
-    debugPrint('Network error occurred: $e');
-    return 500; // Assume server error on exception
-  }
-}
 
 /// 애플 로그인
 Future<Map<String, dynamic>> signInWithApple(BuildContext context) async {

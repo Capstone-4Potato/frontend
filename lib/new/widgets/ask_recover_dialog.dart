@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/new/models/image_path.dart';
-import 'package:flutter_application_1/new/services/api/profile_delete_users.dart';
+import 'package:flutter_application_1/new/services/api/join_api.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
+/// 사용자 계정 복구 묻는 dialog
 void askRecoverDialog(BuildContext context, String? socialId) {
   void onRecoverTap() async {
     // 계정 복구 API 요청
-    await restoreAccountRequest(socialId!);
-    await getUsersData();
+    await recoverUserAccount(socialId!);
+    await getUserData();
     // 홈으로 이동
     Navigator.pushAndRemoveUntil(
       context,
@@ -20,10 +21,10 @@ void askRecoverDialog(BuildContext context, String? socialId) {
     );
   }
 
+  /// delete 눌렀을 때
   void onDeleteTap() {
     // 계정 삭제 API 요청
-    // TODO : 계정 삭제 되는 지 확인
-    deleteAccountRequest(socialId!);
+    deleteUserAccount(socialId!);
     Navigator.pop(context);
     // 홈으로 이동
     Navigator.push<void>(

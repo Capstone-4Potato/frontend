@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
+import 'package:flutter_application_1/new/services/api/join_api.dart';
 import 'package:flutter_application_1/signup/textfield_decoration.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/starting_test_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -63,58 +60,8 @@ class _UserInputFormState extends State<UserInputForm> {
     age = currentYear - birthYearInt + 1;
   }
 
-  // 회원가입 API
-  Future<void> signup() async {
-    Uri url = Uri.parse('$main_url/users');
-    try {
-      var response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'name': nickname,
-          'socialId': widget.socialId,
-          'age': age,
-          'gender': gender,
-          'level': level,
-        }),
-      );
-      switch (response.statusCode) {
-        case 200:
-          String? accessToken = response.headers['access'];
-          String? refreshToken = response.headers['refresh'];
-          debugPrint("accessToken: $accessToken");
-          debugPrint("refreshToken: $refreshToken");
-          if (accessToken != null && refreshToken != null) {
-            // 토큰 저장
-            await saveTokens(accessToken, refreshToken);
-
-            // 유저 정보 저장
-            await UserInfo().saveUserInfo(
-              name: nickname,
-              age: age,
-              gender: gender,
-              level: level,
-            );
-          }
-          break;
-
-        case 500:
-          print(response.body);
-          break;
-        default:
-          print('알 수 없는 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
-          // 기타 상태 코드에 대한 처리
-          break;
-      }
-    } catch (e) {
-      print('네트워크 오류가 발생했습니다: $e');
-      // 네트워크 예외 처리 로직
-    }
-  }
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculatePosition();
@@ -312,7 +259,7 @@ class _UserInputFormState extends State<UserInputForm> {
                       onChanged: (int? newValue) {
                         isTapped[3] = true;
                         setState(() {
-                          gender = newValue!;
+                          level = newValue!;
                           if (_fieldKey_4.currentState != null) {
                             _fieldKey_4.currentState!.validate()
                                 ? isButtonEnabled[3] = true
@@ -321,7 +268,7 @@ class _UserInputFormState extends State<UserInputForm> {
                         });
                       },
                       onSaved: (value) {
-                        gender = value!;
+                        level = value!;
                       },
                       validator: (value) {
                         if (value == null /*|| value.isEmpty*/) {
@@ -344,7 +291,8 @@ class _UserInputFormState extends State<UserInputForm> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        await signup(); // 서버로 데이터 제출
+                        await createUserData(nickname, age, gender, level,
+                            widget.socialId); // 서버로 데이터 제출
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         prefs.setInt('homeTutorialStep', 1); // 기본값은 1 (첫 번째 단계)

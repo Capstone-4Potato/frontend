@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
+import 'package:flutter_application_1/new/services/api/profile_api.dart';
 import 'package:flutter_application_1/signup/textfield_decoration.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
 
 // 회원정보 수정 페이지
 class ProfileUpdatePage extends StatefulWidget {
@@ -82,79 +80,60 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     });
   }
 
-  // 회원정보 수정 API
   Future<void> _updateProfile() async {
-    // 토큰을 가져오는 함수를 별도 메서드로 분리
-    Future<String?> fetchAccessToken() async {
-      return await getAccessToken();
+    // 유효성 검사 성공 후 사용자 정보 업데이트
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    await _saveUserInfo();
+
+    // 토큰 가져옴
+    String? token = await getAccessToken();
+    if (token == null) {
+      debugPrint("updateUser : fail to load token.");
+      return;
     }
 
-    // 요청을 보내는 함수를 별도 메서드로 분리
-    Future<http.Response> makeRequest(String token) async {
-      var url = Uri.parse('$main_url/users');
-      return await http.patch(
-        url,
-        headers: <String, String>{
-          'access': token,
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          'name': _nicknameController.text,
-          'age': DateTime.now().year - int.parse(_birthYearController.text) + 1,
-          'gender': _selectedGender,
-          'level': _selectedLevel,
-        }),
-      );
+    // 유저 정보 업데이트 api 요청
+    var response = await updateUserDataRequest(token);
+
+    // 변경 성공 하면 dialog
+    if (response.statusCode == 200) {
+      debugPrint("프로필 변경 성공: ${response.body}");
+      _showSuccessDialog();
+      return;
     }
 
-    // 요청을 보낼 때 사용할 액세스 토큰
-    String? token = await fetchAccessToken();
-    if (_formKey.currentState?.validate() ?? false) {
-      var response = await makeRequest(token!);
+    if (response.statusCode == 401) {
+      // 토큰이 만료된 경우 리프레시
+      debugPrint('Access token expired. Refreshing token...');
+      bool isRefreshed = await refreshAccessToken();
 
-      if (response.statusCode == 200) {
-        debugPrint("Info updated successfully: ${response.body}");
-        widget.onProfileUpdate(
-          _nicknameController.text,
-          DateTime.now().year - int.parse(_birthYearController.text) + 1,
-          _selectedGender!,
-          _selectedLevel!,
-        );
-        // 유저 정보 저장
-        await UserInfo().saveUserInfo(
-          name: _nicknameController.text,
-          age: DateTime.now().year - int.parse(_birthYearController.text) + 1,
-          gender: _selectedGender!,
-          level: _selectedLevel!,
-        );
-        _showSuccessDialog();
-      } else if (response.statusCode == 401) {
-        // 토큰이 만료된 경우
-        debugPrint('Access token expired. Refreshing token...');
-
-        // 리프레시 토큰을 사용하여 새로운 액세스 토큰을 가져옵니다.
-        bool isRefreshed = await refreshAccessToken();
-
-        if (isRefreshed) {
-          // 새로운 액세스 토큰으로 다시 시도
-          debugPrint('Token refreshed successfully. Retrying request...');
-          String? newToken = await fetchAccessToken();
-          response = await makeRequest(newToken!);
-
+      if (isRefreshed) {
+        String? newToken = await getAccessToken();
+        if (newToken != null) {
+          response = await updateUserDataRequest(newToken);
           if (response.statusCode == 200) {
-            debugPrint('프로필 변경 성공');
-          } else {
-            debugPrint('프로필 변경 실패');
+            debugPrint("프로필 변경 성공 (토큰 갱신 후) : ${response.body}");
+            _showSuccessDialog();
+            return;
           }
-        } else {
-          debugPrint('Failed to refresh token. Please log in again.');
         }
-      } else {
-        // 다른 상태 코드에 대한 처리
-        debugPrint(
-            'Failed to update bookmark. Status code: ${response.statusCode}');
       }
+      debugPrint('Failed to refresh token. Please log in again.');
+    } else {
+      // 다른 상태 코드에 대한 처리
+      debugPrint(
+          'Failed to update profile. Status code: ${response.statusCode}');
     }
+  }
+
+  /// 사용자 정보 저장
+  Future<void> _saveUserInfo() async {
+    await UserInfo().saveUserInfo(
+      name: _nicknameController.text,
+      age: DateTime.now().year - int.parse(_birthYearController.text) + 1,
+      gender: _selectedGender!,
+      level: _selectedLevel!,
+    );
   }
 
   void _showSuccessDialog() {

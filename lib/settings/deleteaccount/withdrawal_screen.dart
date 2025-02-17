@@ -3,10 +3,11 @@ import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/screens/delete_account_survey_screen.dart';
+import 'package:flutter_application_1/new/widgets/custom_app_bar.dart';
 import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// 회원탈퇴 페이지
+/// 회원탈퇴 페이지
 class WithdrawalScreen extends StatefulWidget {
   const WithdrawalScreen({
     Key? key,
@@ -70,15 +71,7 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
     return DismissKeyboard(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: const Text(
-            'Delete Account',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          backgroundColor: const Color(0xFFF5F5F5),
-        ),
+        appBar: const CustomAppBar(),
         backgroundColor: const Color(0xFFF5F5F5),
         body: Padding(
           padding: const EdgeInsets.all(15.0),
