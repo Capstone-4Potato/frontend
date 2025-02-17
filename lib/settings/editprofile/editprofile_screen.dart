@@ -10,19 +10,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // 회원정보 수정 페이지
 class ProfileUpdatePage extends StatefulWidget {
-  final String currentnickname;
-  final int currentage;
-  final int currentgender;
-  final int currentLevel;
-  final Function(String, int, int, int) onProfileUpdate;
-
   const ProfileUpdatePage({
     Key? key,
-    required this.currentnickname,
-    required this.currentage,
-    required this.currentgender,
-    required this.currentLevel,
-    required this.onProfileUpdate,
   }) : super(key: key);
 
   @override
@@ -34,20 +23,15 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final _fieldKey_1 = GlobalKey<FormFieldState>();
   final _fieldKey_2 = GlobalKey<FormFieldState>();
   final _fieldKey_3 = GlobalKey<FormFieldState>();
-  final _fieldKey_4 = GlobalKey<FormFieldState>();
 
-  late TextEditingController _nicknameController;
-  late TextEditingController _birthYearController;
+  TextEditingController? _nicknameController;
+  TextEditingController? _birthYearController;
 
-  late int? _selectedGender;
-  late int? _selectedLevel;
-  late int currentbirthyear;
+  int? _selectedGender;
+  int? currentbirthyear;
 
-  var isButtonEnabled = List<bool>.filled(4, false);
-  var isTapped = List<bool>.filled(4, false);
-
-  final levelMap = {0: 1, 1: 5, 2: 16}; // 레벨에 따른 단계
-  final levelLabels = {1: 'Beginner', 5: 'Intermediate', 16: 'Advanced'};
+  var isButtonEnabled = List<bool>.filled(3, false);
+  var isTapped = List<bool>.filled(3, false);
 
   final GlobalKey _containerKey = GlobalKey();
   final GlobalKey _buttonKey = GlobalKey();
@@ -56,16 +40,25 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   @override
   void initState() {
     super.initState();
-    currentbirthyear = DateTime.now().year - widget.currentage + 1;
-    _nicknameController = TextEditingController(text: widget.currentnickname);
-    _birthYearController =
-        TextEditingController(text: currentbirthyear.toString());
-    _selectedGender = widget.currentgender;
-    _selectedLevel = widget.currentLevel;
-    print(_selectedLevel);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculatePosition();
+    });
+
+    initUserData(); // 초기화
+  }
+
+  /// 유저 정보 초기화
+  Future<void> initUserData() async {
+    // 유저 정보 불러옴
+    await UserInfo().loadUserInfo();
+
+    setState(() {
+      currentbirthyear = DateTime.now().year - UserInfo().age + 1;
+      _nicknameController = TextEditingController(text: UserInfo().name);
+      _birthYearController =
+          TextEditingController(text: currentbirthyear.toString());
+      _selectedGender = UserInfo().gender;
     });
   }
 
@@ -80,6 +73,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     });
   }
 
+  /// 사용자 정보 업데이트
   Future<void> _updateProfile() async {
     // 유효성 검사 성공 후 사용자 정보 업데이트
     if (!(_formKey.currentState?.validate() ?? false)) return;
@@ -129,10 +123,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   /// 사용자 정보 저장
   Future<void> _saveUserInfo() async {
     await UserInfo().saveUserInfo(
-      name: _nicknameController.text,
-      age: DateTime.now().year - int.parse(_birthYearController.text) + 1,
+      name: _nicknameController!.text,
+      age: DateTime.now().year - int.parse(_birthYearController!.text) + 1,
       gender: _selectedGender!,
-      level: _selectedLevel!,
     );
   }
 
@@ -187,6 +180,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 padding: EdgeInsets.all(30.0.h),
                 child: Column(
                   children: [
+                    SizedBox(height: 30.0.h),
                     Text(
                       'You can edit your Profile!',
                       textAlign: TextAlign.center,
@@ -195,120 +189,96 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                         fontSize: 18.0.sp,
                       ),
                     ),
-                    SizedBox(height: 50.h),
-                    TextFormField(
-                      controller: _birthYearController,
-                      key: _fieldKey_1,
-                      decoration: textfieldDecoration(
-                          isTapped[0], isButtonEnabled[0], 'Birth Year'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        isTapped[0] = true;
-                        setState(() {
-                          if (_fieldKey_1.currentState != null) {
-                            _fieldKey_1.currentState!.validate()
-                                ? isButtonEnabled[0] = true
-                                : isButtonEnabled[0] = false;
-                          }
-                        });
-                      },
-                      validator: (value) {
-                        int? year = int.tryParse(value!);
-                        debugPrint("$year");
-                        if (year == null) {
-                          return 'Please enter a valid year.';
-                        } else if (year < 1924 || year > DateTime.now().year) {
-                          return 'Please enter your birth year.';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 25.h),
-                    DropdownButtonFormField<int>(
-                      value: _selectedGender,
-                      key: _fieldKey_2,
-                      icon: const Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 195, 185, 182),
-                      ),
-                      dropdownColor: const Color.fromARGB(255, 223, 234, 251),
-                      style: TextStyle(
-                        color: bam,
-                        fontSize: 20.sp,
-                      ),
-                      elevation: 16,
-                      items: <int>[0, 1].map((int value) {
-                        return DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value == 0 ? 'Male' : 'Female'),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedGender = value;
-                        });
-                      },
-                      decoration: textfieldDecoration(
-                          isTapped[1], isButtonEnabled[1], 'Gender'),
-                    ),
-                    SizedBox(height: 25.h),
-                    TextFormField(
-                      controller: _nicknameController,
-                      key: _fieldKey_3,
-                      decoration: textfieldDecoration(
-                          isTapped[2], isButtonEnabled[2], 'Nickname'),
-                      onChanged: (value) {
-                        isTapped[2] = true;
-                        setState(() {
-                          if (_fieldKey_3.currentState != null) {
-                            _fieldKey_3.currentState!.validate()
-                                ? isButtonEnabled[2] = true
-                                : isButtonEnabled[2] = false;
-                          }
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your nickname.';
-                        } else if (value.length < 3) {
-                          return 'Nickname must be at least 3 characters.';
-                        } else if (value.length > 8) {
-                          return 'Nickname must be at most 8 characters.';
-                        } else if (value.contains(' ')) {
-                          return 'Nickname cannot contain spaces.';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 25.h),
-                    DropdownButtonFormField<int>(
-                      value: _selectedLevel,
-                      key: _fieldKey_4,
-                      icon: const Icon(
-                        Icons.arrow_drop_down,
-                        color: Color.fromARGB(255, 195, 185, 182),
-                      ),
-                      dropdownColor: const Color.fromARGB(255, 223, 234, 251),
-                      style: TextStyle(
-                        color: bam,
-                        fontSize: 20.sp,
-                      ),
-                      elevation: 16,
-                      items: levelLabels.entries.map((entry) {
-                        return DropdownMenuItem<int>(
-                          value: entry.key,
-                          child: Text(entry.value),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedLevel = value ?? 1;
-                        });
-                      },
-                      decoration: textfieldDecoration(
-                          isTapped[3], isButtonEnabled[3], 'Level'),
-                    ),
-                    SizedBox(height: 110.h),
+                    SizedBox(height: 80.0.h),
+                    Wrap(
+                      runSpacing: 25.0.h, // 각 항목 사이 간격
+                      children: [
+                        TextFormField(
+                          controller: _birthYearController,
+                          key: _fieldKey_1,
+                          decoration: textfieldDecoration(
+                              isTapped[0], isButtonEnabled[0], 'Birth Year'),
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            isTapped[0] = true;
+                            setState(() {
+                              if (_fieldKey_1.currentState != null) {
+                                _fieldKey_1.currentState!.validate()
+                                    ? isButtonEnabled[0] = true
+                                    : isButtonEnabled[0] = false;
+                              }
+                            });
+                          },
+                          validator: (value) {
+                            int? year = int.tryParse(value!);
+                            debugPrint("$year");
+                            if (year == null) {
+                              return 'Please enter a valid year.';
+                            } else if (year < 1924 ||
+                                year > DateTime.now().year) {
+                              return 'Please enter your birth year.';
+                            }
+                            return null;
+                          },
+                        ),
+                        DropdownButtonFormField<int>(
+                          value: _selectedGender,
+                          key: _fieldKey_2,
+                          icon: const Icon(
+                            Icons.arrow_drop_down,
+                            color: Color.fromARGB(255, 195, 185, 182),
+                          ),
+                          dropdownColor:
+                              const Color.fromARGB(255, 223, 234, 251),
+                          style: TextStyle(
+                            color: bam,
+                            fontSize: 20.sp,
+                          ),
+                          elevation: 16,
+                          items: <int>[0, 1].map((int value) {
+                            return DropdownMenuItem<int>(
+                              value: value,
+                              child: Text(value == 0 ? 'Male' : 'Female'),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedGender = value;
+                            });
+                          },
+                          decoration: textfieldDecoration(
+                              isTapped[1], isButtonEnabled[1], 'Gender'),
+                        ),
+                        TextFormField(
+                          controller: _nicknameController,
+                          key: _fieldKey_3,
+                          decoration: textfieldDecoration(
+                              isTapped[2], isButtonEnabled[2], 'Nickname'),
+                          onChanged: (value) {
+                            isTapped[2] = true;
+                            setState(() {
+                              if (_fieldKey_3.currentState != null) {
+                                _fieldKey_3.currentState!.validate()
+                                    ? isButtonEnabled[2] = true
+                                    : isButtonEnabled[2] = false;
+                              }
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your nickname.';
+                            } else if (value.length < 3) {
+                              return 'Nickname must be at least 3 characters.';
+                            } else if (value.length > 8) {
+                              return 'Nickname must be at most 8 characters.';
+                            } else if (value.contains(' ')) {
+                              return 'Nickname cannot contain spaces.';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),

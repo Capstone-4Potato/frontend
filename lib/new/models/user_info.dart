@@ -22,12 +22,15 @@ class UserInfo {
     required String name,
     required int age,
     required int gender,
-    required int level,
+    int? level,
   }) async {
+    int currentLevel =
+        level ?? _prefs.getInt(UserKey.level.name) ?? 1; // 기존 level 유지
+
     await _prefs.setString(UserKey.name.name, name);
     await _prefs.setInt(UserKey.age.name, age);
     await _prefs.setInt(UserKey.gender.name, gender);
-    await _prefs.setInt(UserKey.level.name, level);
+    await _prefs.setInt(UserKey.level.name, currentLevel);
   }
 
   // 유저 정보 로드
