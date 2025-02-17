@@ -7,7 +7,7 @@ import 'package:flutter_application_1/new/services/login_platform_manage.dart';
 import 'package:flutter_application_1/settings/editprofile/editprofile_screen.dart';
 import 'package:flutter_application_1/tutorial/retutorial.dart';
 import 'package:flutter_application_1/settings/logout/sign_out_social.dart';
-import 'package:flutter_application_1/new/services/api/login_post_logout.dart';
+import 'package:flutter_application_1/new/services/api/login_api.dart';
 import 'package:flutter_application_1/settings/deleteaccount/withdrawal_screen.dart';
 import 'package:flutter_application_1/new/screens/login_screen.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';

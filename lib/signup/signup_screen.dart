@@ -66,6 +66,7 @@ class _UserInputFormState extends State<UserInputForm> {
   // 회원가입 API
   Future<void> signup() async {
     Uri url = Uri.parse('$main_url/users');
+    debugPrint("$nickname, ${widget.socialId}, $age, $gender, $level");
     try {
       var response = await http.post(
         url,
@@ -114,7 +115,6 @@ class _UserInputFormState extends State<UserInputForm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _calculatePosition();
@@ -312,7 +312,7 @@ class _UserInputFormState extends State<UserInputForm> {
                       onChanged: (int? newValue) {
                         isTapped[3] = true;
                         setState(() {
-                          gender = newValue!;
+                          level = newValue!;
                           if (_fieldKey_4.currentState != null) {
                             _fieldKey_4.currentState!.validate()
                                 ? isButtonEnabled[3] = true
@@ -321,7 +321,7 @@ class _UserInputFormState extends State<UserInputForm> {
                         });
                       },
                       onSaved: (value) {
-                        gender = value!;
+                        level = value!;
                       },
                       validator: (value) {
                         if (value == null /*|| value.isEmpty*/) {
