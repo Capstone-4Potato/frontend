@@ -68,7 +68,56 @@ Future<void> getUserData() async {
 }
 
 /// POST /users  (회원가입)
-Future<void> createUser(String socialId) async {}
+Future<void> createUserData(
+    String name, int age, int gender, int level, String socialId) async {
+  Uri url = Uri.parse('$main_url/users');
+  debugPrint("$name, $socialId, $age, $gender, $level");
+
+  try {
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': name,
+        'socialId': socialId,
+        'age': age,
+        'gender': gender,
+        'level': level,
+      }),
+    );
+    switch (response.statusCode) {
+      case 200:
+        String? accessToken = response.headers['access'];
+        String? refreshToken = response.headers['refresh'];
+        debugPrint("accessToken: $accessToken");
+        debugPrint("refreshToken: $refreshToken");
+        if (accessToken != null && refreshToken != null) {
+          // 토큰 저장
+          await saveTokens(accessToken, refreshToken);
+
+          // 유저 정보 저장
+          await UserInfo().saveUserInfo(
+            name: name,
+            age: age,
+            gender: gender,
+            level: level,
+          );
+        }
+        break;
+
+      case 500:
+        debugPrint(response.body);
+        break;
+      default:
+        debugPrint('알 수 없는 오류가 발생했습니다. 상태 코드: ${response.statusCode}');
+        // 기타 상태 코드에 대한 처리
+        break;
+    }
+  } catch (e) {
+    debugPrint('네트워크 오류가 발생했습니다: $e');
+    // 네트워크 예외 처리 로직
+  }
+}
 
 /// POST /users/recover  (탈퇴 계정 복구)
 Future<void> recoverUserAccount(String socialId) async {
