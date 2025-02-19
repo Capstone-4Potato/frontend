@@ -1,7 +1,7 @@
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
+import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
@@ -118,7 +118,7 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
                     radius: avatarSize!.width / 2,
                     backgroundColor: const Color.fromARGB(255, 242, 235, 227),
                     child: SvgPicture.asset(
-                      'assets/image/bam_character.svg',
+                      ImagePath.balbamCharacter1.path,
                       width: 130.w,
                     ),
                   ),

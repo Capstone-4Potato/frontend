@@ -300,9 +300,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     DraggableScrollableSheet(
                       // 드래그 시트
-                      initialChildSize: (401 / 665).h,
-                      minChildSize: (400 / 665).h,
-                      maxChildSize: (665 / 665).h,
+                      initialChildSize: (0.56).h,
+                      minChildSize: (0.56).h,
+                      // maxChildSize: (665 / 665).h,
                       shouldCloseOnMinExtent: true,
                       expand: true,
                       builder: (BuildContext context,

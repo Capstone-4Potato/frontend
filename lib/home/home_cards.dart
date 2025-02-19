@@ -1,27 +1,19 @@
 import 'dart:convert';
 
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/home/custom/customsentence_screen.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/today_learning_card.dart';
-import 'package:flutter_application_1/learning_coures/learning_course_card_list.dart';
 import 'package:flutter_application_1/home/missed_cards_screen.dart';
 import 'package:flutter_application_1/home/saved_cards_screen.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_screen.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
-import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;

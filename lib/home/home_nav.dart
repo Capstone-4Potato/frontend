@@ -172,7 +172,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SizedBox(
-                    height: 15.h,
+                    height: 10.h,
                   ),
                   Icon(
                     iconList[index],

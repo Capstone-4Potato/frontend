@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
+import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_application_1/new/models/levels.dart';
 import 'package:flutter_application_1/new/services/api/report_api.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/re_test_page.dart';
@@ -452,7 +453,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               backgroundColor:
                                   const Color.fromARGB(255, 242, 235, 227),
                               child: SvgPicture.asset(
-                                'assets/image/bam_character.svg',
+                                ImagePath.balbamCharacter1.path,
                                 width: 50.w,
                                 height: 50.h,
                               ),

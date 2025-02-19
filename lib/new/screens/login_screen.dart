@@ -55,7 +55,7 @@ class LoginScreen extends StatelessWidget {
       height: 58.0.h,
       alignment: Alignment.bottomCenter,
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: const Color.fromARGB(0, 218, 43, 43),
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(

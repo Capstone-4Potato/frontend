@@ -104,8 +104,8 @@ class _FeedbackTutorialScreen2State extends State<FeedbackTutorialScreen2> {
                     ),
                   ),
                   SizedBox(
-                    width: 70.w,
-                    height: 70.h,
+                    width: 72.w,
+                    height: 72.h,
                     child: FloatingActionButton(
                       onPressed: widget.onTap,
                       backgroundColor: const Color(0xFFF26647),
