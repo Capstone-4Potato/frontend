@@ -5,6 +5,7 @@ import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/widgets/sign_in_image_button.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
+import 'package:flutter_svg/svg.dart';
 
 /// 로그인 화면
 class LoginScreen extends StatelessWidget {
@@ -54,7 +55,7 @@ class LoginScreen extends StatelessWidget {
       height: 58.h,
       alignment: Alignment.bottomCenter,
       decoration: BoxDecoration(
-        color: AppColors.orange_002,
+        color: Colors.black,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
@@ -64,9 +65,8 @@ class LoginScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: Image.asset(
+      child: SvgPicture.asset(
         ImagePath.loginBalbamCharacter.path,
-        fit: BoxFit.fitWidth,
       ),
     );
   }
