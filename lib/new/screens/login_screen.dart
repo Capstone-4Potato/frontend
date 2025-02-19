@@ -51,11 +51,11 @@ class LoginScreen extends StatelessWidget {
   /// 로고 아이콘 박스 빌드
   Widget _buildLogoContainer() {
     return Container(
-      width: 58.w,
-      height: 58.h,
+      width: 58.0.w,
+      height: 58.0.h,
       alignment: Alignment.bottomCenter,
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(10.r),
         boxShadow: [
           BoxShadow(
