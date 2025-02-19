@@ -148,5 +148,9 @@
 	<string>발밤발밤</string>
 	<key>naverServiceAppUrlScheme</key>
 	<string>balbambalbamurlscheme</string>
+	<key>FirebaseMessagingAutoInitEnabled</key>
+	<true/>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
 </dict>
 </plist>

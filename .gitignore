@@ -46,3 +46,8 @@ app.*.map.json
 
 # Ios related
 /ios/Runner/GoogleService-Info.plist
+
+# firebase
+firebase.json
+.firebaserc
+/assets/data/google-service-account.json
