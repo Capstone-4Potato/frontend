@@ -9,6 +9,7 @@ import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_cards.dart';
+import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_application_1/notification/notification_screen.dart';
 import 'package:flutter_application_1/settings/profile_page.dart';
 import 'package:flutter_application_1/tutorial/home_tutorial_screen1.dart';
@@ -186,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   radius: 101.r,
                                   backgroundColor: AppColors.orange_001,
                                   child: SvgPicture.asset(
-                                    'assets/image/bam_character.svg',
+                                    ImagePath.balbamCharacter1.path,
                                     width: 130.w,
                                   ),
                                 ),
