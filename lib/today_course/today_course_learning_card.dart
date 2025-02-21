@@ -540,24 +540,32 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0.h),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 8.0.h, horizontal: 16.w),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(widget.texts[_currentIndex],
-                            style: const TextStyle(
-                                fontSize: 40, fontWeight: FontWeight.bold)),
+                        Text(
+                          widget.texts[_currentIndex],
+                          style: TextStyle(
+                              fontSize: 24.0.sp, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
                         SizedBox(height: 7.h),
-                        Text('[${widget.cardPronunciations[_currentIndex]}]',
-                            style: TextStyle(
-                                fontSize: 24.h, color: Colors.grey[700])),
+                        Text(
+                          '[${widget.cardPronunciations[_currentIndex]}]',
+                          style: TextStyle(
+                              fontSize: 18.sp, color: Colors.grey[700]),
+                          textAlign: TextAlign.center,
+                        ),
                         SizedBox(height: 4.h),
                         Text(
                           widget.cardTranslations[_currentIndex],
-                          style: const TextStyle(
-                              fontSize: 22,
+                          style: TextStyle(
+                              fontSize: 18.0.sp,
                               fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 231, 156, 135)),
+                              color: const Color.fromARGB(255, 231, 156, 135)),
+                          textAlign: TextAlign.center,
                         ),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
