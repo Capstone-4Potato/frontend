@@ -1232,9 +1232,6 @@ PODS:
     - Flutter
   - flutter_native_splash (2.4.3):
     - Flutter
-  - flutter_naver_login (0.0.1):
-    - Flutter
-    - naveridlogin-sdk-ios (~> 4.1.0)
   - flutter_secure_storage (3.3.1):
     - Flutter
   - flutter_sound (9.23.1):
@@ -1387,7 +1384,6 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
-  - naveridlogin-sdk-ios (4.1.6)
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -1416,7 +1412,6 @@ DEPENDENCIES:
   - flutter_blue_plus_darwin (from `.symlinks/plugins/flutter_blue_plus_darwin/darwin`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
-  - flutter_naver_login (from `.symlinks/plugins/flutter_naver_login/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_sound (from `.symlinks/plugins/flutter_sound/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/darwin`)
@@ -1454,7 +1449,6 @@ SPEC REPOS:
     - GTMSessionFetcher
     - leveldb-library
     - nanopb
-    - naveridlogin-sdk-ios
     - PromisesObjC
 
 EXTERNAL SOURCES:
@@ -1476,8 +1470,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_native_splash:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
-  flutter_naver_login:
-    :path: ".symlinks/plugins/flutter_naver_login/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_sound:
@@ -1524,7 +1516,6 @@ SPEC CHECKSUMS:
   flutter_blue_plus_darwin: 3ea4ec9133b377febcc8a70b28cd2d2dc9242bd9
   flutter_local_notifications: df98d66e515e1ca797af436137b4459b160ad8c9
   flutter_native_splash: f71420956eb811e6d310720fee915f1d42852e7a
-  flutter_naver_login: 1dbf6d21aae5235cdf76a28ac79cf6871899282f
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   flutter_sound: 094823bc99ca323422808f386c6f597ea157dc49
   flutter_sound_core: 8d3c08efc430a06debc49a627f9b651b542e8351
@@ -1540,7 +1531,6 @@ SPEC CHECKSUMS:
   kakao_flutter_sdk_common: 4f10f98226da5d0f7cbdeeaed5cc21f144515209
   leveldb-library: cc8b8f8e013647a295ad3f8cd2ddf49a6f19be19
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  naveridlogin-sdk-ios: cdd34e3585a3d5aaf37c1d84c1f41faba4a25d1a
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47

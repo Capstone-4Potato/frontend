@@ -25,7 +25,6 @@ dependencies:
   flutter_svg: ^1.1.6
   #firebase_auth: ^4.17.8
   kakao_flutter_sdk: ^1.9.1+2
-  flutter_naver_login: ^1.8.0
   kakao_flutter_sdk_user: ^1.2.1
   flutter_secure_storage: ^5.0.1
   shared_preferences: ^2.0.6
