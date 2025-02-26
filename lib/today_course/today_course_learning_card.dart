@@ -182,7 +182,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
             base64userAudio,
             base64correctAudio,
           ).timeout(
-            const Duration(seconds: 6),
+            const Duration(seconds: 7),
             onTimeout: () {
               throw TimeoutException('Feedback request timed out');
             },
