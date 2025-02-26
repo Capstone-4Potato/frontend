@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/home/custom/customfeedbackui.dart';
@@ -37,7 +36,7 @@ class CustomSentenceLearningCard extends StatefulWidget {
 
 class _CustomSentenceLearningCardState
     extends State<CustomSentenceLearningCard> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
@@ -48,9 +47,6 @@ class _CustomSentenceLearningCardState
 
   late PageController pageController; // 페이지 컨트롤러 생성
 
-  final List<dynamic> _voices = [];
-  final String _selectedVoice = '';
-
   @override
   void initState() {
     super.initState();
@@ -60,6 +56,7 @@ class _CustomSentenceLearningCardState
   }
 
   Future<void> _initialize() async {
+    await _audioPlayer.openPlayer();
     await _permissionService.requestPermissions();
     await _audioRecorder.openRecorder();
   }
@@ -263,7 +260,7 @@ class _CustomSentenceLearningCardState
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _audioPlayer.closePlayer();
     _audioRecorder.closeRecorder();
     pageController.dispose();
     super.dispose();

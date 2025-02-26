@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
@@ -47,7 +46,7 @@ class SyllableLearningCard extends StatefulWidget {
 }
 
 class _SyllableLearningCardState extends State<SyllableLearningCard> {
-  final AudioPlayer _audioPlayer = AudioPlayer(); // 오디오 재생기
+  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer(); // 오디오 재생기
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder(); // 오디오 녹음기
   final PermissionService _permissionService = PermissionService(); // 권한 서비스
   bool _isRecording = false; // 녹음 중인지 여부
@@ -277,7 +276,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose(); // 오디오 플레이어 정리
+    _audioPlayer.closePlayer(); // 오디오 플레이어 정리
     _audioRecorder.closeRecorder(); // 오디오 세션 닫기
     pageController.dispose();
     super.dispose();
