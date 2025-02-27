@@ -151,7 +151,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
                           );
                         },
                       )
-                    : Navigator.push<void>(
+                    : Navigator.pushReplacement(
                         context,
                         MaterialPageRoute<void>(
                           builder: (BuildContext context) =>

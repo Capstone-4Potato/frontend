@@ -40,7 +40,7 @@ class TongueTwistersLearningCard extends StatefulWidget {
 
 class _TongueTwistersLearningCardState
     extends State<TongueTwistersLearningCard> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
@@ -60,6 +60,7 @@ class _TongueTwistersLearningCardState
   }
 
   Future<void> _initialize() async {
+    await _audioPlayer.openPlayer();
     await _permissionService.requestPermissions();
     await _audioRecorder.openRecorder();
   }
@@ -88,7 +89,7 @@ class _TongueTwistersLearningCardState
               base64userAudio,
               base64correctAudio,
             ).timeout(
-              const Duration(seconds: 8),
+              const Duration(seconds: 9),
               onTimeout: () {
                 throw TimeoutException('Feedback request timed out');
               },
@@ -216,7 +217,7 @@ class _TongueTwistersLearningCardState
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _audioPlayer.closePlayer();
     _audioRecorder.closeRecorder();
     pageController.dispose();
     super.dispose();

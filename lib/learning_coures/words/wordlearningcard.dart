@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
@@ -38,7 +36,7 @@ class WordLearningCard extends StatefulWidget {
 }
 
 class _WordLearningCardState extends State<WordLearningCard> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
@@ -58,6 +56,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
   }
 
   Future<void> _initialize() async {
+    _audioPlayer.openPlayer();
     await _permissionService.requestPermissions();
     await _audioRecorder.openRecorder();
   }
@@ -65,9 +64,6 @@ class _WordLearningCardState extends State<WordLearningCard> {
   Future<void> _recordAudio() async {
     if (_isRecording) {
       final path = await _audioRecorder.stopRecorder();
-      // print("경로 : $path");
-      // await _audioPlayer.setSourceDeviceFile((path!)); // 바이트 데이터를 재생
-      // _audioPlayer.play(path);
       setState(() {
         _isRecording = false;
         _recordedFilePath = path!;
@@ -211,7 +207,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _audioPlayer.closePlayer();
     _audioRecorder.closeRecorder();
     pageController.dispose();
     super.dispose();

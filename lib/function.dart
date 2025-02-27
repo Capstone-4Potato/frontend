@@ -317,7 +317,6 @@ Future<FeedbackData?> getCustomFeedback(
 // 단어, 문장, 사용자문장 피드백 화면에서 잘못발음한 텍스트 표현하기 위함
 Widget buildTextSpans(String text, List<int>? mistakenIndexes) {
   List<TextSpan> spans = [];
-  print(text);
   if (mistakenIndexes != null)
     // ignore: curly_braces_in_flow_control_structures
     for (int i = 0; i < text.length; i++) {
@@ -335,6 +334,32 @@ Widget buildTextSpans(String text, List<int>? mistakenIndexes) {
               fontWeight: FontWeight.w600,
               fontFamily: 'Pretendard',
             );
+      spans.add(TextSpan(text: text[i], style: textStyle));
+    }
+  return AutoSizeText.rich(
+    TextSpan(children: spans),
+  );
+}
+
+// TODO : 중복 함수 수정
+// 단어, 문장, 사용자문장 피드백 화면에서 잘못발음한 텍스트 표현하기 위함 (Today Course feedback에서 사용!1)
+Widget buildTextSpansTodayCourse(String text, List<int>? mistakenIndexes) {
+  List<TextSpan> spans = [];
+  if (mistakenIndexes != null)
+    // ignore: curly_braces_in_flow_control_structures
+    for (int i = 0; i < text.length; i++) {
+      final bool isMistaken = mistakenIndexes.contains(i);
+      // 잘못된 문자라면 빨간색, 그렇지 않다면 검정색
+      TextStyle textStyle = isMistaken
+          ? const TextStyle(
+              color: Color(0xFFDE0000),
+              fontWeight: FontWeight.w600,
+              overflow: TextOverflow.ellipsis)
+          : const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Pretendard',
+              overflow: TextOverflow.ellipsis);
       spans.add(TextSpan(text: text[i], style: textStyle));
     }
   return AutoSizeText.rich(
@@ -364,6 +389,40 @@ Widget buildTextSpansOmit(String correctText, String userText) {
             fontWeight: FontWeight.w600,
             fontFamily: 'Pretendard',
           );
+
+    // 현재 문자 추가
+    spans.add(TextSpan(
+      text: correctText[i],
+      style: textStyle,
+    ));
+  }
+
+  return AutoSizeText.rich(
+    TextSpan(children: spans),
+  );
+}
+
+// TODO : 중복 함수 수정
+// 사용자가 발음하지 못한 음절은 회색으로 표시(Today couse에서만 사용)
+Widget buildTextSpansOmitTodayCourse(String correctText, String userText) {
+  List<TextSpan> spans = [];
+
+  for (int i = 0; i < correctText.length; i++) {
+    // 사용자 발음이 올바른 문자와 일치하는지 확인
+    final bool isCorrect = i < userText.length && correctText[i] == userText[i];
+
+    // 텍스트 스타일: 올바른 발음은 black, 틀린 발음은 gray
+    TextStyle textStyle = isCorrect
+        ? const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Pretendard',
+            overflow: TextOverflow.ellipsis)
+        : const TextStyle(
+            color: Color.fromARGB(255, 206, 203, 203),
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Pretendard',
+            overflow: TextOverflow.ellipsis);
 
     // 현재 문자 추가
     spans.add(TextSpan(
