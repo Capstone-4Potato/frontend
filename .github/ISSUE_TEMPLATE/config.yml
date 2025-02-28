@@ -1,0 +1,13 @@
+iblank_issues_enabled: false
+contact_links:
+  - name: 질문이 있나요?
+    url: https://github.com/example/repo/discussions
+    about: 질문은 GitHub Discussions에서 해주세요.
+
+  - name: 버그 제보 가이드
+    url: https://example.com/bug-report-guide
+    about: 버그를 제보하기 전에 가이드를 확인하세요.
+
+  - name: 실시간 도움받기 (Discord)
+    url: https://discord.gg/example
+    about: 실시간 채팅 지원이 필요하다면 Discord에 참여하세요.
