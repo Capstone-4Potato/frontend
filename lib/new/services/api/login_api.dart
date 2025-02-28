@@ -4,7 +4,7 @@ import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/new/widgets/ask_recover_dialog.dart';
 import 'package:http/http.dart' as http;
 
-/// POST /logout  (로그아웃)
+/// POST `/logout`  (로그아웃)
 Future<void> logoutRequest() async {
   String? token = await getAccessToken();
   var url = Uri.parse('$main_url/logout');
@@ -55,7 +55,7 @@ Future<void> logoutRequest() async {
   }
 }
 
-/// POST /login  (로그인)
+/// POST `/login`  (로그인)
 Future<int> sendSocialLoginRequest(
     BuildContext context, String? socialId) async {
   var url = Uri.parse('$main_url/login');

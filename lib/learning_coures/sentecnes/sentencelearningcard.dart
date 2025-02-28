@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/learning_coures/sentecnes/sentencefeedbackui.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
@@ -11,7 +11,6 @@ import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
-import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
@@ -101,19 +100,24 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
               setState(() {
                 _isLoading = false; // Stop loading
               });
-              showErrorDialog();
+              if (!mounted) return;
+              showRecordingErrorDialog(context);
             }
           } catch (e) {
             setState(() {
               _isLoading = false; // Stop loading
             });
             if (e.toString() == 'Exception: ReRecordNeeded') {
-              // Show the ReRecordNeeded dialog if the exception occurs
-              showRecordLongerDialog(context);
+              if (!mounted) return;
+              showRecordingErrorDialog(context,
+                  type: RecordingErrorType.tooShort);
             } else if (e is TimeoutException) {
-              showTimeoutDialog(); // Show error dialog on timeout
+              if (!mounted) return;
+              showRecordingErrorDialog(context,
+                  type: RecordingErrorType.timeout);
             } else {
-              showErrorDialog();
+              if (!mounted) return;
+              showRecordingErrorDialog(context);
             }
           }
         } else {
@@ -155,38 +159,6 @@ class _SentenceLearningCardState extends State<SentenceLearningCard> {
           feedbackData: feedbackData,
           recordedFilePath: _recordedFilePath,
           text: widget.texts[widget.currentIndex], // 카드 한글 발음
-        );
-      },
-    );
-  }
-
-  void showErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RecordingErrorDialog();
-      },
-    );
-  }
-
-  void showTimeoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RecordingErrorDialog(
-          text: "The server response timed out. Please try again.",
-        );
-      },
-    );
-  }
-
-  // "좀 더 길게 녹음해주세요" 다이얼로그 표시 함수
-  void showRecordLongerDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RecordingErrorDialog(
-          text: "Please press the stop recording button a bit later.",
         );
       },
     );

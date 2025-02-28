@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart' as audioplayers;
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
@@ -16,7 +17,6 @@ import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/updatecardweaksound.dart';
-import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -197,19 +197,24 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
             setState(() {
               _isLoading = false; // Stop loading
             });
-            showErrorDialog();
+            if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+            showRecordingErrorDialog(context); // 녹음 오류 dialog
           }
         } catch (e) {
           setState(() {
             _isLoading = false; // Stop loading
           });
           if (e.toString() == 'Exception: ReRecordNeeded') {
-            // Show the ReRecordNeeded dialog if the exception occurs
-            showRecordLongerDialog(context);
+            if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+            showRecordingErrorDialog(context,
+                type: RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
           } else if (e is TimeoutException) {
-            showTimeoutDialog(); // Show error dialog on timeout
+            if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+            showRecordingErrorDialog(context,
+                type: RecordingErrorType.timeout); // 녹음 길이가 너무 짧음
           } else {
-            showErrorDialog();
+            if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+            showRecordingErrorDialog(context); // 녹음 오류 dialog
           }
         }
       }
@@ -274,25 +279,29 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
               body: jsonEncode(body),
             );
             if (retryResponse.statusCode == 200) {
-              print('File uploaded successfully after token refresh');
-              print('Response body: $response.body');
+              debugPrint('File uploaded successfully after token refresh');
+              debugPrint('Response body: $response.body');
               _nextCard();
             } else {
-              print(
+              debugPrint(
                   'File upload failed after token refresh with status: ${retryResponse.statusCode}');
-              showErrorDialog();
+              if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+              showRecordingErrorDialog(context); // 녹음 오류 dialog
             }
           } else {
-            print('Failed to refresh access token');
-            showErrorDialog();
+            debugPrint('Failed to refresh access token');
+            if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+            showRecordingErrorDialog(context); // 녹음 오류 dialog
           }
         } else {
-          print('File upload failed with status: ${response.statusCode}');
-          showErrorDialog();
+          debugPrint('File upload failed with status: ${response.statusCode}');
+          if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+          showRecordingErrorDialog(context); // 녹음 오류 dialog
         }
       } catch (e) {
-        print('Error uploading file: $e');
-        showErrorDialog();
+        debugPrint('Error uploading file: $e');
+        if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+        showRecordingErrorDialog(context); // 녹음 오류 dialog
       }
     }
   }
@@ -383,39 +392,6 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         _nextCard();
       });
     });
-  }
-
-  void showTimeoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RecordingErrorDialog(
-          text: "The server response timed out. Please try again.",
-        );
-      },
-    );
-  }
-
-  // "좀 더 길게 녹음해주세요" 다이얼로그 표시 함수
-  void showRecordLongerDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RecordingErrorDialog(
-          text: "Please press the stop recording button a bit later.",
-        );
-      },
-    );
-  }
-
-  // 오류 다이얼로그 표시
-  void showErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RecordingErrorDialog();
-      },
-    );
   }
 
   void _showCompletionDialog() async {

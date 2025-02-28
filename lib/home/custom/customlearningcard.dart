@@ -7,9 +7,9 @@ import 'package:flutter_application_1/home/custom/customfeedbackui.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/home/custom/customtts.dart';
+import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
-import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
@@ -99,19 +99,25 @@ class _CustomSentenceLearningCardState
             setState(() {
               _isLoading = false; // Stop loading
             });
-            showErrorDialog();
+
+            if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+            showRecordingErrorDialog(context); // 녹음 오류 dialog
           }
         } catch (e) {
           setState(() {
             _isLoading = false; // Stop loading
           });
           if (e.toString() == 'Exception: ReRecordNeeded') {
-            // Show the ReRecordNeeded dialog if the exception occurs
-            showRecordLongerDialog(context);
+            if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+            showRecordingErrorDialog(context,
+                type: RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
           } else if (e is TimeoutException) {
-            showTimeoutDialog(); // Show error dialog on timeout
+            if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+            showRecordingErrorDialog(context,
+                type: RecordingErrorType.timeout); // 서버 타임아웃
           } else {
-            showErrorDialog();
+            if (!mounted) return; // 위젯이 여전히 존재하는지 확인
+            showRecordingErrorDialog(context); // 녹음 오류 dialog
           }
         }
       }
@@ -141,40 +147,6 @@ class _CustomSentenceLearningCardState
     });
   }
 
-  List<Map<String, String>> _splitTextByLanguage(String text) {
-    RegExp koreanRegex = RegExp(r'[가-힣]+');
-    RegExp englishRegex = RegExp(r'[a-zA-Z]+');
-
-    List<Map<String, String>> segments = [];
-    StringBuffer buffer = StringBuffer();
-    String? currentLanguage;
-
-    for (int i = 0; i < text.length; i++) {
-      String char = text[i];
-      String? lang = koreanRegex.hasMatch(char)
-          ? 'ko-KR'
-          : englishRegex.hasMatch(char)
-              ? 'en-US'
-              : null;
-
-      if (lang != null && lang != currentLanguage) {
-        if (buffer.isNotEmpty) {
-          segments
-              .add({'text': buffer.toString(), 'language': currentLanguage!});
-          buffer.clear();
-        }
-        currentLanguage = lang;
-      }
-      buffer.write(char);
-    }
-
-    if (buffer.isNotEmpty) {
-      segments.add({'text': buffer.toString(), 'language': currentLanguage!});
-    }
-
-    return segments;
-  }
-
   void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
     showGeneralDialog(
       context: context,
@@ -189,38 +161,6 @@ class _CustomSentenceLearningCardState
           feedbackData: feedbackData,
           recordedFilePath: _recordedFilePath,
           text: widget.texts[widget.currentIndex], // 카드 한글 발음
-        );
-      },
-    );
-  }
-
-  void showErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RecordingErrorDialog();
-      },
-    );
-  }
-
-  void showTimeoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RecordingErrorDialog(
-          text: "The server response timed out. Please try again.",
-        );
-      },
-    );
-  }
-
-  // "좀 더 길게 녹음해주세요" 다이얼로그 표시 함수
-  void showRecordLongerDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RecordingErrorDialog(
-          text: "Please press the stop recording button a bit later.",
         );
       },
     );
@@ -269,7 +209,6 @@ class _CustomSentenceLearningCardState
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.74;
-    double cardHeight = MediaQuery.of(context).size.height * 0.32;
 
     String currentContent = widget.texts[widget.currentIndex];
     String currentPronunciation = widget.pronunciations[widget.currentIndex];
