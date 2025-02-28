@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -230,10 +232,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   padding: EdgeInsets.only(right: 12.w),
                                   child: CircleAvatar(
                                     radius: 21.r,
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 255, 160, 105),
-                                    child: Image.asset(
-                                        'assets/image/noti_character.png'),
+                                    backgroundColor: const Color(0xFFFFA069),
+                                    child: SvgPicture.asset(
+                                      'assets/image/noti_character.svg',
+                                      width: 42.w,
+                                      height: 42.h,
+                                    ),
                                   ),
                                 ),
                                 Column(

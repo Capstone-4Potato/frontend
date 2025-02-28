@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
@@ -489,7 +490,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 26.0),
+                        padding: EdgeInsets.only(top: 26.0.h),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -522,50 +523,6 @@ class _ReportScreenState extends State<ReportScreen> {
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  width: 140.0.w,
-                                  height: 35.0.h,
-                                  decoration: BoxDecoration(
-                                      color: AppColors.appBarColor,
-                                      borderRadius:
-                                          BorderRadius.circular(10.0.r),
-                                      border: Border.all(
-                                        color: AppColors.primary,
-                                        width: 1.0.w, // 테두리 너비
-                                      )),
-                                  child: DropdownButton<String>(
-                                    value: _selectedLevel!,
-                                    icon: const Icon(Icons.arrow_drop_down,
-                                        color: AppColors.gray_001),
-                                    underline: const SizedBox(),
-                                    dropdownColor: const Color.fromARGB(
-                                        255, 223, 234, 251),
-                                    menuWidth: 160.w,
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    style: TextStyle(
-                                      color: bam,
-                                      fontSize: 12.sp,
-                                    ),
-                                    elevation: 1,
-                                    items: levelOptions.map((entry) {
-                                      return DropdownMenuItem<String>(
-                                        value: entry,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 12.0.w, right: 25.w),
-                                          child: Text(entry),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) async {
-                                      setState(() {
-                                        _selectedLevel = value ?? 'Beginner';
-                                      });
-                                      await updateCardLevel(value!);
-                                    },
-                                    padding: const EdgeInsets.all(0),
-                                  ),
-                                ),
                               ],
                             ),
                             Container(
@@ -574,7 +531,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             AspectRatio(
                               aspectRatio: 382 / 265,
                               child: Padding(
-                                padding: const EdgeInsets.only(bottom: 30.0),
+                                padding: EdgeInsets.only(bottom: 27.0.h),
                                 child: BarChart(
                                   weeklyData(maxCardValue),
                                 ),
@@ -584,13 +541,86 @@ class _ReportScreenState extends State<ReportScreen> {
                         ),
                       ),
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Today\'s Course Level',
+                            style: TextStyle(
+                              color: const Color(0xFF5E5D58),
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 6.0.h, bottom: 6.0.h),
+                            child: DropdownButton2<String>(
+                              value: _selectedLevel!,
+                              buttonStyleData: ButtonStyleData(
+                                width: double.infinity,
+                                height: 35.0.h,
+                                padding:
+                                    EdgeInsets.only(left: 10.0.w, right: 11.w),
+                                decoration: BoxDecoration(
+                                    color: AppColors.appBarColor,
+                                    borderRadius: BorderRadius.circular(10.0.r),
+                                    border: Border.all(
+                                      color: AppColors.primary,
+                                      width: 1.0.w, // 테두리 너비
+                                    )),
+                                elevation: 0,
+                              ),
+                              alignment: AlignmentDirectional.centerStart,
+                              dropdownStyleData: DropdownStyleData(
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 223, 234, 251),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                elevation: 1,
+                              ),
+                              underline: const SizedBox(),
+                              style: TextStyle(
+                                color: bam,
+                                fontSize: 12.sp,
+                              ),
+                              items: levelOptions.map((entry) {
+                                return DropdownMenuItem<String>(
+                                  value: entry,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(entry),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (value) async {
+                                setState(() {
+                                  _selectedLevel = value ?? 'Beginner';
+                                });
+                                await updateCardLevel(value!);
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 22.0.h),
+                            child: Text(
+                              'This level will be reflected in the Today\'s Course card level.',
+                              style: TextStyle(
+                                color: const Color(0xFFBEBDB8),
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
                         key: widget.keys['vulnerablePhonemesKey'],
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
                             'Vulnerable Phonemes',
                             style: TextStyle(
-                              color: Color(0xFF282722),
+                              color: Color(0xFF5E5D58),
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
                             ),

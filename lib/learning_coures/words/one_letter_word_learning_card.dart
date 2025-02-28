@@ -48,7 +48,7 @@ class OneLetterWordLearningCard extends StatefulWidget {
 }
 
 class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
@@ -71,6 +71,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
   }
 
   Future<void> _initialize() async {
+    await _audioPlayer.openPlayer();
     await _permissionService.requestPermissions();
     await _audioRecorder.openRecorder();
   }
@@ -315,7 +316,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _audioPlayer.closePlayer();
     _audioRecorder.closeRecorder();
     pageController.dispose();
     super.dispose();

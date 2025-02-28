@@ -33,7 +33,7 @@ class TodayLearningCard extends StatefulWidget {
 }
 
 class _TodayLearningCardState extends State<TodayLearningCard> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
   bool _isRecording = false;
@@ -199,7 +199,8 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
       await audioFile.writeAsBytes(audioBytes);
 
       // 3. 파일 재생
-      await _audioPlayer.play(DeviceFileSource(filePath));
+      await _audioPlayer.startPlayer(
+          fromURI: filePath, codec: Codec.pcm16WAV); // 파일 재생
       setState(() {
         _canRecord = true;
       });
@@ -278,7 +279,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _audioPlayer.closePlayer();
     _audioRecorder.closeRecorder();
     super.dispose();
   }
