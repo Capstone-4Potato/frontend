@@ -46,4 +46,6 @@ class AppColors {
   static const Color cardBorder_000 = Color(0xFFE66932);
 
   static const Color cardProgressBar_000 = Color(0xFFE66932);
+
+  static const Color dialog = Color(0xFFFFFFFF);
 }

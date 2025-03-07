@@ -15,7 +15,6 @@ import 'package:flutter_application_1/learning_coures/syllables/syllablefeedback
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
-import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:shared_preferences/shared_preferences.dart';
