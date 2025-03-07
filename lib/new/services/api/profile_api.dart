@@ -21,7 +21,7 @@ Future<void> deleteUsersAccountRequest(
           // 토큰 삭제
           deleteTokens();
           // 튜토 정보 삭제
-          initiallizeTutoInfo(true);
+          initiallizeTutoInfo(false);
           // 로그인 화면으로 이동
           context.navigateTo(
               screen: const LoginScreen(),

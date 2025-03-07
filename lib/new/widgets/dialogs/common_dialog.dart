@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -12,32 +11,34 @@ class CommonDialog extends StatelessWidget {
     this.title = "Great Job",
     this.content = "Please try recording again.",
     this.buttonText = "Go ahead",
+    this.onPressed,
   });
 
   final String imagePath;
   final String title;
   final String content;
   final String buttonText;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 200.0.h),
       child: Container(
-        margin: const EdgeInsets.symmetric(),
+        width: double.maxFinite,
         decoration: BoxDecoration(
           color: AppColors.dialog,
           borderRadius: BorderRadius.circular(14.r),
         ),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 28.h),
+          padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 28.0.h),
           child: Column(
             children: [
               Padding(
                 padding: EdgeInsets.only(bottom: 18.0.h),
                 child: SvgPicture.asset(
                   imagePath,
-                  height: 110,
+                  height: 110.0.h,
                 ),
               ),
               Text(
@@ -56,7 +57,7 @@ class CommonDialog extends StatelessWidget {
                       .copyWith(color: AppColors.gray_002)),
               SizedBox(height: 16.0.h),
               TextButton(
-                onPressed: () {},
+                onPressed: onPressed,
                 style: TextButton.styleFrom(
                   backgroundColor: AppColors.button_000,
                   padding: EdgeInsets.symmetric(

@@ -41,6 +41,9 @@ void showCommonDialog(BuildContext context,
         imagePath: imagePath,
         title: title,
         content: content,
+        onPressed: () {
+          Navigator.pop(context);
+        },
       );
     },
   );
