@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/models/api_method.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_application_1/new/services/login_platform_manage.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/new/services/tutorial_initializer.dart';
 import 'package:flutter_application_1/new/utils/navigation_extension.dart';
+import 'package:flutter_application_1/new/utils/response_printer.dart';
 import 'package:flutter_application_1/new/widgets/dialogs/ask_recover_dialog.dart';
 import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:http/http.dart' as http;
@@ -48,10 +51,11 @@ Future<void> sendLogoutRequest(BuildContext context) async {
 /// ### POST `/login` : 로그인
 Future<int> sendSocialLoginRequest(
     BuildContext context, String? socialId) async {
-  var url = Uri.parse('$main_url/login');
+  String url = '$main_url/login';
+  var urlParse = Uri.parse(url);
 
   try {
-    var request = http.MultipartRequest(ApiMethod.post.type, url);
+    var request = http.MultipartRequest(ApiMethod.post.type, urlParse);
     request.fields['socialId'] = socialId!;
 
     var streamedResponse = await request.send();
@@ -62,6 +66,8 @@ Future<int> sendSocialLoginRequest(
       // Assuming 'access' is the key for the access token in headers
       String? accessToken = response.headers['access'];
       String? refreshToken = response.headers['refresh'];
+
+      responsePrinter(url, response.body, ApiMethod.post.type);
 
       if (accessToken != null && refreshToken != null) {
         await saveTokens(accessToken, refreshToken);

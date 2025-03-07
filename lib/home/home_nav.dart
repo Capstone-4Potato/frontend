@@ -1,6 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_screen.dart';
@@ -71,13 +70,6 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
       reportTutorialStep =
           prefs.getInt('reportTutorialStep') ?? 1; // 기본값은 1 (첫 번째 단계)
     });
-
-    if (homeTutorialStep == 4) {
-      // welcom dialog 표시
-      // ignore: use_build_context_synchronously
-      showCommonDialog(context, type: DialogType.welcome);
-      prefs.setInt('homeTutorialStep', 5);
-    }
   }
 
   // SharedPreferences에서 todayCourse 했는지 여부
@@ -85,7 +77,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       checkTodayCourse = prefs.getBool('checkTodayCourse') ?? false;
-      print("check today course : $checkTodayCourse");
+      debugPrint("check today course : $checkTodayCourse");
     });
     return checkTodayCourse;
   }
