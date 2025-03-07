@@ -4,8 +4,6 @@ import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/services/api/profile_api.dart';
 import 'package:flutter_application_1/signup/textfield_decoration.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
-import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // 회원정보 수정 페이지
@@ -80,45 +78,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     await _saveUserInfo();
 
-    // 토큰 가져옴
-    String? token = await getAccessToken();
-    if (token == null) {
-      debugPrint("updateUser : fail to load token.");
-      return;
-    }
-
     // 유저 정보 업데이트 api 요청
-    var response = await updateUserDataRequest(token);
-
-    // 변경 성공 하면 dialog
-    if (response.statusCode == 200) {
-      debugPrint("프로필 변경 성공: ${response.body}");
-      _showSuccessDialog();
-      return;
-    }
-
-    if (response.statusCode == 401) {
-      // 토큰이 만료된 경우 리프레시
-      debugPrint('Access token expired. Refreshing token...');
-      bool isRefreshed = await refreshAccessToken();
-
-      if (isRefreshed) {
-        String? newToken = await getAccessToken();
-        if (newToken != null) {
-          response = await updateUserDataRequest(newToken);
-          if (response.statusCode == 200) {
-            debugPrint("프로필 변경 성공 (토큰 갱신 후) : ${response.body}");
-            _showSuccessDialog();
-            return;
-          }
-        }
-      }
-      debugPrint('Failed to refresh token. Please log in again.');
-    } else {
-      // 다른 상태 코드에 대한 처리
-      debugPrint(
-          'Failed to update profile. Status code: ${response.statusCode}');
-    }
+    // ignore: use_build_context_synchronously
+    await updateUserDataRequest(context);
   }
 
   /// 사용자 정보 저장
@@ -127,22 +89,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       name: _nicknameController!.text,
       age: DateTime.now().year - int.parse(_birthYearController!.text) + 1,
       gender: _selectedGender!,
-    );
-  }
-
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return SuccessDialog(
-          subtitle: 'Your profile has been updated successfully.',
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-          },
-        );
-      },
     );
   }
 

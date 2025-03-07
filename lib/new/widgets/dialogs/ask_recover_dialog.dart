@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_application_1/new/services/api/join_api.dart';
@@ -12,13 +11,9 @@ void askRecoverDialog(BuildContext context, String? socialId) {
   void onRecoverTap() async {
     // 계정 복구 API 요청
     await recoverUserAccount(socialId!);
-    await getUserData();
-    // 홈으로 이동
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => HomeNav()),
-      (route) => false,
-    );
+    // 사용자 정보 API 요청
+    // ignore: use_build_context_synchronously
+    await getUserData(context);
   }
 
   /// delete 눌렀을 때

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/widgets/recording_error_dialog.dart';
+import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 
 // recording error 타입 Enum으로 정의
 enum RecordingErrorType { generic, timeout, tooShort }

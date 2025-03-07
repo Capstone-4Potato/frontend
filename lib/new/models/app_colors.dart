@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// TODO : 나중에 삭제 필요
 Color primary = const Color.fromARGB(255, 230, 105, 50);
 Color background = const Color.fromARGB(255, 245, 245, 245);
 Color bam = const Color.fromARGB(255, 73, 43, 33);

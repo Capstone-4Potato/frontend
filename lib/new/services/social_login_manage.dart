@@ -21,6 +21,7 @@ Future<Map<String, dynamic>> signInWithApple(BuildContext context) async {
     );
 
     int statusCode =
+        // ignore: use_build_context_synchronously
         await sendSocialLoginRequest(context, credential.userIdentifier);
 
     if (statusCode == 200 || statusCode == 404) {
@@ -51,6 +52,7 @@ Future<Map<String, dynamic>> signInWithKakao(BuildContext context) async {
 
       // 소셜 로그인 정보 전달
       int statusCode =
+          // ignore: use_build_context_synchronously
           await sendSocialLoginRequest(context, user.id.toString());
       if (statusCode == 200 || statusCode == 404) {
         await saveLoginPlatform(LoginPlatform.kakao);
@@ -76,6 +78,7 @@ Future<Map<String, dynamic>> signInWithKakao(BuildContext context) async {
         debugPrint('사용자 정보 요청 성공'
             '\n회원번호: ${user.id}');
         int statusCode =
+            // ignore: use_build_context_synchronously
             await sendSocialLoginRequest(context, user.id.toString());
         if (statusCode == 200 || statusCode == 404) {
           await saveLoginPlatform(LoginPlatform.kakao);
@@ -100,6 +103,7 @@ Future<Map<String, dynamic>> signInWithKakao(BuildContext context) async {
       debugPrint('사용자 정보 요청 성공'
           '\n회원번호: ${user.id}');
       int statusCode =
+          // ignore: use_build_context_synchronously
           await sendSocialLoginRequest(context, user.id.toString());
       if (statusCode == 200 || statusCode == 404) {
         await saveLoginPlatform(LoginPlatform.kakao);
@@ -109,7 +113,7 @@ Future<Map<String, dynamic>> signInWithKakao(BuildContext context) async {
         'socialId': user.id.toString(),
       };
     } catch (error) {
-      print('카카오계정으로 로그인 실패 $error');
+      debugPrint('카카오계정으로 로그인 실패 $error');
       return {
         'statusCode': 500,
         'socialId': '',
@@ -130,6 +134,7 @@ Future<Map<String, dynamic>> signInWithGoogle(BuildContext context) async {
       debugPrint('name = ${googleUser.id}\n');
 
       int statusCode =
+          // ignore: use_build_context_synchronously
           await sendSocialLoginRequest(context, googleUser.id.toString());
       if (statusCode == 200 || statusCode == 404) {
         await saveLoginPlatform(LoginPlatform.google);

@@ -5,7 +5,7 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:http/http.dart' as http;
 
-/// POST /report/cardLevel (사용자 카드 레벨 설정)
+///### POST `report/cardLevel` : 사용자 카드 레벨 설정
 Future<void> updateCardLevel(String level) async {
   String? token = await getAccessToken();
   var url = Uri.parse('$main_url/report/cardLevel');
@@ -58,6 +58,6 @@ Future<void> updateCardLevel(String level) async {
   }
 }
 
-/// GET /report (My report 화면 정보 조회)
+/// ### GET `/report` : My report 화면 정보 조회
 // TODO : report 함수 정의
 Future<void> getReportData() async {}

@@ -13,7 +13,6 @@ import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/learning_coures/words/wordfeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
-import 'package:flutter_application_1/new/widgets/recording_error_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:http/http.dart' as http;
@@ -92,7 +91,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
         });
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh the token
-        print('Access token expired. Refreshing token...');
+        debugPrint('Access token expired. Refreshing token...');
 
         // Refresh the access token
         bool isRefreshed = await refreshAccessToken();

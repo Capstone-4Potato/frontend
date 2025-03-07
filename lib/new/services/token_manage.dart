@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -33,7 +34,7 @@ Future<bool> refreshAccessToken() async {
   try {
     String? refreshToken = await getRefreshToken();
     if (refreshToken == null) {
-      print('No refresh token found for user.');
+      debugPrint('No refresh token found for user.');
       return false;
     }
 
@@ -49,19 +50,19 @@ Future<bool> refreshAccessToken() async {
 
       await saveTokens(newAccessToken!, newRefreshToken!);
 
-      print('Token refreshed successfully.');
+      debugPrint('Token refreshed successfully.');
       return true;
     }
 
     // refresh 만료 -> 강제 로그아웃시키기
     else if (response.statusCode == 401) {
-      print('refresh 만료');
+      debugPrint('refresh 만료');
       deleteTokens();
 
       return false;
     }
   } catch (e) {
-    print('Token refresh failed: $e');
+    debugPrint('Token refresh failed: $e');
   }
   return false;
 }

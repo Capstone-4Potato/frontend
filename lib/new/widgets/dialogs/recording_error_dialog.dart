@@ -3,14 +3,14 @@ import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RecordingErrorDialog extends StatelessWidget {
-  RecordingErrorDialog({
+  const RecordingErrorDialog({
     super.key,
     this.title = "Recording Error",
     this.text = "Please try recording again.",
   });
 
-  String title;
-  String text;
+  final String title;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class RecordingErrorDialog extends StatelessWidget {
                 height: 44.h,
                 decoration: BoxDecoration(
                   color: accent,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: const Center(
                     child: Text(

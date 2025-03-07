@@ -4,7 +4,7 @@ import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/home/custom/customlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
-import 'package:flutter_application_1/new/widgets/recording_error_dialog.dart';
+import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
