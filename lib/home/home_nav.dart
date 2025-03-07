@@ -65,6 +65,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
     setState(() {
       homeTutorialStep =
           prefs.getInt('homeTutorialStep') ?? 1; // 기본값은 1 (첫 번째 단계)
+      debugPrint('$homeTutorialStep');
 
       reportTutorialStep =
           prefs.getInt('reportTutorialStep') ?? 1; // 기본값은 1 (첫 번째 단계)
@@ -76,7 +77,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       checkTodayCourse = prefs.getBool('checkTodayCourse') ?? false;
-      print("check today course : $checkTodayCourse");
+      debugPrint("check today course : $checkTodayCourse");
     });
     return checkTodayCourse;
   }
@@ -167,7 +168,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
             key: keys['homeNavContainerKey'],
             itemCount: iconList.length,
             tabBuilder: (index, isActive) {
-              final color = isActive ? primary : bam;
+              final color = isActive ? AppColors.icon_000 : AppColors.icon_001;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

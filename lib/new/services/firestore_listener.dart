@@ -3,8 +3,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 class FirestoreListener {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   /// 알림 권한 요청 세팅
   Future<void> setupPushNotifications() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;

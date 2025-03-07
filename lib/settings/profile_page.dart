@@ -25,7 +25,6 @@ class _ProfilePageState extends State<ProfilePage> {
   static String? nickname;
   static int? age;
   static int? gender;
-  static int? level;
   bool isLoading = true;
   LoginPlatform _loginPlatform = LoginPlatform.none; // Add this line
 
@@ -68,7 +67,6 @@ class _ProfilePageState extends State<ProfilePage> {
           nickname = data['name'];
           age = data['age'];
           gender = data['gender'];
-          level = data['level'];
           isLoading = false;
         });
       } else if (response.statusCode == 401) {
@@ -89,7 +87,6 @@ class _ProfilePageState extends State<ProfilePage> {
               nickname = data['name'];
               age = data['age'];
               gender = data['gender'];
-              level = data['level'];
               isLoading = false;
             });
           } else {
@@ -112,17 +109,14 @@ class _ProfilePageState extends State<ProfilePage> {
       nickname = newNickname;
       age = newAge;
       gender = newGender;
-      level = newLevel;
     });
   }
 
   void _resetUserProfile() {
-    initiallizeTutoInfo(true);
     setState(() {
       nickname = null;
       age = null;
       gender = null;
-      level = null;
     });
   }
 
@@ -328,15 +322,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             'Current login platform: $_loginPlatform'); // Add this line
                         await SignOutService.signOut(
                             _loginPlatform); // 소셜로그인 로그아웃하기
-                        logoutRequest(); // 앱 로그아웃하기
+                        // ignore: use_build_context_synchronously
+                        sendLogoutRequest(context); // 앱 로그아웃하기
                         _resetUserProfile();
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
-                          (route) => false,
-                        );
-                        removeLoginPlatform(); // 로그인 플랫폼 삭제
                       },
                       child: Container(
                         width: 263.w,

@@ -238,7 +238,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
           children: [
             IconButton(
               icon: const Icon(Icons.arrow_back),
-              color: bam,
+              color: AppColors.icon_001,
               onPressed: () {
                 Navigator.pop(context);
               },

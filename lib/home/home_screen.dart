@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:app_tutorial/app_tutorial.dart';
 import 'package:card_swiper/card_swiper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/main.dart';
@@ -12,10 +10,10 @@ import 'package:flutter_application_1/home/home_cards.dart';
 import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_application_1/notification/notification_screen.dart';
 import 'package:flutter_application_1/settings/profile_page.dart';
-import 'package:flutter_application_1/tutorial/home_tutorial_screen1.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:http/http.dart' as http;
 
@@ -46,10 +44,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   double progressValue = 0;
 
+  int homeTutorialStep = 1; // 홈 화면 튜토리얼 단계 상태
+
   @override
   void initState() {
     super.initState();
     fetchUserData();
+    _loadTutorialStatus();
+  }
+
+  // SharedPreferences에서 튜토리얼 진행 상태를 불러오는 함수
+  _loadTutorialStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      homeTutorialStep =
+          prefs.getInt('homeTutorialStep') ?? 1; // 기본값은 1 (첫 번째 단계)
+    });
+
+    if (homeTutorialStep == 4) {
+      // welcom dialog 표시
+      // ignore: use_build_context_synchronously
+      showCommonDialog(context, type: DialogType.welcome);
+      prefs.setInt('homeTutorialStep', 5);
+    }
   }
 
   Future<void> fetchUserData() async {
@@ -157,19 +174,19 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return userLevel == null
-        ? Center(
+        ? const Center(
             child: CircularProgressIndicator(
-            color: primary,
+            color: AppColors.primary,
           ))
         : Column(
             children: [
               Container(
-                color: primary,
+                color: AppColors.primary,
                 height: 60.h, // appbar size
               ),
               Container(
                 height: 700.h,
-                color: primary,
+                color: AppColors.primary,
                 child: Stack(
                   children: [
                     Column(
@@ -178,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           // 캐릭터와 레벨
                           alignment: Alignment.topCenter,
                           height: 265.h,
-                          color: primary,
+                          color: AppColors.primary,
                           child: Stack(
                             children: [
                               Center(
@@ -199,10 +216,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   maxValue: levelExperience!.toDouble(),
                                   progressStrokeWidth: 6.w,
                                   backStrokeWidth: 6.w,
-                                  progressColors: [
-                                    progress_color,
+                                  progressColors: const [
+                                    AppColors.orange_003,
                                   ],
-                                  backColor: back_progress_color,
+                                  backColor: AppColors.circularAvatar_000,
                                   startAngle: 180,
                                   valueNotifier: ValueNotifier(
                                       userExperience!.toDouble()), // 진행 상태 연결
@@ -217,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 24.0.w, vertical: 6.0.h),
                                       decoration: BoxDecoration(
-                                        color: progress_color,
+                                        color: AppColors.orange_003,
                                         borderRadius:
                                             BorderRadius.circular(25.r),
                                       ),
@@ -261,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               icon: Icon(
                                 CustomIcons.notification_icon,
-                                color: bam,
+                                color: AppColors.icon_001,
                                 size: 20.sp,
                               ),
                             ),
@@ -292,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           icon: Icon(
                             CustomIcons.setting_icon,
-                            color: bam,
+                            color: AppColors.icon_001,
                             size: 20.sp,
                           ),
                         ),
@@ -352,7 +369,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       pagination: SwiperPagination(
                                         alignment: const Alignment(0, 1.5),
                                         builder: DotSwiperPaginationBuilder(
-                                            activeColor: primary,
+                                            activeColor: AppColors.icon_001,
                                             color: const Color.fromARGB(
                                                 255, 235, 235, 235),
                                             size: 9.0.h,

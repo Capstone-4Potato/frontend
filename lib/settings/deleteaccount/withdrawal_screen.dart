@@ -4,7 +4,7 @@ import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/screens/delete_account_survey_screen.dart';
 import 'package:flutter_application_1/new/widgets/custom_app_bar.dart';
-import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 회원탈퇴 페이지
@@ -45,7 +45,7 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return RecordingErrorDialog(
+        return const RecordingErrorDialog(
           title: "Error",
           text: "Nickname does not match.",
         );
@@ -58,7 +58,7 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return RecordingErrorDialog(
+        return const RecordingErrorDialog(
           title: "Input Required",
           text: "Please enter your nickname.",
         );
@@ -136,23 +136,5 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
         ),
       ),
     );
-  }
-}
-
-// 학습 카드 갯수, 튜토 관련 정보 초기화
-Future<void> initiallizeTutoInfo(bool isLogout) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  // 정보 초기화
-  await prefs.setInt('learnedCardCount', 0);
-  await prefs.setInt('totalCard', 10);
-  await prefs.setBool('checkTodayCourse', false);
-  await prefs.remove('cardIdList');
-
-  // 계정 삭제일 경우만 튜토리얼 초기화
-  if (!isLogout) {
-    await prefs.setInt('homeTutorialStep', 1);
-    await prefs.setInt('reportTutorialStep', 1);
-    await prefs.setInt('learningCourseTutorialStep', 1);
-    await prefs.setInt('feedbackTutorialStep', 1);
   }
 }

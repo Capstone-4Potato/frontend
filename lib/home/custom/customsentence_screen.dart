@@ -3,10 +3,8 @@ import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/home/custom/customlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
-import 'package:flutter_application_1/widgets/exit_dialog.dart';
-import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
@@ -426,23 +424,6 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
     }
   }
 
-  void _showExitDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
-
-        return ExitDialog(
-          width: width,
-          height: height,
-          page: HomeNav(),
-        );
-      },
-    );
-  }
-
   bool isToday(String createdAt) {
     // 현재 날짜 가져오기
     DateTime now = DateTime.now();
@@ -464,16 +445,16 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            color: bam,
+            color: AppColors.icon_001,
             onPressed: () {
               final int cnt = _sentences.length;
               Navigator.pop(context, cnt);
             },
           ),
-          title: Text(
+          title: const Text(
             'Custom Sentences',
             style: TextStyle(
-              color: bam,
+              color: AppColors.brown_000,
               fontWeight: FontWeight.w600,
               fontSize: 22,
             ),
@@ -641,7 +622,8 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                                     color: (isToday(
                                                             _sentences[index]
                                                                 .createdAt!))
-                                                        ? primary
+                                                        ? AppColors
+                                                            .cardProgressBar_000
                                                         : Colors.transparent,
                                                     borderRadius:
                                                         BorderRadius.circular(

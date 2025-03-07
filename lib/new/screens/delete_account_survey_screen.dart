@@ -7,10 +7,8 @@ import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/models/survey_reason.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
-import 'package:flutter_application_1/new/screens/login_screen.dart';
 import 'package:flutter_application_1/new/widgets/custom_app_bar.dart';
-import 'package:flutter_application_1/new/widgets/delete_account_dialog.dart';
-import 'package:flutter_application_1/settings/deleteaccount/withdrawal_screen.dart';
+import 'package:flutter_application_1/new/widgets/dialogs/delete_account_dialog.dart';
 import 'package:flutter_application_1/new/services/api/profile_api.dart';
 
 /// 계정 탈퇴 설문조사 화면
@@ -155,9 +153,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             spacing: 5.0.w,
             children: [
-              SizedBox(
-                width: 3.0.w,
-              ),
+              SizedBox(width: 3.0.w),
               Icon(Icons.check,
                   color: _selectedValue == item ? Colors.black : Colors.white,
                   size: 18.sp),
@@ -202,19 +198,12 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
 
   /// 계정 탈퇴 시 처리 함수
   void onConfirmTap() async {
-    // 서버에 이유 전송
-    await sendWithdrawalReason(_selectedReasonCode, _detail);
+    // 이유 전송 api 요청
+    await sendWithdrawalReasonRequest(_selectedReasonCode, _detail);
 
     // 계정 탈퇴 api 요청
-    await deleteUsersAccountRequest(UserInfo().name);
-
-    // 튜토 정보 삭제
-    initiallizeTutoInfo(true);
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-      (route) => false,
-    );
+    // ignore: use_build_context_synchronously
+    await deleteUsersAccountRequest(UserInfo().name, context);
   }
 
   /// 삭제 버튼 빌드

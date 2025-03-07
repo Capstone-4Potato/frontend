@@ -1,81 +1,69 @@
-import 'dart:convert';
-
-import 'package:flutter_application_1/main.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/new/models/api_method.dart';
+import 'package:flutter_application_1/new/models/navigation_type.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
+import 'package:flutter_application_1/new/screens/login_screen.dart';
+import 'package:flutter_application_1/new/services/api/api_service.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_application_1/new/services/tutorial_initializer.dart';
+import 'package:flutter_application_1/new/utils/navigation_extension.dart';
+import 'package:flutter_application_1/widgets/success_dialog.dart';
 
-/// DELETE /users  (회원 탈퇴 )
-Future<void> deleteUsersAccountRequest(String nickname) async {
-  String? token = await getAccessToken();
-  var url = Uri.parse('$main_url/users');
-
-  // Function to make the delete request
-  Future<http.Response> makeDeleteRequest(String token) {
-    return http.delete(
-      url,
-      headers: <String, String>{
-        'access': token,
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(<String, String>{
-        'name': nickname,
-      }),
-    );
-  }
-
+/// ### DELETE `/users` : 회원 탈퇴
+Future<void> deleteUsersAccountRequest(
+    String nickname, BuildContext context) async {
   try {
-    var response = await makeDeleteRequest(token!);
-
-    if (response.statusCode == 200) {
-      deleteTokens();
-      print(response.body);
-    } else if (response.statusCode == 401) {
-      // Token expired, attempt to refresh the token
-      print('Access token expired. Refreshing token...');
-
-      // Refresh the access token
-      bool isRefreshed = await refreshAccessToken();
-      if (isRefreshed) {
-        // Retry the delete request with the new token
-        token = await getAccessToken();
-        response = await makeDeleteRequest(token!);
-
-        if (response.statusCode == 200) {
+    await apiRequest(
+        endpoint: 'users',
+        method: ApiMethod.delete.type,
+        body: {'name': nickname},
+        onSuccess: (response) {
+          // 토큰 삭제
           deleteTokens();
-          print(response.body);
-        } else {
-          throw Exception('Failed to delete account after refreshing token');
-        }
-      } else {
-        throw Exception('Failed to refresh access token');
-      }
-    } else {
-      throw Exception('Failed to delete account');
-    }
+          // 튜토 정보 삭제
+          initiallizeTutoInfo(false);
+          // 로그인 화면으로 이동
+          context.navigateTo(
+              screen: const LoginScreen(),
+              type: NavigationType.pushAndRemoveUntil);
+        });
   } catch (e) {
-    // Handle errors that occur during the request
-    print("Error deleting account: $e");
+    debugPrint('계정 삭제 실패 : $e');
   }
 }
 
-/// PATCH /users  (회원정보 수정)
-Future<http.Response> updateUserDataRequest(String token) async {
-  final userInfo = UserInfo();
-  await userInfo.loadUserInfo(); // 유저 정보 로드
+/// ### PATCH `/users` : 회원정보 수정
+Future<void> updateUserDataRequest(BuildContext context) async {
+  try {
+    final userInfo = UserInfo();
+    await userInfo.loadUserInfo(); // 유저 정보 로드
 
-  var url = Uri.parse('$main_url/users');
-
-  return await http.patch(
-    url,
-    headers: <String, String>{
-      'access': token,
-      'Content-Type': 'application/json',
-    },
-    body: json.encode({
-      'name': userInfo.name,
-      'age': userInfo.age,
-      'gender': userInfo.gender,
-    }),
-  );
+    await apiRequest(
+        // api 요청
+        endpoint: 'users',
+        method: ApiMethod.patch.type,
+        body: {
+          'name': userInfo.name,
+          'age': userInfo.age,
+          'gender': userInfo.gender,
+        },
+        onSuccess: (response) {
+          // 토큰 삭제
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context) {
+              return SuccessDialog(
+                subtitle: 'Your profile has been updated successfully.',
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+              );
+            },
+          );
+        });
+  } catch (e) {
+    debugPrint('회원 정보 수정 실패 : $e');
+  }
 }

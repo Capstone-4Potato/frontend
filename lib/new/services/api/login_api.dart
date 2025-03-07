@@ -1,67 +1,61 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/models/api_method.dart';
+import 'package:flutter_application_1/new/models/navigation_type.dart';
+import 'package:flutter_application_1/new/screens/login_screen.dart';
+import 'package:flutter_application_1/new/services/api/api_service.dart';
+import 'package:flutter_application_1/new/services/login_platform_manage.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
-import 'package:flutter_application_1/new/widgets/ask_recover_dialog.dart';
+import 'package:flutter_application_1/new/services/tutorial_initializer.dart';
+import 'package:flutter_application_1/new/utils/navigation_extension.dart';
+import 'package:flutter_application_1/new/utils/response_printer.dart';
+import 'package:flutter_application_1/new/widgets/dialogs/ask_recover_dialog.dart';
+import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:http/http.dart' as http;
 
-/// POST /logout  (로그아웃)
-Future<void> logoutRequest() async {
-  String? token = await getAccessToken();
-  var url = Uri.parse('$main_url/logout');
-
-  // Function to make the signout request
-  Future<http.Response> makeLogoutRequest(String token) {
-    return http.post(
-      url,
-      headers: <String, String>{
-        'access': token,
-        'Content-Type': 'application/json',
-      },
-    );
-  }
-
+/// ### POST `/logout` : 로그아웃
+Future<void> sendLogoutRequest(BuildContext context) async {
   try {
-    var response = await makeLogoutRequest(token!);
-
-    if (response.statusCode == 200) {
-      deleteTokens();
-      print(response.body);
-    } else if (response.statusCode == 401) {
-      // Token expired, attempt to refresh the token
-      print('Access token expired. Refreshing token...');
-
-      // Refresh the access token
-      bool isRefreshed = await refreshAccessToken();
-      if (isRefreshed) {
-        // Retry the signout request with the new token
-        token = await getAccessToken();
-        response = await makeLogoutRequest(token!);
-
-        if (response.statusCode == 200) {
+    await apiRequest(
+        endpoint: 'logout',
+        method: ApiMethod.post.type,
+        requiresAuth: true,
+        autoRefresh: true,
+        onSuccess: (response) {
+          // 토큰 삭제
           deleteTokens();
-          print(response.body);
-        } else {
-          throw Exception('Failed to sign out after refreshing token');
-        }
-      } else {
-        throw Exception('Failed to refresh access token');
-      }
-    } else {
-      throw Exception('Failed to sign out');
-    }
+          // 유저 정보 초기화
+          initiallizeTutoInfo(true);
+          // 로그인 화면으로 이동
+          context.navigateTo(
+              screen: const LoginScreen(),
+              type: NavigationType.pushAndRemoveUntil);
+          // 로그인 플랫폼 삭제
+          removeLoginPlatform();
+        },
+        onError: (statusCode, message) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const RecordingErrorDialog(text: 'Failed to logout');
+            },
+          );
+        });
   } catch (e) {
-    // Handle errors that occur during the request
-    print("Error sign out: $e");
+    debugPrint("로그아웃 Error: $e");
   }
 }
 
-/// POST /login  (로그인)
+/// ### POST `/login` : 로그인
 Future<int> sendSocialLoginRequest(
     BuildContext context, String? socialId) async {
-  var url = Uri.parse('$main_url/login');
+  String url = '$main_url/login';
+  var urlParse = Uri.parse(url);
 
   try {
-    var request = http.MultipartRequest('POST', url);
+    var request = http.MultipartRequest(ApiMethod.post.type, urlParse);
     request.fields['socialId'] = socialId!;
 
     var streamedResponse = await request.send();
@@ -73,10 +67,13 @@ Future<int> sendSocialLoginRequest(
       String? accessToken = response.headers['access'];
       String? refreshToken = response.headers['refresh'];
 
+      responsePrinter(url, response.body, ApiMethod.post.type);
+
       if (accessToken != null && refreshToken != null) {
         await saveTokens(accessToken, refreshToken);
       }
     } else if (response.statusCode == 403) {
+      // ignore: use_build_context_synchronously
       askRecoverDialog(context, socialId);
     }
 

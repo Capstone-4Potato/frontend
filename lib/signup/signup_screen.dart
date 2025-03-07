@@ -4,10 +4,7 @@ import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/services/api/join_api.dart';
 import 'package:flutter_application_1/signup/textfield_decoration.dart';
-import 'package:flutter_application_1/report/vulnerablesoundtest/starting_test_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// 회원가입 페이지
 class UserInputForm extends StatefulWidget {
@@ -291,22 +288,9 @@ class _UserInputFormState extends State<UserInputForm> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        await createUserData(nickname, age, gender, level,
-                            widget.socialId); // 서버로 데이터 제출
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        prefs.setInt('homeTutorialStep', 1); // 기본값은 1 (첫 번째 단계)
-                        prefs.setInt(
-                            'reportTutorialStep', 1); // 기본값은 1 (첫 번째 단계)
-                        prefs.setInt('learningCourseTutorialStep',
-                            1); // 기본값은 1 (첫 번째 단계)
-                        //튜토리얼로 이동
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const StartTestScreen()),
-                          (route) => false,
-                        );
+                        // 회원 가입 api 요청
+                        await createUserData(context, nickname, age, gender,
+                            level, widget.socialId); // 서버로 데이터 제출
                       }
                     }, // 텍스트 크기 조정
                     style: ElevatedButton.styleFrom(
