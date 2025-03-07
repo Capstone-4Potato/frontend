@@ -157,19 +157,19 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return userLevel == null
-        ? Center(
+        ? const Center(
             child: CircularProgressIndicator(
-            color: primary,
+            color: AppColors.primary,
           ))
         : Column(
             children: [
               Container(
-                color: primary,
+                color: AppColors.primary,
                 height: 60.h, // appbar size
               ),
               Container(
                 height: 700.h,
-                color: primary,
+                color: AppColors.primary,
                 child: Stack(
                   children: [
                     Column(
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           // 캐릭터와 레벨
                           alignment: Alignment.topCenter,
                           height: 265.h,
-                          color: primary,
+                          color: AppColors.primary,
                           child: Stack(
                             children: [
                               Center(
@@ -199,10 +199,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   maxValue: levelExperience!.toDouble(),
                                   progressStrokeWidth: 6.w,
                                   backStrokeWidth: 6.w,
-                                  progressColors: [
-                                    progress_color,
+                                  progressColors: const [
+                                    AppColors.orange_003,
                                   ],
-                                  backColor: back_progress_color,
+                                  backColor: AppColors.circularAvatar_000,
                                   startAngle: 180,
                                   valueNotifier: ValueNotifier(
                                       userExperience!.toDouble()), // 진행 상태 연결
@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 24.0.w, vertical: 6.0.h),
                                       decoration: BoxDecoration(
-                                        color: progress_color,
+                                        color: AppColors.orange_003,
                                         borderRadius:
                                             BorderRadius.circular(25.r),
                                       ),
@@ -261,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               icon: Icon(
                                 CustomIcons.notification_icon,
-                                color: bam,
+                                color: AppColors.icon_001,
                                 size: 20.sp,
                               ),
                             ),
@@ -292,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           icon: Icon(
                             CustomIcons.setting_icon,
-                            color: bam,
+                            color: AppColors.icon_001,
                             size: 20.sp,
                           ),
                         ),
@@ -352,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       pagination: SwiperPagination(
                                         alignment: const Alignment(0, 1.5),
                                         builder: DotSwiperPaginationBuilder(
-                                            activeColor: primary,
+                                            activeColor: AppColors.icon_001,
                                             color: const Color.fromARGB(
                                                 255, 235, 235, 235),
                                             size: 9.0.h,

@@ -445,16 +445,16 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            color: bam,
+            color: AppColors.icon_001,
             onPressed: () {
               final int cnt = _sentences.length;
               Navigator.pop(context, cnt);
             },
           ),
-          title: Text(
+          title: const Text(
             'Custom Sentences',
             style: TextStyle(
-              color: bam,
+              color: AppColors.brown_000,
               fontWeight: FontWeight.w600,
               fontSize: 22,
             ),
@@ -622,7 +622,8 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                                     color: (isToday(
                                                             _sentences[index]
                                                                 .createdAt!))
-                                                        ? primary
+                                                        ? AppColors
+                                                            .cardProgressBar_000
                                                         : Colors.transparent,
                                                     borderRadius:
                                                         BorderRadius.circular(

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 /// 이미지 저장 경로
 enum ImagePath {
   loginBgText(path: 'assets/image/login_bg_text.png'),

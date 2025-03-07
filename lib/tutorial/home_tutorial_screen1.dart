@@ -102,10 +102,8 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
                     maxValue: 100,
                     progressStrokeWidth: 6.w,
                     backStrokeWidth: 6.w,
-                    progressColors: [
-                      progress_color,
-                    ],
-                    backColor: back_progress_color,
+                    progressColors: const [AppColors.primary],
+                    backColor: AppColors.circularAvatar_000,
                     startAngle: 180,
                     valueNotifier: ValueNotifier(40),
                   ),
@@ -139,7 +137,7 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 20.0.w, vertical: 6.0.h),
                         decoration: BoxDecoration(
-                          color: progress_color,
+                          color: AppColors.orange_003,
                           borderRadius: BorderRadius.circular(25.r),
                         ),
                         child: DefaultTextStyle(

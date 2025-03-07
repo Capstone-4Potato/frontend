@@ -211,7 +211,6 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
           "Today's Goal",
           style: TextStyle(
             fontSize: 12.h,
-            color: bam,
           ),
         ),
         Container(
@@ -235,7 +234,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                     : learnedCardCount / totalCard * 246.w,
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
-                  color: primary,
+                  color: AppColors.primary,
                   borderRadius: checkTodayCourse
                       ? BorderRadius.all(Radius.circular(20.r))
                       : BorderRadius.only(
@@ -255,7 +254,6 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                           child: Text(
                             item, // 메뉴 아이템은 숫자만 표시
                             style: TextStyle(
-                              color: bam,
                               fontSize: 14.w,
                               fontWeight: FontWeight.w400,
                             ),
@@ -296,7 +294,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                     boxShadow: <BoxShadow>[
                       BoxShadow(
                         color: const Color.fromARGB(255, 157, 169, 204)
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         blurRadius: 10.0,
                         spreadRadius: 5.0,
                         offset: const Offset(0.0, 2.0),
@@ -317,7 +315,6 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                       AutoSizeText(
                         "$learnedCardCount/$totalCard",
                         style: TextStyle(
-                          color: bam,
                           fontSize: 11.w,
                           fontWeight: FontWeight.w500,
                         ),
@@ -325,7 +322,6 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                       if (checkTodayCourse)
                         Icon(
                           Icons.arrow_drop_down_rounded,
-                          color: bam,
                           size: 24.w,
                         ),
                     ],
@@ -364,9 +360,9 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 24.0.w, vertical: 10.0.h),
                         child: isLoading
-                            ? Center(
+                            ? const Center(
                                 child: CircularProgressIndicator(
-                                color: primary,
+                                color: AppColors.primary,
                               ))
                             : TableCalendar(
                                 focusedDay: DateTime.now(),
@@ -377,7 +373,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                   decoration: BoxDecoration(
                                     border: Border(
                                       bottom: BorderSide(
-                                        color: primary,
+                                        color: AppColors.primary,
                                         width: 2.w,
                                       ),
                                     ),
@@ -439,8 +435,8 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 height: 30.h,
                                                 width: 30.h,
                                                 alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: primary,
+                                                decoration: const BoxDecoration(
+                                                  color: AppColors.primary,
                                                   shape: BoxShape.circle,
                                                 ),
                                                 child: Text(
@@ -489,7 +485,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 width: 30.h,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
-                                                  color: primary,
+                                                  color: AppColors.primary,
                                                   shape: BoxShape.circle,
                                                   border: Border.all(
                                                       color: const Color(
@@ -546,8 +542,8 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 width: 30.w,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
-                                                  color:
-                                                      primary.withOpacity(0.5),
+                                                  color: AppColors.primary
+                                                      .withValues(alpha: 0.5),
                                                   shape: BoxShape.circle,
                                                 ),
                                                 child: Text(
@@ -673,13 +669,13 @@ class Stamp extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(100),
         border: Border.all(
-          color: primary,
+          color: AppColors.primary,
           width: 3.w,
         ),
       ),
       child: Text(
         days[index],
-        style: TextStyle(color: primary),
+        style: const TextStyle(color: AppColors.primary),
       ),
     );
   }
@@ -709,14 +705,12 @@ class ContentTodayCard extends StatelessWidget {
               "Today's Card",
               style: TextStyle(
                 fontSize: 12.h,
-                color: bam,
               ),
             ),
             Text(
               dailyWord!,
               style: TextStyle(
                 fontSize: 30.h,
-                color: bam,
               ),
             ),
             Row(
@@ -728,7 +722,6 @@ class ContentTodayCard extends StatelessWidget {
                     "[$dailyWordPronunciation]",
                     style: TextStyle(
                       fontSize: 12.h,
-                      color: bam,
                     ),
                     softWrap: true,
                   ),
@@ -746,7 +739,7 @@ class ContentTodayCard extends StatelessWidget {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: primary,
+                      color: AppColors.primary,
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Padding(
@@ -785,7 +778,6 @@ class ContentCustomCard extends StatelessWidget {
               "Say your own\nCustom sentence!",
               style: TextStyle(
                 fontSize: 21.h,
-                color: bam,
               ),
             ),
             Row(
@@ -803,7 +795,7 @@ class ContentCustomCard extends StatelessWidget {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: primary,
+                      color: AppColors.primary,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Padding(
@@ -842,13 +834,12 @@ class ContentLearningCourseCard extends StatelessWidget {
               "Let's go to study!",
               style: TextStyle(
                 fontSize: 21.h,
-                color: bam,
               ),
             ),
             Text(
               'Learning Course',
               style: TextStyle(
-                  color: primary,
+                  color: AppColors.primary,
                   fontSize: 18.h,
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Pretendard'),
@@ -868,7 +859,7 @@ class ContentLearningCourseCard extends StatelessWidget {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: primary,
+                      color: AppColors.primary,
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Padding(
@@ -922,7 +913,6 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
           "Menu",
           style: TextStyle(
             fontSize: 16.h,
-            color: bam,
           ),
         ),
         MenuItem(
@@ -1034,7 +1024,7 @@ class MenuItem extends StatelessWidget {
                 children: [
                   Icon(
                     icon,
-                    color: bam,
+                    color: AppColors.icon_001,
                     size: 20.sp,
                   ),
                   Container(
@@ -1043,7 +1033,6 @@ class MenuItem extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      color: bam,
                       fontSize: 18.h,
                     ),
                   ),
@@ -1058,7 +1047,7 @@ class MenuItem extends StatelessWidget {
                           height: 26.h,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: progress_color,
+                            color: AppColors.orange_003,
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(
@@ -1073,9 +1062,9 @@ class MenuItem extends StatelessWidget {
                   Container(
                     width: 15.w,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.arrow_forward_ios,
-                    color: bam,
+                    color: AppColors.icon_001,
                   ),
                 ],
               ),

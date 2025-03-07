@@ -4,7 +4,7 @@ import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/screens/delete_account_survey_screen.dart';
 import 'package:flutter_application_1/new/widgets/custom_app_bar.dart';
-import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_application_1/new/widgets/recording_error_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 회원탈퇴 페이지

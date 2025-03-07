@@ -8,7 +8,7 @@ import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/updatecardweaksound.dart';
-import 'package:flutter_application_1/widgets/recording_error_dialog.dart';
+import 'package:flutter_application_1/new/widgets/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';

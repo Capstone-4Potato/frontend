@@ -167,7 +167,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
             key: keys['homeNavContainerKey'],
             itemCount: iconList.length,
             tabBuilder: (index, isActive) {
-              final color = isActive ? primary : bam;
+              final color = isActive ? AppColors.icon_000 : AppColors.icon_001;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
