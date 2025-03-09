@@ -52,7 +52,7 @@ Future<List<int>> getTodayCourseCardList() async {
       },
     );
   } catch (e) {
-    debugPrint('report 화면 정보 조회 실패 : $e');
+    debugPrint('today-course 카드 ID 리스트 조회 실패 : $e');
     return [];
   }
   return [];

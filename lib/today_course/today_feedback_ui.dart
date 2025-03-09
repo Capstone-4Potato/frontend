@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_application_1/learning_coures/syllables/syllabelearningc
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/widgets/audio_graph.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// 한글자 음절 피드백 창
@@ -30,17 +30,23 @@ class TodayFeedbackUI extends StatefulWidget {
 }
 
 class _TodayFeedbackUIState extends State<TodayFeedbackUI> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer.openPlayer();
+  }
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _audioPlayer.closePlayer();
     super.dispose();
   }
 
   Future<void> _playUserRecording() async {
     await _audioPlayer
-        .play(DeviceFileSource(widget.recordedFilePath, mimeType: "audio/mp3"))
+        .startPlayer(fromURI: widget.recordedFilePath, codec: Codec.pcm16WAV)
         .onError((error, stackTrace) =>
             throw Exception("Failed to play Local audio $error"));
   }
@@ -53,14 +59,15 @@ class _TodayFeedbackUIState extends State<TodayFeedbackUI> {
 
       // 임시 디렉터리 경로를 가져옴
       Directory tempDir = await getTemporaryDirectory();
-      String tempPath = '${tempDir.path}/temp_audio.mp3'; // 파일명 설정
+      String tempPath = '${tempDir.path}/temp_audio.wav'; // 파일명 설정
 
       // 파일로 저장
       File tempFile = File(tempPath);
       await tempFile.writeAsBytes(audioBytes);
 
       // 저장된 파일 재생
-      await _audioPlayer.play(DeviceFileSource(tempPath));
+      await _audioPlayer.startPlayer(
+          fromURI: tempPath, codec: Codec.pcm16WAV); // 파일 재생
     } catch (e) {
       print("Error playing audio: $e");
     }
@@ -206,9 +213,8 @@ class _TodayFeedbackUIState extends State<TodayFeedbackUI> {
                                               color: Colors.black,
                                               iconSize: 20.0.w,
                                               onPressed: () {
-                                                TtsService.instance
-                                                    .playCachedAudio(widget
-                                                        .feedbackData.cardId);
+                                                playAudio(widget.feedbackData
+                                                    .correctAudioText);
                                               },
                                             ),
                                           ),
@@ -439,8 +445,10 @@ class _TodayFeedbackUIState extends State<TodayFeedbackUI> {
                                           color: Colors.black,
                                           iconSize: 20.0.w,
                                           onPressed: () {
-                                            TtsService.instance.playCachedAudio(
-                                                widget.feedbackData.cardId);
+                                            // TtsService.instance.playCachedAudio(
+                                            //     widget.feedbackData.cardId);
+                                            playAudio(widget
+                                                .feedbackData.correctAudioText);
                                           },
                                         ),
                                       ),

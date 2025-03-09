@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:audioplayers/audioplayers.dart' as audioplayers;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
@@ -72,7 +71,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   Uint8List? _imageData; // 이미지를 저장할 변수
   bool _isImageLoading = true; // 이미지 로딩 중인지 여부
 
-  audioplayers.AudioPlayer audioPlayer = audioplayers.AudioPlayer();
+  FlutterSoundPlayer audioPlayer = FlutterSoundPlayer();
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
@@ -124,7 +123,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     await audioFile.writeAsBytes(audioBytes);
 
     // 저장된 파일 재생
-    await audioPlayer.play(audioplayers.DeviceFileSource(filePath));
+    await audioPlayer.startPlayer(fromURI: filePath, codec: Codec.pcm16WAV);
   }
 
   void _onListenPressed(int currentIndex) async {
@@ -132,25 +131,6 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     setState(() {
       _canRecord = true;
     });
-  }
-
-  Future<void> _startRecording() async {
-    setState(() {
-      _isRecording = true;
-    });
-    String fileName = 'audio_record_${widget.ids[_currentIndex]}.wav';
-    await _recorder.startRecorder(toFile: fileName);
-  }
-
-// 멈춤 버튼 누를 때 파일 전송
-  Future<void> _stopRecording() async {
-    var path = await _recorder.stopRecorder();
-    setState(() {
-      _isRecording = false;
-      _isRecorded = true;
-    });
-    print(path);
-    await _uploadRecording(path);
   }
 
   // 오디오 녹음 및 처리
