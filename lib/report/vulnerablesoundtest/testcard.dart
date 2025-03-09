@@ -1,12 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
+import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
-import 'package:flutter_application_1/report/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
@@ -14,7 +14,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
 
 class TestCard extends StatefulWidget {
   final List<int> testIds;
@@ -73,14 +72,14 @@ class _TestCardState extends State<TestCard> {
     var path = await _recorder.stopRecorder();
 
     if (path != null) {
-      print('Recording file saved to: $path');
+      debugPrint('Recording file saved to: $path');
       setState(() {
         _isRecording = false;
         _isRecorded = true;
       });
       await _uploadRecording(path);
     } else {
-      print('Error: Recording path is null');
+      debugPrint('Error: Recording path is null');
     }
   }
 
@@ -95,57 +94,17 @@ class _TestCardState extends State<TestCard> {
       _isLoading = true;
     });
     if (path != null && File(path).existsSync()) {
-      print('Uploading file: $path');
-
-      String? token = await getAccessToken();
-      var url = Uri.parse('$main_url/test/${widget.testIds[_currentIndex]}');
-
-      // multipart/form-data 요청 생성
-      var request = http.MultipartRequest('POST', url);
-      request.headers['access'] = token ?? '';
-
-      // 'userAudio' 필드에 파일 추가
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'userAudio', // 서버에서 요구하는 필드명
-          path, // 파일 경로
-        ),
-      );
-
-      print('Headers: ${request.headers}');
-      print('Files: ${request.files}');
-
-      try {
-        var response = await request.send();
-        String responseBody = await response.stream.bytesToString();
-
-        if (response.statusCode == 200) {
-          print('Upload successful: $responseBody');
-          _nextCard();
-          setState(() {
-            _isLoading = false;
-          });
-        } else {
-          print('Upload failed with status: ${response.statusCode}');
-          print('Response: $responseBody');
-          _showUploadErrorDialog();
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      } catch (e) {
-        print('Error uploading file: $e');
+      var statusCode =
+          await getTestResultByCard(widget.testIds[_currentIndex], File(path));
+      if (statusCode == 200) {
+        _nextCard();
+      } else {
         _showUploadErrorDialog();
-        setState(() {
-          _isLoading = false;
-        });
       }
-    } else {
-      print('Error: File does not exist at path $path');
-      setState(() {
-        _isLoading = false;
-      });
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _nextCard() {
@@ -175,7 +134,7 @@ class _TestCardState extends State<TestCard> {
   }
 
   void _showCompletionDialog() async {
-    int responseCode = await testfinalize();
+    int responseCode = await sendTestFinalizeRequest();
     String title;
     String content;
     // 테스트했고 틀린 발음 바탕으로 학습 카드에 취약음소 표시
@@ -197,11 +156,9 @@ class _TestCardState extends State<TestCard> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
-
         return SuccessDialog(
-          subtitle: "You did a great job in the test!",
+          title: title,
+          subtitle: content,
           onTap: () {
             Navigator.pushAndRemoveUntil(
               context,

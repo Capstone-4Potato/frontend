@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/report/vulnerablesoundtest/gettestlist.dart';
+import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/testcard.dart';
 
 class RestartTestScreen extends StatefulWidget {
@@ -28,9 +28,9 @@ class _RestartTestScreenState extends State<RestartTestScreen> {
   }
 
   Future<void> initTestData() async {
-    var data =
-        widget.check ? await getTestContinueData() : await getTestNewData();
-
+    List<dynamic>? data = widget.check
+        ? await getTestContinueDataRequest()
+        : await getTestNewDataRequest();
     if (data != null) {
       setState(() {
         testIds = List.generate(data.length, (index) => data[index]['id']);

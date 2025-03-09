@@ -11,10 +11,10 @@ import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/syllables/fetchimage.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
+import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
 import 'package:flutter_application_1/today_course/today_feedback_ui.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
-import 'package:flutter_application_1/report/vulnerablesoundtest/testfinalize.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -375,7 +375,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   }
 
   void _showCompletionDialog() async {
-    int responseCode = await testfinalize();
+    int responseCode = await sendTestFinalizeRequest();
     // 현재까지 학습한 마지막 카드 ID 저장
     if (widget.ids.isNotEmpty) {
       int lastCardId = widget.ids.last; // 현재까지 학습한 마지막 카드 ID

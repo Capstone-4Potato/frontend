@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +9,10 @@ import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_application_1/new/models/levels.dart';
 import 'package:flutter_application_1/new/services/api/report_api.dart';
 import 'package:flutter_application_1/new/services/api/weak_sound_api.dart';
+import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
+import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/re_test_page.dart';
 import 'package:flutter_application_1/report/phonemes_class.dart';
-import 'package:flutter_application_1/report/vulnerablesoundtest/gettestlist.dart';
 import 'package:flutter_application_1/widgets/previous_test_found_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -809,8 +812,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   child: TextButton(
                                     onPressed: () async {
                                       bool check =
-                                          await getTestCheck(); // 이전에 진행하던 테스트가 있는지 체크
-                                      print("취약음소 테스트 존재 여부 $check");
+                                          await getUnfinishedTestRequest(); // 이전에 진행하던 테스트가 있는지 체크
                                       check
                                           ? showDialog(
                                               context: context,
@@ -831,30 +833,20 @@ class _ReportScreenState extends State<ReportScreen> {
                                                     );
                                                   },
                                                   rightTap: () {
-                                                    Navigator.push<void>(
-                                                      context,
-                                                      MaterialPageRoute<void>(
-                                                        builder: (BuildContext
-                                                                builder) =>
+                                                    // 테스트 재시작 화면으로 이동
+                                                    context.navigateTo(
+                                                        screen:
                                                             RestartTestScreen(
-                                                          check: false,
-                                                        ),
-                                                      ),
-                                                    );
+                                                      check: false,
+                                                    ));
                                                   },
                                                 );
                                               },
                                             )
-                                          : Navigator.push<void>(
-                                              context,
-                                              MaterialPageRoute<void>(
-                                                builder:
-                                                    (BuildContext builder) =>
-                                                        RestartTestScreen(
-                                                  check: check,
-                                                ),
-                                              ),
-                                            );
+                                          : context.navigateTo(
+                                              screen: RestartTestScreen(
+                                              check: check,
+                                            ));
                                     },
                                     style: TextButton.styleFrom(
                                       backgroundColor: primary,
@@ -1046,7 +1038,6 @@ class _ReportScreenState extends State<ReportScreen> {
     bool isTouched = false,
     List<int> showTooltips = const [],
   }) {
-    double height = MediaQuery.of(context).size.height / 852;
     double width = MediaQuery.of(context).size.width / 392;
 
     return BarChartGroupData(

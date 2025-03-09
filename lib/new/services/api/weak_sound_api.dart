@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/api_method.dart';
 import 'package:flutter_application_1/new/services/api/api_service.dart';
@@ -31,15 +29,11 @@ Future<void> getWeakSoundListRequest({
   required Function(List<dynamic>) onDataReceived,
 }) async {
   try {
-    await apiRequest(
+    final data = await apiRequest(
       endpoint: 'test/all',
       method: ApiMethod.get.type,
-      onSuccess: (response) {
-        final data = jsonDecode(response.body);
-        onDataReceived(data);
-        // onDataReceived(data);
-      },
     );
+    onDataReceived(data);
   } catch (e) {
     debugPrint('취약 음소 정보 조회 실패 : $e');
   }
