@@ -161,7 +161,6 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
       } else {
         // 마지막 카드 ID를 리스트에서 찾을 수 없는 경우
         debugPrint("마지막 카드 ID를 리스트에서 찾을 수 없습니다.");
-        getTodayCourseCardList();
       }
 
       debugPrint("필터링 이후 카드 리스트입니다 : $cardList");
