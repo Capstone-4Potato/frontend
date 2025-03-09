@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/api_method.dart';
 import 'package:flutter_application_1/new/services/api/api_service.dart';
 
-///### POST `report/cardLevel` : 사용자 카드 레벨 설정
+/// ### POST `report/cardLevel` : 사용자 카드 레벨 설정
 Future<void> updateCardLevelRequest(String level) async {
   try {
     await apiRequest(

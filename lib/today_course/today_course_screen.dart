@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/services/api/today_course_api.dart';
 import 'package:flutter_application_1/today_course/fetch_today_course.dart';
 import 'package:flutter_application_1/today_course/today_course_learning_card.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
@@ -160,7 +161,8 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     if (cardList.isEmpty) {
       // 카드가 모두 끝난 경우 새 카드 요청
       print("All cards finished. Fetching new cards...");
-      await postTodayCourse();
+      // await postTodayCourse();
+      await getTodayCourseCardList();
       await Future.delayed(const Duration(seconds: 2)); // 1초 대기
     } else {
       //fetchAllCards();
@@ -186,8 +188,8 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     });
     try {
       // 새로운 카드 리스트 요청
-      cardList = await postTodayCourse(); // 이 작업이 완료될 때까지 기다림
-
+      // cardList = await postTodayCourse(); // 이 작업이 완료될 때까지 기다림
+      cardList = await getTodayCourseCardList(); // 이 작업이 완료될 때까지 기다림
       if (cardList.isNotEmpty) {
         // cardList가 제대로 업데이트되었는지 확인
         await fetchAllCards();
