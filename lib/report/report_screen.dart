@@ -6,16 +6,13 @@ import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_application_1/new/models/levels.dart';
 import 'package:flutter_application_1/new/services/api/report_api.dart';
+import 'package:flutter_application_1/new/services/api/weak_sound_api.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/re_test_page.dart';
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/report/phonemes_class.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/gettestlist.dart';
 import 'package:flutter_application_1/widgets/previous_test_found_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({
@@ -88,44 +85,16 @@ class _ReportScreenState extends State<ReportScreen> {
     });
   }
 
-  void _navigateToPage(int pageIndex) {
-    if (pageIndex >= 0 && pageIndex < phonemes.length) {
-      pageController.animateToPage(
-        pageIndex,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-      setState(() {
-        _currentPageIndex = pageIndex;
-      });
-    }
-  }
-
-  // report 화면 데이터 요청 함수
-  Future<void> fetchReportData() async {
-    try {
-      String? token = await getAccessToken();
-
-      var url = Uri.parse('$main_url/report');
-
-      // Set headers with the token
-      var headers = <String, String>{
-        'access': '$token',
-        'Content-Type': 'application/json',
-      };
-
-      var response = await http.get(url, headers: headers);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
+  /// report 화면 데이터 요청 함수
+  void fetchReportData() {
+    getReportDataRequest(
+      onDataReceived: (data) {
         if (mounted) {
           setState(() {
             nickname = data['nickname'];
             studyDays = data['studyDays'];
             totalLearned = data['totalLearned'];
-            accuracy =
-                data['accuracy'] != null ? data['accuracy'].toDouble() : 0.0;
+            accuracy = data['accuracy'].toDouble();
             weeklyAverageCards = data['weeklyAverageCards'];
             sundayCards = data['sundayCards'];
             mondayCards = data['mondayCards'];
@@ -146,91 +115,11 @@ class _ReportScreenState extends State<ReportScreen> {
                       'phonemeText': phoneme['phonemeText'],
                     })
                 .toList();
-
-            // 데이터 출력 확인용
-            print("Nickname: $nickname");
-            print("Study Days: $studyDays");
-            print("Total Learned: $totalLearned");
-            print("Accuracy: $accuracy");
-            print("Weekly Average Cards: $weeklyAverageCards");
-            print("Sunday Cards: $sundayCards");
-            print("Monday Cards: $mondayCards");
-            print("Tuesday Cards: $tuesdayCards");
-            print("Wednesday Cards: $wednesdayCards");
-            print("Thursday Cards: $thursdayCards");
-            print("Friday Cards: $fridayCards");
-            print("Saturday Cards: $saturdayCards");
-            print("Weak Phonemes: $weakPhonemes");
-            print("cardLevel: $cardLevel");
-
-            isLoading = false; // 로딩 중 상태 변환
+            isLoading = false;
           });
         }
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh and retry the request
-        print('Access token expired. Refreshing token...');
-
-        // Refresh the token
-        bool isRefreshed = await refreshAccessToken();
-
-        if (isRefreshed) {
-          // Retry request with new token
-          print('Token refreshed successfully. Retrying request...');
-          String? newToken = await getAccessToken();
-          response = await http.get(url, headers: {
-            'access': '$newToken',
-            'Content-Type': 'application/json'
-          });
-          if (response.statusCode == 200) {
-            final data = json.decode(response.body);
-            if (mounted) {
-              setState(() {
-                nickname = data['nickname'];
-                studyDays = data['studyDays'];
-                totalLearned = data['totalLearned'];
-                accuracy = data['accuracy'].toDouble();
-                weeklyAverageCards = data['weeklyAverageCards'];
-                sundayCards = data['sundayCards'];
-                mondayCards = data['mondayCards'];
-                tuesdayCards = data['tuesdayCards'];
-                wednesdayCards = data['wednesdayCards'];
-                thursdayCards = data['thursdayCards'];
-                fridayCards = data['fridayCards'];
-                saturdayCards = data['saturdayCards'];
-                maxCardValue = (getMaxCardValue().toDouble() ~/ 5) * 5 + 5;
-                cardLevel = data['cardLevel'];
-                _selectedLevel = cardLevel;
-
-                // weakPhonemes 리스트 처리
-                weakPhonemes = (data['weakPhonemes'] ?? [])
-                    .map<Map<String, dynamic>>((phoneme) => {
-                          'rank': phoneme['rank'],
-                          'phonemeId': phoneme['phonemeId'],
-                          'phonemeText': phoneme['phonemeText'],
-                        })
-                    .toList();
-
-                isLoading = false; // 로딩 중 상태 변환
-              });
-            }
-          } else {
-            // Handle other response codes after retry if needed
-            print(
-                'Unhandled server response after retry: ${response.statusCode}');
-            print(json.decode(response.body));
-          }
-        } else {
-          print('Failed to refresh token. Please log in again.');
-        }
-      } else {
-        // Handle other status codes
-        print('Unhandled server response: ${response.statusCode}');
-        print(json.decode(response.body));
-      }
-    } catch (e) {
-      // Handle network request exceptions
-      print("Error during the request: $e");
-    }
+      },
+    );
   }
 
   int getMaxCardValue() {
@@ -251,22 +140,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
   // 모든 취약음소와 사용자가 가진 취약음소 여부 반환
   Future<void> fetchPhoneme() async {
-    try {
-      String? token = await getAccessToken();
-
-      var url = Uri.parse('$main_url/test/all');
-
-      // Set headers with the token
-      var headers = <String, String>{
-        'access': '$token',
-        'Content-Type': 'application/json',
-      };
-
-      var response = await http.get(url, headers: headers);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
+    await getWeakSoundListRequest(
+      onDataReceived: (data) {
         if (mounted) {
           setState(() {
             // data["type"] 별로 list 저장
@@ -282,127 +157,24 @@ class _ReportScreenState extends State<ReportScreen> {
                 .where((item) => item['type'] == 'Final Consonant')
                 .cast<Map<String, dynamic>>()
                 .toList();
-            print('길이는 : ${finalConsonants.length}');
           });
         }
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh and retry the request
-        print('Access token expired. Refreshing token...');
-
-        // Refresh the token
-        bool isRefreshed = await refreshAccessToken();
-
-        if (isRefreshed) {
-          // Retry request with new token
-          print('Token refreshed successfully. Retrying request...');
-          String? newToken = await getAccessToken();
-          response = await http.get(url, headers: {
-            'access': '$newToken',
-            'Content-Type': 'application/json'
-          });
-          if (response.statusCode == 200) {
-            final data = json.decode(response.body);
-            if (mounted) {
-              setState(() {
-                // data["type"] 별로 list 저장
-                initialConsonants = data
-                    .where((item) => item['type'] == 'Initial Consonant')
-                    .cast<Map<String, dynamic>>()
-                    .toList();
-                vowels = data
-                    .where((item) => item['type'] == 'Vowel')
-                    .cast<Map<String, dynamic>>()
-                    .toList();
-                finalConsonants = data
-                    .where((item) => item['type'] == 'Final Consonant')
-                    .cast<Map<String, dynamic>>()
-                    .toList();
-              });
-            }
-          } else {
-            // Handle other response codes after retry if needed
-            print(
-                'Unhandled server response after retry: ${response.statusCode}');
-            print(json.decode(response.body));
-          }
-        } else {
-          print('Failed to refresh token. Please log in again.');
-        }
-      } else {
-        // Handle other status codes
-        print('Unhandled server response: ${response.statusCode}');
-        print(json.decode(response.body));
-      }
-    } catch (e) {
-      // Handle network request exceptions
-      print("Error during the request: $e");
-    }
+      },
+    );
   }
 
   // 취약음소 서버에 추가
   Future<void> postAddPhonemes() async {
-    try {
-      String? token = await getAccessToken();
-
-      var url = Uri.parse('$main_url/test/add');
-
-      // Set headers with the token
-      var headers = <String, String>{
-        'access': '$token',
-        'Content-Type': 'application/json',
-      };
-
-      var body = json.encode(addPhonemes);
-
-      var response = await http.post(url, headers: headers, body: body);
-
-      if (response.statusCode == 200) {
-        print('POST 요청 성공: ${response.body}');
-        setState(() {
-          addPhonemes.clear(); // 요청 성공 후 리스트 초기화
-        });
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh and retry the request
-        print('Access token expired. Refreshing token...');
-
-        // Refresh the token
-        bool isRefreshed = await refreshAccessToken();
-
-        if (isRefreshed) {
-          // Retry request with new token
-          print('Token refreshed successfully. Retrying request...');
-          String? newToken = await getAccessToken();
-          response = await http.post(
-            url,
-            headers: {
-              'access': '$newToken',
-              'Content-Type': 'application/json'
-            },
-            body: body,
-          );
-          if (response.statusCode == 200) {
-            print('POST 요청 성공: ${response.body}');
-            setState(() {
-              addPhonemes.clear(); // 요청 성공 후 리스트 초기화
-            });
-          } else {
-            // Handle other response codes after retry if needed
-            print(
-                'Unhandled server response after retry: ${response.statusCode}');
-            print(json.decode(response.body));
-          }
-        } else {
-          print('Failed to refresh token. Please log in again.');
+    await addWeakSoundRequest(
+      addPhonemes,
+      onSuccess: () {
+        if (mounted) {
+          setState(() {
+            addPhonemes.clear(); // 요청 성공 후 리스트 초기화
+          });
         }
-      } else {
-        // Handle other status codes
-        print('Unhandled server response: ${response.statusCode}');
-        print(json.decode(response.body));
-      }
-    } catch (e) {
-      // Handle network request exceptions
-      print("Error during the request: $e");
-    }
+      },
+    );
   }
 
   @override
@@ -596,7 +368,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 setState(() {
                                   _selectedLevel = value ?? 'Beginner';
                                 });
-                                await updateCardLevel(value!);
+                                await updateCardLevelRequest(value!);
                               },
                             ),
                           ),
@@ -630,7 +402,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                 EdgeInsets.symmetric(vertical: 6.0 * height),
                             child: TextButton.icon(
                               onPressed: () async {
-                                await fetchPhoneme();
+                                fetchPhoneme();
 
                                 showDialog(
                                     context: context,
@@ -906,7 +678,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                     });
                                                     try {
                                                       await postAddPhonemes(); // POST 요청 보내기
-                                                      await fetchReportData();
+                                                      fetchReportData();
                                                     } catch (e) {
                                                       print(
                                                           'Error while adding phonemes: $e');
@@ -1347,57 +1119,6 @@ class VulnerableCardItem extends StatelessWidget {
 
   VoidCallback onDelete;
 
-  // 취약음소 삭제 API
-  Future<void> deletePhonemes(int phonemeId) async {
-    String? token = await getAccessToken();
-    var url = Uri.parse('$main_url/test/phonemes/$phonemeId');
-
-    // Function to make the delete request
-    Future<http.Response> makeDeleteRequest(String token) {
-      return http.delete(
-        url,
-        headers: <String, String>{
-          'access': token,
-          'Content-Type': 'application/json',
-        },
-      );
-    }
-
-    try {
-      var response = await makeDeleteRequest(token!);
-
-      if (response.statusCode == 200) {
-        onDelete(); // 성공 시 콜백 호출
-        print(response.body);
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh the token
-        print('Access token expired. Refreshing token...');
-
-        // Refresh the access token
-        bool isRefreshed = await refreshAccessToken();
-        if (isRefreshed) {
-          // Retry the delete request with the new token
-          token = await getAccessToken();
-          response = await makeDeleteRequest(token!);
-
-          if (response.statusCode == 200) {
-            onDelete(); // 성공 시 콜백 호출
-            print(response.body);
-          } else {
-            throw Exception('Failed to delete account after refreshing token');
-          }
-        } else {
-          throw Exception('Failed to refresh access token');
-        }
-      } else {
-        throw Exception('Failed to delete phoneme');
-      }
-    } catch (e) {
-      // Handle errors that occur during the request
-      print("Error deleting phoneme: $e");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -1436,7 +1157,7 @@ class VulnerableCardItem extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  await deletePhonemes(phonemeId);
+                  await deleteWeakSoundRequest(phonemeId, onDelete: onDelete);
                 },
                 child: Container(
                   height: 27.h,

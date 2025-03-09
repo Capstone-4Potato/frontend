@@ -10,7 +10,7 @@ Future<dynamic> apiRequest({
   required String endpoint,
   required String method,
   Map<String, String>? headers,
-  Map<String, dynamic>? body,
+  dynamic body,
   bool requiresAuth = true,
   bool autoRefresh = true,
   Function(http.Response)? onSuccess, // 요청 성공 후 호출
