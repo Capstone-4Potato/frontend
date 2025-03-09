@@ -19,6 +19,6 @@ Future<void> getUserAttendanceRequest({
       },
     );
   } catch (e) {
-    debugPrint('취약 음소 정보 조회 실패 : $e');
+    debugPrint('사용자 출석 날짜 조회 실패 : $e');
   }
 }
