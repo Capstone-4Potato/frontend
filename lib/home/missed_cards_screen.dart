@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/sentecnes/sentencelearningcard.dart';
 import 'package:flutter_application_1/learning_coures/words/wordlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
+import 'package:flutter_application_1/new/services/api/missed_cards_api.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,75 +34,60 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
   bool isLoading = true;
 
   late TabController _tabController;
-
   Future<void> fetchSavedCardList() async {
-    String? token = await getAccessToken();
-    var url = Uri.parse('$main_url/home/missed');
+    Map<String, dynamic> cardList = await getMissedCardsListRequest();
 
-    var response = await http.get(url, headers: {
-      'access': token!,
-      'Content-Type': 'application/json',
-    });
+    if (mounted) {
+      List<Map<String, dynamic>> tempDataList = [];
 
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      Map<String, dynamic> cardList = data['cardList'];
+      List<Future> futures = [];
 
-      if (mounted) {
-        // Temporary storage for fetched data
-        List<Map<String, dynamic>> tempDataList = [];
+      for (var entry in cardList.values) {
+        for (var card in entry) {
+          futures.add(fetchData(card['id']).then((cardData) async {
+            await Future.delayed(const Duration(seconds: 1)); // 1초 대기
 
-        List<Future> futures = [];
-
-        for (var entry in cardList.values) {
-          for (var card in entry) {
-            futures.add(fetchData(card['id']).then((cardData) async {
-              await Future.delayed(const Duration(seconds: 1)); // 1초 대기
-
-              tempDataList.add({
-                'id': card['id'],
-                'text': card['text'],
-                'cardPronunciation': card['cardPronunciation'],
-                'cardScore': card['cardScore'],
-                ...cardData, // Merge additional data fetched from fetchData
-              });
-            }));
-          }
-        }
-
-        await Future.wait(futures);
-
-        if (mounted) {
-          setState(() {
-            // Clear existing lists
-            idList.clear();
-            textList.clear();
-            cardScoreList.clear();
-            weakCardList.clear();
-            bookmarkList.clear();
-            translationList.clear();
-            explanationList.clear();
-            pictureList.clear();
-
-            // Populate lists in order
-            for (var card in tempDataList) {
-              idList.add(card['id']);
-              textList.add(card['text']);
-              cardPronunciationList.add(card['cardPronunciation']);
-              cardScoreList.add(card['cardScore']);
-              pictureList.add(card['pictureUrl'] ?? '');
-              explanationList.add(card['explanation'] ?? '');
-              translationList.add(card['cardTranslation'] ?? '');
-              bookmarkList.add(card['bookmark']);
-              weakCardList.add(card['weakCard']);
-            }
-
-            isLoading = false;
-          });
+            tempDataList.add({
+              'id': card['id'],
+              'text': card['text'],
+              'cardPronunciation': card['cardPronunciation'],
+              'cardScore': card['cardScore'],
+              ...cardData, // Merge additional data fetched from fetchData
+            });
+          }));
         }
       }
-    } else {
-      throw Exception('Failed to load card list');
+
+      await Future.wait(futures);
+
+      if (mounted) {
+        setState(() {
+          // Clear existing lists
+          idList.clear();
+          textList.clear();
+          cardScoreList.clear();
+          weakCardList.clear();
+          bookmarkList.clear();
+          translationList.clear();
+          explanationList.clear();
+          pictureList.clear();
+
+          // Populate lists in order
+          for (var card in tempDataList) {
+            idList.add(card['id']);
+            textList.add(card['text']);
+            cardPronunciationList.add(card['cardPronunciation']);
+            cardScoreList.add(card['cardScore']);
+            pictureList.add(card['pictureUrl'] ?? '');
+            explanationList.add(card['explanation'] ?? '');
+            translationList.add(card['cardTranslation'] ?? '');
+            bookmarkList.add(card['bookmark']);
+            weakCardList.add(card['weakCard']);
+          }
+
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -344,7 +329,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
       onTap: () {
         // Fetch and save the correct audio for the selected card
         TtsService.fetchCorrectAudio(ids[index]).then((_) {
-          print('Audio fetched and saved successfully.');
+          debugPrint('Audio fetched and saved successfully.');
         });
         if (ids[index] >= 1684) {
           Navigator.push(

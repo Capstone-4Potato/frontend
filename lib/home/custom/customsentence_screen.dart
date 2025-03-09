@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/home/custom/customlearningcard.dart';
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/services/api/custom_card_api.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
+import 'package:flutter_application_1/new/services/api/custom_cards_list_api.dart';
 import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class CustomSentenceScreen extends StatefulWidget {
   const CustomSentenceScreen({super.key});
@@ -97,143 +94,51 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
   }
 
   Future<void> _loadSentencesFromServer() async {
-    String? token = await getAccessToken();
-    String url = '$main_url/home/custom';
     setState(() {
       isLoading = true;
     });
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: <String, String>{
-          'access': '$token',
-          'Content-Type': 'application/json',
-        },
-      );
+    final List<dynamic> responseData = await getCustomCardsListRequest();
 
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData =
-            json.decode(response.body)['cardList'];
+    if (mounted) {
+      setState(() {
+        _sentences.addAll(
+          responseData.map((data) => Sentence.fromJson(data)).toList(),
+        );
 
-        if (mounted) {
-          setState(() {
-            _sentences.addAll(
-              responseData.map((data) => Sentence.fromJson(data)).toList(),
-            );
-
-            // 리스트 초기화
-            idList.clear();
-            textList.clear();
-            engTranslationList.clear();
-            engPronunciationList.clear();
-            cardScoreList.clear();
-            weakCardList.clear();
-            bookmarkList.clear();
-            createdAtList.clear();
-            // 변수 리스트에 데이터 저장
-            for (var card in responseData) {
-              idList.add(card['id']);
-              textList.add(card['text']);
-              engTranslationList.add(card['engTranslation']);
-              engPronunciationList.add(card['engPronunciation']);
-              cardScoreList.add(card['cardScore']);
-              weakCardList.add(card['weakCard']);
-              bookmarkList.add(card['bookmark']);
-              createdAtList.add(card['createdAt'] ??
-                  DateTime(2024, 10, 10).toIso8601String()); // 기본값 추가
-            }
-            // 리스트 뒤집기
-            _sentences = _sentences.reversed.toList();
-            idList = idList.reversed.toList();
-            textList = textList.reversed.toList();
-            engTranslationList = engTranslationList.reversed.toList();
-            engPronunciationList = engPronunciationList.reversed.toList();
-            cardScoreList = cardScoreList.reversed.toList();
-            weakCardList = weakCardList.reversed.toList();
-            bookmarkList = bookmarkList.reversed.toList();
-            createdAtList = createdAtList.reversed.toList();
-
-            isLoading = false;
-          });
+        // 리스트 초기화
+        idList.clear();
+        textList.clear();
+        engTranslationList.clear();
+        engPronunciationList.clear();
+        cardScoreList.clear();
+        weakCardList.clear();
+        bookmarkList.clear();
+        createdAtList.clear();
+        // 변수 리스트에 데이터 저장
+        for (var card in responseData) {
+          idList.add(card['id']);
+          textList.add(card['text']);
+          engTranslationList.add(card['engTranslation']);
+          engPronunciationList.add(card['engPronunciation']);
+          cardScoreList.add(card['cardScore']);
+          weakCardList.add(card['weakCard']);
+          bookmarkList.add(card['bookmark']);
+          createdAtList.add(card['createdAt'] ??
+              DateTime(2024, 10, 10).toIso8601String()); // 기본값 추가
         }
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh and retry the request
-        print('Access token expired. Refreshing token...');
+        // 리스트 뒤집기
+        _sentences = _sentences.reversed.toList();
+        idList = idList.reversed.toList();
+        textList = textList.reversed.toList();
+        engTranslationList = engTranslationList.reversed.toList();
+        engPronunciationList = engPronunciationList.reversed.toList();
+        cardScoreList = cardScoreList.reversed.toList();
+        weakCardList = weakCardList.reversed.toList();
+        bookmarkList = bookmarkList.reversed.toList();
+        createdAtList = createdAtList.reversed.toList();
 
-        // Refresh the token
-        bool isRefreshed = await refreshAccessToken();
-
-        if (isRefreshed) {
-          // Retry request with new token
-          print('Token refreshed successfully. Retrying request...');
-          String? newToken = await getAccessToken();
-          final retryResponse = await http.get(
-            Uri.parse(url),
-            headers: <String, String>{
-              'access': '$newToken',
-              'Content-Type': 'application/json',
-            },
-          );
-
-          if (response.statusCode == 200) {
-            final List<dynamic> responseData =
-                json.decode(response.body)['cardList'];
-
-            if (mounted) {
-              setState(() {
-                _sentences.addAll(
-                  responseData.map((data) => Sentence.fromJson(data)).toList(),
-                );
-
-                // 리스트 초기화
-                idList.clear();
-                textList.clear();
-                engTranslationList.clear();
-                engPronunciationList.clear();
-                cardScoreList.clear();
-                weakCardList.clear();
-                bookmarkList.clear();
-                createdAtList.clear();
-                // 변수 리스트에 데이터 저장
-                for (var card in responseData) {
-                  idList.add(card['id']);
-                  textList.add(card['text']);
-                  engTranslationList.add(card['engTranslation']);
-                  engPronunciationList.add(card['engPronunciation']);
-                  cardScoreList.add(card['cardScore']);
-                  weakCardList.add(card['weakCard']);
-                  bookmarkList.add(card['bookmark']);
-                  createdAtList.add(card['createdAt'] ??
-                      DateTime(2024, 10, 10).toIso8601String()); // 기본값 추가
-                }
-                // 리스트 뒤집기
-                _sentences = _sentences.reversed.toList();
-                idList = idList.reversed.toList();
-                textList = textList.reversed.toList();
-                engTranslationList = engTranslationList.reversed.toList();
-                engPronunciationList = engPronunciationList.reversed.toList();
-                cardScoreList = cardScoreList.reversed.toList();
-                weakCardList = weakCardList.reversed.toList();
-                bookmarkList = bookmarkList.reversed.toList();
-                createdAtList = createdAtList.reversed.toList();
-
-                isLoading = false;
-              });
-            }
-          } else {
-            _showErrorDialog(
-                'Failed to load sentences after retry. Please try again.');
-          }
-        } else {
-          _showErrorDialog('Failed to refresh token. Please log in again.');
-        }
-      } else {
-        _showErrorDialog('Failed to load sentences. Please try again.');
-      }
-    } catch (e) {
-      // Handle network request exceptions
-      print("Error during the request: $e");
-      _showErrorDialog('Failed to load sentences. Please try again.');
+        isLoading = false;
+      });
     }
   }
 
