@@ -29,7 +29,7 @@ Future<int> getTestResultByCard(int cardId, File audioFile) async {
 
     return resultCode;
   } catch (e) {
-    debugPrint('새로운 취약음 테스트 목록 반환 실패 : $e');
+    debugPrint('사용자 음성 파일 업로드 실패 : $e');
     return 500;
   }
 }

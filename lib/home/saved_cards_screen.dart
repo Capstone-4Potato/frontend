@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/sentecnes/sentencelearningcard.dart';
 import 'package:flutter_application_1/learning_coures/words/wordlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -506,8 +506,8 @@ class _SavedCardScreenState extends State<SavedCardScreen>
                           setState(() {
                             bookmarks[index] = !bookmarks[index];
                           });
-                          updateBookmarkStatus(
-                              ids[index], bookmarks[index]); // 북마크 상태 서버에 업데이트
+                          updateBookmarkStatusRequest(
+                              ids[index]); // 북마크 상태 서버에 업데이트
                         },
                       ),
                     ),
@@ -568,8 +568,9 @@ class _SavedCardScreenState extends State<SavedCardScreen>
                           setState(() {
                             bookmarks[index] = !bookmarks[index];
                           });
-                          updateBookmarkStatus(idList[index],
-                              bookmarks[index]); // 북마크 상태 서버에 업데이트
+                          updateBookmarkStatusRequest(
+                            idList[index],
+                          ); // 북마크 상태 서버에 업데이트
                         },
                       ),
                     ),

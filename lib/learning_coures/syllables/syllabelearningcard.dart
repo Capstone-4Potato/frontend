@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
+import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
 import 'package:flutter_application_1/tutorial/feedback_tutorial_screen1.dart';
 import 'package:flutter_application_1/tutorial/feedback_tutorial_screen2.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
@@ -293,8 +294,8 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                         !widget.bookmarked[widget.currentIndex];
                   });
                   // 북마크 상태를 서버에 업데이트
-                  updateBookmarkStatus(widget.cardIds[widget.currentIndex],
-                      widget.bookmarked[widget.currentIndex]);
+                  updateBookmarkStatusRequest(
+                      widget.cardIds[widget.currentIndex]);
                 },
               ),
               Padding(

@@ -6,6 +6,7 @@ import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/sentecnes/sentencelearningcard.dart';
 import 'package:flutter_application_1/learning_coures/words/wordlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -435,7 +436,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
                           setState(() {
                             bookmarks[index] = !bookmarks[index];
                           });
-                          updateBookmarkStatus(ids[index], bookmarks[index]);
+                          updateBookmarkStatusRequest(ids[index]);
                         },
                       ),
                     ),
@@ -497,7 +498,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
                           setState(() {
                             bookmarks[index] = !bookmarks[index];
                           });
-                          updateBookmarkStatus(ids[index], bookmarks[index]);
+                          updateBookmarkStatusRequest(ids[index]);
                         },
                       ),
                     ),

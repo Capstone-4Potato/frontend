@@ -1,9 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_screen.dart';
 import 'package:flutter_application_1/home/home_screen.dart';
+import 'package:flutter_application_1/new/models/navigation_type.dart';
+import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/today_course/today_course_screen.dart';
 import 'package:flutter_application_1/report/report_screen.dart';
 import 'package:flutter_application_1/tutorial/home_tutorial_screen1.dart';
@@ -115,7 +119,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
               borderRadius: BorderRadius.circular(100),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
+                  color: Colors.black.withValues(alpha: 0.25),
                   blurRadius: 4,
                   spreadRadius: 1,
                   offset: const Offset(0, 4),
@@ -152,13 +156,9 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
                           );
                         },
                       )
-                    : Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) =>
-                              const TodayCourseScreen(),
-                        ),
-                      );
+                    : context.navigateTo(
+                        screen: const TodayCourseScreen(),
+                        type: NavigationType.pushReplacement);
               },
             ),
           ),

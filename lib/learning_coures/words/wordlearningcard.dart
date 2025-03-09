@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
+import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/learning_coures/words/wordfeedbackui.dart';
@@ -226,8 +227,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
                     !widget.bookmarked[widget.currentIndex];
               });
               // 북마크 상태를 서버에 업데이트
-              updateBookmarkStatus(widget.cardIds[widget.currentIndex],
-                  widget.bookmarked[widget.currentIndex]);
+              updateBookmarkStatusRequest(widget.cardIds[widget.currentIndex]);
             },
           ),
           Padding(
