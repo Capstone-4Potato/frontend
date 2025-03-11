@@ -1,7 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/new/models/image_path.dart';
+import 'package:flutter_application_1/new/models/navigation_type.dart';
 import 'package:flutter_application_1/new/services/api/join_api.dart';
+import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,8 +17,10 @@ void askRecoverDialog(BuildContext context, String? socialId) {
     // 계정 복구 API 요청
     await recoverUserAccount(socialId!);
     // 사용자 정보 API 요청
-    // ignore: use_build_context_synchronously
-    await getUserData(context);
+    await getUserData();
+    // 홈으로 이동
+    context.navigateTo(
+        screen: HomeNav(), type: NavigationType.pushAndRemoveUntil);
   }
 
   /// delete 눌렀을 때

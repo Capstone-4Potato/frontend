@@ -1,21 +1,17 @@
-import 'dart:convert';
-
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_cards.dart';
 import 'package:flutter_application_1/new/models/image_path.dart';
+import 'package:flutter_application_1/new/services/api/home_api.dart';
 import 'package:flutter_application_1/notification/notification_screen.dart';
 import 'package:flutter_application_1/settings/profile_page.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -49,8 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    fetchUserData();
-    _loadTutorialStatus();
+    fetchHomeUserData(); // 홈 화면 정보 초기화
+    _loadTutorialStatus(); // 튜토리얼 진행 상황 초기화
   }
 
   // SharedPreferences에서 튜토리얼 진행 상태를 불러오는 함수
@@ -69,88 +65,21 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> fetchUserData() async {
-    try {
-      var url = Uri.parse('$main_url/home');
-      String? token = await getAccessToken();
-      print('$token');
-
-      // api 요청 함수
-      Future<http.Response> makeRequest(String token) {
-        var headers = <String, String>{
-          'access': token,
-          'Content-Type': 'application/json',
-        };
-        return http.get(url, headers: headers);
-      }
-
-      var response = await makeRequest(token!);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          userLevel = data['userLevel'];
-          levelExperience = data['levelExperience'];
-          userExperience = data['userExperience'];
-          weeklyAttendance = data['weeklyAttendance'];
-          dailyWordId = data['dailyWordId'];
-          dailyWord = data['dailyWord'];
-          dailyWordPronunciation = data['dailyWordPronunciation'];
-          savedCardNumber = data['savedCardNumber'];
-          missedCardNumber = data['missedCardNumber'];
-          customCardNumber = data['customCardNumber'];
-          hasUnreadNotifications = data['hasUnreadNotifications'];
-        });
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh and retry the request
-        print('Access token expired. Refreshing token...');
-
-        // Refresh the token
-        bool isRefreshed = await refreshAccessToken();
-
-        if (isRefreshed) {
-          // Retry request with new token
-          print('Token refreshed successfully. Retrying request...');
-          String? newToken = await getAccessToken();
-          response = await http.get(url, headers: {
-            'access': '$newToken',
-            'Content-Type': 'application/json'
-          });
-
-          if (response.statusCode == 200) {
-            final data = json.decode(response.body);
-            setState(() {
-              userLevel = data['userLevel'];
-              levelExperience = data['levelExperience'];
-              userExperience = data['userExperience'];
-              weeklyAttendance = data['weeklyAttendance'];
-              dailyWordId = data['dailyWordId'];
-              dailyWord = data['dailyWord'];
-              dailyWordPronunciation = data['dailyWordPronunciation'];
-              savedCardNumber = data['savedCardNumber'];
-              missedCardNumber = data['missedCardNumber'];
-              customCardNumber = data['customCardNumber'];
-              hasUnreadNotifications = data['hasUnreadNotifications'];
-            });
-          } else {
-            // Handle other response codes after retry if needed
-            print(
-                'Unhandled server response after retry: ${response.statusCode}');
-            print(json.decode(response.body));
-          }
-        } else {
-          print('Failed to refresh token. Please log in again.');
-        }
-      } else {
-        // Handle other status codes
-        print('Unhandled server response: ${response.statusCode}');
-
-        print(json.decode(response.body));
-      }
-    } catch (e) {
-      // Handle network request exceptions
-      print("Error during the request: $e");
-    }
+  Future<void> fetchHomeUserData() async {
+    final data = await getHomeDataRequest();
+    setState(() {
+      userLevel = data['userLevel'];
+      levelExperience = data['levelExperience'];
+      userExperience = data['userExperience'];
+      weeklyAttendance = data['weeklyAttendance'];
+      dailyWordId = data['dailyWordId'];
+      dailyWord = data['dailyWord'];
+      dailyWordPronunciation = data['dailyWordPronunciation'];
+      savedCardNumber = data['savedCardNumber'];
+      missedCardNumber = data['missedCardNumber'];
+      customCardNumber = data['customCardNumber'];
+      hasUnreadNotifications = data['hasUnreadNotifications'];
+    });
   }
 
   @override

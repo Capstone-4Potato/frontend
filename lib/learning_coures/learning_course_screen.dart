@@ -1,17 +1,14 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_card_list.dart';
 import 'package:flutter_application_1/learning_coures/unit_class.dart';
+import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
 import 'package:flutter_application_1/tutorial/learning_course_tutorial_screen1.dart';
 import 'package:flutter_application_1/tutorial/learning_course_tutorial_screen2.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// 러닝 코스 단계 선택 리스트 스크린
 class LearningCourseScreen extends StatefulWidget {
@@ -78,7 +75,6 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
   void _updateChoiceChipByScroll() {
     final double offset = _scrollController.offset;
 
-    final beginnerPosition = _getWidgetPosition(_beginnerKey);
     final intermediatePosition = _getWidgetPosition(_intermediateKey);
     final advancedPosition = _getWidgetPosition(_advancedKey);
 
@@ -153,75 +149,26 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
 
   /// 레벨 별 학습 현황 조회
   Future<void> _getLearningCourseList() async {
-    String? token = await getAccessToken();
-    String url = '$main_url/home/course';
-
     // 로딩 중
     setState(() {
       isLoading = true;
     });
-
     try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: <String, String>{
-          'access': '$token',
-          'Content-Type': 'application/json',
-        },
-      );
+      // 러닝 코스 학습 현황 API 요청
+      final List<dynamic> responseData = await getLearningCourseStatusReqeust();
 
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData =
-            json.decode(response.body)['courseList'];
-        setState(() {
-          _units.addAll(
-            responseData.map((data) => Unit.fromJson(data)).toList(),
-          );
-          isLoading = false;
-        });
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh and retry the request
-        print('Access token expired. Refreshing token...');
-
-        // Refresh the token
-        bool isRefreshed = await refreshAccessToken();
-
-        if (isRefreshed) {
-          // Retry request with new token
-          print('Token refreshed successfully. Retrying request...');
-          String? newToken = await getAccessToken();
-          final retryResponse = await http.get(
-            Uri.parse(url),
-            headers: <String, String>{
-              'access': '$newToken',
-              'Content-Type': 'application/json',
-            },
-          );
-
-          if (retryResponse.statusCode == 200) {
-            final List<dynamic> responseData =
-                json.decode(retryResponse.body)['courseList'];
-            setState(() {
-              _units.addAll(
-                responseData.map((data) => Unit.fromJson(data)).toList(),
-              );
-              isLoading = false;
-            });
-          } else {
-            _showErrorDialog(
-                'Failed to load Learning Course after retry. Please try again.');
-          }
-        } else {
-          _showErrorDialog('Failed to refresh token. Please log in again.');
-        }
-      } else {
-        _showErrorDialog('Failed to load Learning Course. Please try again.');
-      }
+      setState(() {
+        _units.addAll(
+          responseData.map((data) => Unit.fromJson(data)).toList(),
+        );
+      });
     } catch (e) {
-      // Handle network request exceptions
-      print("Error during the request: $e");
-      _showErrorDialog('Failed to load Learning Course. Please try again.');
+      _showErrorDialog(
+          'Failed to load Learning Course after retry. Please try again.');
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void _showErrorDialog(String message) {

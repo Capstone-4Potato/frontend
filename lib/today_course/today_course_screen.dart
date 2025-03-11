@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/today_course/fetch_today_course.dart';
+import 'package:flutter_application_1/new/services/api/today_course_api.dart';
+import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/today_course/today_course_learning_card.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -87,7 +88,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
         }
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh the token
-        print('Access token expired. Refreshing token...');
+        debugPrint('Access token expired. Refreshing token...');
 
         // Refresh the access token
         bool isRefreshed = await refreshAccessToken();
@@ -124,7 +125,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
                 });
               });
             }
-            print(response.body);
+            debugPrint(response.body);
           } else {
             throw Exception('Failed to load card list after refreshing token');
           }
@@ -136,7 +137,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
       }
     } catch (e) {
       // Handle errors that occur during the request
-      print("Error loading card list: $e");
+      debugPrint("Error loading card list: $e");
     }
   }
 
@@ -149,19 +150,28 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
 
   Future<void> filterCardsAfterLastFinished() async {
     lastFinishedCardId = await loadLastFinishedCard();
-    print("마지막 카드 아이디 입니다 : $lastFinishedCardId");
+    debugPrint("마지막 카드 아이디 입니다 : $lastFinishedCardId");
+
     setState(() {
-      // 마지막 학습한 카드 이후의 카드만 남기기
-      cardList =
-          cardList.where((cardId) => cardId >= lastFinishedCardId).toList();
-      print("필터링 이후 카드 리스트입니다 : $cardList");
+      // 마지막으로 학습한 카드의 인덱스 찾기
+      int lastFinishedIndex = cardList.indexOf(lastFinishedCardId);
+
+      if (lastFinishedIndex != -1) {
+        // 인덱스를 찾은 경우, 그 이후의 카드들만 유지
+        cardList = cardList.sublist(lastFinishedIndex);
+      } else {
+        // 마지막 카드 ID를 리스트에서 찾을 수 없는 경우
+        debugPrint("마지막 카드 ID를 리스트에서 찾을 수 없습니다.");
+      }
+
+      debugPrint("필터링 이후 카드 리스트입니다 : $cardList");
     });
 
     if (cardList.isEmpty) {
       // 카드가 모두 끝난 경우 새 카드 요청
-      print("All cards finished. Fetching new cards...");
-      await postTodayCourse();
-      await Future.delayed(const Duration(seconds: 2)); // 1초 대기
+      debugPrint("All cards finished. Fetching new cards...");
+      await getTodayCourseCardList();
+      await Future.delayed(const Duration(seconds: 2)); // 2초 대기
     } else {
       //fetchAllCards();
     }
@@ -171,7 +181,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
   Future<void> saveLastFinishedCard(int cardId) async {
     await secureStorage.write(
         key: 'lastFinishedCardId', value: cardId.toString());
-    print("Saved last finished card ID: $cardId");
+    debugPrint("Saved last finished card ID: $cardId");
   }
 
   // 마지막 학습 카드 ID 불러오기
@@ -186,16 +196,21 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     });
     try {
       // 새로운 카드 리스트 요청
-      cardList = await postTodayCourse(); // 이 작업이 완료될 때까지 기다림
+      List<int> tempList = await getTodayCourseCardList(); // 이 작업이 완료될 때까지 기다림
+
+      setState(() {
+        cardList = tempList;
+        debugPrint("$cardList");
+      });
 
       if (cardList.isNotEmpty) {
         // cardList가 제대로 업데이트되었는지 확인
         await fetchAllCards();
       } else {
-        print("No cards available from server.");
+        debugPrint("No cards available from server.");
       }
     } catch (e) {
-      print("Error fetching new cards: $e");
+      debugPrint("Error fetching new cards: $e");
     } finally {
       setState(() {
         isLoading = false; // 로딩 상태 종료
@@ -207,7 +222,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
   Future<void> loadCardList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? savedCardIdList = prefs.getStringList('cardIdList');
-    print("저장됐던 카드 리스트 입니다 : $savedCardIdList");
+    debugPrint("저장됐던 카드 리스트 입니다 : $savedCardIdList");
     setState(() {
       isLoading = true;
     });
@@ -219,7 +234,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
 
       // 마지막 학습한 카드 이후 카드 필터링
       await filterCardsAfterLastFinished();
-      print("새로 저장한 카드 리스트 입니다 : $savedCardIdList");
+      debugPrint("새로 저장한 카드 리스트 입니다 : $savedCardIdList");
 
       // 카드 정보를 한 번만 요청
       if (cardList.isNotEmpty) {
@@ -227,7 +242,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
       }
     } else {
       // 카드 리스트가 비어있으면 서버에서 새로 요청
-      print("Fetching new cards...");
+      debugPrint("Fetching new cards...");
       await fetchTodayCourseCards();
     }
 

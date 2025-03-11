@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
-import 'package:flutter_application_1/report/vulnerablesoundtest/gettestlist.dart';
+import 'package:flutter_application_1/new/models/navigation_type.dart';
+import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
+import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/testcard.dart';
 
-// 로그인 -> 회원가입 -> 튜토리얼 -> 취약음테스트 시작 페이지
+/// 로그인 -> 회원가입 -> 튜토리얼 -> 취약음테스트 시작 페이지
 class StartTestScreen extends StatefulWidget {
   const StartTestScreen({super.key});
 
@@ -25,8 +27,7 @@ class _StartTestScreenState extends State<StartTestScreen> {
   }
 
   Future<void> initTestData() async {
-    var data = await getTestNewData();
-    print(data);
+    var data = await getTestNewDataRequest(); // 새 test 데이터 요청
 
     if (data != null) {
       setState(() {
@@ -126,11 +127,8 @@ class _StartTestScreenState extends State<StartTestScreen> {
             ElevatedButton(
               onPressed: () {
                 // skip 하면 메인으로 이동
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeNav()),
-                  (route) => false,
-                );
+                context.navigateTo(
+                    screen: HomeNav(), type: NavigationType.pushAndRemoveUntil);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey,

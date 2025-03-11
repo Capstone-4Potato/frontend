@@ -14,13 +14,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 
 class CustomSentenceLearningCard extends StatefulWidget {
-  int currentIndex;
+  final int currentIndex;
   final List<int> cardIds;
   final List<String> texts;
   final List<String> pronunciations;
   final List<String> engpronunciations;
 
-  CustomSentenceLearningCard({
+  const CustomSentenceLearningCard({
     Key? key,
     required this.currentIndex,
     required this.cardIds,
@@ -39,6 +39,7 @@ class _CustomSentenceLearningCardState
   final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final PermissionService _permissionService = PermissionService();
+
   bool _isRecording = false;
   bool _canRecord = true;
   late String _recordedFilePath;
@@ -47,10 +48,13 @@ class _CustomSentenceLearningCardState
 
   late PageController pageController; // 페이지 컨트롤러 생성
 
+  late int currentIndex; // 현재 카드 인덱스 번혼
+
   @override
   void initState() {
     super.initState();
     _initialize();
+    currentIndex = widget.currentIndex; // index 초기값 저장
     pageController =
         PageController(initialPage: widget.currentIndex); // PageController 초기화
   }
@@ -136,9 +140,9 @@ class _CustomSentenceLearningCardState
     await CustomTtsService.fetchCorrectAudio(
             widget.cardIds[widget.currentIndex])
         .then((_) {
-      print('Audio fetched and saved successfully.');
+      debugPrint('Audio fetched and saved successfully.');
     }).catchError((error) {
-      print('Error fetching audio: $error');
+      debugPrint('Error fetching audio: $error');
     });
     await CustomTtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
@@ -238,12 +242,12 @@ class _CustomSentenceLearningCardState
           onPageChanged: (value) {
             setState(() {
               // currentIndex를 새로 갱신하여 카드 내용을 바꾸도록 설정
-              widget.currentIndex = value;
+              currentIndex = value;
             });
             CustomTtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
-              print('Audio fetched and saved successfully.');
+              debugPrint('Audio fetched and saved successfully.');
             }).catchError((error) {
-              print('Error fetching audio: $error');
+              debugPrint('Error fetching audio: $error');
             });
           },
           itemCount: widget.texts.length,

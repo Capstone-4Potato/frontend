@@ -1,29 +1,25 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/function.dart';
-import 'package:flutter_application_1/learning_coures/sentecnes/sentencelearningcard.dart';
-import 'package:flutter_application_1/learning_coures/tongue_twisters/tongue_twisters_learing_card.dart';
-import 'package:flutter_application_1/learning_coures/syllables/syllabelearningcard.dart';
-import 'package:flutter_application_1/learning_coures/words/one_letter_word_learning_card.dart';
-import 'package:flutter_application_1/learning_coures/words/wordlearningcard.dart';
-import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/ttsservice.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:flutter_application_1/ttsservice.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
+import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
+import 'package:flutter_application_1/learning_coures/words/wordlearningcard.dart';
+import 'package:flutter_application_1/learning_coures/syllables/syllabelearningcard.dart';
+import 'package:flutter_application_1/learning_coures/sentecnes/sentencelearningcard.dart';
+import 'package:flutter_application_1/learning_coures/words/one_letter_word_learning_card.dart';
+import 'package:flutter_application_1/learning_coures/tongue_twisters/tongue_twisters_learing_card.dart';
 
 /// 레벨 별로 학습 카드 목록 띄워주는 스크린
 class LearningCourseCardList extends StatefulWidget {
-  LearningCourseCardList({
+  const LearningCourseCardList({
     super.key,
     required this.level,
     required this.subTitle,
   });
 
-  int level;
-  String subTitle;
+  final int level;
+  final String subTitle;
 
   @override
   State<LearningCourseCardList> createState() => _LearningCourseCardListState();
@@ -44,64 +40,50 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
 
   /// 해당 레벨 카드리스트 불러오는 함수
   Future<void> fetchCardList() async {
-    String? token = await getAccessToken();
-    var url = Uri.parse('$main_url/home/course/{level}?level=${widget.level}');
+    setState(() {
+      isLoading = true;
+    });
+    //  card 리스트 api 요청
+    final List<dynamic> cardList =
+        await getLearningCourseCardListReqeust(widget.level);
 
-    // Function to make the request
-    Future<http.Response> makeRequest(String token) {
-      var headers = <String, String>{
-        'access': token,
-        'Content-Type': 'application/json',
-      };
-      return http.get(url, headers: headers);
-    }
+    if (mounted) {
+      setState(() {
+        // 리스트 초기화
+        idList.clear();
+        textList.clear();
+        engTranslationList.clear();
+        engPronunciationList.clear();
+        cardScoreList.clear();
+        pictureUrlList.clear();
+        explanationList.clear();
+        weakCardList.clear();
+        bookmarkList.clear();
 
-    var response = await makeRequest(token!);
+        // 변수 리스트에 데이터 저장
+        for (var card in cardList) {
+          idList.add(card['id']);
+          textList.add(card['text']);
+          engTranslationList.add(card['engTranslation']);
+          engPronunciationList.add(card['engPronunciation']);
+          cardScoreList.add(card['cardScore']);
 
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
+          // Level 15 이하면 pictureUrl 이랑 explanation이 없음
+          pictureUrlList.add(card['pictureUrl'] ?? '');
+          explanationList.add(card['explanation'] ?? '');
 
-      List<dynamic> cardList = data['cardList'];
-      if (mounted) {
-        setState(() {
-          // 리스트 초기화
-          idList.clear();
-          textList.clear();
-          engTranslationList.clear();
-          engPronunciationList.clear();
-          cardScoreList.clear();
-          pictureUrlList.clear();
-          explanationList.clear();
-          weakCardList.clear();
-          bookmarkList.clear();
-
-          // 변수 리스트에 데이터 저장
-          for (var card in cardList) {
-            idList.add(card['id']);
-            textList.add(card['text']);
-            engTranslationList.add(card['engTranslation']);
-            engPronunciationList.add(card['engPronunciation']);
-            cardScoreList.add(card['cardScore']);
-
-            // Level 15 이하면 picktureUrl 이랑 explanation이 없음
-            pictureUrlList.add(card['pictureUrl'] ?? '');
-            explanationList.add(card['explanation'] ?? '');
-
-            weakCardList.add(card['weakCard']);
-            bookmarkList.add(card['bookmark']);
-          }
-          isLoading = false;
-        });
-      }
-    } else {
-      throw Exception('Failed to load card list');
+          weakCardList.add(card['weakCard']);
+          bookmarkList.add(card['bookmark']);
+        }
+        isLoading = false;
+      });
     }
   }
 
   @override
   void initState() {
     super.initState();
-    fetchCardList();
+    fetchCardList(); // 카드 리스트 초기화
   }
 
   @override
@@ -149,7 +131,7 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                   onTap: () async {
                     // 학습 카드 선택 시, 해당 카드의 올바른 발음 음성 불러오고 해당 카드 화면으로 이동
                     await TtsService.fetchCorrectAudio(idList[index]).then((_) {
-                      print('Audio fetched and saved successfully.');
+                      debugPrint('Audio fetched and saved successfully.');
                     });
                     // level 1 : 음절 학습 카드로 이동
                     if (widget.level == 1) {
@@ -325,10 +307,8 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                                         bookmarkList[index] =
                                             !bookmarkList[index];
                                       });
-                                      updateBookmarkStatus(
-                                          idList[index],
-                                          bookmarkList[
-                                              index]); // 북마크 상태 서버에 업데이트
+                                      updateBookmarkStatusRequest(
+                                          idList[index]); // 북마크 상태 서버에 업데이트
                                     },
                                   ),
                                 ),
@@ -402,10 +382,8 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                                         bookmarkList[index] =
                                             !bookmarkList[index];
                                       });
-                                      updateBookmarkStatus(
-                                          idList[index],
-                                          bookmarkList[
-                                              index]); // 북마크 상태 서버에 업데이트
+                                      updateBookmarkStatusRequest(
+                                          idList[index]); // 북마크 상태 서버에 업데이트
                                     },
                                   ),
                                 ),

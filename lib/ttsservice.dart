@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:http/http.dart' as http;
-import 'package:audioplayers/audioplayers.dart' as audioplayers;
 import 'package:path_provider/path_provider.dart';
 
 class TtsService {
@@ -12,8 +14,7 @@ class TtsService {
 
   TtsService._internal();
 
-  static final audioplayers.AudioPlayer _audioPlayer =
-      audioplayers.AudioPlayer();
+  static final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
   static final String _baseUrl = '$main_url/cards/';
 
   String? base64CorrectAudio;
@@ -96,12 +97,13 @@ class TtsService {
 
   // 저장된 오디오 파일을 재생하는 메서드
   Future<void> playCachedAudio(int cardId) async {
+    await _audioPlayer.openPlayer();
     final String dir = (await getTemporaryDirectory()).path;
     final String fileName = 'correct_audio_$cardId.wav';
-    final File file = File('$dir/$fileName');
-
+    final String filePath = '$dir/$fileName';
+    debugPrint(filePath);
     await Future.delayed(const Duration(seconds: 2)); // 혹시 몰라서 딜레이 2초
 
-    await _audioPlayer.play(audioplayers.DeviceFileSource(file.path));
+    await _audioPlayer.startPlayer(fromURI: filePath, codec: Codec.pcm16WAV);
   }
 }

@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,57 +11,57 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/gestures.dart';
 
 // 음절, 단어, 문장 학습 카드 북마크 API
-Future<void> updateBookmarkStatus(int cardId, bool newStatus) async {
-  String? token = await getAccessToken();
-  var url = Uri.parse('$main_url/cards/bookmark/$cardId');
+// Future<void> updateBookmarkStatus(int cardId, bool newStatus) async {
+//   String? token = await getAccessToken();
+//   var url = Uri.parse('$main_url/cards/bookmark/$cardId');
 
-  // Function to make the GET request
-  Future<http.Response> makeGetRequest(String token) {
-    return http.get(
-      url,
-      headers: <String, String>{
-        'access': token,
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-  }
+//   // Function to make the GET request
+//   Future<http.Response> makeGetRequest(String token) {
+//     return http.get(
+//       url,
+//       headers: <String, String>{
+//         'access': token,
+//         'Content-Type': 'application/json; charset=UTF-8',
+//       },
+//     );
+//   }
 
-  try {
-    var response = await makeGetRequest(token!);
+//   try {
+//     var response = await makeGetRequest(token!);
 
-    if (response.statusCode == 200) {
-      print(response.body);
-    } else if (response.statusCode == 401) {
-      // Token expired, attempt to refresh the token
-      print('Access token expired. Refreshing token...');
+//     if (response.statusCode == 200) {
+//       print(response.body);
+//     } else if (response.statusCode == 401) {
+//       // Token expired, attempt to refresh the token
+//       print('Access token expired. Refreshing token...');
 
-      // Refresh the access token
-      bool isRefreshed = await refreshAccessToken();
-      if (isRefreshed) {
-        // Retry the bookmark status update request with the new token
-        token = await getAccessToken();
-        response = await makeGetRequest(token!);
+//       // Refresh the access token
+//       bool isRefreshed = await refreshAccessToken();
+//       if (isRefreshed) {
+//         // Retry the bookmark status update request with the new token
+//         token = await getAccessToken();
+//         response = await makeGetRequest(token!);
 
-        if (response.statusCode == 200) {
-          print('Bookmark status updated successfully after token refresh');
-          print(response.body);
-        } else {
-          print(
-              'Failed to update bookmark status after token refresh: ${response.statusCode}');
-        }
-      } else {
-        print('Failed to refresh access token');
-      }
-    } else {
-      // Handle all other HTTP status codes
-      print('Unhandled server response: ${response.statusCode}');
-      print(json.decode(response.body));
-    }
-  } catch (e) {
-    // Handle exceptions that occur during the network request
-    print("Error updating bookmark status: $e");
-  }
-}
+//         if (response.statusCode == 200) {
+//           print('Bookmark status updated successfully after token refresh');
+//           print(response.body);
+//         } else {
+//           print(
+//               'Failed to update bookmark status after token refresh: ${response.statusCode}');
+//         }
+//       } else {
+//         print('Failed to refresh access token');
+//       }
+//     } else {
+//       // Handle all other HTTP status codes
+//       print('Unhandled server response: ${response.statusCode}');
+//       print(json.decode(response.body));
+//     }
+//   } catch (e) {
+//     // Handle exceptions that occur during the network request
+//     print("Error updating bookmark status: $e");
+//   }
+// }
 
 // 음절, 단어, 문장 사용자 피드백 API
 Future<FeedbackData?> getFeedback(

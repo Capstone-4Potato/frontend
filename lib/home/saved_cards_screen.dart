@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/sentecnes/sentencelearningcard.dart';
 import 'package:flutter_application_1/learning_coures/words/wordlearningcard.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/services/api/bookmark_cards_api.dart';
+import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
+import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,146 +39,55 @@ class _SavedCardScreenState extends State<SavedCardScreen>
   late TabController _tabController;
 
   Future<void> fetchSavedCardList() async {
-    try {
-      String? token = await getAccessToken();
-      var url = Uri.parse('$main_url/home/bookmark');
+    List<dynamic> cardList = await getBookmarkCardsListRequest();
 
-      // Function to make the request
-      Future<http.Response> makeRequest(String token) {
-        var headers = <String, String>{
-          'access': token,
-          'Content-Type': 'application/json',
-        };
-        return http.get(url, headers: headers);
+    if (mounted) {
+      List<Map<String, dynamic>> tempDataList = [];
+
+      List<Future> futures = [];
+
+      for (var card in cardList) {
+        futures.add(fetchData(card['id']).then((cardData) async {
+          await Future.delayed(const Duration(seconds: 1)); // 1초 대기
+          tempDataList.add({
+            'id': card['id'],
+            'text': card['text'],
+            'cardPronunciation': card['cardPronunciation'],
+            'cardScore': card['cardScore'],
+            ...cardData, // Merge additional data fetched from fetchData
+          });
+        }));
       }
 
-      var response = await makeRequest(token!);
+      await Future.wait(futures);
 
-      if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-        List<dynamic> cardList = data['cardList'];
+      if (mounted) {
+        setState(() {
+          // 리스트 초기화
+          idList.clear();
+          textList.clear();
+          cardScoreList.clear();
+          weakCardList.clear();
+          bookmarkList.clear();
+          translationList.clear();
+          explanationList.clear();
+          pictureList.clear();
 
-        if (mounted) {
-          List<Map<String, dynamic>> tempDataList = [];
-
-          List<Future> futures = [];
-
+          // 변수 리스트에 데이터 저장
           for (var card in cardList) {
-            futures.add(fetchData(card['id']).then((cardData) async {
-              await Future.delayed(const Duration(seconds: 1)); // 1초 대기
-              tempDataList.add({
-                'id': card['id'],
-                'text': card['text'],
-                'cardPronunciation': card['cardPronunciation'],
-                'cardScore': card['cardScore'],
-                ...cardData, // Merge additional data fetched from fetchData
-              });
-            }));
+            idList.add(card['id']);
+            textList.add(card['text']);
+            cardPronunciationList.add(card['cardPronunciation']);
+            cardScoreList.add(card['cardScore']);
+            pictureList.add(card['pictureUrl'] ?? '');
+            explanationList.add(card['explanation'] ?? '');
+            translationList.add(card['cardTranslation'] ?? '');
+            bookmarkList.add(card['bookmarked']);
+            weakCardList.add(card['weakCard']);
           }
-          print(cardList);
-
-          await Future.wait(futures);
-
-          if (mounted) {
-            setState(() {
-              // 리스트 초기화
-              idList.clear();
-              textList.clear();
-              cardScoreList.clear();
-              weakCardList.clear();
-              bookmarkList.clear();
-              translationList.clear();
-              explanationList.clear();
-              pictureList.clear();
-
-              // 변수 리스트에 데이터 저장
-              for (var card in cardList) {
-                idList.add(card['id']);
-                textList.add(card['text']);
-                cardPronunciationList.add(card['cardPronunciation']);
-                cardScoreList.add(card['cardScore']);
-                pictureList.add(card['pictureUrl'] ?? '');
-                explanationList.add(card['explanation'] ?? '');
-                translationList.add(card['cardTranslation'] ?? '');
-                bookmarkList.add(card['bookmarked']);
-                weakCardList.add(card['weakCard']);
-              }
-              isLoading = false;
-            });
-          }
-        }
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh the token
-        print('Access token expired. Refreshing token...');
-
-        // Refresh the access token
-        bool isRefreshed = await refreshAccessToken();
-        if (isRefreshed) {
-          // Retry the request with the new token
-          token = await getAccessToken();
-          response = await makeRequest(token!);
-
-          if (response.statusCode == 200) {
-            var data = json.decode(response.body);
-            List<dynamic> cardList = data['cardList'];
-
-            if (mounted) {
-              List<dynamic> tempDataList = [];
-
-              List<Future> futures = [];
-
-              for (var entry in cardList) {
-                for (var card in entry) {
-                  futures.add(fetchData(card['id']).then((cardData) async {
-                    await Future.delayed(const Duration(seconds: 1)); // 1초 대기
-                    tempDataList.add({
-                      'id': card['id'],
-                      'text': card['text'],
-                      'cardPronunciation': card['cardPronunciation'],
-                      'cardScore': card['cardScore'],
-                      ...cardData, // Merge additional data fetched from fetchData
-                    });
-                  }));
-                }
-              }
-
-              await Future.wait(futures);
-
-              if (mounted) {
-                setState(() {
-                  // 리스트 초기화
-                  idList.clear();
-                  textList.clear();
-                  cardScoreList.clear();
-                  weakCardList.clear();
-                  bookmarkList.clear();
-                  translationList.clear();
-                  explanationList.clear();
-                  pictureList.clear();
-
-                  // 변수 리스트에 데이터 저장
-                  for (var card in cardList) {
-                    idList.add(card['id']);
-                    textList.add(card['text']);
-                    cardPronunciationList.add(card['cardPronunciation']);
-                    cardScoreList.add(card['cardScore']);
-                    pictureList.add(card['pictureUrl'] ?? '');
-                    explanationList.add(card['explanation'] ?? '');
-                    translationList.add(card['cardTranslation'] ?? '');
-                    bookmarkList.add(card['bookmarked']);
-                    weakCardList.add(card['weakCard']);
-                  }
-                  isLoading = false;
-                });
-              }
-            }
-          }
-        }
-      } else if (response.statusCode == 500) {
-        print(response.body);
+          isLoading = false;
+        });
       }
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -506,8 +417,8 @@ class _SavedCardScreenState extends State<SavedCardScreen>
                           setState(() {
                             bookmarks[index] = !bookmarks[index];
                           });
-                          updateBookmarkStatus(
-                              ids[index], bookmarks[index]); // 북마크 상태 서버에 업데이트
+                          updateBookmarkStatusRequest(
+                              ids[index]); // 북마크 상태 서버에 업데이트
                         },
                       ),
                     ),
@@ -568,8 +479,9 @@ class _SavedCardScreenState extends State<SavedCardScreen>
                           setState(() {
                             bookmarks[index] = !bookmarks[index];
                           });
-                          updateBookmarkStatus(idList[index],
-                              bookmarks[index]); // 북마크 상태 서버에 업데이트
+                          updateBookmarkStatusRequest(
+                            idList[index],
+                          ); // 북마크 상태 서버에 업데이트
                         },
                       ),
                     ),

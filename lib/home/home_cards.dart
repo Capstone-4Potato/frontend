@@ -1,22 +1,18 @@
-import 'dart:convert';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/home/custom/customsentence_screen.dart';
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/today_learning_card.dart';
 import 'package:flutter_application_1/home/missed_cards_screen.dart';
 import 'package:flutter_application_1/home/saved_cards_screen.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_screen.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
+import 'package:flutter_application_1/new/services/api/attendance_api.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 
 class CustomHomeCard extends StatelessWidget {
   CustomHomeCard({
@@ -112,85 +108,25 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
     await prefs.setInt('totalCard', value); // totalCard 저장
   }
 
+  /// 출석 정보 가져오는 함수
   Future<void> fetchAttendanceData() async {
-    try {
-      String? token = await getAccessToken();
+    await getUserAttendanceRequest(onDataReceived: (data) {
+      final attendanceByMonth =
+          data["attendanceByMonth"] as Map<String, dynamic>;
 
-      var url = Uri.parse('$main_url/home/attendance');
+      Map<DateTime, List<int>> attendanceDates = {};
 
-      // Set headers with the token
-      var headers = <String, String>{
-        'access': '$token',
-        'Content-Type': 'application/json',
-      };
-
-      var response = await http.get(url, headers: headers);
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final attendanceByMonth =
-            data["attendanceByMonth"] as Map<String, dynamic>;
-
-        Map<DateTime, List<int>> attendanceDates = {};
-
-        attendanceByMonth.forEach((month, days) {
-          DateTime monthDate = DateTime.parse("$month-01");
-          attendanceDates[monthDate] = List<int>.from(days);
-        });
-
+      attendanceByMonth.forEach((month, days) {
+        DateTime monthDate = DateTime.parse("$month-01");
+        attendanceDates[monthDate] = List<int>.from(days);
+      });
+      if (mounted) {
         setState(() {
           _attendanceDates = attendanceDates;
           isLoading = false; // 로딩 중 상태 변환
         });
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh and retry the request
-        print('Access token expired. Refreshing token...');
-
-        // Refresh the token
-        bool isRefreshed = await refreshAccessToken();
-
-        if (isRefreshed) {
-          // Retry request with new token
-          print('Token refreshed successfully. Retrying request...');
-          String? newToken = await getAccessToken();
-          response = await http.get(url, headers: {
-            'access': '$newToken',
-            'Content-Type': 'application/json'
-          });
-          if (response.statusCode == 200) {
-            final data = json.decode(response.body);
-            final attendanceByMonth =
-                data["attendanceByMonth"] as Map<String, dynamic>;
-
-            Map<DateTime, List<int>> attendanceDates = {};
-
-            attendanceByMonth.forEach((month, days) {
-              DateTime monthDate = DateTime.parse("$month-01");
-              attendanceDates[monthDate] = List<int>.from(days);
-            });
-
-            setState(() {
-              _attendanceDates = attendanceDates;
-              isLoading = false; // 로딩 중 상태 변환
-            });
-          } else {
-            // Handle other response codes after retry if needed
-            print(
-                'Unhandled server response after retry: ${response.statusCode}');
-            print(json.decode(response.body));
-          }
-        } else {
-          print('Failed to refresh token. Please log in again.');
-        }
-      } else {
-        // Handle other status codes
-        print('Unhandled server response: ${response.statusCode}');
-        print(json.decode(response.body));
       }
-    } catch (e) {
-      // Handle network request exceptions
-      print("Error during the request: $e");
-    }
+    });
   }
 
   bool _isAttendanceDay(DateTime day) {
@@ -711,6 +647,7 @@ class ContentTodayCard extends StatelessWidget {
               dailyWord!,
               style: TextStyle(
                 fontSize: 30.h,
+                height: 1.16,
               ),
             ),
             Row(
@@ -721,7 +658,7 @@ class ContentTodayCard extends StatelessWidget {
                   child: Text(
                     "[$dailyWordPronunciation]",
                     style: TextStyle(
-                      fontSize: 12.h,
+                      fontSize: 18.h,
                     ),
                     softWrap: true,
                   ),
@@ -777,7 +714,7 @@ class ContentCustomCard extends StatelessWidget {
             Text(
               "Say your own\nCustom sentence!",
               style: TextStyle(
-                fontSize: 21.h,
+                fontSize: 20.h,
               ),
             ),
             Row(
@@ -798,10 +735,10 @@ class ContentCustomCard extends StatelessWidget {
                       color: AppColors.primary,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-                      child: Text(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 14.0.w, vertical: 8.0.h),
+                      child: const Text(
                         'Try it →',
                         style: TextStyle(
                           color: Colors.white,
