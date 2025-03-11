@@ -95,6 +95,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
   Future<void> _initialize() async {
     await _permissionService.requestPermissions();
     await _audioRecorder.openRecorder();
+    await _audioPlayer.openPlayer();
   }
 
   // 이미지 로드

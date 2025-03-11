@@ -647,6 +647,7 @@ class ContentTodayCard extends StatelessWidget {
               dailyWord!,
               style: TextStyle(
                 fontSize: 30.h,
+                height: 1.16,
               ),
             ),
             Row(
@@ -657,7 +658,7 @@ class ContentTodayCard extends StatelessWidget {
                   child: Text(
                     "[$dailyWordPronunciation]",
                     style: TextStyle(
-                      fontSize: 12.h,
+                      fontSize: 18.h,
                     ),
                     softWrap: true,
                   ),
@@ -734,10 +735,10 @@ class ContentCustomCard extends StatelessWidget {
                       color: AppColors.primary,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
-                      child: Text(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 14.0.w, vertical: 8.0.h),
+                      child: const Text(
                         'Try it →',
                         style: TextStyle(
                           color: Colors.white,

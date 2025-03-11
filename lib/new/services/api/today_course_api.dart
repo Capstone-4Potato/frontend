@@ -47,13 +47,11 @@ Future<List<int>> getTodayCourseCardList() async {
         // SharedPreferences에 cardIdList 저장
         await prefs.setStringList(
             'cardIdList', cardIdList.map((e) => e.toString()).toList());
-
-        return cardIdList;
       },
     );
+    return cardIdList;
   } catch (e) {
     debugPrint('today-course 카드 ID 리스트 조회 실패 : $e');
     return [];
   }
-  return [];
 }

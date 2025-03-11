@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
@@ -7,12 +6,13 @@ import 'package:flutter_application_1/home/custom/customtts.dart';
 import 'package:flutter_application_1/learning_coures/syllables/syllabelearningcard.dart';
 import 'package:flutter_application_1/widgets/audio_graph.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 
 class CustomFeedbackUI extends StatefulWidget {
   final FeedbackData feedbackData;
   final String recordedFilePath;
-  String text; // 올바른 발음
-  CustomFeedbackUI({
+  final String text; // 올바른 발음
+  const CustomFeedbackUI({
     super.key,
     required this.feedbackData,
     required this.recordedFilePath,
@@ -24,19 +24,26 @@ class CustomFeedbackUI extends StatefulWidget {
 }
 
 class _CustomFeedbackUIState extends State<CustomFeedbackUI> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
+
+  @override
+  void initState() {
+    // audioPlayer 엶
+    _audioPlayer.startPlayer();
+    super.initState();
+  }
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    // audioPlayer 닫음
+    _audioPlayer.closePlayer();
     super.dispose();
   }
 
   // 사용자의 녹음된 음성을 재생하는 메서드
   Future<void> _playUserRecording() async {
-    print('Recorded File Path: ${widget.recordedFilePath}');
-
-    await _audioPlayer.play(DeviceFileSource(widget.recordedFilePath));
+    await _audioPlayer.startPlayer(
+        fromURI: widget.recordedFilePath, codec: Codec.pcm16WAV);
   }
 
   @override

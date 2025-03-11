@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/models/api_method.dart';
 import 'package:flutter_application_1/new/models/navigation_type.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
@@ -12,7 +11,7 @@ import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/starting_test_page.dart';
 
 /// ### GET `/users` : 회원정보 조회
-Future<void> getUserData(BuildContext context) async {
+Future<void> getUserData() async {
   try {
     await apiRequest(
         endpoint: 'users',
@@ -26,10 +25,6 @@ Future<void> getUserData(BuildContext context) async {
               age: data['age'],
               gender: data['gender'],
               level: data['level']);
-
-          // 홈으로 이동
-          context.navigateTo(
-              screen: HomeNav(), type: NavigationType.pushAndRemoveUntil);
         });
   } catch (e) {
     debugPrint('회원 정보 조회 실패 : $e');

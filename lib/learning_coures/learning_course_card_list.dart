@@ -68,7 +68,7 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
           engPronunciationList.add(card['engPronunciation']);
           cardScoreList.add(card['cardScore']);
 
-          // Level 15 이하면 picktureUrl 이랑 explanation이 없음
+          // Level 15 이하면 pictureUrl 이랑 explanation이 없음
           pictureUrlList.add(card['pictureUrl'] ?? '');
           explanationList.add(card['explanation'] ?? '');
 

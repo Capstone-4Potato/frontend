@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_application_1/main.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 
 // SecureStorage 인스턴스 생성
 const _storage = FlutterSecureStorage();
@@ -26,43 +23,4 @@ Future<String?> getRefreshToken() async {
 Future<void> deleteTokens() async {
   await _storage.delete(key: 'access_token');
   await _storage.delete(key: 'refresh_token');
-}
-
-// 엑세스 토큰 재발급
-Future<bool> refreshAccessToken() async {
-  String url = '$main_url/reissue';
-  try {
-    String? refreshToken = await getRefreshToken();
-    if (refreshToken == null) {
-      debugPrint('No refresh token found for user.');
-      return false;
-    }
-
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {'refresh': refreshToken, "Content-Type": "application/json"},
-    );
-
-    if (response.statusCode == 200) {
-      //print('토큰 재발급 성공');
-      final newAccessToken = response.headers['access'];
-      final newRefreshToken = response.headers['refresh'];
-
-      await saveTokens(newAccessToken!, newRefreshToken!);
-
-      debugPrint('Token refreshed successfully.');
-      return true;
-    }
-
-    // refresh 만료 -> 강제 로그아웃시키기
-    else if (response.statusCode == 401) {
-      debugPrint('refresh 만료');
-      deleteTokens();
-
-      return false;
-    }
-  } catch (e) {
-    debugPrint('Token refresh failed: $e');
-  }
-  return false;
 }

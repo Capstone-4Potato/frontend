@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/services/api/today_course_api.dart';
+import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/today_course/today_course_learning_card.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -195,7 +196,13 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
     });
     try {
       // 새로운 카드 리스트 요청
-      cardList = await getTodayCourseCardList(); // 이 작업이 완료될 때까지 기다림
+      List<int> tempList = await getTodayCourseCardList(); // 이 작업이 완료될 때까지 기다림
+
+      setState(() {
+        cardList = tempList;
+        debugPrint("$cardList");
+      });
+
       if (cardList.isNotEmpty) {
         // cardList가 제대로 업데이트되었는지 확인
         await fetchAllCards();

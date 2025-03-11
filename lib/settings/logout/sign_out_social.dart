@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 // 소셜로그인 로그아웃하기
 class SignOutService {
@@ -18,8 +17,8 @@ class SignOutService {
 
         break;
       case LoginPlatform.kakao:
-        await UserApi.instance.logout();
-        print('kakaologout');
+        // await UserApi.instance.logout();
+        debugPrint('kakaologout');
         break;
 
       case LoginPlatform.apple:

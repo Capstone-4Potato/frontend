@@ -2,18 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
-import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/models/user_info.dart';
+import 'package:flutter_application_1/new/services/api/join_api.dart';
 import 'package:flutter_application_1/new/services/login_platform_manage.dart';
 import 'package:flutter_application_1/settings/editprofile/editprofile_screen.dart';
 import 'package:flutter_application_1/tutorial/retutorial.dart';
 import 'package:flutter_application_1/settings/logout/sign_out_social.dart';
 import 'package:flutter_application_1/new/services/api/login_api.dart';
 import 'package:flutter_application_1/settings/deleteaccount/withdrawal_screen.dart';
-import 'package:flutter_application_1/new/screens/login_screen.dart';
-import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -31,9 +28,19 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    initUserInfo();
+  }
 
+  void initUserInfo() async {
     if (nickname == null || age == null || gender == null) {
-      userData();
+      await getUserData();
+      UserInfo().loadUserInfo();
+      setState(() {
+        nickname = UserInfo().name;
+        age = UserInfo().age;
+        gender = UserInfo().gender;
+        isLoading = false;
+      });
     } else {
       setState(() {
         isLoading = false;
@@ -42,75 +49,67 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   // 회원정보 받기 API
-  Future<void> userData() async {
-    String? token = await getAccessToken();
-    var url = Uri.parse('$main_url/users');
 
-    // Function to make the get request
-    Future<http.Response> makeGetRequest(String token) {
-      return http.get(
-        url,
-        headers: <String, String>{
-          'access': token,
-          'Content-Type': 'application/json',
-        },
-      );
-    }
+  // Future<void> userData() async {
+  //   String? token = await getAccessToken();
+  //   var url = Uri.parse('$main_url/users');
 
-    try {
-      var response = await makeGetRequest(token!);
+  //   // Function to make the get request
+  //   Future<http.Response> makeGetRequest(String token) {
+  //     return http.get(
+  //       url,
+  //       headers: <String, String>{
+  //         'access': token,
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+  //   }
 
-      if (response.statusCode == 200) {
-        print(response.body);
-        var data = json.decode(response.body);
-        setState(() {
-          nickname = data['name'];
-          age = data['age'];
-          gender = data['gender'];
-          isLoading = false;
-        });
-      } else if (response.statusCode == 401) {
-        // Token expired, attempt to refresh the token
-        print('Access token expired. Refreshing token...');
+  //   try {
+  //     var response = await makeGetRequest(token!);
 
-        // Refresh the access token
-        bool isRefreshed = await refreshAccessToken();
-        if (isRefreshed) {
-          // Retry the get request with the new token
-          token = await getAccessToken();
-          response = await makeGetRequest(token!);
+  //     if (response.statusCode == 200) {
+  //       print(response.body);
+  //       var data = json.decode(response.body);
+  //       setState(() {
+  //         nickname = data['name'];
+  //         age = data['age'];
+  //         gender = data['gender'];
+  //         isLoading = false;
+  //       });
+  //     } else if (response.statusCode == 401) {
+  //       // Token expired, attempt to refresh the token
+  //       print('Access token expired. Refreshing token...');
 
-          if (response.statusCode == 200) {
-            print(response.body);
-            var data = json.decode(response.body);
-            setState(() {
-              nickname = data['name'];
-              age = data['age'];
-              gender = data['gender'];
-              isLoading = false;
-            });
-          } else {
-            throw Exception('Failed to fetch user data after refreshing token');
-          }
-        } else {
-          throw Exception('Failed to refresh access token');
-        }
-      } else {
-        throw Exception('Failed to fetch user data');
-      }
-    } catch (e) {
-      print('Network error occurred: $e');
-    }
-  }
+  //       // Refresh the access token
+  //       bool isRefreshed = await refreshAccessToken();
+  //       if (isRefreshed) {
+  //         // Retry the get request with the new token
+  //         token = await getAccessToken();
+  //         response = await makeGetRequest(token!);
 
-  void _updateUserProfile(
-      String newNickname, int newAge, int newGender, int newLevel) {
-    setState(() {
-      nickname = newNickname;
-      age = newAge;
-      gender = newGender;
-    });
-  }
+  //         if (response.statusCode == 200) {
+  //           print(response.body);
+  //           var data = json.decode(response.body);
+  //           setState(() {
+  //             nickname = data['name'];
+  //             age = data['age'];
+  //             gender = data['gender'];
+  //             isLoading = false;
+  //           });
+  //         } else {
+  //           throw Exception('Failed to fetch user data after refreshing token');
+  //         }
+  //       } else {
+  //         throw Exception('Failed to refresh access token');
+  //       }
+  //     } else {
+  //       throw Exception('Failed to fetch user data');
+  //     }
+  //   } catch (e) {
+  //     print('Network error occurred: $e');
+  //   }
+  // }
 
   void _resetUserProfile() {
     setState(() {

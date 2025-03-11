@@ -19,8 +19,6 @@ Future<void> sendLogoutRequest(BuildContext context) async {
     await apiRequest(
         endpoint: 'logout',
         method: ApiMethod.post.type,
-        requiresAuth: true,
-        autoRefresh: true,
         onSuccess: (response) {
           // 토큰 삭제
           deleteTokens();
@@ -37,7 +35,8 @@ Future<void> sendLogoutRequest(BuildContext context) async {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return const RecordingErrorDialog(text: 'Failed to logout');
+              return const RecordingErrorDialog(
+                  title: 'Failed to logout', text: 'Please logout again.');
             },
           );
         });
