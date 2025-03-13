@@ -102,7 +102,7 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
                     maxValue: 100,
                     progressStrokeWidth: 6.w,
                     backStrokeWidth: 6.w,
-                    progressColors: const [AppColors.primary],
+                    progressColors: const [AppColors.orange_003],
                     backColor: AppColors.circularAvatar_000,
                     startAngle: 180,
                     valueNotifier: ValueNotifier(40),
