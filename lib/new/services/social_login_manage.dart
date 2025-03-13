@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/new/services/api/login_api.dart';
+import 'package:flutter_application_1/new/services/user_id_manage.dart';
 
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -25,7 +26,9 @@ Future<Map<String, dynamic>> signInWithApple(BuildContext context) async {
         await sendSocialLoginRequest(context, credential.userIdentifier);
 
     if (statusCode == 200 || statusCode == 404) {
+      // 로그인 플랫폼 저장
       await saveLoginPlatform(LoginPlatform.apple);
+      await saveUserId(credential.userIdentifier!);
     }
     return {
       'statusCode': statusCode,
@@ -56,6 +59,7 @@ Future<Map<String, dynamic>> signInWithKakao(BuildContext context) async {
           await sendSocialLoginRequest(context, user.id.toString());
       if (statusCode == 200 || statusCode == 404) {
         await saveLoginPlatform(LoginPlatform.kakao);
+        await saveUserId(user.id.toString());
       }
       return {
         'statusCode': statusCode,
@@ -81,7 +85,10 @@ Future<Map<String, dynamic>> signInWithKakao(BuildContext context) async {
             // ignore: use_build_context_synchronously
             await sendSocialLoginRequest(context, user.id.toString());
         if (statusCode == 200 || statusCode == 404) {
+          // 로그인 플랫폼 저장
           await saveLoginPlatform(LoginPlatform.kakao);
+          // userId 저장
+          await saveUserId(user.id.toString());
         }
         return {
           'statusCode': statusCode,
@@ -106,7 +113,10 @@ Future<Map<String, dynamic>> signInWithKakao(BuildContext context) async {
           // ignore: use_build_context_synchronously
           await sendSocialLoginRequest(context, user.id.toString());
       if (statusCode == 200 || statusCode == 404) {
+        // 로그인 플랫폼 저장
         await saveLoginPlatform(LoginPlatform.kakao);
+        // userId 저장
+        await saveUserId(user.id.toString());
       }
       return {
         'statusCode': statusCode,
@@ -125,13 +135,15 @@ Future<Map<String, dynamic>> signInWithKakao(BuildContext context) async {
 /// 구글 로그인
 Future<Map<String, dynamic>> signInWithGoogle(BuildContext context) async {
   try {
-    debugPrint('try');
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     debugPrint('구글 계정으로 로그인!');
     if (googleUser != null) {
-      debugPrint('name = ${googleUser.displayName}\n');
-      debugPrint('name = ${googleUser.email}\n');
-      debugPrint('name = ${googleUser.id}\n');
+      debugPrint('name = ${googleUser.displayName}');
+      debugPrint('name = ${googleUser.email}');
+      debugPrint('name = ${googleUser.id}');
+
+      // userId 저장
+      saveUserId(googleUser.id);
 
       int statusCode =
           // ignore: use_build_context_synchronously

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
+import 'package:flutter_application_1/new/services/firestore_listener.dart';
 import 'package:flutter_application_1/new/services/social_login_manage.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,6 +33,9 @@ class SignInImageButton extends StatelessWidget {
       var result = await loginFunction(context); // context 전달
 
       debugPrint("$result");
+
+      // 사용자 id 저장
+      await FirestoreListener().saveDeviceToken();
 
       int statusCode = result['statusCode'];
       String socialId = result['socialId'];

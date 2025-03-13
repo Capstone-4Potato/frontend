@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_application_1/new/services/user_id_manage.dart';
 
 class FirestoreListener {
   /// 알림 권한 요청 세팅
@@ -36,6 +37,7 @@ class FirestoreListener {
   Future<void> saveDeviceToken() async {
     // FCM 토큰 가져오기
     String? token = await FirebaseMessaging.instance.getToken();
+    String? userId = await getUserId();
 
     if (token != null) {
       // Firestore 인스턴스
@@ -46,10 +48,12 @@ class FirestoreListener {
           firestore.collection('device_tokens');
 
       // 토큰을 Firestore에 저장
-      await tokensCollection.doc(token).set({'token': token});
-      print("✅ 기기 토큰 저장 성공: $token");
+      await tokensCollection
+          .doc(userId)
+          .set({'token': token, 'userId': userId});
+      debugPrint("✅ 기기 토큰 저장 성공: $token");
     } else {
-      print("❌ 기기 토큰을 가져오는 데 실패했습니다.");
+      debugPrint("❌ 기기 토큰을 가져오는 데 실패했습니다.");
     }
   }
 }
