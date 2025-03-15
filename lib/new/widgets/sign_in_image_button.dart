@@ -1,9 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/models/login_platform.dart';
+import 'package:flutter_application_1/new/models/navigation_type.dart';
 import 'package:flutter_application_1/new/services/firestore_listener.dart';
 import 'package:flutter_application_1/new/services/social_login_manage.dart';
+import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/signup/signup_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -41,17 +46,16 @@ class SignInImageButton extends StatelessWidget {
       String socialId = result['socialId'];
 
       if (statusCode == 404) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UserInputForm(socialId: socialId)),
-        );
+        // GA : 회원가입 여부 전달
+        FirebaseAnalytics.instance.logSignUp(signUpMethod: loginPlatform.name);
+        // 회원가입 폼으로 이동
+        context.navigateTo(screen: UserInputForm(socialId: socialId));
       } else if (statusCode == 200) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => HomeNav()),
-          (route) => false,
-        );
+        // GA : 로그인 할 때 플랫폼 전달
+        FirebaseAnalytics.instance.logLogin(loginMethod: loginPlatform.name);
+        // 홈으로 이동
+        context.navigateTo(
+            screen: HomeNav(), type: NavigationType.pushAndRemoveUntil);
       }
     }
 
