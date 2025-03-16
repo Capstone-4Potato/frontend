@@ -4,15 +4,14 @@ import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/home/home_cards.dart';
-import 'package:flutter_application_1/new/models/image_path.dart';
 import 'package:flutter_application_1/new/services/api/home_api.dart';
+import 'package:flutter_application_1/new/utils/calculate_last_login_days.dart';
+import 'package:flutter_application_1/new/widgets/home_character.dart';
 import 'package:flutter_application_1/notification/notification_screen.dart';
 import 'package:flutter_application_1/settings/profile_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -38,21 +37,30 @@ class _HomeScreenState extends State<HomeScreen> {
   int? missedCardNumber; // Missed Card 수
   int? customCardNumber; // Custom Card 수
   bool? hasUnreadNotifications; // 알림 읽음 여부
+  String? lastLoginDate; // 마지막 로그인 날짜 (당일 제외)
+  bool? checkTodayCourse; // today Course 했는지 여부
 
   double progressValue = 0;
 
   int homeTutorialStep = 1; // 홈 화면 튜토리얼 단계 상태
 
+  int characterIndex = 4;
+
   @override
   void initState() {
     super.initState();
-    fetchHomeUserData(); // 홈 화면 정보 초기화
-    _loadTutorialStatus(); // 튜토리얼 진행 상황 초기화
-    // navigateToFirstScreen('home');
+    _initializeHomeScreen(); // 홈 화면 초기화
   }
 
-  void navigateToFirstScreen(String screenName) async {
-    await FirebaseAnalytics.instance.logScreenView(screenName: screenName);
+  // 초기화 함수
+  Future<void> _initializeHomeScreen() async {
+    await fetchHomeUserData(); // 홈 화면 정보 초기화
+    await _loadTutorialStatus(); // 튜토리얼 진행 상황 초기화
+    await _loadCheckTodayCourse(); // todayCourse 했는지 여부
+
+    setState(() {
+      characterIndex = determineCharacter(); // 모든 데이터가 로드된 후 캐릭터 설정
+    });
   }
 
   // SharedPreferences에서 튜토리얼 진행 상태를 불러오는 함수
@@ -85,7 +93,39 @@ class _HomeScreenState extends State<HomeScreen> {
       missedCardNumber = data['missedCardNumber'];
       customCardNumber = data['customCardNumber'];
       hasUnreadNotifications = data['hasUnreadNotifications'];
+      lastLoginDate = data['lastLoginDate'];
     });
+  }
+
+  // SharedPreferences에서 todayCourse 했는지 여부
+  Future<void> _loadCheckTodayCourse() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      checkTodayCourse = prefs.getBool('checkTodayCourse') ?? false;
+      debugPrint("check today course : $checkTodayCourse");
+    });
+  }
+
+  int determineCharacter() {
+    int loginDays = calculateLastLoginDays(lastLoginDate);
+    // 읽지 않은 알림이 있는 경우
+    if (hasUnreadNotifications!) {
+      return 0;
+    }
+    // today's course 끝낸 경우
+    else if (checkTodayCourse!) {
+      return 1;
+    }
+    // 마지막 접속일 3일 경과
+    else if (loginDays >= 3 && loginDays < 7) {
+      return 2;
+    }
+    // 마지막 접속일 7일 경과
+    else if (loginDays >= 7) {
+      return 3;
+    }
+    // 기본값
+    return 4;
   }
 
   @override
@@ -138,9 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   key: widget.keys['avatarKey'],
                                   radius: 101.r,
                                   backgroundColor: AppColors.orange_001,
-                                  child: SvgPicture.asset(
-                                    ImagePath.balbamCharacter1.path,
-                                    width: 130.w,
+                                  child: HomeCharacter(
+                                    characterIndex: characterIndex,
                                   ),
                                 ),
                               ),
@@ -207,6 +246,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     setState(() {
                                       hasUnreadNotifications =
                                           !updateHasUnreadNotification;
+                                      characterIndex =
+                                          determineCharacter(); // 모든 데이터가 로드된 후 캐릭터 설정
                                     });
                                   }
                                 });

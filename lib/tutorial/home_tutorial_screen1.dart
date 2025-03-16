@@ -84,7 +84,7 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
       child: Stack(
         children: [
           Container(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             width: width,
             height: height,
           ),
@@ -114,7 +114,7 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
                   left: avatarPosition!.dx,
                   child: CircleAvatar(
                     radius: avatarSize!.width / 2,
-                    backgroundColor: const Color.fromARGB(255, 242, 235, 227),
+                    backgroundColor: AppColors.orange_001,
                     child: SvgPicture.asset(
                       ImagePath.balbamCharacter1.path,
                       width: 130.w,
