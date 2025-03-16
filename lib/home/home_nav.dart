@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/icons/custom_icons.dart';
@@ -192,7 +193,25 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
             notchSmoothness: NotchSmoothness.sharpEdge,
             leftCornerRadius: 10.r,
             rightCornerRadius: 10.r,
-            onTap: (index) => setState(() => widget.bottomNavIndex = index),
+            onTap: (index) {
+              setState(() {
+                widget.bottomNavIndex = index;
+              });
+
+              // 탭에 따라 화면 이름 정의
+              final screenNames = [
+                'HomeScreen',
+                'ReportScreen',
+              ];
+
+              // 화면 조회 이벤트 로깅
+              FirebaseAnalytics.instance.logScreenView(
+                screenName: screenNames[index],
+              );
+
+              debugPrint(
+                  '📊 Analytics: Navigation Tab - ${screenNames[index]}');
+            },
             backgroundColor: const Color.fromARGB(255, 242, 235, 227),
           ),
         ),

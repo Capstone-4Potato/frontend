@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -47,6 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     fetchHomeUserData(); // 홈 화면 정보 초기화
     _loadTutorialStatus(); // 튜토리얼 진행 상황 초기화
+    // navigateToFirstScreen('home');
+  }
+
+  void navigateToFirstScreen(String screenName) async {
+    await FirebaseAnalytics.instance.logScreenView(screenName: screenName);
   }
 
   // SharedPreferences에서 튜토리얼 진행 상태를 불러오는 함수
