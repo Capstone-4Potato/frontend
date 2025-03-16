@@ -48,69 +48,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // 회원정보 받기 API
-
-  // Future<void> userData() async {
-  //   String? token = await getAccessToken();
-  //   var url = Uri.parse('$main_url/users');
-
-  //   // Function to make the get request
-  //   Future<http.Response> makeGetRequest(String token) {
-  //     return http.get(
-  //       url,
-  //       headers: <String, String>{
-  //         'access': token,
-  //         'Content-Type': 'application/json',
-  //       },
-  //     );
-  //   }
-
-  //   try {
-  //     var response = await makeGetRequest(token!);
-
-  //     if (response.statusCode == 200) {
-  //       print(response.body);
-  //       var data = json.decode(response.body);
-  //       setState(() {
-  //         nickname = data['name'];
-  //         age = data['age'];
-  //         gender = data['gender'];
-  //         isLoading = false;
-  //       });
-  //     } else if (response.statusCode == 401) {
-  //       // Token expired, attempt to refresh the token
-  //       print('Access token expired. Refreshing token...');
-
-  //       // Refresh the access token
-  //       bool isRefreshed = await refreshAccessToken();
-  //       if (isRefreshed) {
-  //         // Retry the get request with the new token
-  //         token = await getAccessToken();
-  //         response = await makeGetRequest(token!);
-
-  //         if (response.statusCode == 200) {
-  //           print(response.body);
-  //           var data = json.decode(response.body);
-  //           setState(() {
-  //             nickname = data['name'];
-  //             age = data['age'];
-  //             gender = data['gender'];
-  //             isLoading = false;
-  //           });
-  //         } else {
-  //           throw Exception('Failed to fetch user data after refreshing token');
-  //         }
-  //       } else {
-  //         throw Exception('Failed to refresh access token');
-  //       }
-  //     } else {
-  //       throw Exception('Failed to fetch user data');
-  //     }
-  //   } catch (e) {
-  //     print('Network error occurred: $e');
-  //   }
-  // }
-
   void _resetUserProfile() {
     setState(() {
       nickname = null;

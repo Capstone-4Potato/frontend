@@ -116,7 +116,7 @@ class _HomeTutorialScreen1State extends State<HomeTutorialScreen1> {
                     radius: avatarSize!.width / 2,
                     backgroundColor: AppColors.orange_001,
                     child: SvgPicture.asset(
-                      ImagePath.balbamCharacter1.path,
+                      ImagePath.balbamCharacter5.path,
                       width: 130.w,
                     ),
                   ),
