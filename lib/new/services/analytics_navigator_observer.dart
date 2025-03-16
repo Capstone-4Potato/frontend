@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/home/home_nav.dart';
 
 /// GA 화면 전환 옵저버
 class AnalyticsNavigatorObserver extends NavigatorObserver {
@@ -19,12 +20,6 @@ class AnalyticsNavigatorObserver extends NavigatorObserver {
     if (newRoute != null) _sendScreenView(newRoute);
   }
 
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    super.didPop(route, previousRoute);
-    if (previousRoute != null) _sendScreenView(previousRoute);
-  }
-
   /// GA에 화면 전환 로그 출력
   void _sendScreenView(Route<dynamic> route) {
     String? screenName = _getScreenName(route);
@@ -39,21 +34,37 @@ class AnalyticsNavigatorObserver extends NavigatorObserver {
     if (route.settings.name != null) {
       return route.settings.name;
     } else if (route.settings.arguments is Map) {
-      // arguments에서 screen_name을 추출할 수도 있습니다
       final args = route.settings.arguments as Map;
       return args['screen_name'];
     } else {
-      // 라우트 이름이 없는 경우 위젯 타입을 사용
+      // Get the actual widget class name
       if (route is MaterialPageRoute) {
-        // 빌더의 타입에서 클래스 이름만 추출
-        String fullType = route.builder.runtimeType.toString();
+        try {
+          // Build the widget
+          Widget widget = route.buildContent(route.navigator!.context);
 
-        // (BuildContext) => NotificationScreen 형태에서 NotificationScreen만 추출
-        if (fullType.contains('=>')) {
-          String className = fullType.split('=>').last.trim();
-          return className;
+          // Get the runtime type as string
+          String widgetType = widget.runtimeType.toString();
+
+          // Special case for HomeNav
+          if (widgetType == 'HomeNav') {
+            // Try to access the bottomNavIndex property
+            if (widget is HomeNav) {
+              int bottomNavIndex = (widget as dynamic).bottomNavIndex ?? 0;
+              if (bottomNavIndex == 0) {
+                return 'HomeScreen';
+              } else if (bottomNavIndex == 1) {
+                return 'ReportScreen';
+              }
+            }
+          }
+
+          // Return the widget class name
+          return widgetType;
+        } catch (e) {
+          debugPrint('📊 Analytics: Error getting screen name - $e');
+          return null;
         }
-        return fullType;
       }
       return null;
     }

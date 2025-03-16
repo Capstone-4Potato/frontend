@@ -8,7 +8,6 @@ import 'package:flutter_application_1/icons/custom_icons.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_screen.dart';
 import 'package:flutter_application_1/home/home_screen.dart';
 import 'package:flutter_application_1/new/models/navigation_type.dart';
-import 'package:flutter_application_1/new/services/analytics_wrapper.dart';
 import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/today_course/today_course_screen.dart';
 import 'package:flutter_application_1/report/report_screen.dart';
