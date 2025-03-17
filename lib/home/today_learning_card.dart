@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
@@ -114,7 +114,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint("$e");
       setState(() {
         _isLoading = false;
       });
@@ -160,7 +160,8 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
               _isFeedbackLoading = false; // Stop loading
             });
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         } catch (e) {
           setState(() {
@@ -168,15 +169,19 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
           });
           if (e.toString() == 'Exception: ReRecordNeeded') {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType:
+                    RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
           } else if (e is TimeoutException) {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.timeout); // 서버 타임아웃
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType: RecordingErrorType.timeout); // 서버 타임아웃
           } else {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         }
       }
@@ -210,7 +215,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
         _canRecord = true;
       });
     } catch (e) {
-      print("오디오 재생 중 오류 발생: $e");
+      debugPrint("오디오 재생 중 오류 발생: $e");
     }
   }
 

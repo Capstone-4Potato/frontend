@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (homeTutorialStep == 4) {
       // welcom dialog 표시
       // ignore: use_build_context_synchronously
-      showCommonDialog(context, type: DialogType.welcome);
+      showCommonDialog(context, dialogType: DialogType.welcome);
       prefs.setInt('homeTutorialStep', 5);
     }
   }

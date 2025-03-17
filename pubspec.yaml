@@ -87,6 +87,7 @@ flutter:
     - assets/tutorial/
     - assets/data/
     - assets/image/home_character/
+    - assets/image/dialog_character/
   fonts:
     - family: BM_Jua
       fonts:

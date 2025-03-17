@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/learning_coures/syllables/fetchimage.dart';
 import 'package:flutter_application_1/main.dart';
@@ -106,7 +106,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
         });
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh the token
-        print('Access token expired. Refreshing token...');
+        debugPrint('Access token expired. Refreshing token...');
 
         // Refresh the access token
         bool isRefreshed = await refreshAccessToken();
@@ -128,7 +128,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint('e');
     }
     return; // Return null if there's an error or unsuccessful fetch
   }
@@ -160,7 +160,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
         });
       }
     } catch (e) {
-      print('Error loading image: $e');
+      debugPrint('Error loading image: $e');
       if (mounted) {
         setState(() {
           _isImageLoading = false;
@@ -208,7 +208,8 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
                 _isLoading = false; // Stop loading
               });
               if (!mounted) return;
-              showRecordingErrorDialog(context);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           } catch (e) {
             setState(() {
@@ -216,15 +217,19 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
             });
             if (e.toString() == 'Exception: ReRecordNeeded') {
               if (!mounted) return;
-              showRecordingErrorDialog(context,
-                  type: RecordingErrorType.tooShort);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError,
+                  recordingErrorType:
+                      RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
             } else if (e is TimeoutException) {
               if (!mounted) return;
-              showRecordingErrorDialog(context,
-                  type: RecordingErrorType.timeout);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError,
+                  recordingErrorType: RecordingErrorType.timeout); // 서버 타임아웃
             } else {
               if (!mounted) return;
-              showRecordingErrorDialog(context);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           }
         } else {
@@ -365,9 +370,9 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
             });
             // 새로 로드된 카드의 발음 오디오 파일 불러오기
             TtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
-              print('Audio fetched and saved successfully.');
+              debugPrint('Audio fetched and saved successfully.');
             }).catchError((error) {
-              print('Error fetching audio: $error');
+              debugPrint('Error fetching audio: $error');
             });
             fetchData();
           },

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
@@ -114,7 +114,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         });
       }
     } catch (e) {
-      print('Error loading image: $e');
+      debugPrint('Error loading image: $e');
     }
   }
 
@@ -158,7 +158,8 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                 _isLoading = false; // Stop loading
               });
               if (!mounted) return;
-              showRecordingErrorDialog(context);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           } catch (e) {
             setState(() {
@@ -167,15 +168,19 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
             if (e.toString() == 'Exception: ReRecordNeeded') {
               // Show the ReRecordNeeded dialog if the exception occurs
               if (!mounted) return;
-              showRecordingErrorDialog(context,
-                  type: RecordingErrorType.tooShort);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError,
+                  recordingErrorType:
+                      RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
             } else if (e is TimeoutException) {
               if (!mounted) return;
-              showRecordingErrorDialog(context,
-                  type: RecordingErrorType.timeout);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError,
+                  recordingErrorType: RecordingErrorType.timeout); // 서버 타임아웃
             } else {
               if (!mounted) return;
-              showRecordingErrorDialog(context);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           }
         } else {
@@ -324,9 +329,9 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
               _loadImage(); // 페이지 변경 시 이미지도 새로 로드
               // 새로 로드된 카드의 발음 오디오 파일 불러오기
               TtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
-                print('Audio fetched and saved successfully.');
+                debugPrint('Audio fetched and saved successfully.');
               }).catchError((error) {
-                print('Error fetching audio: $error');
+                debugPrint('Error fetching audio: $error');
               });
             },
             itemCount: widget.texts.length,
@@ -362,10 +367,10 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                                   TtsService.fetchCorrectAudio(
                                           widget.cardIds[nextIndex])
                                       .then((_) {
-                                    print(
+                                    debugPrint(
                                         'Audio fetched and saved successfully.');
                                   }).catchError((error) {
-                                    print('Error fetching audio: $error');
+                                    debugPrint('Error fetching audio: $error');
                                   });
                                 }
                               : null,
@@ -446,10 +451,10 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                                   TtsService.fetchCorrectAudio(
                                           widget.cardIds[nextIndex])
                                       .then((_) {
-                                    print(
+                                    debugPrint(
                                         'Audio fetched and saved successfully.');
                                   }).catchError((error) {
-                                    print('Error fetching audio: $error');
+                                    debugPrint('Error fetching audio: $error');
                                   });
                                 }
                               : null,

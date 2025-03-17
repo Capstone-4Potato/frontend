@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -77,7 +78,10 @@ class _TestCardScreenState extends State<TestCardScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _filePath == null ? null : _playRecording,
+              onPressed: () {
+                showCommonDialog(context,
+                    dialogType: DialogType.recordingError);
+              },
               child: const Text('녹음된 음성 듣기'),
             ),
           ],

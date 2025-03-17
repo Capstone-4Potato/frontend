@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
@@ -55,11 +55,10 @@ class TodayCourseLearningCard extends StatefulWidget {
   });
 
   @override
-  _TodayCourseLearningCardState createState() =>
-      _TodayCourseLearningCardState();
+  TodayCourseLearningCardState createState() => TodayCourseLearningCardState();
 }
 
-class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
+class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   late FlutterSoundRecorder _recorder;
   late String _recordedFilePath; // 녹음된 파일 경로
 
@@ -107,7 +106,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   Future<void> saveLastFinishedCard(int cardId) async {
     await secureStorage.write(
         key: 'lastFinishedCardId', value: cardId.toString());
-    print("Saved last finished card ID: $cardId");
+    debugPrint("Saved last finished card ID: $cardId");
   }
 
   // Base64 오디오 데이터를 디코딩하고 AudioPlayer로 재생
@@ -143,7 +142,6 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         _isLoading = true;
         _isRecorded = true;
       });
-      print(path);
       if (path != null) {
         setState(() {
           _isRecording = false;
@@ -179,7 +177,8 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
               _isLoading = false; // Stop loading
             });
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         } catch (e) {
           setState(() {
@@ -187,15 +186,19 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
           });
           if (e.toString() == 'Exception: ReRecordNeeded') {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType:
+                    RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
           } else if (e is TimeoutException) {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.timeout); // 녹음 길이가 너무 짧음
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType: RecordingErrorType.timeout); // 서버 타임아웃
           } else {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         }
       }
@@ -239,12 +242,12 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         );
 
         if (response.statusCode == 200) {
-          print('File uploaded successfully');
-          print('Response body: ${response.body}');
+          debugPrint('File uploaded successfully');
+          debugPrint('Response body: ${response.body}');
           _nextCard();
         } else if (response.statusCode == 401) {
           // Token expired, attempt to refresh the token
-          print('Access token expired. Refreshing token...');
+          debugPrint('Access token expired. Refreshing token...');
 
           // Refresh the access token
           bool isRefreshed = await refreshAccessToken();
@@ -267,22 +270,26 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
               debugPrint(
                   'File upload failed after token refresh with status: ${retryResponse.statusCode}');
               if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-              showRecordingErrorDialog(context); // 녹음 오류 dialog
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           } else {
             debugPrint('Failed to refresh access token');
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         } else {
           debugPrint('File upload failed with status: ${response.statusCode}');
           if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-          showRecordingErrorDialog(context); // 녹음 오류 dialog
+          showCommonDialog(context,
+              dialogType: DialogType.recordingError); // 녹음 오류 dialog
         }
       } catch (e) {
         debugPrint('Error uploading file: $e');
         if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-        showRecordingErrorDialog(context); // 녹음 오류 dialog
+        showCommonDialog(context,
+            dialogType: DialogType.recordingError); // 녹음 오류 dialog
       }
     }
   }
@@ -308,7 +315,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   }
 
   void _nextCard() {
-    print('Before: currentIndex = $_currentIndex'); // 디버깅용
+    debugPrint('Before: currentIndex = $_currentIndex'); // 디버깅용
 
     if (_isRecorded) {
       if (_currentIndex < widget.ids.length - 1) {
@@ -317,16 +324,16 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
           _currentIndex++;
           _isRecorded = false;
           saveLastFinishedCard(widget.ids[_currentIndex - 1]); // 이전 카드 인덱스 저장
-          print('After: currentIndex = $_currentIndex'); // 디버깅용
+          debugPrint('After: currentIndex = $_currentIndex'); // 디버깅용
         });
       } else {
-        print('Last card reached');
+        debugPrint('Last card reached');
         _showCompletionDialog();
         incrementLearnedCardCount(); // 카드 갯수 + 1
         setTodayCourseCompleted(); // 오늘 학습 완료 저장
       }
     } else {
-      print('Recording not completed!');
+      debugPrint('Recording not completed!');
       // showErrorDialog();
     }
   }
@@ -343,9 +350,9 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     // String todayDate = "${now.year}-${now.month}-${now.day}";
     String todayDate = "${now.month}-${now.day}-${now.minute}"; // 임시 분 단위
     await prefs.setString('lastSavedDate', todayDate);
-    print(todayDate);
+    debugPrint(todayDate);
 
-    print('checkTodayCourse set to true and lastSavedDate updated.');
+    debugPrint('checkTodayCourse set to true and lastSavedDate updated.');
   }
 
   // 피드백 다이얼로그 표시
@@ -369,7 +376,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
       // 다이얼로그가 닫히면 nextCard 호출
 
       Future.delayed(const Duration(milliseconds: 300), () {
-        print("Dialog animation finished, calling nextCard...");
+        debugPrint("Dialog animation finished, calling nextCard...");
         _nextCard();
       });
     });
@@ -381,7 +388,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     if (widget.ids.isNotEmpty) {
       int lastCardId = widget.ids.last; // 현재까지 학습한 마지막 카드 ID
       await saveLastFinishedCard(lastCardId);
-      print("Saved last finished card ID: $lastCardId");
+      debugPrint("Saved last finished card ID: $lastCardId");
     }
 
     String title;
@@ -425,7 +432,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     if (widget.ids.isNotEmpty) {
       int lastCardId = widget.ids[_currentIndex]; // 현재까지 학습한 마지막 카드 ID
       await saveLastFinishedCard(lastCardId);
-      print("Saved last finished card ID: $lastCardId");
+      debugPrint("Saved last finished card ID: $lastCardId");
     }
 
     showDialog(
