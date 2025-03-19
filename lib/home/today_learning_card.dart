@@ -166,6 +166,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
         } catch (e) {
           setState(() {
             _isLoading = false; // Stop loading
+            _isFeedbackLoading = false;
           });
           if (e.toString() == 'Exception: ReRecordNeeded') {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
@@ -350,7 +351,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                   SizedBox(
                     height: 50.h,
                   ),
-                  !_isLoading && _isFeedbackLoading
+                  _isFeedbackLoading
                       ? const Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
