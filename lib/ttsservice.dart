@@ -106,4 +106,11 @@ class TtsService {
 
     await _audioPlayer.startPlayer(fromURI: filePath, codec: Codec.pcm16WAV);
   }
+
+  // audio path 가져오는 함수
+  static Future<String> getCorrectAudioPath(int cardId) async {
+    final String dir = (await getTemporaryDirectory()).path;
+    final String fileName = 'correct_audio_$cardId.wav';
+    return '$dir/$fileName';
+  }
 }

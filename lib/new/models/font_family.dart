@@ -2,6 +2,7 @@
 enum FontFamily {
   bmJua(fontName: 'BM_Jua'),
   marine(fontName: 'Marine'),
+  pretendard(fontName: 'Pretendard'),
   madeTommySoft(fontName: 'MADE-Tommy-Soft');
 
   final String fontName;

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/learning_coures/syllables/fetchimage.dart';
 import 'package:flutter_application_1/main.dart';
@@ -12,8 +13,6 @@ import 'package:flutter_application_1/new/services/api/learning_course_api.dart'
 import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
-import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/learning_coures/words/wordfeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
@@ -202,7 +201,8 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
               setState(() {
                 _isLoading = false; // Stop loading
               });
-              showFeedbackDialog(context, feedbackData);
+              showFeedbackDialog(context, feedbackData, _recordedFilePath,
+                  widget.texts[widget.currentIndex]);
             } else {
               setState(() {
                 _isLoading = false; // Stop loading
@@ -255,25 +255,6 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
     setState(() {
       _canRecord = true;
     });
-  }
-
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return WordFeedbackUI(
-          feedbackData: feedbackData,
-          recordedFilePath: _recordedFilePath,
-          text: widget.texts[widget.currentIndex], // 카드 한글 발음
-        );
-      },
-    );
   }
 
   void _showExitDialog() {

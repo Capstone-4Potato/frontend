@@ -27,12 +27,13 @@ class CommonDialog extends StatelessWidget {
       child: Container(
         width: double.maxFinite,
         decoration: BoxDecoration(
-          color: AppColors.dialog,
+          color: AppColors.dialogBackground_000,
           borderRadius: BorderRadius.circular(14.r),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 28.0.h),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
                 padding: EdgeInsets.only(bottom: 18.0.h),
@@ -54,7 +55,7 @@ class CommonDialog extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
-                      .copyWith(color: AppColors.gray_002)),
+                      .copyWith(color: AppColors.gray_003)),
               SizedBox(height: 16.0.h),
               TextButton(
                 onPressed: onPressed,

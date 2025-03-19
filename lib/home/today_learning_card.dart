@@ -4,14 +4,13 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
-import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/learning_coures/words/wordfeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -154,7 +153,8 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
             setState(() {
               _isFeedbackLoading = false; // Stop loading
             });
-            showFeedbackDialog(context, feedbackData);
+            showFeedbackDialog(
+                context, feedbackData, _recordedFilePath, cardText);
           } else {
             setState(() {
               _isFeedbackLoading = false; // Stop loading
@@ -197,45 +197,25 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
   }
 
   void _onListenPressed() async {
-    // 여기서 cardCorrectAudio 재생
     try {
-      // 1. base64 문자열을 디코딩
-      Uint8List audioBytes = base64Decode(cardCorrectAudio);
+      if (!_audioPlayer.isOpen()) {
+        await _audioPlayer.openPlayer();
+      }
 
-      // 2. 임시 디렉터리에 파일로 저장
+      Uint8List audioBytes = base64Decode(cardCorrectAudio);
       final tempDir = await getTemporaryDirectory();
       final filePath = '${tempDir.path}/correct_audio.wav';
       final audioFile = File(filePath);
       await audioFile.writeAsBytes(audioBytes);
 
-      // 3. 파일 재생
-      await _audioPlayer.startPlayer(
-          fromURI: filePath, codec: Codec.pcm16WAV); // 파일 재생
+      await _audioPlayer.startPlayer(fromURI: filePath, codec: Codec.pcm16WAV);
+
       setState(() {
         _canRecord = true;
       });
     } catch (e) {
       debugPrint("오디오 재생 중 오류 발생: $e");
     }
-  }
-
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return WordFeedbackUI(
-          feedbackData: feedbackData,
-          recordedFilePath: _recordedFilePath,
-          text: cardText, // 카드 한글 발음
-        );
-      },
-    );
   }
 
   void _showExitDialog() {

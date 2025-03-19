@@ -127,7 +127,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.w400,
-              color: AppColors.gray_003,
+              color: AppColors.gray_005,
             ),
           );
         }).toList();
@@ -170,7 +170,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
           ),
           if (item != surveyOptions.last) // 마지막 아이템에는 Divider 추가하지 않음
             Divider(
-              color: AppColors.gray_001,
+              color: AppColors.gray_002,
               thickness: 1,
               height: 10.0.h,
             ),
@@ -214,7 +214,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
           : null,
       child: Ink(
         decoration: BoxDecoration(
-          color: _isButtonEnabled ? AppColors.primary : AppColors.gray_001,
+          color: _isButtonEnabled ? AppColors.primary : AppColors.gray_002,
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: Container(
@@ -223,7 +223,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
           child: Text(
             'Delete Account',
             style: TextStyle(
-              color: AppColors.white,
+              color: AppColors.white_000,
               fontSize: 15.sp,
               fontWeight: FontWeight.w500,
             ),
@@ -238,21 +238,21 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
     return InputDecoration(
       hintText: hintText,
       hintStyle: TextStyle(
-          color: AppColors.gray_003,
+          color: AppColors.gray_005,
           fontSize: 20.sp,
           fontWeight: FontWeight.w400),
       contentPadding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 21.w),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5.r),
-        borderSide: const BorderSide(color: AppColors.gray_001),
+        borderSide: const BorderSide(color: AppColors.gray_002),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5.r),
-        borderSide: const BorderSide(color: AppColors.gray_001),
+        borderSide: const BorderSide(color: AppColors.gray_002),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5.r),
-        borderSide: const BorderSide(color: AppColors.gray_001),
+        borderSide: const BorderSide(color: AppColors.gray_002),
       ),
     );
   }
@@ -260,7 +260,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
   /// 드롭다운 전체 컨테이너 css
   BoxDecoration _dropdownDecoration() => BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
-        color: AppColors.white,
+        color: AppColors.white_000,
         boxShadow: const <BoxShadow>[],
       );
 

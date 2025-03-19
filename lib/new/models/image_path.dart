@@ -14,6 +14,11 @@ enum ImagePath {
   balbamCharacter4(path: 'assets/image/home_character/balbam_4.svg'),
   balbamCharacter5(path: 'assets/image/home_character/balbam_5.svg'),
 
+  // Feedback Dialog Stamp
+  feedbackStamp1(path: 'assets/image/feedback_stamp/feedback_stamp_1.svg'),
+  feedbackStamp2(path: 'assets/image/feedback_stamp/feedback_stamp_2.svg'),
+  feedbackStamp3(path: 'assets/image/feedback_stamp/feedback_stamp_3.svg'),
+
   // Dialog 캐릭터
   welcomeDialog(path: 'assets/image/dialog_character/welcome.svg'),
   longTimeNoSeeDialog(path: 'assets/image/dialog_character/longTimeNoSee.svg'),

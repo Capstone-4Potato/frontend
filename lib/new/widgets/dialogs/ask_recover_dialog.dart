@@ -54,7 +54,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
           width: 340.0.w,
           height: 300.0.h,
           decoration: BoxDecoration(
-              color: AppColors.white.withValues(alpha: 0.01),
+              color: AppColors.white_000.withValues(alpha: 0.01),
               borderRadius: BorderRadius.circular(20.r)),
           child: Stack(
             children: [
@@ -66,7 +66,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                   width: 340.0.w,
                   height: 250.0.h,
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: AppColors.white_000,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Column(
@@ -90,7 +90,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
-                            color: AppColors.gray_002,
+                            color: AppColors.gray_003,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -113,7 +113,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                                   child: Text(
                                 'Delete',
                                 style: TextStyle(
-                                  color: AppColors.gray_002,
+                                  color: AppColors.gray_003,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -135,7 +135,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                                   child: Text(
                                 'Restore',
                                 style: TextStyle(
-                                  color: AppColors.white,
+                                  color: AppColors.white_000,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),

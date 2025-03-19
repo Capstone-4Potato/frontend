@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -325,15 +326,18 @@ Widget buildTextSpans(String text, List<int>? mistakenIndexes) {
       // 잘못된 문자라면 빨간색, 그렇지 않다면 검정색
       TextStyle textStyle = isMistaken
           ? TextStyle(
-              color: const Color(0xFFDE0000),
-              fontSize: 32.h,
+              fontSize: 24.sp,
               fontWeight: FontWeight.w600,
+              color: AppColors.red,
+              fontFamily: 'Pretendard',
+              letterSpacing: 0,
             )
           : TextStyle(
-              color: Colors.black,
-              fontSize: 32.h,
+              fontSize: 24.sp,
               fontWeight: FontWeight.w600,
+              color: AppColors.black,
               fontFamily: 'Pretendard',
+              letterSpacing: 0,
             );
       spans.add(TextSpan(text: text[i], style: textStyle));
     }

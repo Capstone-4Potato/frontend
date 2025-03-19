@@ -8,6 +8,7 @@ import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/home/custom/customtts.dart';
 import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -98,7 +99,8 @@ class _CustomSentenceLearningCardState
             setState(() {
               _isLoading = false; // Stop loading
             });
-            showFeedbackDialog(context, feedbackData);
+            showFeedbackDialog(context, feedbackData, _recordedFilePath,
+                widget.texts[widget.currentIndex]);
           } else {
             setState(() {
               _isLoading = false; // Stop loading
@@ -154,25 +156,6 @@ class _CustomSentenceLearningCardState
     setState(() {
       _canRecord = true;
     });
-  }
-
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return CustomFeedbackUI(
-          feedbackData: feedbackData,
-          recordedFilePath: _recordedFilePath,
-          text: widget.texts[widget.currentIndex], // 카드 한글 발음
-        );
-      },
-    );
   }
 
   void navigateToCard(int newIndex) {
