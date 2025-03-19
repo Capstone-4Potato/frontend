@@ -229,7 +229,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               backgroundColor:
                                   const Color.fromARGB(255, 242, 235, 227),
                               child: SvgPicture.asset(
-                                ImagePath.balbamCharacter1.path,
+                                ImagePath.balbamCharacter5.path,
                                 width: 50.w,
                                 height: 50.h,
                               ),
@@ -776,34 +776,38 @@ class _ReportScreenState extends State<ReportScreen> {
                                       padding: EdgeInsets.only(top: 12.0.h),
                                       child: Column(
                                         children: List.generate(
-                                            weakPhonemes!.length, (index) {
-                                          return VulnerableCardItem(
-                                            index: index,
-                                            phonemes: weakPhonemes![index]
-                                                    ['phonemeText']
-                                                .split(" ")
-                                                .last,
-                                            title: weakPhonemes![index]
-                                                    ['phonemeText']
-                                                .split(" ")
-                                                .sublist(
-                                                    0,
-                                                    weakPhonemes![index]
-                                                                ['phonemeText']
-                                                            .split(" ")
-                                                            .length -
-                                                        1)
-                                                .join(' '),
-                                            phonemeId: weakPhonemes![index]
-                                                ['phonemeId'],
-                                            onDelete: () {
-                                              setState(() {
-                                                weakPhonemes!.removeAt(
-                                                    index); // 리스트에서 항목 삭제
-                                              });
-                                            },
-                                          );
-                                        }),
+                                          weakPhonemes!.length,
+                                          (index) {
+                                            String phonemeText =
+                                                weakPhonemes![index]
+                                                        ['phonemeText'] ??
+                                                    '';
+                                            List<String> parts =
+                                                phonemeText.split(" ");
+
+                                            return VulnerableCardItem(
+                                              index: index,
+                                              phonemes: parts.isNotEmpty
+                                                  ? parts.last
+                                                  : '',
+                                              title: parts.length > 1
+                                                  ? parts
+                                                      .sublist(
+                                                          0, parts.length - 1)
+                                                      .join(' ')
+                                                  : '',
+                                              phonemeId: weakPhonemes![index]
+                                                      ['phonemeId'] as int? ??
+                                                  0, // 🔹 null이면 기본값 0 설정
+                                              onDelete: () {
+                                                setState(() {
+                                                  weakPhonemes!.removeAt(
+                                                      index); // 리스트에서 항목 삭제
+                                                });
+                                              },
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                               Padding(
