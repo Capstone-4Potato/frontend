@@ -202,9 +202,10 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
 
   // 사용자에게 올바른 발음 Listen 버튼 누르면 들려주기
   void _onListenPressed() async {
-    //_setupAudioSession();
+    debugPrint("👾👾👾👾👾👾👾👾${widget.cardIds[widget.currentIndex]}");
     await TtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
+    debugPrint("🐬 ${widget.cardIds[widget.currentIndex]}");
     setState(() {
       _canRecord = true; // 녹음 가능 상태로 설정
       if (feedbackTutorialStep == 1) {

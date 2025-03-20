@@ -43,7 +43,7 @@ class AudioGraphWidget extends StatelessWidget {
                   correctAudioData, maxX), // 올바른 오디오 데이터의 점들
               isCurved: true,
               dotData: const FlDotData(show: false),
-              color: primary.withOpacity(0.8),
+              color: primary.withValues(alpha: 0.8),
               barWidth: 5.w,
               preventCurveOverShooting: true,
               preventCurveOvershootingThreshold: 1,
@@ -52,8 +52,8 @@ class AudioGraphWidget extends StatelessWidget {
                 show: true,
                 gradient: LinearGradient(
                   colors: [
-                    primary.withOpacity(0.4),
-                    primary.withOpacity(0.4),
+                    primary.withValues(alpha: 0.4),
+                    primary.withValues(alpha: 0.4),
                   ],
                 ),
               ),
@@ -64,7 +64,7 @@ class AudioGraphWidget extends StatelessWidget {
                   _normalizeDataSpots(userAudioData, maxX), // 사용자 오디오 데이터의 점들
               isCurved: true,
               dotData: const FlDotData(show: false),
-              color: bam.withOpacity(0.7),
+              color: bam.withValues(alpha: 0.7),
               barWidth: 5.w,
               preventCurveOverShooting: true,
               preventCurveOvershootingThreshold: 1,
@@ -72,8 +72,8 @@ class AudioGraphWidget extends StatelessWidget {
                 show: true,
                 gradient: LinearGradient(
                   colors: [
-                    bam.withOpacity(0.2),
-                    bam.withOpacity(0.2),
+                    bam.withValues(alpha: 0.2),
+                    bam.withValues(alpha: 0.2),
                   ],
                 ),
               ),
@@ -110,26 +110,32 @@ class AudioGraphWidget extends StatelessWidget {
   List<FlSpot> _normalizeDataSpots(
       List<AmplitudeData> data, double targetDuration) {
     if (data.isEmpty) {
-      // 데이터가 없는 경우 빈 배열 대신 시작점과 끝점을 포함하는 플랫 라인 반환
       return [
-        const FlSpot(0, 0), // 시작점
-        FlSpot(targetDuration, 0), // 끝점
+        const FlSpot(0, 0),
+        FlSpot(targetDuration, 0),
       ];
     }
 
-    // 첫 번째 시간값을 0으로 맞추기 위해 오프셋 계산
     double timeOffset = data.first.time;
-
-    // 데이터의 실제 지속 시간 계산
     double originalDuration = data.last.time - timeOffset;
 
-    // 시간축 스케일 팩터 계산
-    double scaleFactor = targetDuration / originalDuration;
+    // originalDuration이 0이면 스케일 팩터를 1로 설정
+    double scaleFactor =
+        (originalDuration == 0.0) ? 1.0 : targetDuration / originalDuration;
 
-    // 데이터 포인트 정규화 및 변환
     return data.map((point) {
-      // 시간값에서 오프셋을 빼고 스케일 팩터를 적용
       double normalizedTime = (point.time - timeOffset) * scaleFactor;
+
+      // NaN 또는 Infinity가 발생하는 경우 기본값으로 변경
+      if (normalizedTime.isNaN ||
+          normalizedTime.isInfinite ||
+          point.amplitude.isNaN ||
+          point.amplitude.isInfinite) {
+        debugPrint(
+            "Invalid FlSpot detected: x=$normalizedTime, y=${point.amplitude}");
+        return const FlSpot(0, 0); // 기본값으로 설정
+      }
+
       return FlSpot(normalizedTime, point.amplitude);
     }).toList();
   }

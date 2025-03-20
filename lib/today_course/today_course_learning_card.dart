@@ -4,6 +4,15 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
+import 'package:flutter_application_1/new/widgets/dialogs/feedback_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/feedback_data.dart';
@@ -13,18 +22,12 @@ import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
 import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
+import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/today_course/today_feedback_ui.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TodayCourseLearningCard extends StatefulWidget {
   int courseSize;
@@ -74,6 +77,7 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   FlutterSoundPlayer audioPlayer = FlutterSoundPlayer();
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  final PermissionService _permissionService = PermissionService();
 
   // 학습한 카드 갯수 변수
   int learnedCardCount = 0;
@@ -87,8 +91,9 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   }
 
   Future<void> _initializeRecorder() async {
-    await Permission.microphone.request();
+    await _permissionService.requestPermissions();
     await _recorder.openRecorder();
+    await audioPlayer.openPlayer();
   }
 
   // 카드 학습 후 학습한 카드 갯수 업데이트
@@ -116,7 +121,7 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
     // 파일 경로 얻기
     Directory appDocDirectory = await getApplicationDocumentsDirectory();
-    String filePath = '${appDocDirectory.path}/audio.mp3';
+    String filePath = '${appDocDirectory.path}/audio.wav';
 
     // 파일로 저장
     File audioFile = File(filePath);
@@ -171,7 +176,12 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
             setState(() {
               _isLoading = false; // Stop loading
             });
-            showFeedbackDialog(context, feedbackData);
+            showFeedbackDialog(context, feedbackData, _recordedFilePath,
+                widget.texts[_currentIndex]);
+            Future.delayed(const Duration(milliseconds: 300), () {
+              debugPrint("Dialog animation finished, calling nextCard...");
+              _nextCard();
+            });
           } else {
             setState(() {
               _isLoading = false; // Stop loading
@@ -310,7 +320,7 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         });
       }
     } catch (e) {
-      print('Error loading image: $e');
+      debugPrint('Error loading image: $e');
     }
   }
 
@@ -356,31 +366,23 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   }
 
   // 피드백 다이얼로그 표시
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return TodayFeedbackUI(
-          feedbackData: feedbackData,
-          recordedFilePath: _recordedFilePath,
-          text: widget.texts[_currentIndex], // 카드 한글 발음
-        );
-      },
-    ).then((_) {
-      // 다이얼로그가 닫히면 nextCard 호출
+  // void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return FeedbackDialog(
+  //           feedbackData: feedbackData,
+  //           recordedFilePath: path,
+  //           correctText:  widget.texts[_currentIndex]);
+  //     }).then((_) {
+  //     // 다이얼로그가 닫히면 nextCard 호출
 
-      Future.delayed(const Duration(milliseconds: 300), () {
-        debugPrint("Dialog animation finished, calling nextCard...");
-        _nextCard();
-      });
-    });
-  }
+  //     Future.delayed(const Duration(milliseconds: 300), () {
+  //       debugPrint("Dialog animation finished, calling nextCard...");
+  //       _nextCard();
+  //     });
+  //   });
+  // }
 
   void _showCompletionDialog() async {
     int responseCode = await sendTestFinalizeRequest();
@@ -454,13 +456,13 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   @override
   void dispose() {
     _recorder.closeRecorder();
+    audioPlayer.closePlayer();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.70;
-    double cardHeight = MediaQuery.of(context).size.height * 0.22;
 
     int cardCount = (widget.courseSize - widget.ids.length) + _currentIndex + 1;
 

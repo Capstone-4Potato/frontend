@@ -43,14 +43,14 @@ class TtsService {
         return;
       } else if (response.statusCode == 401) {
         // 토큰이 만료된 경우
-        print('Access token expired. Refreshing token...');
+        debugPrint('Access token expired. Refreshing token...');
 
         // 토큰 갱신 시도
         bool isRefreshed = await refreshAccessToken();
 
         if (isRefreshed) {
           // 갱신에 성공하면 요청을 다시 시도
-          print('Token refreshed successfully. Retrying request...');
+          debugPrint('Token refreshed successfully. Retrying request...');
           String? newToken = await getAccessToken();
           final retryResponse = await http.get(
             Uri.parse(audioUrl),
@@ -72,7 +72,7 @@ class TtsService {
             throw Exception('Failed to load audio after retry: $errorMessage');
           }
         } else {
-          print('Failed to refresh token. Please log in again.');
+          debugPrint('Failed to refresh token. Please log in again.');
           throw Exception('Failed to refresh token.');
         }
       } else {
@@ -80,7 +80,7 @@ class TtsService {
         throw Exception('Failed to load audio: $errorMessage');
       }
     } catch (e) {
-      print('Error occurred: $e');
+      debugPrint('Error occurred: $e');
       rethrow;
     }
   }

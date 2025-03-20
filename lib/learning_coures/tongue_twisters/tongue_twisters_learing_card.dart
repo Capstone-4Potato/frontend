@@ -88,7 +88,7 @@ class _TongueTwistersLearningCardState
               base64userAudio,
               base64correctAudio,
             ).timeout(
-              const Duration(seconds: 9),
+              const Duration(seconds: 14),
               onTimeout: () {
                 throw TimeoutException('Feedback request timed out');
               },

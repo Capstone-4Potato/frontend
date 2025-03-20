@@ -47,15 +47,23 @@ class FeedbackText extends StatelessWidget {
     return feedbackData.userScore == 100
         ? Text(
             correctText,
+            textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: AppColors.black,
                   fontFamily: FontFamily.pretendard.fontName,
                 ),
           )
-        : buildTextSpans(
-            feedbackData.userText,
-            feedbackData.mistakenIndexes,
-          );
+        : feedbackData.userText.length == correctText.length
+            ?
+            // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
+            buildTextSpans(
+                feedbackData.userText,
+                feedbackData.mistakenIndexes,
+              )
+            : buildTextSpansOmit(
+                // 발음 안된 글자가 있을 때
+                correctText,
+                feedbackData.userText);
   }
 }
 

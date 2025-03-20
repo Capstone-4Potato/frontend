@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_application_1/ttsservice.dart';
 import 'package:flutter_application_1/widgets/audio_graph.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// 피드백 Dialog창
 class FeedbackDialog extends StatefulWidget {
@@ -98,9 +101,11 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
     if (_isCorrectPlaying) {
       await _correctPlayerController.pausePlayer();
     } else {
-      // Get path for correct audio and initialize its controller
-      String correctAudioPath =
-          await TtsService.getCorrectAudioPath(widget.feedbackData.cardId);
+      Uint8List audioBytes = base64Decode(widget.feedbackData.correctAudioText);
+      final tempDir = await getTemporaryDirectory();
+      final correctAudioPath = '${tempDir.path}/correct_audio.wav';
+      final audioFile = File(correctAudioPath);
+      await audioFile.writeAsBytes(audioBytes);
 
       await _audioPlayer.startPlayer(
           fromURI: correctAudioPath, codec: Codec.pcm16WAV);
@@ -138,230 +143,237 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
         children: [
           // 피드백 창
           Container(
+            height: 612.0.h,
             decoration: BoxDecoration(
                 color: AppColors.dialogBackground_001,
                 borderRadius: BorderRadius.circular(16.r)),
-            child: Padding(
-              padding:
-                  EdgeInsets.only(right: 21.0.w, left: 21.0.w, bottom: 30.0.h),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      // 점수에 따른 캐릭터 도장
-                      FeedbackStamp(
-                        userScore: widget.feedbackData.userScore,
-                        recommendCardKey: recommendCardKey,
-                      ),
-                      // 점수 패널
-                      UserScorePanel(userScore: widget.feedbackData.userScore),
-                    ],
-                  ),
-                  // 한국어 발음 패널
-                  Container(
-                    margin: EdgeInsets.only(top: 10.0.h, bottom: 25.0.h),
-                    width: double.maxFinite,
-                    decoration: BoxDecoration(
-                      color: AppColors.dialogBackground_000,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 12.0.w, right: 18.0.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 5.0.h),
-                            // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
-                            child: FeedbackText(
-                              feedbackData: widget.feedbackData,
-                              correctText: widget.correctText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Amplitude 그래프
-                  Container(
-                    margin: EdgeInsets.only(
-                        right: 18.0.w, left: 18.0.w, bottom: 26.0.h),
-                    height: 195.0.h,
-                    child: Stack(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    right: 21.0.w, left: 21.0.w, bottom: 30.0.h),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        AudioGraphWidget(
-                          feedbackData: widget.feedbackData,
+                        // 점수에 따른 캐릭터 도장
+                        FeedbackStamp(
+                          userScore: widget.feedbackData.userScore,
+                          recommendCardKey: recommendCardKey,
                         ),
-                        Positioned(
-                          right: 0,
-                          child: Wrap(
-                            spacing: 2.0.h,
-                            direction: Axis.vertical,
-                            crossAxisAlignment: WrapCrossAlignment.end,
-                            children: const [
-                              AudioGraphLabel(
-                                labelColor: AppColors.orange_000,
-                                labelText: "Correct",
-                              ),
-                              AudioGraphLabel(
-                                labelColor: AppColors.black,
-                                labelText: "User",
-                              )
-                            ],
-                          ),
-                        )
+                        // 점수 패널
+                        UserScorePanel(
+                            userScore: widget.feedbackData.userScore),
                       ],
                     ),
-                  ),
-                  // 취약 음소 표시
-                  FeedbackResultContainer(
-                    title: 'Practice',
-                    content: SizedBox(
-                      width: 180.0.w,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        reverse: true,
-                        child: Row(
+                    // 한국어 발음 패널
+                    Container(
+                      margin: EdgeInsets.only(top: 10.0.h, bottom: 25.0.h),
+                      width: double.maxFinite,
+                      decoration: BoxDecoration(
+                        color: AppColors.dialogBackground_000,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 12.0.w, right: 18.0.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            for (int i = 0;
-                                i <
-                                    widget.feedbackData.recommendCard.entries
-                                        .length;
-                                i += 2)
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  for (int j = i; j < i + 2; j++)
-                                    if (j <
-                                        widget.feedbackData.recommendCard
-                                            .entries.length)
-                                      GestureDetector(
-                                        onTap: () {
-                                          final recommendCardKey = widget
-                                              .feedbackData
-                                              .recommendCard
-                                              .entries
-                                              .elementAt(j)
-                                              .key;
-                                          final recommendCardData = widget
-                                              .feedbackData
-                                              .recommendCard
-                                              .entries
-                                              .elementAt(j)
-                                              .value;
-                                          recommendCardKey == "Perfect" ||
-                                                  recommendCardKey ==
-                                                      "Try Again"
-                                              ? null
-                                              : Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SyllableLearningCard(
-                                                      currentIndex: 0,
-                                                      cardIds: [
-                                                        recommendCardData[
-                                                                'id'] ??
-                                                            0
-                                                      ],
-                                                      texts: [
-                                                        recommendCardData[
-                                                                'text'] ??
-                                                            ''
-                                                      ],
-                                                      translations: [
-                                                        recommendCardData[
-                                                                'cardTranslation'] ??
-                                                            ''
-                                                      ],
-                                                      engpronunciations: [
-                                                        recommendCardData[
-                                                                'cardPronunciation'] ??
-                                                            ''
-                                                      ],
-                                                      explanations: [
-                                                        recommendCardData[
-                                                                'explanation'] ??
-                                                            ''
-                                                      ],
-                                                      pictures: [
-                                                        recommendCardData[
-                                                                'pictureUrl'] ??
-                                                            ''
-                                                      ],
-                                                      bookmarked: [
-                                                        recommendCardData[
-                                                                'bookmark'] ??
-                                                            false
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ).then((updatedBookmark) {
-                                                  if (updatedBookmark != null) {
-                                                    setState(() {
-                                                      recommendCardData[
-                                                              'bookmark'] =
-                                                          updatedBookmark;
-                                                    });
-                                                  }
-                                                });
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 3.h, horizontal: 4.w),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 12.w, vertical: 3.h),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10.r),
-                                          ),
-                                          child: Text(
-                                            widget.feedbackData.recommendCard
-                                                .entries
-                                                .elementAt(j)
-                                                .key,
-                                            style: TextStyle(
-                                              color: const Color(0xFF15B931),
-                                              fontWeight: FontWeight.w600,
-                                              fontFamily: 'Pretendard',
-                                              fontSize: 15.h,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                ],
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.0.h),
+                              // 사용자 발음 텍스트와 잘못된 부분을 표시하는 텍스트 위젯
+                              child: FeedbackText(
+                                feedbackData: widget.feedbackData,
+                                correctText: widget.correctText,
                               ),
+                            ),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  // 올바른 음성
-                  FeedbackResultContainer(
-                    title: 'Correct',
-                    content: FeedbackWaveformContainer(
-                      buttonBackgroundColor: AppColors.orange_000,
-                      containerBackgroundColor: AppColors.orange_004,
-                      playerController: _correctPlayerController,
-                      // Replace the existing onPressed handler for correct audio
-                      onPressed: _playCorrectRecording,
+                    // Amplitude 그래프
+                    Container(
+                      margin: EdgeInsets.only(
+                          right: 18.0.w, left: 18.0.w, bottom: 26.0.h),
+                      height: 195.0.h,
+                      child: Stack(
+                        children: [
+                          AudioGraphWidget(
+                            feedbackData: widget.feedbackData,
+                          ),
+                          Positioned(
+                            right: 0,
+                            child: Wrap(
+                              spacing: 2.0.h,
+                              direction: Axis.vertical,
+                              crossAxisAlignment: WrapCrossAlignment.end,
+                              children: const [
+                                AudioGraphLabel(
+                                  labelColor: AppColors.orange_000,
+                                  labelText: "Correct",
+                                ),
+                                AudioGraphLabel(
+                                  labelColor: AppColors.black,
+                                  labelText: "User",
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  // 사용자 음성
-                  FeedbackResultContainer(
-                    title: 'User',
-                    content: FeedbackWaveformContainer(
-                      buttonBackgroundColor: AppColors.black,
-                      containerBackgroundColor: AppColors.white_000,
-                      playerController: _userPlayerController,
-                      onPressed: _playUserRecording,
+                    // 취약 음소 표시
+                    FeedbackResultContainer(
+                      title: 'Practice',
+                      content: SizedBox(
+                        width: 180.0.w,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          reverse: true,
+                          child: Row(
+                            children: [
+                              for (int i = 0;
+                                  i <
+                                      widget.feedbackData.recommendCard.entries
+                                          .length;
+                                  i += 2)
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    for (int j = i; j < i + 2; j++)
+                                      if (j <
+                                          widget.feedbackData.recommendCard
+                                              .entries.length)
+                                        GestureDetector(
+                                          onTap: () async {
+                                            await _audioPlayer.closePlayer();
+                                            final recommendCardKey = widget
+                                                .feedbackData
+                                                .recommendCard
+                                                .entries
+                                                .elementAt(j)
+                                                .key;
+                                            final recommendCardData = widget
+                                                .feedbackData
+                                                .recommendCard
+                                                .entries
+                                                .elementAt(j)
+                                                .value;
+                                            recommendCardKey == "Perfect" ||
+                                                    recommendCardKey ==
+                                                        "Try Again"
+                                                ? null
+                                                : Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          SyllableLearningCard(
+                                                        currentIndex: 0,
+                                                        cardIds: [
+                                                          recommendCardData[
+                                                                  'id'] ??
+                                                              0
+                                                        ],
+                                                        texts: [
+                                                          recommendCardData[
+                                                                  'text'] ??
+                                                              ''
+                                                        ],
+                                                        translations: [
+                                                          recommendCardData[
+                                                                  'cardTranslation'] ??
+                                                              ''
+                                                        ],
+                                                        engpronunciations: [
+                                                          recommendCardData[
+                                                                  'cardPronunciation'] ??
+                                                              ''
+                                                        ],
+                                                        explanations: [
+                                                          recommendCardData[
+                                                                  'explanation'] ??
+                                                              ''
+                                                        ],
+                                                        pictures: [
+                                                          recommendCardData[
+                                                                  'pictureUrl'] ??
+                                                              ''
+                                                        ],
+                                                        bookmarked: [
+                                                          recommendCardData[
+                                                                  'bookmark'] ??
+                                                              false
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ).then((updatedBookmark) {
+                                                    if (updatedBookmark !=
+                                                        null) {
+                                                      setState(() {
+                                                        recommendCardData[
+                                                                'bookmark'] =
+                                                            updatedBookmark;
+                                                      });
+                                                    }
+                                                  });
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 3.h, horizontal: 4.w),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 12.w,
+                                                vertical: 3.h),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10.r),
+                                            ),
+                                            child: Text(
+                                              widget.feedbackData.recommendCard
+                                                  .entries
+                                                  .elementAt(j)
+                                                  .key,
+                                              style: TextStyle(
+                                                color: const Color(0xFF15B931),
+                                                fontWeight: FontWeight.w600,
+                                                fontFamily: 'Pretendard',
+                                                fontSize: 15.h,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                  ],
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    // 올바른 음성
+                    FeedbackResultContainer(
+                      title: 'Correct',
+                      content: FeedbackWaveformContainer(
+                        buttonBackgroundColor: AppColors.orange_000,
+                        containerBackgroundColor: AppColors.orange_004,
+                        playerController: _correctPlayerController,
+                        // Replace the existing onPressed handler for correct audio
+                        onPressed: _playCorrectRecording,
+                      ),
+                    ),
+                    // 사용자 음성
+                    FeedbackResultContainer(
+                      title: 'User',
+                      content: FeedbackWaveformContainer(
+                        buttonBackgroundColor: AppColors.black,
+                        containerBackgroundColor: AppColors.white_000,
+                        playerController: _userPlayerController,
+                        onPressed: _playUserRecording,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
