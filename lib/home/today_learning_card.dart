@@ -67,7 +67,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
     try {
       String? token = await getAccessToken();
       // Backend server URL
-      var url = Uri.parse('$main_url/cards/today/${widget.cardId}');
+      var url = Uri.parse('$mainUrl/cards/today/${widget.cardId}');
 
       // Function to make the request
       Future<http.Response> makeRequest(String token) {

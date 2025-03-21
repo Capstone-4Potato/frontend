@@ -82,7 +82,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
       String? token = await getAccessToken();
       // Backend server URL
       var url =
-          Uri.parse('$main_url/cards/${widget.cardIds[widget.currentIndex]}');
+          Uri.parse('$mainUrl/cards/${widget.cardIds[widget.currentIndex]}');
 
       // Function to make the request
       Future<http.Response> makeRequest(String token) {

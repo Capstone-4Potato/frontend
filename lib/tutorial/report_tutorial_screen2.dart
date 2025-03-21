@@ -1,11 +1,8 @@
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/report/report_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 /// 리포트 화면 튜토리얼 2
 class ReportTutorialScreen2 extends StatelessWidget {
@@ -47,7 +44,7 @@ class ReportTutorialScreen2 extends StatelessWidget {
         children: [
           // 반투명 배경
           Container(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             width: width,
             height: height,
           ),

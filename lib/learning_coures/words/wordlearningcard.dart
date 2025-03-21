@@ -241,9 +241,9 @@ class _WordLearningCardState extends State<WordLearningCard> {
             });
             // 새로 로드된 카드의 발음 오디오 파일 불러오기
             TtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
-              print('Audio fetched and saved successfully.');
+              debugPrint('Audio fetched and saved successfully.');
             }).catchError((error) {
-              print('Error fetching audio: $error');
+              debugPrint('Error fetching audio: $error');
             });
           },
           itemCount: widget.texts.length,

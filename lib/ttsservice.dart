@@ -15,7 +15,7 @@ class TtsService {
   TtsService._internal();
 
   static final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
-  static final String _baseUrl = '$main_url/cards/';
+  static final String _baseUrl = '$mainUrl/cards/';
 
   String? base64CorrectAudio;
 

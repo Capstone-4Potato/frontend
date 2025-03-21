@@ -638,7 +638,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                                                     weakPhonemes!.remove(currentList[index]); // 취약음소 목록에서 제거
                                                                                   }
                                                                                 });
-                                                                                print('선택된 인덱스: $addPhonemes');
+                                                                                debugPrint('선택된 인덱스: $addPhonemes');
                                                                               },
                                                                               borderRadius: BorderRadius.circular(12.0.r),
                                                                               child: Container(
@@ -683,7 +683,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                       await postAddPhonemes(); // POST 요청 보내기
                                                       fetchReportData();
                                                     } catch (e) {
-                                                      print(
+                                                      debugPrint(
                                                           'Error while adding phonemes: $e');
                                                     } finally {
                                                       setState(() {
@@ -691,7 +691,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                                       });
                                                     }
                                                     if (!isLoading) {
-                                                      print(weakPhonemes);
+                                                      debugPrint(
+                                                          "$weakPhonemes");
                                                       Navigator.pop(context);
                                                     }
                                                   },
@@ -1163,7 +1164,7 @@ class VulnerableCardItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100.r),
                   ),
                   child: Icon(
-                    CustomIcons.cancel_icon,
+                    CustomIcons.cancelIcon,
                     color: const Color(0xFF92918C),
                     size: 12.sp,
                   ),

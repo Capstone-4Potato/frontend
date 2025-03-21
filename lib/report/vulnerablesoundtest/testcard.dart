@@ -34,10 +34,10 @@ class TestCard extends StatefulWidget {
   });
 
   @override
-  _TestCardState createState() => _TestCardState();
+  TestCardState createState() => TestCardState();
 }
 
-class _TestCardState extends State<TestCard> {
+class TestCardState extends State<TestCard> {
   late FlutterSoundRecorder _recorder;
   bool _isRecording = false;
   bool _isRecorded = false;

@@ -24,7 +24,7 @@ Future<dynamic> apiRequest({
   Function(int, String)? onError, // 요청 실패 시 호출
   Function(dynamic)? onComplete, // 성공 여부와 관계없이 항상 실행
 }) async {
-  String url = '$main_url/$endpoint';
+  String url = '$mainUrl/$endpoint';
   var urlParse = Uri.parse(url);
 
   // default headers 빌드

@@ -72,7 +72,7 @@ Future<FeedbackData?> getFeedback(
     'correctAudio': base64correctAudio,
   };
 
-  String url = '$main_url/cards/$cardId';
+  String url = '$mainUrl/cards/$cardId';
 
   String? token = await getAccessToken();
   Future<http.Response> makePostRequest(String token) {
@@ -87,30 +87,30 @@ Future<FeedbackData?> getFeedback(
     var response = await makePostRequest(token!);
 
     if (response.statusCode == 200) {
-      print('Successful feedback submission');
+      debugPrint('Successful feedback submission');
       String responseString = response.body.toString(); // Response를 문자열로 저장
 
       var responseData = json.decode(responseString); // JSON으로 디코딩
       return FeedbackData.fromJson(responseData);
     } else if (response.statusCode == 401) {
       // Handle token expiration
-      print('Access token expired. Refreshing token...');
+      debugPrint('Access token expired. Refreshing token...');
       bool isRefreshed = await refreshAccessToken();
       if (isRefreshed) {
         token = await getAccessToken();
         response = await makePostRequest(token!);
         if (response.statusCode == 200) {
-          print('Successful feedback submission after token refresh');
+          debugPrint('Successful feedback submission after token refresh');
           String responseString = response.body.toString(); // Response를 문자열로 저장
 
           var responseData = json.decode(responseString); // JSON으로 디코딩
           return FeedbackData.fromJson(responseData);
         } else {
-          print('Failed after token refresh: ${response.statusCode}');
+          debugPrint('Failed after token refresh: ${response.statusCode}');
           return null;
         }
       } else {
-        print('Failed to refresh access token');
+        debugPrint('Failed to refresh access token');
         return null;
       }
     } else if (response.statusCode == 500) {
@@ -120,7 +120,7 @@ Future<FeedbackData?> getFeedback(
       var message = responseData['message'];
       if (message is String) {
         var messageDetail = json.decode(message)['detail'];
-        print(messageDetail);
+        debugPrint(messageDetail);
         if (messageDetail ==
                 "failed to extract user text (STT), please request re-recording" ||
             messageDetail == "no non-silent samples to save" ||
@@ -139,12 +139,12 @@ Future<FeedbackData?> getFeedback(
       }
     }
 
-    print('Unhandled server response: ${response.statusCode}');
+    debugPrint('Unhandled server response: ${response.statusCode}');
     String responseString = response.body.toString(); // Response를 문자열로 저장
-    print('Response as string: $responseString');
+    debugPrint('Response as string: $responseString');
     return null;
   } catch (e) {
-    print("Error during the request: $e");
+    debugPrint("Error during the request: $e");
     if (e.toString() == 'Exception: ReRecordNeeded') {
       // If ReRecordNeeded exception occurs, signal to the calling function
       throw Exception('ReRecordNeeded');
@@ -161,7 +161,7 @@ Future<FeedbackData?> getTodayFeedback(
     'correctAudio': base64correctAudio,
   };
 
-  String url = '$main_url/cards/today/$cardId';
+  String url = '$mainUrl/cards/today/$cardId';
 
   String? token = await getAccessToken();
   Future<http.Response> makePostRequest(String token) {
@@ -176,26 +176,26 @@ Future<FeedbackData?> getTodayFeedback(
     var response = await makePostRequest(token!);
 
     if (response.statusCode == 200) {
-      print('Successful feedback submission');
+      debugPrint('Successful feedback submission');
       var responseData = json.decode(response.body);
       return FeedbackData.fromJson(responseData);
     } else if (response.statusCode == 401) {
       // Handle token expiration
-      print('Access token expired. Refreshing token...');
+      debugPrint('Access token expired. Refreshing token...');
       bool isRefreshed = await refreshAccessToken();
       if (isRefreshed) {
         token = await getAccessToken();
         response = await makePostRequest(token!);
         if (response.statusCode == 200) {
-          print('Successful feedback submission after token refresh');
+          debugPrint('Successful feedback submission after token refresh');
           var responseData = json.decode(response.body);
           return FeedbackData.fromJson(responseData);
         } else {
-          print('Failed after token refresh: ${response.statusCode}');
+          debugPrint('Failed after token refresh: ${response.statusCode}');
           return null;
         }
       } else {
-        print('Failed to refresh access token');
+        debugPrint('Failed to refresh access token');
         return null;
       }
     } else if (response.statusCode == 500) {
@@ -203,7 +203,7 @@ Future<FeedbackData?> getTodayFeedback(
       var message = responseData['message'];
       if (message is String) {
         var messageDetail = json.decode(message)['detail'];
-        print(messageDetail);
+        debugPrint(messageDetail);
         if (messageDetail ==
                 "failed to extract user text (STT), please request re-recording" ||
             messageDetail == "no non-silent samples to save" ||
@@ -222,11 +222,11 @@ Future<FeedbackData?> getTodayFeedback(
       }
     }
 
-    print('Unhandled server response: ${response.statusCode}');
-    print(json.decode(response.body));
+    debugPrint('Unhandled server response: ${response.statusCode}');
+    debugPrint(json.decode(response.body));
     return null;
   } catch (e) {
-    print("Error during the request: $e");
+    debugPrint("Error during the request: $e");
     if (e.toString() == 'Exception: ReRecordNeeded') {
       // If ReRecordNeeded exception occurs, signal to the calling function
       throw Exception('ReRecordNeeded');
@@ -243,7 +243,7 @@ Future<FeedbackData?> getCustomFeedback(
     'correctAudio': base64correctAudio,
   };
 
-  String url = '$main_url/cards/custom/$cardId';
+  String url = '$mainUrl/cards/custom/$cardId';
 
   String? token = await getAccessToken();
   Future<http.Response> makePostRequest(String token) {
@@ -258,26 +258,26 @@ Future<FeedbackData?> getCustomFeedback(
     var response = await makePostRequest(token!);
 
     if (response.statusCode == 200) {
-      print('Successful feedback submission');
+      debugPrint('Successful feedback submission');
       var responseData = json.decode(response.body);
       return FeedbackData.fromJson(responseData);
     } else if (response.statusCode == 401) {
       // Handle token expiration
-      print('Access token expired. Refreshing token...');
+      debugPrint('Access token expired. Refreshing token...');
       bool isRefreshed = await refreshAccessToken();
       if (isRefreshed) {
         token = await getAccessToken();
         response = await makePostRequest(token!);
         if (response.statusCode == 200) {
-          print('Successful feedback submission after token refresh');
+          debugPrint('Successful feedback submission after token refresh');
           var responseData = json.decode(response.body);
           return FeedbackData.fromJson(responseData);
         } else {
-          print('Failed after token refresh: ${response.statusCode}');
+          debugPrint('Failed after token refresh: ${response.statusCode}');
           return null;
         }
       } else {
-        print('Failed to refresh access token');
+        debugPrint('Failed to refresh access token');
         return null;
       }
     } else if (response.statusCode == 500) {
@@ -303,11 +303,11 @@ Future<FeedbackData?> getCustomFeedback(
       }
     }
 
-    print('Unhandled server response: ${response.statusCode}');
-    print(json.decode(response.body));
+    debugPrint('Unhandled server response: ${response.statusCode}');
+    debugPrint(json.decode(response.body));
     return null;
   } catch (e) {
-    print("Error during the request: $e");
+    debugPrint("Error during the request: $e");
     if (e.toString() == 'Exception: ReRecordNeeded') {
       // If ReRecordNeeded exception occurs, signal to the calling function
       throw Exception('ReRecordNeeded');
@@ -346,32 +346,6 @@ Widget buildTextSpans(String text, List<int>? mistakenIndexes) {
   );
 }
 
-// TODO : 중복 함수 수정
-// 단어, 문장, 사용자문장 피드백 화면에서 잘못발음한 텍스트 표현하기 위함 (Today Course feedback에서 사용!1)
-Widget buildTextSpansTodayCourse(String text, List<int>? mistakenIndexes) {
-  List<TextSpan> spans = [];
-  if (mistakenIndexes != null)
-    // ignore: curly_braces_in_flow_control_structures
-    for (int i = 0; i < text.length; i++) {
-      final bool isMistaken = mistakenIndexes.contains(i);
-      // 잘못된 문자라면 빨간색, 그렇지 않다면 검정색
-      TextStyle textStyle = isMistaken
-          ? const TextStyle(
-              color: Color(0xFFDE0000),
-              fontWeight: FontWeight.w600,
-              overflow: TextOverflow.ellipsis)
-          : const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'Pretendard',
-              overflow: TextOverflow.ellipsis);
-      spans.add(TextSpan(text: text[i], style: textStyle));
-    }
-  return AutoSizeText.rich(
-    TextSpan(children: spans),
-  );
-}
-
 // 사용자가 발음하지 못한 음절은 회색으로 표시
 Widget buildTextSpansOmit(String correctText, String userText) {
   List<TextSpan> spans = [];
@@ -394,40 +368,6 @@ Widget buildTextSpansOmit(String correctText, String userText) {
             fontWeight: FontWeight.w600,
             fontFamily: 'Pretendard',
           );
-
-    // 현재 문자 추가
-    spans.add(TextSpan(
-      text: correctText[i],
-      style: textStyle,
-    ));
-  }
-
-  return AutoSizeText.rich(
-    TextSpan(children: spans),
-  );
-}
-
-// TODO : 중복 함수 수정
-// 사용자가 발음하지 못한 음절은 회색으로 표시(Today couse에서만 사용)
-Widget buildTextSpansOmitTodayCourse(String correctText, String userText) {
-  List<TextSpan> spans = [];
-
-  for (int i = 0; i < correctText.length; i++) {
-    // 사용자 발음이 올바른 문자와 일치하는지 확인
-    final bool isCorrect = i < userText.length && correctText[i] == userText[i];
-
-    // 텍스트 스타일: 올바른 발음은 black, 틀린 발음은 gray
-    TextStyle textStyle = isCorrect
-        ? const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Pretendard',
-            overflow: TextOverflow.ellipsis)
-        : const TextStyle(
-            color: Color.fromARGB(255, 206, 203, 203),
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Pretendard',
-            overflow: TextOverflow.ellipsis);
 
     // 현재 문자 추가
     spans.add(TextSpan(

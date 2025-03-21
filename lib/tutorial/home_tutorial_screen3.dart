@@ -36,7 +36,7 @@ class HomeTutorialScreen3 extends StatelessWidget {
       children: [
         // 반투명 배경
         Container(
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.black.withValues(alpha: 0.6),
           width: width,
           height: height,
         ),

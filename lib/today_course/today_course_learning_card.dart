@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -5,7 +7,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
-import 'package:flutter_application_1/new/widgets/dialogs/feedback_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -15,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/syllables/fetchimage.dart';
 import 'package:flutter_application_1/main.dart';
@@ -23,7 +23,6 @@ import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
 import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/permissionservice.dart';
-import 'package:flutter_application_1/today_course/today_feedback_ui.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/updatecardweaksound.dart';
@@ -227,7 +226,7 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   Future<void> _uploadRecording(String? userAudioPath) async {
     if (userAudioPath != null) {
       String? token = await getAccessToken();
-      var url = Uri.parse('$main_url/cards/${widget.ids[_currentIndex]}');
+      var url = Uri.parse('$mainUrl/cards/${widget.ids[_currentIndex]}');
 
       // userAudioPath와 correctAudioPath를 base64로 인코딩
       String userAudioBase64 =

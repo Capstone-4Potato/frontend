@@ -13,10 +13,10 @@ class UserInputForm extends StatefulWidget {
   const UserInputForm({Key? key, required this.socialId}) : super(key: key);
 
   @override
-  _UserInputFormState createState() => _UserInputFormState();
+  UserInputFormState createState() => UserInputFormState();
 }
 
-class _UserInputFormState extends State<UserInputForm> {
+class UserInputFormState extends State<UserInputForm> {
   final _formKey = GlobalKey<FormState>();
   final _fieldKey_1 = GlobalKey<FormFieldState>();
   final _fieldKey_2 = GlobalKey<FormFieldState>();

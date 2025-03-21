@@ -95,7 +95,7 @@ class _SavedCardScreenState extends State<SavedCardScreen>
     Map<String, dynamic> result = {};
     try {
       String? token = await getAccessToken();
-      var url = Uri.parse('$main_url/cards/$id');
+      var url = Uri.parse('$mainUrl/cards/$id');
 
       var response = await http.get(url, headers: {
         'access': token!,
@@ -134,7 +134,7 @@ class _SavedCardScreenState extends State<SavedCardScreen>
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint("$e");
     }
     return result;
   }
@@ -289,7 +289,6 @@ class _SavedCardScreenState extends State<SavedCardScreen>
                         ),
                         itemCount: tab2Ids.length,
                         itemBuilder: (BuildContext context, int index) {
-                          print(tab2Texts);
                           return buildCard(
                               tab2Ids,
                               tab2Texts,
@@ -323,7 +322,7 @@ class _SavedCardScreenState extends State<SavedCardScreen>
       onTap: () {
         // Fetch and save the correct audio for the selected card
         TtsService.fetchCorrectAudio(ids[index]).then((_) {
-          print('Audio fetched and saved successfully.');
+          debugPrint('Audio fetched and saved successfully.');
         });
         if (ids[index] >= 1684) {
           Navigator.push(

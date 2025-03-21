@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/function.dart';
-import 'package:flutter_application_1/home/custom/customfeedbackui.dart';
-import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/home/custom/customtts.dart';
 import 'package:flutter_application_1/new/functions/show_common_dialog.dart';

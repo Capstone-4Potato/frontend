@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PreviousTestDialog extends StatelessWidget {
-  PreviousTestDialog({
+  const PreviousTestDialog({
     super.key,
     required this.leftTap,
     required this.rightTap,
   });
 
-  VoidCallback leftTap;
-  VoidCallback rightTap;
+  final VoidCallback leftTap;
+  final VoidCallback rightTap;
 
   @override
   Widget build(BuildContext context) {

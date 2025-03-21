@@ -121,49 +121,51 @@ class FeedbackWaveformContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 140.w,
-      height: 30.0.h,
-      padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-      decoration: BoxDecoration(
-        color: containerBackgroundColor,
-        borderRadius: BorderRadius.circular(25.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 18.w,
-            height: 18.h,
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(right: 4.0.w),
-            decoration: BoxDecoration(
-              color: buttonBackgroundColor,
-              shape: BoxShape.circle, // 원형 테두리
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 140.w,
+        height: 30.0.h,
+        padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+        decoration: BoxDecoration(
+          color: containerBackgroundColor,
+          borderRadius: BorderRadius.circular(25.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 18.w,
+              height: 18.h,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(right: 4.0.w),
+              decoration: BoxDecoration(
+                color: buttonBackgroundColor,
+                shape: BoxShape.circle, // 원형 테두리
+              ),
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.play_arrow_rounded),
+                color: AppColors.white_000,
+                iconSize: 12.0.w,
+                onPressed: onPressed,
+              ),
             ),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              icon: const Icon(Icons.play_arrow_rounded),
-              color: AppColors.white_000,
-              iconSize: 12.0.w,
-              onPressed: onPressed,
-            ),
-          ),
 
-          // 웨이브폼 추가
-          AudioFileWaveforms(
-            size: Size(95.w, 20.h),
-            playerController: playerController,
-            enableSeekGesture: true,
-            waveformType: WaveformType.fitWidth,
-            playerWaveStyle: PlayerWaveStyle(
-              fixedWaveColor: buttonBackgroundColor,
-              liveWaveColor: const Color.fromARGB(255, 206, 14, 14),
-              spacing: 4.w, // spacing 값 증가
-              waveThickness: 2.w, // waveThickness는 spacing보다 작아야 함
+            // 웨이브폼 추가
+            AudioFileWaveforms(
+              size: Size(95.w, 20.h),
+              playerController: playerController,
+              enableSeekGesture: false,
+              waveformType: WaveformType.fitWidth,
+              playerWaveStyle: PlayerWaveStyle(
+                fixedWaveColor: buttonBackgroundColor,
+                spacing: 4.w, // spacing 값 증가
+                waveThickness: 2.w, // waveThickness는 spacing보다 작아야 함
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

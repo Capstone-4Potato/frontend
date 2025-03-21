@@ -183,11 +183,6 @@ class _TongueTwistersLearningCardState
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.74;
 
-    String currentContent = widget.texts[widget.currentIndex];
-    String currentPronunciation = widget.pronunciations[widget.currentIndex];
-    String currentEngPronunciation =
-        widget.engpronunciations[widget.currentIndex];
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
@@ -283,10 +278,10 @@ class _TongueTwistersLearningCardState
                                 TtsService.fetchCorrectAudio(
                                         widget.cardIds[nextIndex])
                                     .then((_) {
-                                  print(
+                                  debugPrint(
                                       'Audio fetched and saved successfully.');
                                 }).catchError((error) {
-                                  print('Error fetching audio: $error');
+                                  debugPrint('Error fetching audio: $error');
                                 });
                               }
                             : null,

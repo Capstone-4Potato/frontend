@@ -10,21 +10,21 @@ enum LoginPlatform {
     buttonColor: AppColors.black,
     textColor: AppColors.white_000,
     borderColor: Color(0xFFE2E2E2),
-    icon: LoginIcons.apple_logo,
+    icon: LoginIcons.appleLogo,
   ),
   kakao(
     platformName: 'Kakao',
     buttonColor: AppColors.yellow,
     textColor: AppColors.brown_000,
     borderColor: Color(0xFFF3E69E),
-    icon: LoginIcons.kakaotalk_icon,
+    icon: LoginIcons.kakaotalkIcon,
   ),
   google(
     platformName: 'Google',
     buttonColor: AppColors.white_000,
     textColor: AppColors.brown_000,
     borderColor: Color(0xFFE2E2E2),
-    icon: LoginIcons.google_icon,
+    icon: LoginIcons.googleIcon,
   ),
 
   none(

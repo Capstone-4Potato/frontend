@@ -8,10 +8,10 @@ class RetutorialScreen extends StatefulWidget {
   const RetutorialScreen({super.key});
 
   @override
-  _RetutorialScreenState createState() => _RetutorialScreenState();
+  RetutorialScreenState createState() => RetutorialScreenState();
 }
 
-class _RetutorialScreenState extends State<RetutorialScreen>
+class RetutorialScreenState extends State<RetutorialScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   late PageController _pageController;

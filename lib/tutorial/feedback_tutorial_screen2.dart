@@ -1,6 +1,5 @@
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FeedbackTutorialScreen2 extends StatefulWidget {
@@ -49,7 +48,7 @@ class _FeedbackTutorialScreen2State extends State<FeedbackTutorialScreen2> {
     return Stack(
       children: [
         Container(
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.black.withValues(alpha: 0.6),
           width: width,
           height: height,
         ),

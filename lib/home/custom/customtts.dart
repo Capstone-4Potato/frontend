@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
@@ -15,7 +16,7 @@ class CustomTtsService {
   CustomTtsService._internal();
 
   static final AudioPlayer _audioPlayer = AudioPlayer();
-  static final String _baseUrl = '$main_url/cards/custom/';
+  static final String _baseUrl = '$mainUrl/cards/custom/';
 
   String? base64CorrectAudio; // 여기에 base64 오디오 데이터를 저장합니다.
 
@@ -34,7 +35,7 @@ class CustomTtsService {
       );
 
       if (response.statusCode == 200) {
-        print('Custom TTS fetch complete');
+        debugPrint('Custom TTS fetch complete');
         final jsonData = jsonDecode(response.body);
         final String? base64correctAudio = jsonData['correctAudio'];
 
@@ -42,12 +43,12 @@ class CustomTtsService {
           _instance.base64CorrectAudio = base64correctAudio;
           await _instance.saveAudioToFile(cardId, base64correctAudio);
         } else {
-          print('No audio data found in response.');
+          debugPrint('No audio data found in response.');
         }
       } else if (response.statusCode == 401) {
-        print('Access token expired. Attempting to refresh...');
+        debugPrint('Access token expired. Attempting to refresh...');
         if (await refreshAccessToken()) {
-          print('Retrying request after token refresh...');
+          debugPrint('Retrying request after token refresh...');
           await fetchCorrectAudio(cardId);
         } else {
           throw Exception('Token refresh failed.');
@@ -57,14 +58,14 @@ class CustomTtsService {
         throw Exception('Failed to load audio: $errorMessage');
       }
     } catch (e) {
-      print('Error fetching audio: $e');
+      debugPrint('Error fetching audio: $e');
       rethrow;
     }
   }
 
   Future<void> saveAudioToFile(int cardId, String? base64String) async {
     if (base64String == null) {
-      print('Base64 String is null, cannot save audio.');
+      debugPrint('Base64 String is null, cannot save audio.');
       return;
     }
 
@@ -77,16 +78,16 @@ class CustomTtsService {
       final File file = File(filePath);
 
       await file.writeAsBytes(bytes);
-      print('Audio saved to: $filePath');
+      debugPrint('Audio saved to: $filePath');
 
       // 파일 존재 여부 검증
       if (await file.exists()) {
-        print('File saved successfully and verified at $filePath.');
+        debugPrint('File saved successfully and verified at $filePath.');
       } else {
-        print('File failed to save at $filePath.');
+        debugPrint('File failed to save at $filePath.');
       }
     } catch (e) {
-      print('Error saving audio file: $e');
+      debugPrint('Error saving audio file: $e');
     }
   }
 
@@ -97,14 +98,14 @@ class CustomTtsService {
       final File file = File('$dir/$fileName');
 
       if (await file.exists()) {
-        print('Playing audio from: ${file.path}');
+        debugPrint('Playing audio from: ${file.path}');
         await _audioPlayer.setSource(DeviceFileSource(file.path));
         await _audioPlayer.resume();
       } else {
-        print('Audio file not found at: ${file.path}');
+        debugPrint('Audio file not found at: ${file.path}');
       }
     } catch (e) {
-      print('Error playing cached audio: $e');
+      debugPrint('Error playing cached audio: $e');
     }
   }
 }

@@ -101,8 +101,8 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     List<IconData> iconList = [
-      CustomIcons.home_icon,
-      CustomIcons.report_icon,
+      CustomIcons.homeIcon,
+      CustomIcons.reportIcon,
     ];
     List<String> labelList = ['Home', 'Report'];
 
@@ -129,7 +129,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
             ),
             child: IconButton(
               icon: Icon(
-                CustomIcons.todaycourse_icon,
+                CustomIcons.todaycourseIcon,
                 size: 44.sp,
               ),
               color: Colors.white,

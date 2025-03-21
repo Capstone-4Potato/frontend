@@ -45,7 +45,7 @@ Future<void> sendLogoutRequest(BuildContext context) async {
 /// ### POST `/login` : 로그인
 Future<int> sendSocialLoginRequest(
     BuildContext context, String? socialId) async {
-  String url = '$main_url/login';
+  String url = '$mainUrl/login';
   var urlParse = Uri.parse(url);
 
   try {

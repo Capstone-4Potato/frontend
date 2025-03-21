@@ -44,7 +44,7 @@ class _TodayCourseScreenState extends State<TodayCourseScreen> {
   /// 카드 번호별 정보 요청해서 저장
   Future<void> fetchTodayCourseCardList(int cardId) async {
     String? token = await getAccessToken();
-    var url = Uri.parse('$main_url/cards/$cardId');
+    var url = Uri.parse('$mainUrl/cards/$cardId');
 
     // Function to make the request
     Future<http.Response> makeRequest(String token) {
