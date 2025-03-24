@@ -1,30 +1,32 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
-import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/learning_coures/syllables/fetchimage.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
 import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
-import 'package:flutter_application_1/today_course/today_feedback_ui.dart';
+import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/updatecardweaksound.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TodayCourseLearningCard extends StatefulWidget {
   int courseSize;
@@ -55,11 +57,10 @@ class TodayCourseLearningCard extends StatefulWidget {
   });
 
   @override
-  _TodayCourseLearningCardState createState() =>
-      _TodayCourseLearningCardState();
+  TodayCourseLearningCardState createState() => TodayCourseLearningCardState();
 }
 
-class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
+class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   late FlutterSoundRecorder _recorder;
   late String _recordedFilePath; // 녹음된 파일 경로
 
@@ -75,6 +76,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   FlutterSoundPlayer audioPlayer = FlutterSoundPlayer();
 
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  final PermissionService _permissionService = PermissionService();
 
   // 학습한 카드 갯수 변수
   int learnedCardCount = 0;
@@ -88,8 +90,9 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   }
 
   Future<void> _initializeRecorder() async {
-    await Permission.microphone.request();
+    await _permissionService.requestPermissions();
     await _recorder.openRecorder();
+    await audioPlayer.openPlayer();
   }
 
   // 카드 학습 후 학습한 카드 갯수 업데이트
@@ -107,7 +110,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   Future<void> saveLastFinishedCard(int cardId) async {
     await secureStorage.write(
         key: 'lastFinishedCardId', value: cardId.toString());
-    print("Saved last finished card ID: $cardId");
+    debugPrint("Saved last finished card ID: $cardId");
   }
 
   // Base64 오디오 데이터를 디코딩하고 AudioPlayer로 재생
@@ -117,7 +120,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
     // 파일 경로 얻기
     Directory appDocDirectory = await getApplicationDocumentsDirectory();
-    String filePath = '${appDocDirectory.path}/audio.mp3';
+    String filePath = '${appDocDirectory.path}/audio.wav';
 
     // 파일로 저장
     File audioFile = File(filePath);
@@ -143,7 +146,6 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         _isLoading = true;
         _isRecorded = true;
       });
-      print(path);
       if (path != null) {
         setState(() {
           _isRecording = false;
@@ -173,13 +175,19 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
             setState(() {
               _isLoading = false; // Stop loading
             });
-            showFeedbackDialog(context, feedbackData);
+            showFeedbackDialog(context, feedbackData, _recordedFilePath,
+                widget.texts[_currentIndex]);
+            Future.delayed(const Duration(milliseconds: 300), () {
+              debugPrint("Dialog animation finished, calling nextCard...");
+              _nextCard();
+            });
           } else {
             setState(() {
               _isLoading = false; // Stop loading
             });
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         } catch (e) {
           setState(() {
@@ -187,15 +195,19 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
           });
           if (e.toString() == 'Exception: ReRecordNeeded') {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType:
+                    RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
           } else if (e is TimeoutException) {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.timeout); // 녹음 길이가 너무 짧음
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType: RecordingErrorType.timeout); // 서버 타임아웃
           } else {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         }
       }
@@ -214,7 +226,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   Future<void> _uploadRecording(String? userAudioPath) async {
     if (userAudioPath != null) {
       String? token = await getAccessToken();
-      var url = Uri.parse('$main_url/cards/${widget.ids[_currentIndex]}');
+      var url = Uri.parse('$mainUrl/cards/${widget.ids[_currentIndex]}');
 
       // userAudioPath와 correctAudioPath를 base64로 인코딩
       String userAudioBase64 =
@@ -239,12 +251,12 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         );
 
         if (response.statusCode == 200) {
-          print('File uploaded successfully');
-          print('Response body: ${response.body}');
+          debugPrint('File uploaded successfully');
+          debugPrint('Response body: ${response.body}');
           _nextCard();
         } else if (response.statusCode == 401) {
           // Token expired, attempt to refresh the token
-          print('Access token expired. Refreshing token...');
+          debugPrint('Access token expired. Refreshing token...');
 
           // Refresh the access token
           bool isRefreshed = await refreshAccessToken();
@@ -267,22 +279,26 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
               debugPrint(
                   'File upload failed after token refresh with status: ${retryResponse.statusCode}');
               if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-              showRecordingErrorDialog(context); // 녹음 오류 dialog
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           } else {
             debugPrint('Failed to refresh access token');
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         } else {
           debugPrint('File upload failed with status: ${response.statusCode}');
           if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-          showRecordingErrorDialog(context); // 녹음 오류 dialog
+          showCommonDialog(context,
+              dialogType: DialogType.recordingError); // 녹음 오류 dialog
         }
       } catch (e) {
         debugPrint('Error uploading file: $e');
         if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-        showRecordingErrorDialog(context); // 녹음 오류 dialog
+        showCommonDialog(context,
+            dialogType: DialogType.recordingError); // 녹음 오류 dialog
       }
     }
   }
@@ -303,12 +319,12 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
         });
       }
     } catch (e) {
-      print('Error loading image: $e');
+      debugPrint('Error loading image: $e');
     }
   }
 
   void _nextCard() {
-    print('Before: currentIndex = $_currentIndex'); // 디버깅용
+    debugPrint('Before: currentIndex = $_currentIndex'); // 디버깅용
 
     if (_isRecorded) {
       if (_currentIndex < widget.ids.length - 1) {
@@ -317,16 +333,16 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
           _currentIndex++;
           _isRecorded = false;
           saveLastFinishedCard(widget.ids[_currentIndex - 1]); // 이전 카드 인덱스 저장
-          print('After: currentIndex = $_currentIndex'); // 디버깅용
+          debugPrint('After: currentIndex = $_currentIndex'); // 디버깅용
         });
       } else {
-        print('Last card reached');
+        debugPrint('Last card reached');
         _showCompletionDialog();
         incrementLearnedCardCount(); // 카드 갯수 + 1
         setTodayCourseCompleted(); // 오늘 학습 완료 저장
       }
     } else {
-      print('Recording not completed!');
+      debugPrint('Recording not completed!');
       // showErrorDialog();
     }
   }
@@ -343,37 +359,29 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     // String todayDate = "${now.year}-${now.month}-${now.day}";
     String todayDate = "${now.month}-${now.day}-${now.minute}"; // 임시 분 단위
     await prefs.setString('lastSavedDate', todayDate);
-    print(todayDate);
+    debugPrint(todayDate);
 
-    print('checkTodayCourse set to true and lastSavedDate updated.');
+    debugPrint('checkTodayCourse set to true and lastSavedDate updated.');
   }
 
   // 피드백 다이얼로그 표시
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return TodayFeedbackUI(
-          feedbackData: feedbackData,
-          recordedFilePath: _recordedFilePath,
-          text: widget.texts[_currentIndex], // 카드 한글 발음
-        );
-      },
-    ).then((_) {
-      // 다이얼로그가 닫히면 nextCard 호출
+  // void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return FeedbackDialog(
+  //           feedbackData: feedbackData,
+  //           recordedFilePath: path,
+  //           correctText:  widget.texts[_currentIndex]);
+  //     }).then((_) {
+  //     // 다이얼로그가 닫히면 nextCard 호출
 
-      Future.delayed(const Duration(milliseconds: 300), () {
-        print("Dialog animation finished, calling nextCard...");
-        _nextCard();
-      });
-    });
-  }
+  //     Future.delayed(const Duration(milliseconds: 300), () {
+  //       debugPrint("Dialog animation finished, calling nextCard...");
+  //       _nextCard();
+  //     });
+  //   });
+  // }
 
   void _showCompletionDialog() async {
     int responseCode = await sendTestFinalizeRequest();
@@ -381,7 +389,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     if (widget.ids.isNotEmpty) {
       int lastCardId = widget.ids.last; // 현재까지 학습한 마지막 카드 ID
       await saveLastFinishedCard(lastCardId);
-      print("Saved last finished card ID: $lastCardId");
+      debugPrint("Saved last finished card ID: $lastCardId");
     }
 
     String title;
@@ -425,7 +433,7 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
     if (widget.ids.isNotEmpty) {
       int lastCardId = widget.ids[_currentIndex]; // 현재까지 학습한 마지막 카드 ID
       await saveLastFinishedCard(lastCardId);
-      print("Saved last finished card ID: $lastCardId");
+      debugPrint("Saved last finished card ID: $lastCardId");
     }
 
     showDialog(
@@ -447,13 +455,13 @@ class _TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
   @override
   void dispose() {
     _recorder.closeRecorder();
+    audioPlayer.closePlayer();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width * 0.70;
-    double cardHeight = MediaQuery.of(context).size.height * 0.22;
 
     int cardCount = (widget.courseSize - widget.ids.length) + _currentIndex + 1;
 

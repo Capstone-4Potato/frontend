@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/screens/delete_account_survey_screen.dart';
 import 'package:flutter_application_1/new/widgets/custom_app_bar.dart';
-import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// 회원탈퇴 페이지
 class WithdrawalScreen extends StatefulWidget {
@@ -13,10 +12,10 @@ class WithdrawalScreen extends StatefulWidget {
     Key? key,
   }) : super(key: key);
   @override
-  _WithdrawalScreenState createState() => _WithdrawalScreenState();
+  WithdrawalScreenState createState() => WithdrawalScreenState();
 }
 
-class _WithdrawalScreenState extends State<WithdrawalScreen> {
+class WithdrawalScreenState extends State<WithdrawalScreen> {
   final TextEditingController _nicknameController = TextEditingController();
   @override
   void initState() {
@@ -42,28 +41,18 @@ class _WithdrawalScreenState extends State<WithdrawalScreen> {
 
   // 입력한 닉네임이 사용자 닉넥임과 일치하지 않는다
   void _showErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const RecordingErrorDialog(
-          title: "Error",
-          text: "Nickname does not match.",
-        );
-      },
-    );
+    showCommonDialog(context,
+        customTitle: "Input Error",
+        customContent: "Nickname does not match.",
+        customButtonText: "Continue");
   }
 
   // 닉네임을 입력하지 않음
   void _showEmptyFieldDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const RecordingErrorDialog(
-          title: "Input Required",
-          text: "Please enter your nickname.",
-        );
-      },
-    );
+    showCommonDialog(context,
+        customTitle: "Input Required",
+        customContent: "Please enter your nickname.",
+        customButtonText: "Continue");
   }
 
   @override

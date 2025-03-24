@@ -20,7 +20,7 @@ void showDeleteAccountDialog(BuildContext context, Function onConfirmTap) {
           width: 340.0.w,
           height: 300.0.h,
           decoration: BoxDecoration(
-              color: AppColors.white.withValues(alpha: 0.01),
+              color: AppColors.white_000.withValues(alpha: 0.01),
               borderRadius: BorderRadius.circular(20.r)),
           child: Stack(
             children: [
@@ -32,7 +32,7 @@ void showDeleteAccountDialog(BuildContext context, Function onConfirmTap) {
                   width: 340.0.w,
                   height: 250.0.h,
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: AppColors.white_000,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Column(
@@ -54,7 +54,7 @@ void showDeleteAccountDialog(BuildContext context, Function onConfirmTap) {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
-                            color: AppColors.gray_002,
+                            color: AppColors.gray_003,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -77,7 +77,7 @@ void showDeleteAccountDialog(BuildContext context, Function onConfirmTap) {
                                   child: Text(
                                 'Cancel',
                                 style: TextStyle(
-                                  color: AppColors.gray_002,
+                                  color: AppColors.gray_003,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -99,7 +99,7 @@ void showDeleteAccountDialog(BuildContext context, Function onConfirmTap) {
                                   child: Text(
                                 'Confirm',
                                 style: TextStyle(
-                                  color: AppColors.white,
+                                  color: AppColors.white_000,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),

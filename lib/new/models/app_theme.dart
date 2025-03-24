@@ -33,10 +33,23 @@ class AppTheme {
         fontWeight: FontWeight.w500,
         color: AppColors.brown_000,
         letterSpacing: 0,
+        height: 20 / 21,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 24.sp,
+        fontWeight: FontWeight.w600,
+        color: AppColors.brown_000,
+        letterSpacing: 0,
       ),
       bodyMedium: TextStyle(
         fontSize: 16.sp,
         fontWeight: FontWeight.w400,
+        color: AppColors.brown_000,
+        letterSpacing: 0,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w500,
         color: AppColors.brown_000,
         letterSpacing: 0,
       ),

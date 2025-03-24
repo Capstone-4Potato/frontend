@@ -6,10 +6,10 @@ class LoginIcons {
   static const _kFontFam = 'LoginIcons';
   static const String? _kFontPkg = null;
 
-  static const IconData google_icon =
+  static const IconData googleIcon =
       IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData kakaotalk_icon =
+  static const IconData kakaotalkIcon =
       IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData apple_logo =
+  static const IconData appleLogo =
       IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

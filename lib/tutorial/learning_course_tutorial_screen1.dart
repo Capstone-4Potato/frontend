@@ -52,7 +52,7 @@ class _LearningCourseTutorialScreen1State
       child: Stack(
         children: [
           Container(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             width: width,
             height: height,
           ),

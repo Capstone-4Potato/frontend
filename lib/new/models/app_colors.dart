@@ -13,12 +13,17 @@ class AppColors {
 
   static const Color black = Color(0xFF000000);
   static const Color yellow = Color(0xFFFEE500);
-  static const Color white = Color(0xFFFFFFFF);
+  static const Color red = Color(0xFFDE0900);
+
+  static const Color white_000 = Color(0xFFFFFFFF);
+  static const Color white_001 = Color(0xFFF2F2F2);
 
   static const Color gray_000 = Color(0xFFEBEBEB);
-  static const Color gray_001 = Color(0xFFBEBDB8);
-  static const Color gray_002 = Color(0xFF92918C);
-  static const Color gray_003 = Color(0xFF5B5A56);
+  static const Color gray_001 = Color(0xFFD8D7D6);
+  static const Color gray_002 = Color(0xFFBEBDB8);
+  static const Color gray_003 = Color(0xFF92918C);
+  static const Color gray_004 = Color(0xFF666560);
+  static const Color gray_005 = Color(0xFF5B5A56);
 
   static const Color brown_000 = Color(0xFF492B21);
 
@@ -26,6 +31,7 @@ class AppColors {
   static const Color orange_001 = Color(0xFFF18B5E);
   static const Color orange_002 = Color(0xFFFFC49D);
   static const Color orange_003 = Color(0xFFFFDBB5);
+  static const Color orange_004 = Color(0xFFFFE7CE);
 
   // 위젯 색
   static const Color circularAvatar_000 = Color(0xFFF18A5E);
@@ -47,5 +53,6 @@ class AppColors {
 
   static const Color cardProgressBar_000 = Color(0xFFE66932);
 
-  static const Color dialog = Color(0xFFFFFFFF);
+  static const Color dialogBackground_000 = Color(0xFFFFFFFF);
+  static const Color dialogBackground_001 = Color(0xFFF9F7F5);
 }

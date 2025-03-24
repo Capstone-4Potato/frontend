@@ -3,15 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/main.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
-import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/learning_coures/words/wordfeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,7 +67,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
     try {
       String? token = await getAccessToken();
       // Backend server URL
-      var url = Uri.parse('$main_url/cards/today/${widget.cardId}');
+      var url = Uri.parse('$mainUrl/cards/today/${widget.cardId}');
 
       // Function to make the request
       Future<http.Response> makeRequest(String token) {
@@ -114,7 +113,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint("$e");
       setState(() {
         _isLoading = false;
       });
@@ -154,29 +153,36 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
             setState(() {
               _isFeedbackLoading = false; // Stop loading
             });
-            showFeedbackDialog(context, feedbackData);
+            showFeedbackDialog(
+                context, feedbackData, _recordedFilePath, cardText);
           } else {
             setState(() {
               _isFeedbackLoading = false; // Stop loading
             });
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         } catch (e) {
           setState(() {
             _isLoading = false; // Stop loading
+            _isFeedbackLoading = false;
           });
           if (e.toString() == 'Exception: ReRecordNeeded') {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType:
+                    RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
           } else if (e is TimeoutException) {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.timeout); // 서버 타임아웃
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType: RecordingErrorType.timeout); // 서버 타임아웃
           } else {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         }
       }
@@ -192,45 +198,25 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
   }
 
   void _onListenPressed() async {
-    // 여기서 cardCorrectAudio 재생
     try {
-      // 1. base64 문자열을 디코딩
-      Uint8List audioBytes = base64Decode(cardCorrectAudio);
+      if (!_audioPlayer.isOpen()) {
+        await _audioPlayer.openPlayer();
+      }
 
-      // 2. 임시 디렉터리에 파일로 저장
+      Uint8List audioBytes = base64Decode(cardCorrectAudio);
       final tempDir = await getTemporaryDirectory();
       final filePath = '${tempDir.path}/correct_audio.wav';
       final audioFile = File(filePath);
       await audioFile.writeAsBytes(audioBytes);
 
-      // 3. 파일 재생
-      await _audioPlayer.startPlayer(
-          fromURI: filePath, codec: Codec.pcm16WAV); // 파일 재생
+      await _audioPlayer.startPlayer(fromURI: filePath, codec: Codec.pcm16WAV);
+
       setState(() {
         _canRecord = true;
       });
     } catch (e) {
-      print("오디오 재생 중 오류 발생: $e");
+      debugPrint("오디오 재생 중 오류 발생: $e");
     }
-  }
-
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return WordFeedbackUI(
-          feedbackData: feedbackData,
-          recordedFilePath: _recordedFilePath,
-          text: cardText, // 카드 한글 발음
-        );
-      },
-    );
   }
 
   void _showExitDialog() {
@@ -365,7 +351,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                   SizedBox(
                     height: 50.h,
                   ),
-                  !_isLoading && _isFeedbackLoading
+                  _isFeedbackLoading
                       ? const Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(

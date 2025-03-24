@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (homeTutorialStep == 4) {
       // welcom dialog 표시
       // ignore: use_build_context_synchronously
-      showCommonDialog(context, type: DialogType.welcome);
+      showCommonDialog(context, dialogType: DialogType.welcome);
       prefs.setInt('homeTutorialStep', 5);
     }
   }
@@ -253,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 });
                               },
                               icon: Icon(
-                                CustomIcons.notification_icon,
+                                CustomIcons.notificationIcon,
                                 color: AppColors.icon_001,
                                 size: 20.sp,
                               ),
@@ -284,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           icon: Icon(
-                            CustomIcons.setting_icon,
+                            CustomIcons.settingIcon,
                             color: AppColors.icon_001,
                             size: 20.sp,
                           ),

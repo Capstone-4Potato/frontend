@@ -229,7 +229,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               backgroundColor:
                                   const Color.fromARGB(255, 242, 235, 227),
                               child: SvgPicture.asset(
-                                ImagePath.balbamCharacter1.path,
+                                ImagePath.balbamCharacter5.path,
                                 width: 50.w,
                                 height: 50.h,
                               ),
@@ -638,7 +638,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                                                     weakPhonemes!.remove(currentList[index]); // 취약음소 목록에서 제거
                                                                                   }
                                                                                 });
-                                                                                print('선택된 인덱스: $addPhonemes');
+                                                                                debugPrint('선택된 인덱스: $addPhonemes');
                                                                               },
                                                                               borderRadius: BorderRadius.circular(12.0.r),
                                                                               child: Container(
@@ -683,7 +683,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                       await postAddPhonemes(); // POST 요청 보내기
                                                       fetchReportData();
                                                     } catch (e) {
-                                                      print(
+                                                      debugPrint(
                                                           'Error while adding phonemes: $e');
                                                     } finally {
                                                       setState(() {
@@ -691,7 +691,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                                       });
                                                     }
                                                     if (!isLoading) {
-                                                      print(weakPhonemes);
+                                                      debugPrint(
+                                                          "$weakPhonemes");
                                                       Navigator.pop(context);
                                                     }
                                                   },
@@ -776,34 +777,38 @@ class _ReportScreenState extends State<ReportScreen> {
                                       padding: EdgeInsets.only(top: 12.0.h),
                                       child: Column(
                                         children: List.generate(
-                                            weakPhonemes!.length, (index) {
-                                          return VulnerableCardItem(
-                                            index: index,
-                                            phonemes: weakPhonemes![index]
-                                                    ['phonemeText']
-                                                .split(" ")
-                                                .last,
-                                            title: weakPhonemes![index]
-                                                    ['phonemeText']
-                                                .split(" ")
-                                                .sublist(
-                                                    0,
-                                                    weakPhonemes![index]
-                                                                ['phonemeText']
-                                                            .split(" ")
-                                                            .length -
-                                                        1)
-                                                .join(' '),
-                                            phonemeId: weakPhonemes![index]
-                                                ['phonemeId'],
-                                            onDelete: () {
-                                              setState(() {
-                                                weakPhonemes!.removeAt(
-                                                    index); // 리스트에서 항목 삭제
-                                              });
-                                            },
-                                          );
-                                        }),
+                                          weakPhonemes!.length,
+                                          (index) {
+                                            String phonemeText =
+                                                weakPhonemes![index]
+                                                        ['phonemeText'] ??
+                                                    '';
+                                            List<String> parts =
+                                                phonemeText.split(" ");
+
+                                            return VulnerableCardItem(
+                                              index: index,
+                                              phonemes: parts.isNotEmpty
+                                                  ? parts.last
+                                                  : '',
+                                              title: parts.length > 1
+                                                  ? parts
+                                                      .sublist(
+                                                          0, parts.length - 1)
+                                                      .join(' ')
+                                                  : '',
+                                              phonemeId: weakPhonemes![index]
+                                                      ['phonemeId'] as int? ??
+                                                  0, // 🔹 null이면 기본값 0 설정
+                                              onDelete: () {
+                                                setState(() {
+                                                  weakPhonemes!.removeAt(
+                                                      index); // 리스트에서 항목 삭제
+                                                });
+                                              },
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                               Padding(
@@ -1159,7 +1164,7 @@ class VulnerableCardItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100.r),
                   ),
                   child: Icon(
-                    CustomIcons.cancel_icon,
+                    CustomIcons.cancelIcon,
                     color: const Color(0xFF92918C),
                     size: 12.sp,
                   ),

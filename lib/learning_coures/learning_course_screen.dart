@@ -468,7 +468,8 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
               Navigator.push<void>(
                 context,
                 MaterialPageRoute<void>(
-                  builder: (BuildContext context) => LearningCourseCardList(
+                  builder: (BuildContext context) =>
+                      const LearningCourseCardList(
                     level: 1,
                     subTitle: "Basic consonants/vowels",
                   ),
@@ -688,7 +689,7 @@ class UnitItem extends StatelessWidget {
                               : Colors.white),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.17),
+                          color: Colors.black.withValues(alpha: 0.17),
                           offset: const Offset(2, 2),
                           blurRadius: 5,
                         ),

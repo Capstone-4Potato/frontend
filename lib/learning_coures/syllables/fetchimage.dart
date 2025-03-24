@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 // 음절 학습 카드 이미지 API
 Future<Uint8List> fetchImage(String pictureUrl) async {
-  final String url = '$main_url$pictureUrl';
+  final String url = '$mainUrl$pictureUrl';
 
   final response = await http.get(Uri.parse(url));
 

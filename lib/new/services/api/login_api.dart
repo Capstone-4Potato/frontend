@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/main.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/api_method.dart';
 import 'package:flutter_application_1/new/models/navigation_type.dart';
 import 'package:flutter_application_1/new/screens/login_screen.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_application_1/new/services/tutorial_initializer.dart';
 import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/new/utils/response_printer.dart';
 import 'package:flutter_application_1/new/widgets/dialogs/ask_recover_dialog.dart';
-import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:http/http.dart' as http;
 
 /// ### POST `/logout` : 로그아웃
@@ -32,13 +32,10 @@ Future<void> sendLogoutRequest(BuildContext context) async {
           removeLoginPlatform();
         },
         onError: (statusCode, message) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return const RecordingErrorDialog(
-                  title: 'Failed to logout', text: 'Please logout again.');
-            },
-          );
+          showCommonDialog(context,
+              dialogType: DialogType.recordingError,
+              customTitle: "Failed to logout",
+              customContent: 'Please logout again.');
         });
   } catch (e) {
     debugPrint("로그아웃 Error: $e");
@@ -48,7 +45,7 @@ Future<void> sendLogoutRequest(BuildContext context) async {
 /// ### POST `/login` : 로그인
 Future<int> sendSocialLoginRequest(
     BuildContext context, String? socialId) async {
-  String url = '$main_url/login';
+  String url = '$mainUrl/login';
   var urlParse = Uri.parse(url);
 
   try {

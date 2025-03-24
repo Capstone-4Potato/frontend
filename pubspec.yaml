@@ -22,7 +22,7 @@ dependencies:
   flutter_native_splash: ^2.3.10
   dcdg: ^4.1.0
   convert: ^3.0.1
-  flutter_svg: ^1.1.6
+  flutter_svg: ^2.0.17
   #firebase_auth: ^4.17.8
   kakao_flutter_sdk: ^1.9.1+2
   kakao_flutter_sdk_user: ^1.2.1
@@ -61,6 +61,7 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   dart_jsonwebtoken: ^2.17.0
   firebase_analytics: ^11.4.4
+  audio_waveforms: ^1.3.0
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +88,8 @@ flutter:
     - assets/tutorial/
     - assets/data/
     - assets/image/home_character/
+    - assets/image/dialog_character/
+    - assets/image/feedback_stamp/
   fonts:
     - family: BM_Jua
       fonts:
@@ -114,6 +117,27 @@ flutter:
         - asset: assets/font/MADE-Tommy-Soft-ExtraBold.otf
           weight: 800
         - asset: assets/font/MADE-Tommy-Soft-Black.otf
+          weight: 900
+
+    - family: Pretendard
+      fonts:
+        - asset: assets/font/Pretendard-Thin.otf
+          weight: 100
+        - asset: assets/font/Pretendard-ExtraLight.otf
+          weight: 200
+        - asset: assets/font/Pretendard-Light.otf
+          weight: 300
+        - asset: assets/font/Pretendard-Regular.otf
+          weight: 400
+        - asset: assets/font/Pretendard-Medium.otf
+          weight: 500
+        - asset: assets/font/Pretendard-SemiBold.otf
+          weight: 600
+        - asset: assets/font/Pretendard-Bold.otf
+          weight: 700
+        - asset: assets/font/Pretendard-ExtraBold.otf
+          weight: 800
+        - asset: assets/font/Pretendard-Black.otf
           weight: 900
 
     - family: CustomIcons

@@ -15,7 +15,7 @@ class TtsService {
   TtsService._internal();
 
   static final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
-  static final String _baseUrl = '$main_url/cards/';
+  static final String _baseUrl = '$mainUrl/cards/';
 
   String? base64CorrectAudio;
 
@@ -43,14 +43,14 @@ class TtsService {
         return;
       } else if (response.statusCode == 401) {
         // 토큰이 만료된 경우
-        print('Access token expired. Refreshing token...');
+        debugPrint('Access token expired. Refreshing token...');
 
         // 토큰 갱신 시도
         bool isRefreshed = await refreshAccessToken();
 
         if (isRefreshed) {
           // 갱신에 성공하면 요청을 다시 시도
-          print('Token refreshed successfully. Retrying request...');
+          debugPrint('Token refreshed successfully. Retrying request...');
           String? newToken = await getAccessToken();
           final retryResponse = await http.get(
             Uri.parse(audioUrl),
@@ -72,7 +72,7 @@ class TtsService {
             throw Exception('Failed to load audio after retry: $errorMessage');
           }
         } else {
-          print('Failed to refresh token. Please log in again.');
+          debugPrint('Failed to refresh token. Please log in again.');
           throw Exception('Failed to refresh token.');
         }
       } else {
@@ -80,7 +80,7 @@ class TtsService {
         throw Exception('Failed to load audio: $errorMessage');
       }
     } catch (e) {
-      print('Error occurred: $e');
+      debugPrint('Error occurred: $e');
       rethrow;
     }
   }
@@ -105,5 +105,12 @@ class TtsService {
     await Future.delayed(const Duration(seconds: 2)); // 혹시 몰라서 딜레이 2초
 
     await _audioPlayer.startPlayer(fromURI: filePath, codec: Codec.pcm16WAV);
+  }
+
+  // audio path 가져오는 함수
+  static Future<String> getCorrectAudioPath(int cardId) async {
+    final String dir = (await getTemporaryDirectory()).path;
+    final String fileName = 'correct_audio_$cardId.wav';
+    return '$dir/$fileName';
   }
 }

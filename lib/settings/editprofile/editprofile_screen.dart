@@ -13,10 +13,10 @@ class ProfileUpdatePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ProfileUpdatePageState createState() => _ProfileUpdatePageState();
+  ProfileUpdatePageState createState() => ProfileUpdatePageState();
 }
 
-class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
+class ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final _formKey = GlobalKey<FormState>();
   final _fieldKey_1 = GlobalKey<FormFieldState>();
   final _fieldKey_2 = GlobalKey<FormFieldState>();

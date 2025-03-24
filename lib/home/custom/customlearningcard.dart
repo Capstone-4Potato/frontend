@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/function.dart';
-import 'package:flutter_application_1/home/custom/customfeedbackui.dart';
-import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/home/custom/customtts.dart';
-import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -98,14 +97,16 @@ class _CustomSentenceLearningCardState
             setState(() {
               _isLoading = false; // Stop loading
             });
-            showFeedbackDialog(context, feedbackData);
+            showFeedbackDialog(context, feedbackData, _recordedFilePath,
+                widget.texts[widget.currentIndex]);
           } else {
             setState(() {
               _isLoading = false; // Stop loading
             });
 
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         } catch (e) {
           setState(() {
@@ -113,15 +114,19 @@ class _CustomSentenceLearningCardState
           });
           if (e.toString() == 'Exception: ReRecordNeeded') {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType:
+                    RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
           } else if (e is TimeoutException) {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context,
-                type: RecordingErrorType.timeout); // 서버 타임아웃
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError,
+                recordingErrorType: RecordingErrorType.timeout); // 서버 타임아웃
           } else {
             if (!mounted) return; // 위젯이 여전히 존재하는지 확인
-            showRecordingErrorDialog(context); // 녹음 오류 dialog
+            showCommonDialog(context,
+                dialogType: DialogType.recordingError); // 녹음 오류 dialog
           }
         }
       }
@@ -149,25 +154,6 @@ class _CustomSentenceLearningCardState
     setState(() {
       _canRecord = true;
     });
-  }
-
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return CustomFeedbackUI(
-          feedbackData: feedbackData,
-          recordedFilePath: _recordedFilePath,
-          text: widget.texts[widget.currentIndex], // 카드 한글 발음
-        );
-      },
-    );
   }
 
   void navigateToCard(int newIndex) {

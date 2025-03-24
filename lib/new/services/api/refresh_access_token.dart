@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 /// ### POST `reissue` : 토큰 재발급
 /// 만료된 또는 유효한 refresh 토큰을 이용하여 새로운 access 및 refresh 토큰을 재발급한다.
 Future<bool> refreshAccessToken() async {
-  String url = '$main_url/reissue';
+  String url = '$mainUrl/reissue';
   try {
     String? refreshToken = await getRefreshToken();
     if (refreshToken == null) {

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,7 @@ class CustomHomeCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.17),
+            color: Colors.black.withValues(alpha: 0.17),
             offset: const Offset(2, 2),
             blurRadius: 5,
             spreadRadius: 0,
@@ -205,7 +207,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                               setState(() {
                                 totalCard = int.parse(value);
                                 _saveTotalCard(int.parse(value));
-                                print("새로 설정된 totalCard 입니다 : $totalCard");
+                                debugPrint("새로 설정된 totalCard 입니다 : $totalCard");
                               });
                             }
                           },
@@ -841,8 +843,6 @@ class ContentTodayMenu extends StatefulWidget {
 class _ContentTodayMenuState extends State<ContentTodayMenu> {
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height / 852;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -854,7 +854,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
         ),
         MenuItem(
           title: 'Learning Course',
-          icon: CustomIcons.learningcourse_icon,
+          icon: CustomIcons.learningCourseIcon,
           onTap: () {
             Navigator.push<void>(
               context,
@@ -870,7 +870,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
         ),
         MenuItem(
           title: 'Saved Cards',
-          icon: CustomIcons.bookmark_icon,
+          icon: CustomIcons.bookmarkIcon,
           onTap: () {
             Navigator.push<void>(
               context,
@@ -884,7 +884,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
         ),
         MenuItem(
           title: 'Missed Cards',
-          icon: CustomIcons.missed_icon,
+          icon: CustomIcons.missedIcon,
           onTap: () {
             Navigator.push<void>(
               context,
@@ -898,7 +898,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
         ),
         MenuItem(
           title: 'Custom Sentence',
-          icon: CustomIcons.custom_icon,
+          icon: CustomIcons.customIcon,
           onTap: () async {
             Navigator.push<int>(
               context,

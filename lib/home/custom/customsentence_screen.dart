@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/home/custom/customlearningcard.dart';
 import 'package:flutter_application_1/new/services/api/custom_card_api.dart';
 import 'package:flutter_application_1/new/services/api/custom_cards_list_api.dart';
-import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,7 +12,7 @@ class CustomSentenceScreen extends StatefulWidget {
   const CustomSentenceScreen({super.key});
 
   @override
-  _CustomSentenceScreenState createState() => _CustomSentenceScreenState();
+  CustomSentenceScreenState createState() => CustomSentenceScreenState();
 }
 
 class Sentence {
@@ -53,7 +53,7 @@ class Sentence {
       };
 }
 
-class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
+class CustomSentenceScreenState extends State<CustomSentenceScreen> {
   List<Sentence> _sentences = [];
   List<int> idList = [];
   List<String> textList = [];
@@ -169,6 +169,8 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
           isAddLoading = false;
         });
       });
+    } else {
+      _showErrorDialog('Please enter a sentence with 50 characters or less.');
     }
   }
 
@@ -188,14 +190,11 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
 
   void _showErrorDialog(String message) {
     if (mounted) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return RecordingErrorDialog(
-            title: "Input Error",
-            text: message,
-          );
-        },
+      showCommonDialog(
+        context,
+        dialogType: DialogType.recordingError,
+        customTitle: "Input Error",
+        customContent: message,
       );
       setState(() {
         isAddLoading = false;
@@ -379,7 +378,7 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.black
-                                                    .withOpacity(0.17),
+                                                    .withValues(alpha: 0.17),
                                                 blurRadius: 5,
                                                 offset: const Offset(2, 2),
                                               ),
@@ -469,7 +468,6 @@ class _CustomSentenceScreenState extends State<CustomSentenceScreen> {
                                                         bookmarkList
                                                             .removeAt(index);
                                                       });
-                                                      print(textList);
                                                     }),
                                               ],
                                             ),

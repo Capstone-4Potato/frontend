@@ -3,16 +3,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/services/api/learning_course_api.dart';
 import 'package:flutter_application_1/tutorial/feedback_tutorial_screen1.dart';
 import 'package:flutter_application_1/tutorial/feedback_tutorial_screen2.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
-import 'package:flutter_application_1/feedback_data.dart';
 import 'package:flutter_application_1/learning_coures/syllables/fetchimage.dart';
-import 'package:flutter_application_1/learning_coures/syllables/syllablefeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
@@ -114,7 +113,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
         });
       }
     } catch (e) {
-      print('Error loading image: $e');
+      debugPrint('Error loading image: $e');
     }
   }
 
@@ -152,13 +151,15 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
               setState(() {
                 _isLoading = false; // Stop loading
               });
-              showFeedbackDialog(context, feedbackData);
+              showFeedbackDialog(context, feedbackData, _recordedFilePath,
+                  widget.texts[widget.currentIndex]);
             } else {
               setState(() {
                 _isLoading = false; // Stop loading
               });
               if (!mounted) return;
-              showRecordingErrorDialog(context);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           } catch (e) {
             setState(() {
@@ -167,15 +168,19 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
             if (e.toString() == 'Exception: ReRecordNeeded') {
               // Show the ReRecordNeeded dialog if the exception occurs
               if (!mounted) return;
-              showRecordingErrorDialog(context,
-                  type: RecordingErrorType.tooShort);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError,
+                  recordingErrorType:
+                      RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
             } else if (e is TimeoutException) {
               if (!mounted) return;
-              showRecordingErrorDialog(context,
-                  type: RecordingErrorType.timeout);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError,
+                  recordingErrorType: RecordingErrorType.timeout); // 서버 타임아웃
             } else {
               if (!mounted) return;
-              showRecordingErrorDialog(context);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           }
         } else {
@@ -197,35 +202,16 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
 
   // 사용자에게 올바른 발음 Listen 버튼 누르면 들려주기
   void _onListenPressed() async {
-    //_setupAudioSession();
+    debugPrint("👾👾👾👾👾👾👾👾${widget.cardIds[widget.currentIndex]}");
     await TtsService.instance
         .playCachedAudio(widget.cardIds[widget.currentIndex]);
+    debugPrint("🐬 ${widget.cardIds[widget.currentIndex]}");
     setState(() {
       _canRecord = true; // 녹음 가능 상태로 설정
       if (feedbackTutorialStep == 1) {
         feedbackTutorialStep = 2; // 1단계 끝나면 2단계로
       }
     });
-  }
-
-  // 피드백 다이얼로그 표시
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return SyllableFeedbackUI(
-          feedbackData: feedbackData,
-          recordedFilePath: _recordedFilePath,
-          text: widget.texts[widget.currentIndex], // 카드 한글 발음
-        );
-      },
-    );
   }
 
   // 학습 종료 확인 다이얼로그 표시
@@ -324,9 +310,9 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
               _loadImage(); // 페이지 변경 시 이미지도 새로 로드
               // 새로 로드된 카드의 발음 오디오 파일 불러오기
               TtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
-                print('Audio fetched and saved successfully.');
+                debugPrint('Audio fetched and saved successfully.');
               }).catchError((error) {
-                print('Error fetching audio: $error');
+                debugPrint('Error fetching audio: $error');
               });
             },
             itemCount: widget.texts.length,
@@ -362,10 +348,10 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                                   TtsService.fetchCorrectAudio(
                                           widget.cardIds[nextIndex])
                                       .then((_) {
-                                    print(
+                                    debugPrint(
                                         'Audio fetched and saved successfully.');
                                   }).catchError((error) {
-                                    print('Error fetching audio: $error');
+                                    debugPrint('Error fetching audio: $error');
                                   });
                                 }
                               : null,
@@ -446,10 +432,10 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                                   TtsService.fetchCorrectAudio(
                                           widget.cardIds[nextIndex])
                                       .then((_) {
-                                    print(
+                                    debugPrint(
                                         'Audio fetched and saved successfully.');
                                   }).catchError((error) {
-                                    print('Error fetching audio: $error');
+                                    debugPrint('Error fetching audio: $error');
                                   });
                                 }
                               : null,

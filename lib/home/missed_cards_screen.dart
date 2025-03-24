@@ -96,7 +96,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
     Map<String, dynamic> result = {};
     try {
       String? token = await getAccessToken();
-      var url = Uri.parse('$main_url/cards/$id');
+      var url = Uri.parse('$mainUrl/cards/$id');
 
       var response = await http.get(url, headers: {
         'access': token!,
@@ -135,7 +135,7 @@ class _MissedCardsScreenState extends State<MissedCardsScreen>
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint("$e");
     }
     return result;
   }

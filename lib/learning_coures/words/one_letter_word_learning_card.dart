@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/functions/show_recording_error_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
+import 'package:flutter_application_1/new/functions/show_feedback_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/learning_coures/syllables/fetchimage.dart';
 import 'package:flutter_application_1/main.dart';
@@ -12,8 +13,6 @@ import 'package:flutter_application_1/new/services/api/learning_course_api.dart'
 import 'package:flutter_application_1/new/services/api/refresh_access_token.dart';
 import 'package:flutter_application_1/new/services/token_manage.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
-import 'package:flutter_application_1/feedback_data.dart';
-import 'package:flutter_application_1/learning_coures/words/wordfeedbackui.dart';
 import 'package:flutter_application_1/function.dart';
 import 'package:flutter_application_1/permissionservice.dart';
 import 'package:flutter_application_1/ttsservice.dart';
@@ -83,7 +82,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
       String? token = await getAccessToken();
       // Backend server URL
       var url =
-          Uri.parse('$main_url/cards/${widget.cardIds[widget.currentIndex]}');
+          Uri.parse('$mainUrl/cards/${widget.cardIds[widget.currentIndex]}');
 
       // Function to make the request
       Future<http.Response> makeRequest(String token) {
@@ -106,7 +105,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
         });
       } else if (response.statusCode == 401) {
         // Token expired, attempt to refresh the token
-        print('Access token expired. Refreshing token...');
+        debugPrint('Access token expired. Refreshing token...');
 
         // Refresh the access token
         bool isRefreshed = await refreshAccessToken();
@@ -128,7 +127,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint('e');
     }
     return; // Return null if there's an error or unsuccessful fetch
   }
@@ -160,7 +159,7 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
         });
       }
     } catch (e) {
-      print('Error loading image: $e');
+      debugPrint('Error loading image: $e');
       if (mounted) {
         setState(() {
           _isImageLoading = false;
@@ -202,13 +201,15 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
               setState(() {
                 _isLoading = false; // Stop loading
               });
-              showFeedbackDialog(context, feedbackData);
+              showFeedbackDialog(context, feedbackData, _recordedFilePath,
+                  widget.texts[widget.currentIndex]);
             } else {
               setState(() {
                 _isLoading = false; // Stop loading
               });
               if (!mounted) return;
-              showRecordingErrorDialog(context);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           } catch (e) {
             setState(() {
@@ -216,15 +217,19 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
             });
             if (e.toString() == 'Exception: ReRecordNeeded') {
               if (!mounted) return;
-              showRecordingErrorDialog(context,
-                  type: RecordingErrorType.tooShort);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError,
+                  recordingErrorType:
+                      RecordingErrorType.tooShort); // 녹음 길이가 너무 짧음
             } else if (e is TimeoutException) {
               if (!mounted) return;
-              showRecordingErrorDialog(context,
-                  type: RecordingErrorType.timeout);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError,
+                  recordingErrorType: RecordingErrorType.timeout); // 서버 타임아웃
             } else {
               if (!mounted) return;
-              showRecordingErrorDialog(context);
+              showCommonDialog(context,
+                  dialogType: DialogType.recordingError); // 녹음 오류 dialog
             }
           }
         } else {
@@ -250,25 +255,6 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
     setState(() {
       _canRecord = true;
     });
-  }
-
-  void showFeedbackDialog(BuildContext context, FeedbackData feedbackData) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: "Feedback",
-      transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return WordFeedbackUI(
-          feedbackData: feedbackData,
-          recordedFilePath: _recordedFilePath,
-          text: widget.texts[widget.currentIndex], // 카드 한글 발음
-        );
-      },
-    );
   }
 
   void _showExitDialog() {
@@ -365,9 +351,9 @@ class _OneLetterWordLearningCardState extends State<OneLetterWordLearningCard> {
             });
             // 새로 로드된 카드의 발음 오디오 파일 불러오기
             TtsService.fetchCorrectAudio(widget.cardIds[value]).then((_) {
-              print('Audio fetched and saved successfully.');
+              debugPrint('Audio fetched and saved successfully.');
             }).catchError((error) {
-              print('Error fetching audio: $error');
+              debugPrint('Error fetching audio: $error');
             });
             fetchData();
           },

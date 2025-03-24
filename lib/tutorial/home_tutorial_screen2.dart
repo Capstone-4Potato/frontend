@@ -57,7 +57,7 @@ class HomeTutorialScreen2 extends StatelessWidget {
         children: [
           // 반투명 배경
           Container(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             width: width,
             height: height,
           ),
@@ -308,7 +308,7 @@ class HomeTutorialScreen2 extends StatelessWidget {
                               color: const Color(0xFFF26647),
                               shape: BoxShape.circle,
                               border: Border.all(
-                                  color: Colors.black.withOpacity(0.4),
+                                  color: Colors.black.withValues(alpha: 0.4),
                                   width: 4.0.w),
                             ),
                             child: const Icon(

@@ -48,7 +48,7 @@ class _FeedbackTutorialScreen1State extends State<FeedbackTutorialScreen1> {
     return Stack(
       children: [
         Container(
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.black.withValues(alpha: 0.6),
           width: width,
           height: height,
         ),

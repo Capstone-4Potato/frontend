@@ -3,12 +3,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/new/functions/show_common_dialog.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/home/home_nav.dart';
 import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
 import 'package:flutter_application_1/widgets/exit_dialog.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/updatecardweaksound.dart';
-import 'package:flutter_application_1/new/widgets/dialogs/recording_error_dialog.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -34,10 +34,10 @@ class TestCard extends StatefulWidget {
   });
 
   @override
-  _TestCardState createState() => _TestCardState();
+  TestCardState createState() => TestCardState();
 }
 
-class _TestCardState extends State<TestCard> {
+class TestCardState extends State<TestCard> {
   late FlutterSoundRecorder _recorder;
   bool _isRecording = false;
   bool _isRecorded = false;
@@ -99,7 +99,7 @@ class _TestCardState extends State<TestCard> {
       if (statusCode == 200) {
         _nextCard();
       } else {
-        _showUploadErrorDialog();
+        showCommonDialog(context, dialogType: DialogType.recordingError);
       }
     }
     setState(() {
@@ -120,17 +120,8 @@ class _TestCardState extends State<TestCard> {
       }
     } else {
       // 녹음이 완료되지 않았을 때 처리
-      _showUploadErrorDialog();
+      showCommonDialog(context, dialogType: DialogType.recordingError);
     }
-  }
-
-  void _showUploadErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const RecordingErrorDialog();
-      },
-    );
   }
 
   void _showCompletionDialog() async {

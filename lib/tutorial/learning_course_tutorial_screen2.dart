@@ -1,6 +1,5 @@
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glowy_borders/glowy_borders.dart';
 
@@ -47,12 +46,11 @@ class _LearningCourseTutorialScreen2State
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    List<String> levels = ['Beginner', 'Intermediate', 'Advanced'];
 
     return Stack(
       children: [
         Container(
-          color: Colors.black.withOpacity(0.6),
+          color: Colors.black.withValues(alpha: 0.6),
           width: width,
           height: height,
         ),

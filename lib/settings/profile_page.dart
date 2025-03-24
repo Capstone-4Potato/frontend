@@ -117,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Divider(
                   color: Color(0xFFBEBDB8),
                 ),
-                _buildSettingsItem('Edit profile', CustomIcons.profile_icon,
+                _buildSettingsItem('Edit profile', CustomIcons.profileIcon,
                     onTap: () {
                   Navigator.push(
                     context,
@@ -126,11 +126,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   );
                 }),
-                _buildSettingsItem('Log out', CustomIcons.logout_icon,
+                _buildSettingsItem('Log out', CustomIcons.logoutIcon,
                     onTap: () {
                   _showLogoutDialog(context);
                 }),
-                _buildSettingsItem('Delete account', CustomIcons.trashcan_icon,
+                _buildSettingsItem('Delete account', CustomIcons.trashcanIcon,
                     onTap: () {
                   Navigator.push(
                     context,
@@ -158,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Divider(
                   color: Color(0xFFBEBDB8),
                 ),
-                _buildSettingsItem('Tutorial', CustomIcons.tutorial_icon,
+                _buildSettingsItem('Tutorial', CustomIcons.tutorialIcon,
                     onTap: () {
                   Navigator.push(
                     context,
