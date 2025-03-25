@@ -48,7 +48,7 @@ class FirestoreListener {
           firestore.collection('device_tokens');
 
       // 토큰을 Firestore에 저장
-      await tokensCollection.doc(userId).set({'token': token, 'user': userId});
+      await tokensCollection.doc(token).set({'token': token, 'user': userId});
       debugPrint("✅ 기기 토큰 저장 성공: $token");
       debugPrint("✅ 사용자 id 저장 성공: $userId");
     } else {
