@@ -25,6 +25,7 @@ class LoginScreen extends StatelessWidget {
             child: Image.asset(
               ImagePath.loginBgText.path,
               width: width,
+              fit: BoxFit.fill,
             ),
           ),
 
@@ -39,7 +40,7 @@ class LoginScreen extends StatelessWidget {
               _buildText('Balbam\nBalbam', AppColors.orange_000, 48.0.h, 1.0),
               SizedBox(height: 125.h),
               _buildText('Log in or sign up to Get Started',
-                  AppColors.brown_000.withValues(alpha: 0.7), 18.0.h),
+                  AppColors.brown_000.withValues(alpha: 0.7), 18.0.h, 1.2),
               SizedBox(height: 16.h),
               _buildSignInButtons(),
             ],
@@ -52,22 +53,11 @@ class LoginScreen extends StatelessWidget {
   /// 로고 아이콘 박스 빌드
   Widget _buildLogoContainer() {
     return Container(
-      width: 58.0.w,
-      height: 58.0.h,
-      alignment: Alignment.bottomCenter,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(0, 218, 43, 43),
-        borderRadius: BorderRadius.circular(10.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
+      alignment: Alignment.center,
       child: SvgPicture.asset(
         ImagePath.loginBalbamCharacter.path,
+        height: 58.0.h,
+        fit: BoxFit.fill,
       ),
     );
   }

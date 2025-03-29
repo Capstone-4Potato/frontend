@@ -14,9 +14,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 소셜로그인 버튼
 class SignInImageButton extends StatelessWidget {
-  LoginPlatform loginPlatform;
+  final LoginPlatform loginPlatform;
 
-  SignInImageButton({
+  const SignInImageButton({
     Key? key,
     required this.loginPlatform,
   }) : super(key: key);
@@ -60,7 +60,7 @@ class SignInImageButton extends StatelessWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.only(left: 25.0.h, right: 25.0.h, top: 21.0.h),
+      padding: EdgeInsets.only(left: 25.0.w, right: 25.0.w, top: 21.0.h),
       child: InkWell(
         onTap: () {
           handleLogin(context);
@@ -78,7 +78,7 @@ class SignInImageButton extends StatelessWidget {
               children: [
                 Icon(
                   loginPlatform.icon,
-                  size: 20,
+                  size: 20.h,
                   color: loginPlatform.textColor,
                 ),
                 SizedBox(width: 15.w),
@@ -87,7 +87,7 @@ class SignInImageButton extends StatelessWidget {
                   style: TextStyle(
                     color: loginPlatform.textColor,
                     fontFamily: FontFamily.bmJua.fontName,
-                    fontSize: 18,
+                    fontSize: 18.h,
                     fontWeight: FontWeight.w400,
                   ),
                 )
