@@ -51,12 +51,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
           ],
         ),
-        title: const Text(
+        title: Text(
           'Noticfications',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.w400,
+            fontSize: 24.h,
           ),
         ),
         backgroundColor: primary,
@@ -119,7 +118,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     backgroundColor: const Color(0xFFFFA069),
                                     child: SvgPicture.asset(
                                       'assets/image/noti_character.svg',
-                                      width: 42.w,
+                                      width: 42.h,
                                       height: 42.h,
                                     ),
                                   ),
@@ -136,6 +135,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                           child: Text(
                                             '${notification["title"]}',
                                             style: TextStyle(
+                                              color: AppColors.black,
                                               fontSize: 16.h,
                                               fontWeight: FontWeight.w400,
                                             ),
@@ -153,7 +153,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 MainAxisAlignment.end,
                                             children: [
                                               Container(
-                                                width: 4.w,
+                                                width: 4.h,
                                                 height: 4.h,
                                                 decoration: const BoxDecoration(
                                                   shape: BoxShape.circle,
@@ -171,7 +171,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 ),
                                               ),
                                               Container(
-                                                width: 10.w,
+                                                width: 10.h,
                                                 height: 10.h,
                                                 margin: EdgeInsets.all(8.w),
                                                 decoration: BoxDecoration(
