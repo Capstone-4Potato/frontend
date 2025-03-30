@@ -18,6 +18,7 @@ import 'package:flutter_application_1/tutorial/report_tutorial_screen1.dart';
 import 'package:flutter_application_1/tutorial/report_tutorial_screen2.dart';
 import 'package:flutter_application_1/widgets/success_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeNav extends StatefulWidget {
@@ -104,7 +105,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
       CustomIcons.homeIcon,
       CustomIcons.reportIcon,
     ];
-    List<String> labelList = ['Home', 'Report'];
+    List<String> labelList = ['Home', 'My Report'];
 
     return Stack(
       children: [
@@ -113,11 +114,11 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
           body: _screens[widget.bottomNavIndex], // 현재 선택된 화면을 표시
           floatingActionButton: Container(
             key: keys['homeNavFabKey'],
-            width: 98.w,
+            width: 98.h,
             height: 98.h,
             decoration: BoxDecoration(
               color: const Color(0xFFF26647),
-              borderRadius: BorderRadius.circular(100),
+              shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.25),
@@ -130,7 +131,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
             child: IconButton(
               icon: Icon(
                 CustomIcons.todaycourseIcon,
-                size: 44.sp,
+                size: 44.h,
               ),
               color: Colors.white,
               onPressed: () async {
@@ -170,24 +171,26 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
             itemCount: iconList.length,
             tabBuilder: (index, isActive) {
               final color = isActive ? AppColors.icon_000 : AppColors.icon_001;
+
               return Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  SizedBox(
-                    height: 10.h,
-                  ),
+                  // SizedBox(
+                  //   height: 10.h,
+                  // ),
                   Icon(
                     iconList[index],
-                    size: 20.sp,
+                    size: 20.h,
                     color: color,
                   ),
                   Text(
                     labelList[index],
-                    style: TextStyle(color: color),
-                  ),
+                    style: GoogleFonts.breeSerif(color: color, fontSize: 10.h),
+                  )
                 ],
               );
             },
+            height: 70.h,
             activeIndex: widget.bottomNavIndex,
             gapLocation: GapLocation.center,
             notchSmoothness: NotchSmoothness.sharpEdge,

@@ -23,7 +23,7 @@ class HomeCharacter extends StatelessWidget {
     ];
     return SvgPicture.asset(
       imagePath[characterIndex],
-      width: 130.w,
+      height: 93.h,
     );
   }
 }

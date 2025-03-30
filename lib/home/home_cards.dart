@@ -10,6 +10,7 @@ import 'package:flutter_application_1/home/today_learning_card.dart';
 import 'package:flutter_application_1/home/missed_cards_screen.dart';
 import 'package:flutter_application_1/home/saved_cards_screen.dart';
 import 'package:flutter_application_1/learning_coures/learning_course_screen.dart';
+import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/services/api/attendance_api.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -148,7 +149,10 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
         Text(
           "Today's Goal",
           style: TextStyle(
-            fontSize: 12.h,
+            fontSize: 14.h,
+            fontWeight: FontWeight.w400,
+            wordSpacing: -0.32,
+            height: 1.2,
           ),
         ),
         Container(
@@ -253,14 +257,16 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                       AutoSizeText(
                         "$learnedCardCount/$totalCard",
                         style: TextStyle(
-                          fontSize: 11.w,
+                          fontSize: 14.h,
                           fontWeight: FontWeight.w500,
+                          wordSpacing: -0.32,
+                          height: 1.2,
                         ),
                       ),
                       if (checkTodayCourse)
                         Icon(
                           Icons.arrow_drop_down_rounded,
-                          size: 24.w,
+                          size: 24.h,
                         ),
                     ],
                   ),
@@ -269,9 +275,9 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
             ),
           ],
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 14.0),
-          child: Divider(
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 14.0.h),
+          child: const Divider(
             height: 1,
             thickness: 1,
             color: Color.fromARGB(255, 213, 213, 213),
@@ -288,11 +294,11 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                     backgroundColor: Colors.transparent,
                     insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Container(
-                      height: 434.h,
-                      width: 353.w,
+                      height: 425.h,
+                      width: 353.h,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -324,16 +330,16 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                   },
                                   weekdayStyle: TextStyle(
                                     color: const Color(0xFF666560),
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 12.h,
                                   ),
                                   weekendStyle: TextStyle(
                                     color: const Color(0xFF666560),
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 12.h,
                                   ),
                                 ),
-                                daysOfWeekHeight: 40,
+                                daysOfWeekHeight: 40.h,
                                 headerStyle: HeaderStyle(
                                   headerMargin: const EdgeInsets.all(0),
                                   headerPadding: const EdgeInsets.all(0),
@@ -383,6 +389,8 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                     color: Colors.white,
                                                     fontSize: 14.h,
                                                     fontWeight: FontWeight.w600,
+                                                    fontFamily: FontFamily
+                                                        .pretendard.fontName,
                                                   ),
                                                 ),
                                               ),
@@ -394,7 +402,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                             children: [
                                               Container(
                                                 height: 30.h,
-                                                width: 30.w,
+                                                width: 30.h,
                                                 alignment: Alignment.center,
                                                 decoration: const BoxDecoration(
                                                   color: Colors.white,
@@ -402,10 +410,12 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 ),
                                                 child: Text(
                                                   day.day.toString(),
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Colors.black,
-                                                    fontSize: 14,
+                                                    fontSize: 14.h,
                                                     fontWeight: FontWeight.w600,
+                                                    fontFamily: FontFamily
+                                                        .pretendard.fontName,
                                                   ),
                                                 ),
                                               ),
@@ -432,10 +442,12 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                                 ),
                                                 child: Text(
                                                   day.day.toString(),
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w600,
+                                                    fontFamily: FontFamily
+                                                        .pretendard.fontName,
                                                   ),
                                                 ),
                                               ),
@@ -447,15 +459,18 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                                             children: [
                                               Container(
                                                 height: 30.h,
-                                                width: 30.w,
+                                                width: 30.h,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   shape: BoxShape.circle,
                                                   border: Border.all(
-                                                      color: const Color(
-                                                          0xFFFFDBB5),
-                                                      width: 3.w),
+                                                    color:
+                                                        const Color(0xFFFFDBB5),
+                                                    width: 3.w,
+                                                    strokeAlign: BorderSide
+                                                        .strokeAlignOutside,
+                                                  ),
                                                 ),
                                                 child: Text(
                                                   day.day.toString(),
@@ -566,19 +581,20 @@ class NoStamp extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       height: 32.h,
-      width: 32.w,
+      width: 32.h,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(100),
         border: Border.all(
           color: const Color.fromARGB(255, 213, 213, 213),
-          width: 3.w,
+          width: 3.h,
         ),
       ),
       child: Text(
         days[index],
-        style: const TextStyle(
-          color: Color.fromARGB(255, 213, 213, 213),
+        style: TextStyle(
+          color: const Color.fromARGB(255, 213, 213, 213),
+          fontSize: 15.h,
         ),
       ),
     );
@@ -602,18 +618,18 @@ class Stamp extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       height: 32.h,
-      width: 32.w,
+      width: 32.h,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(100),
         border: Border.all(
           color: AppColors.primary,
-          width: 3.w,
+          width: 3.h,
         ),
       ),
       child: Text(
         days[index],
-        style: const TextStyle(color: AppColors.primary),
+        style: TextStyle(color: AppColors.primary, fontSize: 15.h),
       ),
     );
   }
@@ -642,8 +658,9 @@ class ContentTodayCard extends StatelessWidget {
             Text(
               "Today's Card",
               style: TextStyle(
-                fontSize: 12.h,
-              ),
+                  fontSize: 12.h,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: FontFamily.pretendard.fontName),
             ),
             Text(
               dailyWord!,
@@ -684,10 +701,11 @@ class ContentTodayCard extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 14.0.w, vertical: 8.0.h),
-                      child: const Text(
+                      child: Text(
                         'Try it →',
                         style: TextStyle(
                           color: Colors.white,
+                          fontSize: 16.h,
                         ),
                       ),
                     ),
@@ -735,16 +753,17 @@ class ContentCustomCard extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 14.0.w, vertical: 8.0.h),
-                      child: const Text(
+                      child: Text(
                         'Try it →',
                         style: TextStyle(
-                          color: Colors.white,
-                        ),
+                            color: Colors.white,
+                            fontSize: 16.h,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -804,10 +823,11 @@ class ContentLearningCourseCard extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 14.0.w, vertical: 8.0.h),
-                      child: const Text(
+                      child: Text(
                         'Try it →',
                         style: TextStyle(
                           color: Colors.white,
+                          fontSize: 16.h,
                         ),
                       ),
                     ),
@@ -850,6 +870,7 @@ class _ContentTodayMenuState extends State<ContentTodayMenu> {
           "Menu",
           style: TextStyle(
             fontSize: 16.h,
+            fontWeight: FontWeight.w500,
           ),
         ),
         MenuItem(
@@ -962,7 +983,7 @@ class MenuItem extends StatelessWidget {
                   Icon(
                     icon,
                     color: AppColors.icon_001,
-                    size: 20.sp,
+                    size: 20.h,
                   ),
                   Container(
                     width: 8.w,
@@ -980,7 +1001,7 @@ class MenuItem extends StatelessWidget {
                 children: [
                   showCount
                       ? Container(
-                          width: 26.w,
+                          width: 26.h,
                           height: 26.h,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
@@ -999,9 +1020,10 @@ class MenuItem extends StatelessWidget {
                   Container(
                     width: 15.w,
                   ),
-                  const Icon(
+                  Icon(
                     Icons.arrow_forward_ios,
                     color: AppColors.icon_001,
+                    size: 20.h,
                   ),
                 ],
               ),

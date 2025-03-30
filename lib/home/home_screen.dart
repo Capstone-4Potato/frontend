@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Center(
                                 child: CircleAvatar(
                                   key: widget.keys['avatarKey'],
-                                  radius: 101.r,
+                                  radius: 101.h, // 반지름
                                   backgroundColor: AppColors.orange_001,
                                   child: HomeCharacter(
                                     characterIndex: characterIndex,
@@ -186,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Center(
                                 child: SimpleCircularProgressBar(
                                   key: widget.keys['progressbarKey'],
-                                  size: 220.w,
+                                  size: 220.h,
                                   maxValue: levelExperience!.toDouble(),
                                   progressStrokeWidth: 6.w,
                                   backStrokeWidth: 6.w,
@@ -214,6 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       child: Text(
                                         'Level $userLevel',
+                                        style: TextStyle(fontSize: 16.h),
                                       ),
                                     ),
                                     Container(
@@ -227,74 +228,78 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    Row(
-                      // 상단 메뉴 아이콘들
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Stack(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const NotificationScreen(),
-                                  ),
-                                ).then((updateHasUnreadNotification) {
-                                  if (updateHasUnreadNotification != null) {
-                                    setState(() {
-                                      hasUnreadNotifications =
-                                          !updateHasUnreadNotification;
-                                      characterIndex =
-                                          determineCharacter(); // 모든 데이터가 로드된 후 캐릭터 설정
-                                    });
-                                  }
-                                });
-                              },
-                              icon: Icon(
-                                CustomIcons.notificationIcon,
-                                color: AppColors.icon_001,
-                                size: 20.sp,
-                              ),
-                            ),
-                            if (hasUnreadNotifications!)
-                              Positioned(
-                                right: 10.w,
-                                top: 12.h,
-                                child: Container(
-                                  width: 5.w,
-                                  height: 5.h,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFFF2EBE3),
-                                    shape: BoxShape.circle,
-                                  ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 20.0.w),
+                      child: Row(
+                        // 상단 메뉴 아이콘들
+                        mainAxisAlignment: MainAxisAlignment.end,
+
+                        children: [
+                          Stack(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const NotificationScreen(),
+                                    ),
+                                  ).then((updateHasUnreadNotification) {
+                                    if (updateHasUnreadNotification != null) {
+                                      setState(() {
+                                        hasUnreadNotifications =
+                                            !updateHasUnreadNotification;
+                                        characterIndex =
+                                            determineCharacter(); // 모든 데이터가 로드된 후 캐릭터 설정
+                                      });
+                                    }
+                                  });
+                                },
+                                icon: Icon(
+                                  CustomIcons.notificationIcon,
+                                  color: AppColors.icon_001,
+                                  size: 24.h,
                                 ),
                               ),
-                          ],
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push<void>(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (BuildContext context) =>
-                                    const ProfilePage(),
-                              ),
-                            );
-                          },
-                          icon: Icon(
-                            CustomIcons.settingIcon,
-                            color: AppColors.icon_001,
-                            size: 20.sp,
+                              if (hasUnreadNotifications!)
+                                Positioned(
+                                  right: 0.w,
+                                  top: 0.h,
+                                  child: Container(
+                                    width: 5.w,
+                                    height: 5.h,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFFF2EBE3),
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
-                        ),
-                      ],
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push<void>(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const ProfilePage(),
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              CustomIcons.settingIcon,
+                              color: AppColors.icon_001,
+                              size: 24.h,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     DraggableScrollableSheet(
                       // 드래그 시트
-                      initialChildSize: (0.56).h,
-                      minChildSize: (0.56).h,
+                      initialChildSize: 0.60,
+                      minChildSize: 0.60,
                       // maxChildSize: (665 / 665).h,
                       shouldCloseOnMinExtent: true,
                       expand: true,
