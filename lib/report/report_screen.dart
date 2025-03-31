@@ -191,7 +191,7 @@ class _ReportScreenState extends State<ReportScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 10,
+          toolbarHeight: 10.h,
           backgroundColor: background,
           scrolledUnderElevation: 0,
         ),
@@ -202,8 +202,8 @@ class _ReportScreenState extends State<ReportScreen> {
               ))
             : SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 25.0, right: 25.0, bottom: 50.0),
+                  padding: EdgeInsets.only(
+                      left: 25.0.w, right: 25.0.w, bottom: 50.0.h),
                   child: Column(
                     children: [
                       Row(
@@ -212,12 +212,12 @@ class _ReportScreenState extends State<ReportScreen> {
                           Text.rich(
                             TextSpan(
                               text: 'Hello,\n',
-                              style: const TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16.h),
                               children: <TextSpan>[
                                 TextSpan(
                                   text: '$nickname 👋',
-                                  style: const TextStyle(
-                                    fontSize: 24,
+                                  style: TextStyle(
+                                    fontSize: 24.h,
                                   ),
                                 ),
                               ],
@@ -230,7 +230,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   const Color.fromARGB(255, 242, 235, 227),
                               child: SvgPicture.asset(
                                 ImagePath.balbamCharacter5.path,
-                                width: 50.w,
+                                width: 50.h,
                                 height: 50.h,
                               ),
                             ),
@@ -241,7 +241,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         key: widget.keys['reportAnalysisItemKey'],
                         padding: EdgeInsets.only(top: 24.0.h),
                         child: Wrap(
-                          spacing: 40.w,
+                          spacing: 45.w,
                           children: [
                             AnalysisItem(
                               icon: '🕰️',
@@ -269,12 +269,12 @@ class _ReportScreenState extends State<ReportScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "Weekly Average",
                               style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 15.h,
                                 fontWeight: FontWeight.w400,
-                                color: Color(0xFFBEBDB8),
+                                color: const Color(0xFFBEBDB8),
                               ),
                             ),
                             Row(
@@ -283,16 +283,16 @@ class _ReportScreenState extends State<ReportScreen> {
                                 Text.rich(
                                   TextSpan(
                                     text: '$weeklyAverageCards ',
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      color: Color(0xFF5E5D58),
+                                    style: TextStyle(
+                                      fontSize: 24.h,
+                                      color: const Color(0xFF5E5D58),
                                     ),
-                                    children: const <TextSpan>[
+                                    children: <TextSpan>[
                                       TextSpan(
                                         text: 'cards',
                                         style: TextStyle(
-                                          fontSize: 15,
-                                          color: Color(0xFFBEBDB8),
+                                          fontSize: 15.h,
+                                          color: const Color(0xFFBEBDB8),
                                         ),
                                       ),
                                     ],
@@ -301,7 +301,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               ],
                             ),
                             Container(
-                              height: 15 * height,
+                              height: 15.h,
                             ),
                             AspectRatio(
                               aspectRatio: 382 / 265,
@@ -322,7 +322,7 @@ class _ReportScreenState extends State<ReportScreen> {
                             'Today\'s Course Level',
                             style: TextStyle(
                               color: const Color(0xFF5E5D58),
-                              fontSize: 15.sp,
+                              fontSize: 15.h,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -356,13 +356,13 @@ class _ReportScreenState extends State<ReportScreen> {
                               underline: const SizedBox(),
                               style: TextStyle(
                                 color: bam,
-                                fontSize: 12.sp,
+                                fontSize: 12.h,
                               ),
                               items: levelOptions.map((entry) {
                                 return DropdownMenuItem<String>(
                                   value: entry,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(8.0.h),
                                     child: Text(entry),
                                   ),
                                 );
@@ -381,7 +381,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               'This level will be reflected in the Today\'s Course card level.',
                               style: TextStyle(
                                 color: const Color(0xFFBEBDB8),
-                                fontSize: 12.sp,
+                                fontSize: 12.h,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -392,17 +392,16 @@ class _ReportScreenState extends State<ReportScreen> {
                         key: widget.keys['vulnerablePhonemesKey'],
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Vulnerable Phonemes',
                             style: TextStyle(
-                              color: Color(0xFF5E5D58),
-                              fontSize: 15,
+                              color: const Color(0xFF5E5D58),
+                              fontSize: 15.h,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.symmetric(vertical: 6.0 * height),
+                            padding: EdgeInsets.symmetric(vertical: 6.0.h),
                             child: TextButton.icon(
                               onPressed: () async {
                                 fetchPhoneme();
@@ -418,30 +417,29 @@ class _ReportScreenState extends State<ReportScreen> {
                                           surfaceTintColor: Colors.transparent,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(16.0),
+                                                BorderRadius.circular(16.0.r),
                                           ),
-                                          insetPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 20.0,
-                                                  vertical: 130.0),
+                                          insetPadding: EdgeInsets.symmetric(
+                                              horizontal: 20.0.w,
+                                              vertical: 130.0.h),
                                           child: Column(
                                             children: [
                                               Container(
-                                                decoration: const BoxDecoration(
-                                                    color: Color(0xFFF5F5F5),
+                                                decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFFF5F5F5),
                                                     borderRadius:
                                                         BorderRadius.only(
-                                                      topRight:
-                                                          Radius.circular(16.0),
-                                                      topLeft:
-                                                          Radius.circular(16.0),
+                                                      topRight: Radius.circular(
+                                                          16.0.r),
+                                                      topLeft: Radius.circular(
+                                                          16.0.r),
                                                     )),
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 32.0,
-                                                          right: 27.0,
-                                                          left: 27.0),
+                                                  padding: EdgeInsets.only(
+                                                      top: 32.0.h,
+                                                      right: 27.0.w,
+                                                      left: 27.0.w),
                                                   child: Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -482,10 +480,10 @@ class _ReportScreenState extends State<ReportScreen> {
                                                         phonemes[
                                                                 _currentPageIndex]
                                                             .name,
-                                                        style: const TextStyle(
-                                                          color:
-                                                              Color(0xFF282722),
-                                                          fontSize: 20,
+                                                        style: TextStyle(
+                                                          color: const Color(
+                                                              0xFF282722),
+                                                          fontSize: 20.h,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                         ),
@@ -596,22 +594,18 @@ class _ReportScreenState extends State<ReportScreen> {
                                                                 children: [
                                                                   Expanded(
                                                                     child: GridView.builder(
-                                                                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                                                           crossAxisCount:
                                                                               2, // 행당 아이템 수
                                                                           crossAxisSpacing:
-                                                                              20.0, // 열 간격
+                                                                              20.0.h, // 열 간격
                                                                           mainAxisSpacing:
-                                                                              20.0, // 행 간격
+                                                                              20.0.w, // 행 간격
                                                                           childAspectRatio:
-                                                                              138 / 88, // 가로:세로 비율
+                                                                              138.h / 88.h, // 가로:세로 비율
                                                                         ),
                                                                         itemCount: currentList.length,
                                                                         itemBuilder: (context, index) {
-                                                                          Color
-                                                                              backgroundColor =
-                                                                              Colors.white;
-
                                                                           // 리스트 길이 검증
                                                                           if (index >=
                                                                               currentList.length) {
@@ -644,16 +638,16 @@ class _ReportScreenState extends State<ReportScreen> {
                                                                               child: Container(
                                                                                 alignment: Alignment.center,
                                                                                 decoration: BoxDecoration(
-                                                                                  borderRadius: BorderRadius.circular(12.0),
+                                                                                  borderRadius: BorderRadius.circular(12.0.r),
                                                                                   border: Border.all(
                                                                                     color: currentList[index]['weak'] || addPhonemes.contains(currentList[index]['id']) ? Colors.transparent : const Color(0xFFF26647),
                                                                                   ),
                                                                                 ),
                                                                                 child: Text(
                                                                                   currentList[index]['text'] ?? 'N/A',
-                                                                                  style: const TextStyle(
-                                                                                    fontSize: 32,
-                                                                                    color: Color(0xFF282722),
+                                                                                  style: TextStyle(
+                                                                                    fontSize: 32.h,
+                                                                                    color: const Color(0xFF282722),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -672,8 +666,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                                 },
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 12.0),
+                                                padding: EdgeInsets.only(
+                                                    top: 12.0.h),
                                                 child: TextButton(
                                                   onPressed: () async {
                                                     setState(() {
@@ -703,17 +697,17 @@ class _ReportScreenState extends State<ReportScreen> {
                                                         RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              10),
+                                                              10.r),
                                                     ),
                                                     fixedSize:
                                                         const Size.fromWidth(
                                                             double.maxFinite),
                                                   ),
-                                                  child: const Text(
+                                                  child: Text(
                                                     'Add',
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontSize: 20,
+                                                      fontSize: 20.h,
                                                     ),
                                                   ),
                                                 ),
@@ -728,10 +722,9 @@ class _ReportScreenState extends State<ReportScreen> {
                                 foregroundColor: const Color(0xFF5E5D58),
                                 backgroundColor: const Color(0xFFF2EBE3),
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 12 * width,
-                                    vertical: 5 * height),
+                                    horizontal: 12.w, vertical: 5.h),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4.0),
+                                  borderRadius: BorderRadius.circular(4.0.r),
                                 ),
                                 surfaceTintColor: Colors.transparent,
                               ),
@@ -743,10 +736,10 @@ class _ReportScreenState extends State<ReportScreen> {
                                   fontSize: 24.h,
                                 ),
                               ),
-                              label: const Text(
+                              label: Text(
                                 'Add phonemes',
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 13.h,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -757,17 +750,18 @@ class _ReportScreenState extends State<ReportScreen> {
                             children: [
                               weakPhonemes!.isEmpty
                                   ? Container(
-                                      padding: const EdgeInsets.all(30.0),
+                                      padding: EdgeInsets.all(30.0.h),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFF2EBE3),
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                       ),
-                                      child: const Center(
+                                      child: Center(
                                         child: Text(
                                           'You got no data for your vulnerable phonemes.\nTry out pronunciation test below!',
                                           style: TextStyle(
-                                            color: Color(0xFF5E5D58),
-                                            fontSize: 13,
+                                            color: const Color(0xFF5E5D58),
+                                            fontSize: 13.h,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
@@ -812,7 +806,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                       ),
                                     ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 12.0),
+                                padding: EdgeInsets.only(top: 12.0.h),
                                 child: Center(
                                   child: TextButton(
                                     onPressed: () async {
@@ -856,20 +850,21 @@ class _ReportScreenState extends State<ReportScreen> {
                                     style: TextButton.styleFrom(
                                       backgroundColor: primary,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius:
+                                            BorderRadius.circular(10.r),
                                       ),
                                       fixedSize: const Size.fromWidth(
                                           double.maxFinite),
                                     ),
-                                    child: const Padding(
+                                    child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                        vertical: 3,
+                                        vertical: 3.h,
                                       ),
                                       child: Text(
                                         'Pronunciation Test',
                                         style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 15,
+                                          fontSize: 15.h,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
@@ -913,11 +908,11 @@ class _ReportScreenState extends State<ReportScreen> {
                 fontWeight: FontWeight.w400,
               ),
               children: <TextSpan>[
-                const TextSpan(
+                TextSpan(
                   text: ' cards',
                   style: TextStyle(
-                    color: Color(0xFF92918C), //widget.touchedBarColor,
-                    fontSize: 10,
+                    color: const Color(0xFF92918C), //widget.touchedBarColor,
+                    fontSize: 10.h,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -943,22 +938,22 @@ class _ReportScreenState extends State<ReportScreen> {
           sideTitles: SideTitles(
             showTitles: true,
             getTitlesWidget: getTitles,
-            reservedSize: 30,
+            reservedSize: 30.h,
             interval: 1,
           ),
         ),
         rightTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 30,
+            reservedSize: 30.w,
             interval: (maxCardValue / 5).toDouble(),
             getTitlesWidget: (value, meta) {
               return Container(
-                padding: const EdgeInsets.only(left: 10),
+                padding: EdgeInsets.only(left: 10.w),
                 child: Text(value.toInt().toString(),
-                    style: const TextStyle(
-                      color: Color(0xFFBEBDB8),
-                      fontSize: 15,
+                    style: TextStyle(
+                      color: const Color(0xFFBEBDB8),
+                      fontSize: 15.h,
                       fontWeight: FontWeight.w400,
                     )),
               );
@@ -986,15 +981,15 @@ class _ReportScreenState extends State<ReportScreen> {
       gridData: FlGridData(
         show: true,
         horizontalInterval: maxCardValue / 5,
-        getDrawingHorizontalLine: (value) => const FlLine(
-          color: Color(0xFFD8D7D6),
-          strokeWidth: 1,
+        getDrawingHorizontalLine: (value) => FlLine(
+          color: const Color(0xFFD8D7D6),
+          strokeWidth: 1.h,
           dashArray: [1, 1],
         ),
         verticalInterval: 1 / 7,
-        getDrawingVerticalLine: (value) => const FlLine(
-          color: Color(0xFFD8D7D6),
-          strokeWidth: 1,
+        getDrawingVerticalLine: (value) => FlLine(
+          color: const Color(0xFFD8D7D6),
+          strokeWidth: 1.h,
           dashArray: [1, 1],
         ),
       ),
@@ -1006,7 +1001,7 @@ class _ReportScreenState extends State<ReportScreen> {
             color: weeklyAverageCards!.toDouble() == 0
                 ? Colors.transparent
                 : const Color(0xFFF26647),
-            strokeWidth: 1.0,
+            strokeWidth: 1.0.w,
           )
         ],
       ),
@@ -1016,10 +1011,10 @@ class _ReportScreenState extends State<ReportScreen> {
   /// 가로 축 title 정의
   Widget getTitles(double value, TitleMeta meta) {
     // x 축 text style
-    const style = TextStyle(
-      color: Color(0xFF5E5D58),
+    final style = TextStyle(
+      color: const Color(0xFF5E5D58),
       fontWeight: FontWeight.w400,
-      fontSize: 12,
+      fontSize: 12.h,
     );
     List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 
@@ -1030,8 +1025,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 10, // 축과 text 간 공간
-
+      space: 10.h, // 축과 text 간 공간
       child: text,
     );
   }
@@ -1043,8 +1037,6 @@ class _ReportScreenState extends State<ReportScreen> {
     bool isTouched = false,
     List<int> showTooltips = const [],
   }) {
-    double width = MediaQuery.of(context).size.width / 392;
-
     return BarChartGroupData(
       x: x,
       barRods: [
@@ -1056,11 +1048,11 @@ class _ReportScreenState extends State<ReportScreen> {
                   ? const Color(0xFFF26647) // 오늘 요일은 주황색
                   : const Color(0xFFF9C6A9)
               : Colors.transparent,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(3),
-            topRight: Radius.circular(3),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(3.r),
+            topRight: Radius.circular(3.r),
           ),
-          width: 29 * width,
+          width: 30.w,
         ),
       ],
       showingTooltipIndicators: showTooltips,
@@ -1157,7 +1149,7 @@ class VulnerableCardItem extends StatelessWidget {
                 },
                 child: Container(
                   height: 27.h,
-                  width: 27.w,
+                  width: 27.h,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: const Color(0xFFEDEBE9),
@@ -1166,7 +1158,7 @@ class VulnerableCardItem extends StatelessWidget {
                   child: Icon(
                     CustomIcons.cancelIcon,
                     color: const Color(0xFF92918C),
-                    size: 12.sp,
+                    size: 12.h,
                   ),
                 ),
               ),
@@ -1213,31 +1205,35 @@ class AnalysisItem extends StatelessWidget {
           backgroundColor: const Color.fromARGB(255, 242, 235, 227),
           child: Text(
             icon,
-            style: const TextStyle(
-              fontSize: 28,
+            style: TextStyle(
+              fontSize: 28.h,
             ),
           ),
         ),
+        SizedBox(
+          height: 9.h,
+        ),
         Text(
           title,
-          style: const TextStyle(
-            color: Color(0xFF5E5D58),
+          style: TextStyle(
+            color: const Color(0xFF5E5D58),
+            fontSize: 15.h,
           ),
         ),
         Text.rich(
           TextSpan(
             text: '$value',
-            style: const TextStyle(
-              fontSize: 20,
+            style: TextStyle(
+              fontSize: 24.h,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF5E5D58),
+              color: const Color(0xFF5E5D58),
             ),
             children: <TextSpan>[
               TextSpan(
                 text: ' $unit',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Color(0xFFBEBDB8),
+                style: TextStyle(
+                  fontSize: 12.h,
+                  color: const Color(0xFFBEBDB8),
                 ),
               ),
             ],
@@ -1254,7 +1250,7 @@ class DottedLineHorizontalPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = const Color(0xFFD8D7D6)
-      ..strokeWidth = 1
+      ..strokeWidth = 1.w
       ..style = PaintingStyle.stroke;
 
     const dashWidth = 1;
