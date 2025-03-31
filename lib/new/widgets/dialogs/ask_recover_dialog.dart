@@ -47,8 +47,8 @@ void askRecoverDialog(BuildContext context, String? socialId) {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         alignment: Alignment.center,
-        insetPadding: const EdgeInsets.symmetric(
-          horizontal: 26,
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: 26.h,
         ),
         child: Container(
           width: 340.0.w,
@@ -77,7 +77,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AppColors.orange_000,
-                          fontSize: 24.sp,
+                          fontSize: 24.h,
                           fontWeight: FontWeight.w600,
                           height: 1.0,
                         ),
@@ -88,7 +88,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                         child: Text(
                           'If you restore your account, you can use your previous account.',
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 14.h,
                             fontWeight: FontWeight.w400,
                             color: AppColors.gray_003,
                           ),
@@ -109,12 +109,12 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                                 color: AppColors.gray_000,
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
-                              child: const Center(
+                              child: Center(
                                   child: Text(
                                 'Delete',
                                 style: TextStyle(
                                   color: AppColors.gray_003,
-                                  fontSize: 14,
+                                  fontSize: 14.h,
                                   fontWeight: FontWeight.w500,
                                 ),
                               )),
@@ -131,12 +131,12 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                                 color: AppColors.orange_000,
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
-                              child: const Center(
+                              child: Center(
                                   child: Text(
                                 'Restore',
                                 style: TextStyle(
                                   color: AppColors.white_000,
-                                  fontSize: 14,
+                                  fontSize: 14.h,
                                   fontWeight: FontWeight.w500,
                                 ),
                               )),
@@ -153,7 +153,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                 right: 50,
                 left: 50,
                 child: Container(
-                  width: 100.w,
+                  width: 100.h,
                   height: 100.h,
                   alignment: Alignment.bottomCenter,
                   decoration: const BoxDecoration(
@@ -163,7 +163,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
                   child: ClipOval(
                     child: SvgPicture.asset(
                       ImagePath.recoverDialogBalbam.path,
-                      width: 100.0.w,
+                      width: 100.0.h,
                     ),
                   ),
                 ),

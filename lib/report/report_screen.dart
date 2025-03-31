@@ -13,7 +13,7 @@ import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart'
 import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/re_test_page.dart';
 import 'package:flutter_application_1/report/phonemes_class.dart';
-import 'package:flutter_application_1/widgets/previous_test_found_dialog.dart';
+import 'package:flutter_application_1/new/widgets/dialogs/previous_test_found_dialog.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -812,36 +812,8 @@ class _ReportScreenState extends State<ReportScreen> {
                                     onPressed: () async {
                                       bool check =
                                           await getUnfinishedTestRequest(); // 이전에 진행하던 테스트가 있는지 체크
-                                      check
-                                          ? showDialog(
-                                              context: context,
-                                              barrierDismissible: true,
-                                              builder: (BuildContext context) {
-                                                return PreviousTestDialog(
-                                                  leftTap: () {
-                                                    // 이전 테스트 계속하기 로직 추가 가능
-                                                    Navigator.push<void>(
-                                                      context,
-                                                      MaterialPageRoute<void>(
-                                                        builder: (BuildContext
-                                                                builder) =>
-                                                            RestartTestScreen(
-                                                          check: true,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  rightTap: () {
-                                                    // 테스트 재시작 화면으로 이동
-                                                    context.navigateTo(
-                                                        screen:
-                                                            RestartTestScreen(
-                                                      check: false,
-                                                    ));
-                                                  },
-                                                );
-                                              },
-                                            )
+                                      !check
+                                          ? showPreviousTestFoundDialog(context)
                                           : context.navigateTo(
                                               screen: RestartTestScreen(
                                               check: check,
