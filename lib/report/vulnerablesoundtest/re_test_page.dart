@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/testcard.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RestartTestScreen extends StatefulWidget {
   RestartTestScreen({
@@ -56,42 +57,40 @@ class _RestartTestScreenState extends State<RestartTestScreen> {
       backgroundColor: const Color(0xFFF5F5F5),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const SizedBox(height: 160.0),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 "Before we start learning,\n let's take a simple test.",
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22.0.h, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(height: 10.0),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 "View the pronunciation guide on the card,\nand record yourself mimicking it slowly.",
                 style: TextStyle(
-                    fontSize: 16.0,
-                    //fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 74, 74, 74)),
+                    fontSize: 16.0.h,
+                    color: const Color.fromARGB(255, 74, 74, 74)),
                 textAlign: TextAlign.center,
               ),
             ),
             //SizedBox(height: 30.0),
             const SizedBox(height: 5.0),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 "It takes about 3 minutes.",
                 style: TextStyle(
-                    fontSize: 16.0,
-                    //fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 74, 74, 74)),
+                    fontSize: 16.0.h,
+                    color: const Color.fromARGB(255, 74, 74, 74)),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 30.0),
+            SizedBox(height: 30.0.h),
             ElevatedButton(
               onPressed: () async {
                 // Add navigation to the test page
@@ -112,8 +111,8 @@ class _RestartTestScreenState extends State<RestartTestScreen> {
                 backgroundColor: const Color(0xfff26647),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                textStyle: const TextStyle(
-                  fontSize: 18,
+                textStyle: TextStyle(
+                  fontSize: 18.h,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -122,7 +121,6 @@ class _RestartTestScreenState extends State<RestartTestScreen> {
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
-            const SizedBox(height: 12.0),
           ],
         ),
       ),

@@ -5,13 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ExitDialog extends StatelessWidget {
   ExitDialog({
     super.key,
-    required this.width,
-    required this.height,
     required this.page,
   });
 
-  final double width;
-  final double height;
   Widget page;
 
   @override
@@ -21,27 +17,28 @@ class ExitDialog extends StatelessWidget {
       insetPadding: EdgeInsets.symmetric(
         horizontal: 26.w,
       ),
+      backgroundColor: AppColors.white_000,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.h),
         width: 381.w,
         height: 179.h,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'End Learning',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 32.h,
                 fontWeight: FontWeight.w500,
-                color: Colors.black,
+                color: AppColors.orange_000,
               ),
             ),
-            const Text(
+            Text(
               'Do you want to end learning?',
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Color.fromARGB(255, 150, 150, 150),
+                fontSize: 16.h,
+                fontWeight: FontWeight.w400,
+                color: AppColors.gray_003,
               ),
             ),
             Row(
@@ -55,10 +52,18 @@ class ExitDialog extends StatelessWidget {
                     width: 148.w,
                     height: 44.h,
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 206, 201, 214),
-                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.gray_000,
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
-                    child: const Center(child: Text('Continue')),
+                    child: Center(
+                        child: Text(
+                      'Continue',
+                      style: TextStyle(
+                        color: AppColors.gray_003,
+                        fontSize: 16.h,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )),
                   ),
                 ),
                 GestureDetector(
@@ -76,11 +81,13 @@ class ExitDialog extends StatelessWidget {
                       color: accent,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Center(
+                    child: Center(
                         child: Text(
                       'End',
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 16.h,
+                        fontWeight: FontWeight.w500,
                       ),
                     )),
                   ),

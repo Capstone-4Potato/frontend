@@ -170,12 +170,7 @@ class TestCardState extends State<TestCard> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
-
         return ExitDialog(
-          width: width,
-          height: height,
           page: HomeNav(
             bottomNavIndex: widget.exitIndex,
           ),
@@ -208,10 +203,10 @@ class TestCardState extends State<TestCard> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.close,
                 color: Colors.black,
-                size: 30,
+                size: 30.h,
               ),
               onPressed: _showExitDialog,
             ),
@@ -269,7 +264,7 @@ class TestCardState extends State<TestCard> {
                       Stack(
                         children: [
                           Container(
-                            height: 16,
+                            height: 16.h,
                             decoration: BoxDecoration(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
@@ -307,9 +302,9 @@ class TestCardState extends State<TestCard> {
                       SizedBox(height: 10.h),
                       Text(
                         '${30 - widget.testIds.length + _currentIndex + 1}/30',
-                        style: const TextStyle(
-                          color: Color.fromARGB(129, 0, 0, 0),
-                          fontSize: 24,
+                        style: TextStyle(
+                          color: const Color.fromARGB(129, 0, 0, 0),
+                          fontSize: 24.h,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -332,18 +327,18 @@ class TestCardState extends State<TestCard> {
 
       // 녹음하기 버튼
       floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
+        width: 70.h,
+        height: 70.h,
         child: FloatingActionButton(
           onPressed: _isRecording ? _stopRecording : _startRecording,
           backgroundColor:
               _isRecording ? const Color(0xFF976841) : const Color(0xFFF26647),
           elevation: 0.0,
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35))),
+              borderRadius: BorderRadius.all(Radius.circular(100))),
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
-            size: 40,
+            size: 40.h,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
         ),

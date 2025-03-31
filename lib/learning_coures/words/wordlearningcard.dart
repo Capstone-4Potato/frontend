@@ -153,12 +153,7 @@ class _WordLearningCardState extends State<WordLearningCard> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        final double height = MediaQuery.of(context).size.height / 852;
-        final double width = MediaQuery.of(context).size.width / 393;
-
         return ExitDialog(
-          width: width,
-          height: height,
           page: HomeNav(),
         );
       },
