@@ -103,7 +103,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
       decoration: _inputDecoration(),
       hint: Text('Select a reason.',
           style: TextStyle(
-            fontSize: 20.sp,
+            fontSize: 20.h,
             fontWeight: FontWeight.w400,
           )),
       items: surveyOptions.map((item) => _buildDropdownItem(item)).toList(),
@@ -125,7 +125,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
             item, // 선택된 값에는 아이콘 없이 텍스트만 표시
 
             style: TextStyle(
-              fontSize: 20.sp,
+              fontSize: 20.h,
               fontWeight: FontWeight.w400,
               color: AppColors.gray_005,
             ),
@@ -156,12 +156,12 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
               SizedBox(width: 3.0.w),
               Icon(Icons.check,
                   color: _selectedValue == item ? Colors.black : Colors.white,
-                  size: 18.sp),
+                  size: 18.h),
               Text(
                 item,
                 style: TextStyle(
                   color: AppColors.black,
-                  fontSize: 15.sp,
+                  fontSize: 15.h,
                   fontWeight: FontWeight.w400,
                   fontFamily: FontFamily.madeTommySoft.fontName,
                 ),
@@ -224,7 +224,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
             'Delete Account',
             style: TextStyle(
               color: AppColors.white_000,
-              fontSize: 15.sp,
+              fontSize: 15.h,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -269,7 +269,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
     return Padding(
       padding: EdgeInsets.only(bottom: 16.h),
       child: Text(text,
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w500)),
+          style: TextStyle(fontSize: 20.h, fontWeight: FontWeight.w500)),
     );
   }
 
@@ -278,7 +278,7 @@ class _DeleteAccountSurveyScreenState extends State<DeleteAccountSurveyScreen> {
     return Padding(
       padding: EdgeInsets.only(bottom: 28.h),
       child: Text(text,
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w400)),
+          style: TextStyle(fontSize: 18.h, fontWeight: FontWeight.w400)),
     );
   }
 }

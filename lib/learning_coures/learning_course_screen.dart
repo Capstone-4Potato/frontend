@@ -215,9 +215,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
             ),
             title: Text(
               'Learning Course',
-              style: TextStyle(
-                color: bam,
-              ),
+              style: TextStyle(color: bam, fontSize: 20.h),
             ),
           ),
           body: Padding(
@@ -369,17 +367,17 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 30.0, bottom: 24.0),
+                                        padding: EdgeInsets.only(
+                                            top: 30.0.h, bottom: 24.0.h),
                                         child: LevelDivider(level: levels[2]),
                                       ),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(
-                                            left: 18.0, bottom: 17.0),
+                                            left: 18.0.w, bottom: 17.0.h),
                                         child: Text(
                                           'Conversation Practice',
                                           style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 18.h,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
@@ -406,22 +404,22 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                                           },
                                         ),
                                       ),
-                                      const Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(
-                                            left: 18.0,
-                                            top: 24.0,
-                                            bottom: 17.0),
+                                            left: 18.0.w,
+                                            top: 24.h,
+                                            bottom: 17.0.h),
                                         child: Text(
                                           'Tongue Twisters',
                                           style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 18.h,
                                             fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ),
                                       Wrap(
                                         direction: Axis.vertical,
-                                        spacing: 16,
+                                        spacing: 16.h,
                                         children: List<Widget>.generate(
                                           _units.sublist(22, 25).length,
                                           (index) {
@@ -846,16 +844,16 @@ class LevelDivider extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Text(
               level,
-              style: const TextStyle(
-                color: Color(0xFFf26647),
-                fontSize: 12,
+              style: TextStyle(
+                color: const Color(0xFFf26647),
+                fontSize: 12.h,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(left: 12.0),
+              padding: EdgeInsets.only(left: 12.0.w),
               child: Container(
                 height: 1.0,
                 //width: 145.0,

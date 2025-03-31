@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
+import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 InputDecoration textfieldDecoration(
@@ -14,12 +15,12 @@ InputDecoration textfieldDecoration(
     hintText: hintText, // 힌트 텍스트 설정
     hintStyle: TextStyle(
       color: bam.withValues(alpha: 0.5),
-      fontFamily: 'BM_Jua',
-      fontSize: 20.sp,
+      fontFamily: FontFamily.bmJua.fontName,
+      fontSize: 20.h,
     ),
     helperText: ' ',
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20.0),
+      borderRadius: BorderRadius.circular(20.0.r),
       borderSide: BorderSide(
         color: const Color.fromARGB(255, 195, 185, 182),
         width: 0.5.w,
@@ -27,24 +28,24 @@ InputDecoration textfieldDecoration(
     ),
     focusedBorder: OutlineInputBorder(
       // 포커스 상태일 때의 테두리 스타일
-      borderRadius: BorderRadius.circular(20.0),
+      borderRadius: BorderRadius.circular(20.0.r),
       borderSide: BorderSide(
         color: primary,
         width: 1.0.w, // 테두리 너비
       ),
     ),
     errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20.0),
-      borderSide: const BorderSide(
-        color: Color.fromARGB(255, 232, 57, 26),
-        width: 1.5,
+      borderRadius: BorderRadius.circular(20.0.r),
+      borderSide: BorderSide(
+        color: const Color.fromARGB(255, 232, 57, 26),
+        width: 1.5.w,
       ),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20.0),
-      borderSide: const BorderSide(
-        color: Color.fromARGB(255, 232, 57, 26),
-        width: 1.5,
+      borderRadius: BorderRadius.circular(20.0.r),
+      borderSide: BorderSide(
+        color: const Color.fromARGB(255, 232, 57, 26),
+        width: 1.5.w,
       ),
     ),
     contentPadding: EdgeInsets.symmetric(

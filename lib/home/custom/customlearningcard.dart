@@ -234,7 +234,7 @@ class _CustomSentenceLearningCardState
           itemCount: widget.texts.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.only(top: 12),
+              padding: EdgeInsets.only(top: 12.h),
               child: Column(
                 children: [
                   Row(
@@ -257,7 +257,7 @@ class _CustomSentenceLearningCardState
                       ),
                       Container(
                         width: cardWidth,
-                        padding: const EdgeInsets.all(12.0),
+                        padding: EdgeInsets.all(12.0.h),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
@@ -305,17 +305,18 @@ class _CustomSentenceLearningCardState
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFF26647),
-                                minimumSize: const Size(240, 40),
+                                minimumSize: Size(240.w, 40.h),
                               ),
                               onPressed: _onListenPressed,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.volume_up,
                                 color: Colors.white,
+                                size: 24.h,
                               ),
-                              label: const Text(
+                              label: Text(
                                 'Listen',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 20.h,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -354,8 +355,8 @@ class _CustomSentenceLearningCardState
             );
           }),
       floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
+        width: 70.h,
+        height: 70.h,
         child: FloatingActionButton(
           onPressed: _canRecord && !_isLoading ? _recordAudio : null,
           backgroundColor: _isLoading
@@ -366,11 +367,12 @@ class _CustomSentenceLearningCardState
                       : const Color(0xFFF26647))
                   : const Color.fromARGB(37, 206, 204, 204),
           elevation: 0.0,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35))), // 조건 업데이트
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(100.r))), // 조건 업데이트
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
-            size: 40,
+            size: 40.h,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
         ),

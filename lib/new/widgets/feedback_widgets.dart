@@ -27,7 +27,7 @@ class FeedbackStamp extends StatelessWidget {
             ? ImagePath.feedbackStamp1.path
             : ImagePath.feedbackStamp2.path); // default 값
 
-    return SvgPicture.asset(imagePath, height: 100.0.w);
+    return SvgPicture.asset(imagePath, width: 100.0.w);
   }
 }
 
@@ -48,10 +48,12 @@ class FeedbackText extends StatelessWidget {
         ? Text(
             correctText,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: AppColors.black,
-                  fontFamily: FontFamily.pretendard.fontName,
-                ),
+            style: TextStyle(
+              color: AppColors.black,
+              fontFamily: FontFamily.pretendard.fontName,
+              fontSize: 24.h,
+              fontWeight: FontWeight.w600,
+            ),
           )
         : feedbackData.userText.length == correctText.length
             ?
@@ -95,6 +97,8 @@ class FeedbackResultContainer extends StatelessWidget {
             title,
             style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   color: AppColors.gray_004,
+                  fontSize: 14.h,
+                  fontWeight: FontWeight.w500,
                 ),
           ),
           content,
@@ -147,7 +151,7 @@ class FeedbackWaveformContainer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 icon: const Icon(Icons.play_arrow_rounded),
                 color: AppColors.white_000,
-                iconSize: 12.0.w,
+                iconSize: 12.0.h,
                 onPressed: onPressed,
               ),
             ),
@@ -200,6 +204,7 @@ class AudioGraphLabel extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 color: labelColor,
                 fontWeight: FontWeight.w400,
+                fontSize: 14.h,
               ),
         ),
       ],

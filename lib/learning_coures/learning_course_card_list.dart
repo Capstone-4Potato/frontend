@@ -272,7 +272,7 @@ class _LearningCourseCardListState extends State<LearningCourseCardList> {
                                       child: Text(
                                         textList[index],
                                         style: TextStyle(
-                                            fontSize: 28,
+                                            fontSize: 28.h,
                                             fontWeight: FontWeight.bold,
                                             color: weakCardList[index] // 취약음이면
                                                 ? const Color.fromARGB(

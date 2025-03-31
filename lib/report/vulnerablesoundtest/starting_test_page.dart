@@ -5,6 +5,7 @@ import 'package:flutter_application_1/new/models/navigation_type.dart';
 import 'package:flutter_application_1/new/services/api/weak_sound_test_api.dart';
 import 'package:flutter_application_1/new/utils/navigation_extension.dart';
 import 'package:flutter_application_1/report/vulnerablesoundtest/testcard.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 로그인 -> 회원가입 -> 튜토리얼 -> 취약음테스트 시작 페이지
 class StartTestScreen extends StatefulWidget {
@@ -51,14 +52,14 @@ class _StartTestScreenState extends State<StartTestScreen> {
       backgroundColor: background,
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const SizedBox(height: 160.0),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 "Before we start learning,\n let's take a simple test.",
                 style: TextStyle(
-                  fontSize: 22.0,
+                  fontSize: 22.0.h,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Marine',
                 ),
@@ -66,26 +67,26 @@ class _StartTestScreenState extends State<StartTestScreen> {
               ),
             ),
             const SizedBox(height: 10.0),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: EdgeInsets.all(16.0.h),
               child: Text(
                 "View the pronunciation guide on the card,\nand record yourself mimicking it slowly.",
                 style: TextStyle(
-                  fontSize: 16.0,
-                  color: Color.fromARGB(255, 74, 74, 74),
+                  fontSize: 16.0.r,
+                  color: const Color.fromARGB(255, 74, 74, 74),
                   fontFamily: 'Marine',
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 "It takes about 3 minutes.",
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 16.0.h,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 74, 74, 74),
+                  color: const Color.fromARGB(255, 74, 74, 74),
                   fontFamily: 'Marine',
                 ),
                 textAlign: TextAlign.center,
@@ -118,9 +119,9 @@ class _StartTestScreenState extends State<StartTestScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              child: const Text(
+              child: Text(
                 '  start  ',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: 20.h),
               ),
             ),
             const SizedBox(height: 12.0),
@@ -132,16 +133,15 @@ class _StartTestScreenState extends State<StartTestScreen> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
                 textStyle: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              child: const Text(
+              child: Text(
                 '  skip  ',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: 20.h),
               ),
             ),
           ],

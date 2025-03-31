@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
+import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/services/api/profile_api.dart';
 import 'package:flutter_application_1/signup/textfield_decoration.dart';
@@ -103,6 +104,7 @@ class ProfileUpdatePageState extends State<ProfileUpdatePage> {
             style: TextStyle(
               color: bam,
               fontWeight: FontWeight.w500,
+              fontSize: 20.h,
             ),
           ),
           backgroundColor: background,
@@ -117,9 +119,9 @@ class ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 height: 600.h,
                 decoration: BoxDecoration(
                   color: background,
-                  borderRadius: const BorderRadiusDirectional.only(
-                    bottomStart: Radius.circular(40),
-                    bottomEnd: Radius.circular(40),
+                  borderRadius: BorderRadiusDirectional.only(
+                    bottomStart: Radius.circular(40.r),
+                    bottomEnd: Radius.circular(40.r),
                   ),
                 ),
               ),
@@ -133,7 +135,7 @@ class ProfileUpdatePageState extends State<ProfileUpdatePage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: primary,
-                        fontSize: 18.0.sp,
+                        fontSize: 30.0.h,
                       ),
                     ),
                     SizedBox(height: 80.0.h),
@@ -143,6 +145,10 @@ class ProfileUpdatePageState extends State<ProfileUpdatePage> {
                         TextFormField(
                           controller: _birthYearController,
                           key: _fieldKey_1,
+                          style: TextStyle(
+                            color: bam,
+                            fontSize: 20.h,
+                          ),
                           decoration: textfieldDecoration(
                               isTapped[0], isButtonEnabled[0], 'Birth Year'),
                           keyboardType: TextInputType.number,
@@ -177,15 +183,24 @@ class ProfileUpdatePageState extends State<ProfileUpdatePage> {
                           ),
                           dropdownColor:
                               const Color.fromARGB(255, 223, 234, 251),
+                          borderRadius: BorderRadius.circular(20.r),
                           style: TextStyle(
                             color: bam,
-                            fontSize: 20.sp,
+                            fontSize: 20.h,
+                            fontFamily: FontFamily.bmJua.fontName,
                           ),
                           elevation: 16,
                           items: <int>[0, 1].map((int value) {
                             return DropdownMenuItem<int>(
                               value: value,
-                              child: Text(value == 0 ? 'Male' : 'Female'),
+                              child: Text(
+                                value == 0 ? 'Male' : 'Female',
+                                style: TextStyle(
+                                  color: bam,
+                                  fontSize: 20.h,
+                                  fontFamily: FontFamily.bmJua.fontName,
+                                ),
+                              ),
                             );
                           }).toList(),
                           onChanged: (value) {
@@ -199,6 +214,10 @@ class ProfileUpdatePageState extends State<ProfileUpdatePage> {
                         TextFormField(
                           controller: _nicknameController,
                           key: _fieldKey_3,
+                          style: TextStyle(
+                            color: bam,
+                            fontSize: 20.h,
+                          ),
                           decoration: textfieldDecoration(
                               isTapped[2], isButtonEnabled[2], 'Nickname'),
                           onChanged: (value) {
@@ -231,8 +250,8 @@ class ProfileUpdatePageState extends State<ProfileUpdatePage> {
               ),
               Positioned(
                 top: _buttonTop,
-                right: 40,
-                left: 40,
+                right: 40.w,
+                left: 40.w,
                 child: Center(
                   child: ElevatedButton(
                     key: _buttonKey,
@@ -241,14 +260,14 @@ class ProfileUpdatePageState extends State<ProfileUpdatePage> {
                       backgroundColor: const Color.fromARGB(255, 232, 120, 71),
                       elevation: 4,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Center(
                       child: Text(
                         'Edit Profile',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 25.sp,
+                          fontSize: 25.h,
                           color: Colors.white,
+                          fontFamily: FontFamily.bmJua.fontName,
                           height: 2.6.h,
                         ),
                       ),

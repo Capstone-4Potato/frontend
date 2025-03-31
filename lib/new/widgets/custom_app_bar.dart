@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             icon: const Icon(Icons.arrow_back),
             color: AppColors.icon_001,
-            iconSize: 24.sp,
+            iconSize: 24.h,
             onPressed: () {
               Navigator.pop(context);
             },
@@ -24,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Text(
         'Delete Account',
-        style: TextStyle(fontSize: 20.sp),
+        style: TextStyle(fontSize: 20.h),
       ),
     );
   }

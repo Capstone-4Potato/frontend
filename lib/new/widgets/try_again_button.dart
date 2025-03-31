@@ -27,6 +27,8 @@ class TryAgainButton extends StatelessWidget {
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.headlineMedium!.copyWith(
               color: Colors.white,
+              fontSize: 20.h,
+              fontWeight: FontWeight.w500,
             ),
       ),
     );

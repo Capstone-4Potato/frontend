@@ -365,20 +365,22 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                             children: <Widget>[
                               Text(
                                 currentContent,
-                                style: const TextStyle(
-                                    fontSize: 38, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 38.h,
+                                    fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 "[$currentEngPronunciation]",
                                 style: TextStyle(
-                                    fontSize: 24, color: Colors.grey[700]),
+                                    fontSize: 24.h, color: Colors.grey[700]),
                               ),
                               Text(
                                 currentPronunciation,
-                                style: const TextStyle(
-                                    fontSize: 22,
+                                style: TextStyle(
+                                    fontSize: 22.h,
                                     fontWeight: FontWeight.w500,
-                                    color: Color.fromARGB(255, 231, 156, 135)),
+                                    color: const Color.fromARGB(
+                                        255, 231, 156, 135)),
                               ),
                               SizedBox(
                                 height: 8.h,
@@ -390,17 +392,18 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                                     : null,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFFF26647),
-                                  minimumSize: const Size(220, 40),
+                                  minimumSize: Size(220.w, 40.h),
                                 ),
                                 onPressed: _onListenPressed,
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.volume_up,
                                   color: Colors.white,
+                                  size: 24.h,
                                 ),
-                                label: const Text(
+                                label: Text(
                                   'Listen',
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 20.h,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -466,7 +469,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                                 child: Text(
                                   currentExplanation,
                                   style: TextStyle(
-                                      fontSize: 13, color: Colors.grey[700]),
+                                      fontSize: 13.h, color: Colors.grey[700]),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -475,9 +478,9 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                         ),
                       ),
                     if (_isLoading) // 피드백 로딩 중이면 로딩중 Indicator 표시
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 160),
-                        child: CircularProgressIndicator(
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 160.h),
+                        child: const CircularProgressIndicator(
                           valueColor:
                               AlwaysStoppedAnimation<Color>(Color(0xFFF26647)),
                         ),
@@ -490,7 +493,7 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
           // 녹음 시작/중지 버튼
           floatingActionButton: SizedBox(
             key: feedbackTutorialStep == 2 ? _speakButtonKey : null,
-            width: 70.w,
+            width: 70.h,
             height: 70.h,
             child: FloatingActionButton(
               onPressed: _canRecord && !_isLoading ? _recordAudio : null,
@@ -502,12 +505,12 @@ class _SyllableLearningCardState extends State<SyllableLearningCard> {
                           : const Color(0xFFF26647))
                       : const Color.fromARGB(37, 206, 204, 204),
               elevation: 0.0,
-              shape: const RoundedRectangleBorder(
+              shape: RoundedRectangleBorder(
                   borderRadius:
-                      BorderRadius.all(Radius.circular(35))), // 조건 업데이트
+                      BorderRadius.all(Radius.circular(100.r))), // 조건 업데이트
               child: Icon(
                 _isRecording ? Icons.stop : Icons.mic,
-                size: 40,
+                size: 40.h,
                 color: const Color.fromARGB(231, 255, 255, 255),
               ),
             ),

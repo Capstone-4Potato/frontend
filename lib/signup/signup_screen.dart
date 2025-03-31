@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/new/models/app_colors.dart';
 import 'package:flutter_application_1/dismisskeyboard.dart';
+import 'package:flutter_application_1/new/models/font_family.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/services/api/join_api.dart';
 import 'package:flutter_application_1/signup/textfield_decoration.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 회원가입 페이지
-class UserInputForm extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   final String socialId;
 
-  const UserInputForm({Key? key, required this.socialId}) : super(key: key);
+  const SignUpScreen({Key? key, required this.socialId}) : super(key: key);
 
   @override
-  UserInputFormState createState() => UserInputFormState();
+  SignUpScreenState createState() => SignUpScreenState();
 }
 
-class UserInputFormState extends State<UserInputForm> {
+class SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fieldKey_1 = GlobalKey<FormFieldState>();
   final _fieldKey_2 = GlobalKey<FormFieldState>();
@@ -82,9 +83,9 @@ class UserInputFormState extends State<UserInputForm> {
                 height: 600.h,
                 decoration: BoxDecoration(
                   color: background,
-                  borderRadius: const BorderRadiusDirectional.only(
-                    bottomStart: Radius.circular(40),
-                    bottomEnd: Radius.circular(40),
+                  borderRadius: BorderRadiusDirectional.only(
+                    bottomStart: Radius.circular(40.r),
+                    bottomEnd: Radius.circular(40.r),
                   ),
                 ),
               ),
@@ -96,7 +97,7 @@ class UserInputFormState extends State<UserInputForm> {
                       'Almost Done!',
                       style: TextStyle(
                         color: bam,
-                        fontSize: 30.0.sp,
+                        fontSize: 30.0.h,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -106,7 +107,7 @@ class UserInputFormState extends State<UserInputForm> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: primary,
-                        fontSize: 14.0.sp,
+                        fontSize: 14.0.h,
                       ),
                     ),
                     SizedBox(height: 50.h),
@@ -114,7 +115,7 @@ class UserInputFormState extends State<UserInputForm> {
                       key: _fieldKey_1,
                       style: TextStyle(
                         color: bam,
-                        fontSize: 20.sp,
+                        fontSize: 20.h,
                       ),
                       decoration: textfieldDecoration(
                           isTapped[0], isButtonEnabled[0], 'Birth Year'),
@@ -152,11 +153,12 @@ class UserInputFormState extends State<UserInputForm> {
                         Icons.arrow_drop_down,
                         color: Color.fromARGB(255, 195, 185, 182),
                       ),
+                      borderRadius: BorderRadius.circular(20.r),
                       dropdownColor: const Color.fromARGB(255, 223, 234, 251),
                       style: TextStyle(
                         color: bam.withValues(alpha: 0.5),
-                        fontSize: 20.sp,
-                        fontFamily: 'BM_Jua',
+                        fontSize: 20.h,
+                        fontFamily: FontFamily.bmJua.fontName,
                       ),
                       elevation: 16,
                       decoration: textfieldDecoration(
@@ -168,7 +170,7 @@ class UserInputFormState extends State<UserInputForm> {
                             value == 0 ? 'Male' : 'Female',
                             style: TextStyle(
                               color: bam,
-                              fontFamily: 'BM_Jua',
+                              fontFamily: FontFamily.bmJua.fontName,
                             ),
                           ),
                         );
@@ -241,7 +243,7 @@ class UserInputFormState extends State<UserInputForm> {
                       dropdownColor: const Color.fromARGB(255, 223, 234, 251),
                       style: TextStyle(
                         color: bam,
-                        fontSize: 20.sp,
+                        fontSize: 20.h,
                         fontFamily: 'BM_Jua',
                       ),
                       elevation: 16,
@@ -280,8 +282,8 @@ class UserInputFormState extends State<UserInputForm> {
               ),
               Positioned(
                 top: _buttonTop,
-                right: 40,
-                left: 40,
+                right: 40.w,
+                left: 40.w,
                 child: Center(
                   child: ElevatedButton(
                     key: _buttonKey,
@@ -307,7 +309,7 @@ class UserInputFormState extends State<UserInputForm> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 25.h,
-                          fontFamily: 'BM_Jua',
+                          fontFamily: FontFamily.bmJua.fontName,
                           color: Colors.white,
                           height: 2.6.h,
                         ),

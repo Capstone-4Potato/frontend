@@ -152,7 +152,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.only(
-                    right: 21.0.w, left: 21.0.w, bottom: 30.0.h),
+                    right: 21.0.w, left: 21.0.w, bottom: 30.0.h, top: 10.h),
                 child: Column(
                   children: [
                     Row(
@@ -381,7 +381,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
           ),
           // 공백
           Container(
-            height: 20.0,
+            height: 20.0.h,
           ),
           // try again 버튼
           TryAgainButton(

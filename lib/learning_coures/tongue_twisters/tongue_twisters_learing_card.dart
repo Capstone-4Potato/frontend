@@ -283,7 +283,7 @@ class _TongueTwistersLearningCardState
                       ),
                       Container(
                         width: cardWidth,
-                        padding: const EdgeInsets.all(12.0),
+                        padding: EdgeInsets.all(12.0.h),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
@@ -308,26 +308,27 @@ class _TongueTwistersLearningCardState
 
                             Text(
                               currentPronunciation,
-                              style: const TextStyle(
-                                fontSize: 18,
+                              style: TextStyle(
+                                fontSize: 18.h,
                                 fontWeight: FontWeight.w500,
-                                color: Color.fromARGB(255, 231, 156, 135),
+                                color: const Color.fromARGB(255, 231, 156, 135),
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(
-                              height: 15,
+                            SizedBox(
+                              height: 15.h,
                             ),
                             // 발음 듣기 버튼 - correctAudio 들려주기
                             ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFF26647),
-                                minimumSize: Size(240.h, 40.w),
+                                minimumSize: Size(240.w, 40.h),
                               ),
                               onPressed: _onListenPressed,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.volume_up,
                                 color: Colors.white,
+                                size: 24.h,
                               ),
                               label: Text(
                                 'Listen',
@@ -379,8 +380,8 @@ class _TongueTwistersLearningCardState
             );
           }),
       floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
+        width: 70.h,
+        height: 70.h,
         child: FloatingActionButton(
           onPressed: _canRecord && !_isLoading ? _recordAudio : null,
           backgroundColor: _isLoading
@@ -391,11 +392,12 @@ class _TongueTwistersLearningCardState
                       : const Color(0xFFF26647))
                   : const Color.fromARGB(37, 206, 204, 204),
           elevation: 0.0,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35))), // 조건 업데이트
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(100.r))), // 조건 업데이트
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
-            size: 40,
+            size: 40.h,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
         ),

@@ -8,7 +8,7 @@ import 'package:flutter_application_1/new/services/api/home_api.dart';
 import 'package:flutter_application_1/new/utils/calculate_last_login_days.dart';
 import 'package:flutter_application_1/new/widgets/home_character.dart';
 import 'package:flutter_application_1/notification/notification_screen.dart';
-import 'package:flutter_application_1/settings/profile_page.dart';
+import 'package:flutter_application_1/settings/settings_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';

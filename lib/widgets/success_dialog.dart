@@ -19,12 +19,13 @@ class SuccessDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: AppColors.white_000,
       alignment: Alignment.center,
-      insetPadding: const EdgeInsets.symmetric(
-        horizontal: 26,
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: 26.w,
       ),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24.h),
         width: 333.w,
         height: 230.h,
         child: Column(
@@ -34,8 +35,8 @@ class SuccessDialog extends StatelessWidget {
               padding: EdgeInsets.only(top: 24.0.h),
               child: Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 24,
+                style: TextStyle(
+                  fontSize: 24.h,
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
                 ),
@@ -46,10 +47,10 @@ class SuccessDialog extends StatelessWidget {
               child: Text(
                 subtitle,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: 16.h,
                   fontWeight: FontWeight.w500,
-                  color: Color.fromARGB(255, 150, 150, 150),
+                  color: const Color.fromARGB(255, 150, 150, 150),
                 ),
               ),
             ),
@@ -66,9 +67,7 @@ class SuccessDialog extends StatelessWidget {
                     child: Text(
                   buttonText,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 16.h),
                 )),
               ),
             ),

@@ -16,8 +16,8 @@ class UserScorePanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 90.0.h,
-      constraints: const BoxConstraints(
-        minWidth: 120.0, // 최소 너비
+      constraints: BoxConstraints(
+        minWidth: 120.0.w, // 최소 너비
       ),
       margin: EdgeInsets.only(top: 32.0.h),
       decoration: BoxDecoration(
@@ -32,9 +32,11 @@ class UserScorePanel extends StatelessWidget {
               padding: EdgeInsets.only(top: 5.0.h),
               child: Text(
                 'Score',
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: AppColors.gray_002,
-                    ),
+                style: TextStyle(
+                  color: AppColors.gray_002,
+                  fontSize: 14.h,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             Padding(
@@ -44,7 +46,7 @@ class UserScorePanel extends StatelessWidget {
                 TextSpan(
                   text: '$userScore',
                   style: TextStyle(
-                    fontSize: 48.sp,
+                    fontSize: 48.h,
                     fontFamily: FontFamily.pretendard.fontName,
                     fontWeight: FontWeight.bold,
                     height: 0.708,
@@ -54,7 +56,7 @@ class UserScorePanel extends StatelessWidget {
                     TextSpan(
                       text: '/100',
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 14.h,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),

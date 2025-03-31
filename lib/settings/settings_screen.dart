@@ -80,12 +80,12 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 24.0, bottom: 24.0),
+                padding: EdgeInsets.only(left: 24.0.w, bottom: 24.0.h),
                 child: Text(
                   'Settings',
                   style: TextStyle(
                     color: bam,
-                    fontSize: 36.w,
+                    fontSize: 36.h,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -105,11 +105,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 Padding(
                   padding: EdgeInsets.only(
                       left: 44.0.w, right: 44.0.w, top: 16.h, bottom: 10.h),
-                  child: const Text(
+                  child: Text(
                     'Account',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 24,
+                      fontSize: 24.h,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -146,11 +146,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     top: 16.h,
                     bottom: 10.h,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Tutorial',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 24,
+                      fontSize: 24.h,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -178,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
     required Function onTap,
   }) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 24.h, vertical: 0),
+      margin: EdgeInsets.symmetric(horizontal: 44.h, vertical: 0),
       decoration: const BoxDecoration(
         color: Color(0xFFF5F5F5),
       ),
@@ -188,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Icon(
             icon,
             color: Colors.black,
-            size: 20.sp,
+            size: 20.h,
           ),
         ),
         title: Text(
@@ -203,20 +203,20 @@ class _ProfilePageState extends State<ProfilePage> {
           padding: EdgeInsets.only(right: 3.0.w),
           child: Container(
             height: 24.h,
-            width: 24.w,
+            width: 24.h,
             decoration: BoxDecoration(
               color: const Color(0xFFF2EBE3),
-              borderRadius: BorderRadius.circular(3),
+              borderRadius: BorderRadius.circular(3.r),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.arrow_forward_ios,
-              color: Color(0xFF92918C),
-              size: 16,
+              color: const Color(0xFF92918C),
+              size: 16.h,
             ),
           ),
         ),
         onTap: () => onTap(),
-        contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+        contentPadding: EdgeInsets.symmetric(vertical: 10.0.h),
       ),
     );
   }
@@ -227,6 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+          backgroundColor: AppColors.white_000,
           alignment: Alignment.center,
           insetPadding: EdgeInsets.symmetric(
             horizontal: 26.w,
@@ -267,13 +268,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 46.h,
                         decoration: BoxDecoration(
                           color: accent,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
-                        child: const Center(
+                        child: Center(
                             child: Text(
                           'Log out',
                           style: TextStyle(
                             color: Colors.white,
+                            fontSize: 16.h,
                           ),
                         )),
                       ),
@@ -287,16 +289,17 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: 263.w,
                         height: 46.h,
                         decoration: BoxDecoration(
-                          color: Colors.transparent,
+                          color: AppColors.gray_000,
                           borderRadius: BorderRadius.circular(20.r),
                           border: Border.all(
                               color: const Color.fromARGB(255, 190, 189, 184)),
                         ),
-                        child: const Center(
+                        child: Center(
                             child: Text(
                           'Cancel',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppColors.gray_003,
+                            fontSize: 16.h,
                           ),
                         )),
                       ),

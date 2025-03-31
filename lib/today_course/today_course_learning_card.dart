@@ -165,7 +165,7 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
             base64userAudio,
             base64correctAudio,
           ).timeout(
-            const Duration(seconds: 7),
+            const Duration(seconds: 8),
             onTimeout: () {
               throw TimeoutException('Feedback request timed out');
             },
@@ -462,21 +462,19 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Today\'s Course!',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20.h),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
         actions: [
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 3.8, 0),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.close,
                 color: Colors.black,
-                size: 30,
+                size: 30.h,
               ),
               onPressed: _showExitDialog,
             ),
@@ -535,14 +533,15 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                           onPressed: () {
                             _onListenPressed(_currentIndex);
                           },
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.volume_up,
                             color: Colors.white,
+                            size: 24.h,
                           ),
-                          label: const Text(
+                          label: Text(
                             'Listen',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 20.h,
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
                             ),
@@ -560,7 +559,7 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                       Stack(
                         children: [
                           Container(
-                            height: 16,
+                            height: 16.h,
                             decoration: BoxDecoration(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
@@ -594,9 +593,9 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
                       SizedBox(height: 10.h),
                       Text(
                         '$cardCount/${widget.courseSize}',
-                        style: const TextStyle(
-                          color: Color.fromARGB(129, 0, 0, 0),
-                          fontSize: 24,
+                        style: TextStyle(
+                          color: const Color.fromARGB(129, 0, 0, 0),
+                          fontSize: 24.h,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -618,19 +617,19 @@ class TodayCourseLearningCardState extends State<TodayCourseLearningCard> {
       ),
       // 녹음하기 버튼
       floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
+        width: 70.h,
+        height: 70.h,
         child: FloatingActionButton(
           //onPressed: _isRecording ? _stopRecording : _startRecording,
           onPressed: _canRecord && !_isLoading ? _recordAudio : null,
           backgroundColor:
               _isRecording ? const Color(0xFF976841) : const Color(0xFFF26647),
           elevation: 0.0,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35))),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(100.r))),
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
-            size: 40,
+            size: 40.h,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
         ),

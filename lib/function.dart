@@ -326,14 +326,14 @@ Widget buildTextSpans(String text, List<int>? mistakenIndexes) {
       // 잘못된 문자라면 빨간색, 그렇지 않다면 검정색
       TextStyle textStyle = isMistaken
           ? TextStyle(
-              fontSize: 24.sp,
+              fontSize: 24.h,
               fontWeight: FontWeight.w600,
               color: AppColors.red,
               fontFamily: 'Pretendard',
               letterSpacing: 0,
             )
           : TextStyle(
-              fontSize: 24.sp,
+              fontSize: 24.h,
               fontWeight: FontWeight.w600,
               color: AppColors.black,
               fontFamily: 'Pretendard',

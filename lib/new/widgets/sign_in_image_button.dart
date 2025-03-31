@@ -49,7 +49,7 @@ class SignInImageButton extends StatelessWidget {
         // GA : 회원가입 여부 전달
         FirebaseAnalytics.instance.logSignUp(signUpMethod: loginPlatform.name);
         // 회원가입 폼으로 이동
-        context.navigateTo(screen: UserInputForm(socialId: socialId));
+        context.navigateTo(screen: SignUpScreen(socialId: socialId));
       } else if (statusCode == 200) {
         // GA : 로그인 할 때 플랫폼 전달
         FirebaseAnalytics.instance.logLogin(loginMethod: loginPlatform.name);

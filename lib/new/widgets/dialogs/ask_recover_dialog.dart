@@ -32,7 +32,7 @@ void askRecoverDialog(BuildContext context, String? socialId) {
     Navigator.push<void>(
       context,
       MaterialPageRoute<void>(
-        builder: (BuildContext context) => UserInputForm(
+        builder: (BuildContext context) => SignUpScreen(
           socialId: socialId,
         ),
       ),

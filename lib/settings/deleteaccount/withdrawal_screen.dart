@@ -5,6 +5,7 @@ import 'package:flutter_application_1/dismisskeyboard.dart';
 import 'package:flutter_application_1/new/models/user_info.dart';
 import 'package:flutter_application_1/new/screens/delete_account_survey_screen.dart';
 import 'package:flutter_application_1/new/widgets/custom_app_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 회원탈퇴 페이지
 class WithdrawalScreen extends StatefulWidget {
@@ -65,11 +66,11 @@ class WithdrawalScreenState extends State<WithdrawalScreen> {
         body: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 140),
-              const Text(
+              Text(
                 'Are you sure you want to \ndelete your account?',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 20.h, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
@@ -103,13 +104,13 @@ class WithdrawalScreenState extends State<WithdrawalScreen> {
                   cursorColor: bam,
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
               ElevatedButton(
                 onPressed: _attemptWithdrawal,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xfff26647),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
                   textStyle: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

@@ -312,10 +312,10 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                                 Text(
                                   "[$cardPronunciation]",
                                   style: TextStyle(
-                                      fontSize: 22, color: Colors.grey[700]),
+                                      fontSize: 22.h, color: Colors.grey[700]),
                                 ),
-                                const SizedBox(
-                                  height: 8,
+                                SizedBox(
+                                  height: 8.h,
                                 ),
                                 ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
@@ -323,14 +323,15 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                                     minimumSize: const Size(220, 40),
                                   ),
                                   onPressed: _onListenPressed,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.volume_up,
                                     color: Colors.white,
+                                    size: 24.h,
                                   ),
-                                  label: const Text(
+                                  label: Text(
                                     'Listen',
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 20.h,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -364,7 +365,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                               child: Text(
                                 "Meaning of the word",
                                 style: TextStyle(
-                                  fontSize: 18.w,
+                                  fontSize: 18.h,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -383,7 +384,7 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                                 cardSummary,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 28.w,
+                                  fontSize: 28.h,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -394,8 +395,8 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
               ),
       ),
       floatingActionButton: SizedBox(
-        width: 70,
-        height: 70,
+        width: 70.h,
+        height: 70.h,
         child: FloatingActionButton(
           onPressed: _canRecord && !_isLoading ? _recordAudio : null,
           backgroundColor: _isLoading
@@ -406,11 +407,12 @@ class _TodayLearningCardState extends State<TodayLearningCard> {
                       : const Color(0xFFF26647))
                   : const Color.fromARGB(37, 206, 204, 204),
           elevation: 0.0,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(35))), // 조건 업데이트
+          shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(100.r))), // 조건 업데이트
           child: Icon(
             _isRecording ? Icons.stop : Icons.mic,
-            size: 40,
+            size: 40.h,
             color: const Color.fromARGB(231, 255, 255, 255),
           ),
         ),
