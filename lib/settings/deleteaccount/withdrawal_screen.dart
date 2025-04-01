@@ -64,7 +64,7 @@ class WithdrawalScreenState extends State<WithdrawalScreen> {
         appBar: const CustomAppBar(),
         backgroundColor: const Color(0xFFF5F5F5),
         body: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: EdgeInsets.symmetric(horizontal: 15.0.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -73,7 +73,7 @@ class WithdrawalScreenState extends State<WithdrawalScreen> {
                 style: TextStyle(fontSize: 20.h, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: TextField(
@@ -111,8 +111,8 @@ class WithdrawalScreenState extends State<WithdrawalScreen> {
                   backgroundColor: const Color(0xfff26647),
                   padding:
                       EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-                  textStyle: const TextStyle(
-                    fontSize: 16,
+                  textStyle: TextStyle(
+                    fontSize: 16.h,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

@@ -294,7 +294,7 @@ class _ContentTodayGoalState extends State<ContentTodayGoal> {
                     backgroundColor: Colors.transparent,
                     insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Container(
-                      height: 425.h,
+                      height: 430.h,
                       width: 353.h,
                       decoration: BoxDecoration(
                         color: Colors.white,

@@ -190,7 +190,7 @@ class _HomeNavState extends State<HomeNav> with TickerProviderStateMixin {
                 ],
               );
             },
-            height: 70.h,
+            height: 50.h,
             activeIndex: widget.bottomNavIndex,
             gapLocation: GapLocation.center,
             notchSmoothness: NotchSmoothness.sharpEdge,
